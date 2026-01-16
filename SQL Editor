@@ -1,0 +1,7 @@
+create table messages (
+  id uuid default gen_random_uuid() primary key,
+  sender text,
+  content text,
+  image_url text,
+  created_at timestamp default now()
+);
