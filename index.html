@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Realtime Chat</title>
+
+<style>
+body {
+    background: #f0f2f5;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.chat-container {
+    width: 420px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-header {
+    background: #0084ff;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.username-box {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.username-box input {
+    width: 100%;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f7f7f7;
+}
+
+.me {
+    align-self: flex-end;
+    background: #0084ff;
+    color: white;
+    padding: 8px;
+    border-radius: 12px 12px 0 12px;
+    margin: 6px 0 6px 60px;
+}
+
+.other {
+    align-self: flex-start;
+    background: #e4e6eb;
+    padding: 8px;
+    border-radius: 12px 12px 12px 0;
+    margin: 6px 60px 6px 0;
+}
+
+.user {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.time {
+    font-size: 11px;
+    margin-left: 6px;
+    color: #ddd;
+}
+
+.other .time {
+    color: #666;
+}
+
+.chat-footer {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    gap: 6px;
+}
+
+.chat-footer input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.chat-footer button {
+    background: #0084ff;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        Realtime Chat
+        <div id="online">Online users: 0</div>
+    </div>
+
+    <div class="username-box">
+        Username:
+        <input id="user" placeholder="Nhập tên">
+    </div>
+
+    <div class="chat-body" id="chat"></div>
+
+    <div class="chat-footer">
+        <input id="msg" placeholder="Nhập tin nhắn"
+               onkeydown="if(event.key==='Enter') send()">
+        <button onclick="send()">Send</button>
+    </div>
+</div>
+
+<script>
+const ws = new WebSocket(
+    "ws://" + window.location.host +
+    window.location.pathname.replace(/\/$/, "") +
+    "/chat"
+);
+
+ws.onmessage = (e) => {
+
+    // SYSTEM
+    if (e.data.startsWith("SYSTEM:")) {
+        document.getElementById("online").innerText =
+            e.data.replace("SYSTEM: ", "");
+        return;
+    }
+
+    // HISTORY BATCH
+    if (e.data.startsWith("HISTORY[")) {
+        const arr = JSON.parse(e.data.replace("HISTORY", ""));
+        arr.forEach(m => renderMessage(m));
+        return;
+    }
+
+    // NORMAL MESSAGE
+    renderMessage(JSON.parse(e.data));
+};
+
+function renderMessage(msg) {
+    const chat = document.getElementById("chat");
+    const myName = document.getElementById("user").value;
+
+    let div = document.createElement("div");
+    div.className = (msg.user === myName) ? "me" : "other";
+
+    div.innerHTML = `
+        <div class="user">
+            ${msg.user}
+            <span class="time">${msg.time}</span>
+        </div>
+        <div>${msg.content}</div>
+    `;
+
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function send() {
+    const user = document.getElementById("user").value.trim();
+    const msg = document.getElementById("msg").value.trim();
+
+    if (!user || !msg) return;
+    if (ws.readyState !== WebSocket.OPEN) return;
+
+    ws.send(user + ": " + msg);
+    document.getElementById("msg").value = "";
+}
+</script>
+
+</body>
+</html>
