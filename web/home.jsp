@@ -23,6 +23,13 @@
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container mt-4">
+            <form action="search" method="GET" class="d-flex w-50 mx-auto">
+                <input class="form-control me-2" type="search" name="keyword" 
+                       placeholder="Bạn muốn đi đâu? (Ví dụ: Đà Nẵng)" 
+                       value="${searchKeyword}"> <button class="btn btn-outline-primary" type="submit">Tìm</button>
+            </form>
+        </div>
         <div class="container">
             <a class="navbar-brand" href="home">TRAVEL BOOKING</a>
             <div class="collapse navbar-collapse">

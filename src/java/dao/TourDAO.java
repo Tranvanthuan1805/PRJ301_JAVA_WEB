@@ -89,4 +89,19 @@ public class TourDAO implements ITourDAO {
             em.close();
         }
     }
+    
+    @Override
+    public List<Tour> searchTours(String keyword) {
+        EntityManager em = JPAContext.getEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        try {
+            // Tìm tour có tên chứa từ khóa (LIKE)
+            String jpql = "SELECT t FROM Tour t WHERE t.tourName LIKE :kw";
+            Query query = em.createQuery(jpql);
+            query.setParameter("kw", "%" + keyword + "%");
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

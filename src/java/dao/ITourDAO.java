@@ -9,8 +9,9 @@ public interface ITourDAO {
     Tour getTourById(int id);
     long countTours();
     
-    // Khai báo sẵn các hàm thêm/sửa/xóa để dành cho tương lai
     void insertTour(Tour t);
     void updateTour(Tour t);
     void deleteTour(int id);
+    
+    List<Tour> searchTours(String keyword);
 }
