@@ -1,81 +1,67 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<!doctype html>
-<html lang="vi">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Register</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <style>
-    body{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: linear-gradient(135deg, #22c55e, #0ea5e9);
-      font-family: Arial, sans-serif;
-    }
-    .card{
-      width: 400px;
-      border: none;
-      border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.25);
-      animation: pop .55s ease;
-    }
-    @keyframes pop{
-      from{ transform: translateY(14px); opacity:.0; }
-      to{ transform: translateY(0); opacity:1; }
-    }
-    .btn-grad{
-      border:0;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #34d399, #22d3ee);
-      color:#fff;
-      font-weight:600;
-    }
-    .btn-grad:hover{ filter: brightness(1.05); }
-  </style>
+  <link rel="stylesheet" href="css/auth.css">
 </head>
-
 <body>
-  <div class="card p-4">
-    <h4 class="mb-1">Đăng ký</h4>
-    <div class="text-muted mb-3" style="font-size:14px;">Tạo tài khoản mới (role USER)</div>
+<div class="top-nav">
+  <div class="logo">✈ AirBooking</div>
+  <span>Home</span>
+  <span>Flights</span>
+  <span>Booking</span>
+  <span>Support</span>
+  <span>Login</span>
+</div>
 
-    <% String err = (String) request.getAttribute("error"); %>
-    <% String msg = (String) request.getAttribute("msg"); %>
+<div class="auth-wrapper">
 
-    <% if (err != null) { %>
-      <div class="alert alert-danger py-2"><%= err %></div>
+  <!-- LEFT -->
+  <div class="auth-left">
+    <h1>Join Flight Booking</h1>
+    <p>Create account to book flights ✈️</p>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+    <h2>Create Account</h2>
+    <p class="subtitle">Start your journey today</p>
+
+    <% 
+      String err = (String) request.getAttribute("error");
+      String msg = (String) request.getAttribute("msg");
+      if (err != null) { 
+    %>
+      <div class="error"><%= err %></div>
     <% } %>
+
     <% if (msg != null) { %>
-      <div class="alert alert-success py-2"><%= msg %></div>
+      <div style="color:green; margin-bottom:12px;"><%= msg %></div>
     <% } %>
 
     <form action="register" method="post">
-      <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input class="form-control" name="username" placeholder="Nhập username">
+      <div class="input-group">
+        <input name="username" placeholder="Username" required>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input class="form-control" name="password" type="password" placeholder="Nhập password">
+      <div class="input-group">
+        <input type="password" name="password" placeholder="Password" required>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Confirm Password</label>
-        <input class="form-control" name="confirm" type="password" placeholder="Nhập lại password">
+      <div class="input-group">
+        <input type="password" name="confirm" placeholder="Confirm Password" required>
       </div>
 
-      <button class="btn btn-grad w-100 py-2" type="submit">Register</button>
-
-      <div class="text-center mt-3" style="font-size:14px;">
-        Đã có tài khoản? <a href="login.jsp">Đăng nhập</a>
-      </div>
+      <button class="btn">SIGN UP</button>
     </form>
+
+    <div class="switch">
+      <a href="login.jsp">Already have an account?</a>
+    </div>
   </div>
+
+</div>
+
 </body>
 </html>

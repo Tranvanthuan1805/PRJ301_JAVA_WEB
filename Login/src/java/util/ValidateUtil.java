@@ -6,6 +6,8 @@ public class ValidateUtil {
         u = u.trim();
         if (u.length() < 3 || u.length() > 20) return "Username phải 3-20 ký tự";
         if (!u.matches("^[a-zA-Z0-9._-]+$")) return "Username chỉ gồm chữ/số/._-";
+        // ❌ cấm username toàn số
+        if (u.matches("^\\d+$")) return "Username phải có chữ cái";
         return null;
     }
 

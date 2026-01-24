@@ -1,6 +1,6 @@
-package servlet;
+package controller;
 
-import dao.UserDAO;
+import userDao.UserDAO;
 import util.ValidateUtil;
 
 import jakarta.servlet.ServletException;

@@ -1,36 +1,55 @@
 package filter;
 
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.*;
-import java.io.IOException;
 import model.User;
+import java.io.IOException;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
-@WebFilter(urlPatterns = {"/admin.jsp", "/user.jsp"})
 public class AuthFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest req, ServletResponse res,
+                         FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        HttpSession session = request.getSession(false);
-        User u = (session == null) ? null : (User) session.getAttribute("user");
+        String uri = request.getRequestURI();
 
-        if (u == null) {
+        // ✅ CHO QUA LOGIN / REGISTER / CSS / IMG
+        if (uri.endsWith("login")
+            || uri.endsWith("login.jsp")
+            || uri.endsWith("register")
+            || uri.endsWith("register.jsp")
+            || uri.contains("/css/")
+            || uri.contains("/images/")
+            || uri.contains("/img/")) {
+
+            chain.doFilter(req, res);
+            return;
+        }
+
+        HttpSession session = request.getSession(false);
+        User user = (session == null) ? null : (User) session.getAttribute("user");
+
+        // ❌ chưa login
+        if (user == null) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        String path = request.getServletPath(); // /admin.jsp hoặc /user.jsp
+        // phân quyền
+        if (uri.contains("admin") && !"ADMIN".equalsIgnoreCase(user.getRoleName())) {
+            response.sendRedirect("error.jsp");
+            return;
+        }
 
-        if ("/admin.jsp".equals(path) && !"ADMIN".equalsIgnoreCase(u.roleName)) {
+        if (uri.contains("user") && !"USER".equalsIgnoreCase(user.getRoleName())) {
             response.sendRedirect("error.jsp");
             return;
         }
 
         chain.doFilter(req, res);
     }
+
 }
