@@ -1,81 +1,78 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Dashboard Quản Lý</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - Đặt Tour Du Lịch</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; }
-        
-        /* Header Menu */
-        .navbar { background-color: #343a40; overflow: hidden; padding: 15px 20px; color: white; display: flex; align-items: center; justify-content: space-between; }
-        .navbar h2 { margin: 0; font-weight: normal; }
-        .nav-links a { color: #ccc; text-decoration: none; margin-left: 20px; font-size: 16px; }
-        .nav-links a:hover { color: white; }
-
-        /* Container chính */
-        .container { padding: 40px; max-width: 1000px; margin: auto; }
-        
-        /* Khu vực hiển thị thẻ (Cards) */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
-        
-        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
-        .card h3 { margin: 0; color: #555; font-size: 16px; text-transform: uppercase; }
-        .card .number { font-size: 48px; font-weight: bold; color: #007bff; margin: 10px 0; }
-        .card .desc { color: #888; font-size: 14px; }
-
-        /* Nút điều hướng lớn */
-        .action-area { margin-top: 40px; text-align: center; }
-        .btn-start { background-color: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-size: 18px; font-weight: bold; }
-        .btn-start:hover { background-color: #218838; }
-        
-        footer { text-align: center; margin-top: 50px; color: #aaa; font-size: 12px; }
+        .tour-card img {
+            height: 200px; /* Cố định chiều cao ảnh cho đều */
+            object-fit: cover;
+        }
+        .price-tag {
+            color: #d32f2f;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
-<body>
+<body class="bg-light">
 
-    <div class="navbar">
-        <h2>🛍️ Shop Manager</h2>
-        <div class="nav-links">
-            <a href="home">Trang chủ</a>
-            <a href="products">Sản phẩm</a>
-            <a href="#">Cài đặt</a>
-            <a href="#">Đăng xuất</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="home">TRAVEL BOOKING</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="home">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Đăng nhập</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
+    </nav>
 
     <div class="container">
-        <h1>Xin chào, Quản trị viên!</h1>
-        <p>Đây là bảng tổng quan tình hình cửa hàng của bạn hôm nay.</p>
-
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3>Tổng Sản Phẩm</h3>
-                <div class="number">${pCount}</div>
-                <div class="desc">Sản phẩm đang kinh doanh</div>
-            </div>
-
-            <div class="card">
-                <h3>Danh Mục</h3>
-                <div class="number">${cCount}</div>
-                <div class="desc">Loại hàng hóa khác nhau</div>
-            </div>
-
-            <div class="card">
-                <h3>Đơn Hàng Mới</h3>
-                <div class="number" style="color: #dc3545;">0</div>
-                <div class="desc">Chưa có đơn hàng nào</div>
-            </div>
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">Khám Phá Các Tour Du Lịch Hot Nhất</h1>
+            <p class="text-muted">Chúng tôi hiện có <span class="badge bg-danger">${totalTours}</span> tour đang mở bán.</p>
         </div>
 
-        <div class="action-area">
-            <a href="products" class="btn-start">Đi tới Quản Lý Sản Phẩm →</a>
-        </div>
+        <div class="row">
+            <c:forEach items="${listTours}" var="t">
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm tour-card">
+                        <img src="${t.imageUrl}" class="card-img-top" alt="Ảnh tour">
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">${t.tourName}</h5>
+                            
+                            <p class="card-text text-muted small">
+                                <i class="bi bi-clock"></i> Thời gian: ${t.duration} <br>
+                                <i class="bi bi-geo-alt"></i> Khởi hành: ${t.startLocation}
+                            </p>
+                            
+                            <p class="card-text">${t.description}</p>
+                            
+                            <div class="mt-auto">
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price-tag">${t.price} VNĐ</span>
+                                    <a href="booking?id=${t.tourId}" class="btn btn-primary">Đặt ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </c:forEach> </div>
     </div>
 
-    <footer>
-        <p>Copyright &copy; 2026 PRJ301 Project. Powered by Java Servlet & JPA.</p>
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">© 2026 Copyright by Kunlu - PRJ301 Project</p>
     </footer>
 
 </body>
