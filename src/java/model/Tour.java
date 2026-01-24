@@ -29,6 +29,18 @@ public class Tour implements Serializable{
     
     @Column(name = "StartLocation")
     private String startLocation;
+    
+    @Column(name = "Itinerary")
+    private String itinerary;
+    
+    @Column(name = "Transport")
+    private String transport;
+    
+    @Column(name = "ShortDesc")
+    private String shortDesc;
+    
+    @Column(name = "MaxPeople")
+    private int maxPeople;
 
     public Tour() {
     }
@@ -97,5 +109,37 @@ public class Tour implements Serializable{
 
     public void setStartLocation(String startLocation) {
         this.startLocation = startLocation;
+    }
+
+    public String getItinerary() {
+        return itinerary;
+    }
+
+    public void setItinerary(String itinerary) {
+        this.itinerary = itinerary;
+    }
+
+    public String getTransport() {
+        return transport;
+    }
+
+    public void setTransport(String transport) {
+        this.transport = transport;
+    }
+
+    public String getShortDesc() {
+        return shortDesc;
+    }
+
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+    }
+
+    public int getMaxPeople() {
+        return maxPeople;
+    }
+
+    public void setMaxPeople(int maxPeople) {
+        this.maxPeople = maxPeople;
     }
 }
