@@ -27,7 +27,7 @@ INSERT INTO Users (Username, PasswordHash, RoleId) VALUES
 ('hieu', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2);
 
 -- =============================================
--- PHẦN 2: MODULE TOUR & BOOKING
+-- MODULE TOUR & BOOKING
 -- =============================================
 
 -- Bảng Danh sách Tour
@@ -61,3 +61,41 @@ INSERT INTO Tours (TourName, Price, Duration, ImageUrl) VALUES
 (N'Tour Du Lịch Bà Nà Hills', 1250000, N'1 ngày', 'https://example.com/bana.jpg'),
 (N'Tour Phố Cổ Hội An', 850000, N'1 ngày', 'https://example.com/hoian.jpg'),
 (N'Tour Khám Phá Hang Sơn Đoòng', 70000000, N'4 ngày 3 đêm', 'https://example.com/sondoong.jpg');
+
+
+SELECT * FROM Bookings
+
+
+
+-- Thêm cột Lịch trình chi tiết (Lưu văn bản dài)
+ALTER TABLE Tours ADD Itinerary NVARCHAR(MAX);
+
+-- Thêm cột Phương tiện di chuyển
+ALTER TABLE Tours ADD Transport NVARCHAR(100);
+
+-- Thêm cột Mô tả ngắn (để hiện ở trang chủ cho gọn, còn Description dùng cho trang chi tiết)
+ALTER TABLE Tours ADD ShortDesc NVARCHAR(500);
+
+-- Thêm cột MaxPeople (Số khách tối đa)
+ALTER TABLE Tours ADD MaxPeople INT;
+
+-- Cập nhật dữ liệu mẫu cho đẹp (Ví dụ 1 tour)
+UPDATE Tours 
+SET 
+    Transport = N'Xe du lịch đời mới',
+    Itinerary = N'<h3>Ngày 1: Đón Khách</h3><p>Xe đón quý khách tại sân bay...</p><h3>Ngày 2: Tham Quan</h3><p>Khám phá địa điểm...</p>'
+WHERE TourId = 1;
+
+-- Cập nhật dữ liệu mẫu (Ví dụ)
+UPDATE Tours SET StartLocation = N'Đà Nẵng' WHERE TourId = 1; -- Bà Nà
+UPDATE Tours SET StartLocation = N'Đà Nẵng' WHERE TourId = 2; -- Hội An
+UPDATE Tours SET StartLocation = N'Quảng Bình' WHERE TourId = 3; -- Sơn Đoòng
+
+-- Set dữ liệu mẫu (Ví dụ)
+UPDATE Tours SET MaxPeople = 30 WHERE TourId = 1; -- Bà Nà (Xe to)
+UPDATE Tours SET MaxPeople = 15 WHERE TourId = 2; -- Hội An (Xe vừa)
+UPDATE Tours SET MaxPeople = 10 WHERE TourId = 3; -- Sơn Đoòng (Giới hạn)
+
+
+
+SELECT * FROM Tours
