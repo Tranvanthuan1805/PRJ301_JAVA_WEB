@@ -29,6 +29,19 @@ public class Booking {
     @Column(name = "Status")
     private String status;
     
+    @Column(name = "UpdatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+    
+    @Column(name = "CancelReason")
+    private String cancelReason;
+    
+    @Column(name = "RefundAmount")
+    private double refundAmount;
+    
+    @Column(name = "PaymentStatus")
+    private String paymentStatus = "UNPAID"; // UNPAID, PAID, REFUNDED
+    
     public Booking() {
     }
 
@@ -40,6 +53,18 @@ public class Booking {
         this.numberOfPeople = numberOfPeople;
         this.totalPrice = totalPrice;
         this.status = status;
+    }
+    
+    // Helper method
+    public BookingStatus getStatusEnum() {
+        return BookingStatus.fromCode(this.status);
+    }
+    public boolean canCancel() {
+        BookingStatus current = getStatusEnum();
+        return current == BookingStatus.PENDING || current == BookingStatus.CONFIRMED;
+    }
+    public boolean isCompleted() {
+        return "Completed".equalsIgnoreCase(this.status);
     }
     
     public int getBookingId() {
@@ -97,4 +122,38 @@ public class Booking {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
+    }
+
+    public double getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(double refundAmount) {
+        this.refundAmount = refundAmount;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+    
+    
 }
