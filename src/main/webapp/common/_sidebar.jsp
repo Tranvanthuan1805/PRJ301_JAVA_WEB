@@ -8,7 +8,7 @@
             </c:when>
             <c:otherwise>
                 <span class="badge" style="background: #edf2f7; color: #4a5568; border: none;">FREE HUB</span>
-                <a href="${pageContext.request.contextPath}/pricing.jsp" style="display: block; font-size: 0.7rem; color: var(--accent); margin-top: 5px;">Upgrade Now</a>
+                <a href="${pageContext.request.contextPath}/views/subscription-payment/pricing.jsp" style="display: block; font-size: 0.7rem; color: var(--accent); margin-top: 5px;">Upgrade Now</a>
             </c:otherwise>
         </c:choose>
     </div>

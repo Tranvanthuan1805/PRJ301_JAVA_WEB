@@ -103,6 +103,6 @@
             </section>
         </main>
     </div>
-    <jsp:include page="/chatbot.jsp" />
+    <jsp:include page="/views/ai-chatbot/chatbot.jsp" />
 </body>
 </html>
