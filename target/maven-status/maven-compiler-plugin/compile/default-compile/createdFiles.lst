@@ -1,11 +1,17 @@
+model\CartItem.class
 controller\LoginServlet.class
+dao\ProviderDAO.class
+controller\CartServlet.class
 controller\DetailServlet.class
 SupabaseJDBCConnect.class
+model\Booking.class
+model\Provider.class
 util\ValidateUtil.class
 util\PasswordUtil.class
 filter\AuthFilter.class
 war\JakartaRestConfiguration.class
 userDao\UserDAO.class
+dao\BookingDAO.class
 controller\LogoutServlet.class
 dao\TourDAO.class
 model\Tour.class

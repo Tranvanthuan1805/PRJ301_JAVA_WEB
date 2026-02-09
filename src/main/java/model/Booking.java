@@ -4,43 +4,38 @@ import java.sql.Timestamp;
 
 public class Booking {
     private int bookingId;
-    private int userId;
+    private int orderId;
     private int tourId;
-    private Timestamp bookingDate;
-    private int numberOfPeople;
-    private double totalPrice;
-    private String status;
+    private Timestamp tourDate; // Date of the actual trip
+    private int quantity;
+    private double subTotal;
+    private String bookingStatus;
 
     public Booking() {}
 
-    public Booking(int bookingId, int userId, int tourId, Timestamp bookingDate, int numberOfPeople, double totalPrice, String status) {
+    public Booking(int bookingId, int orderId, int tourId, Timestamp tourDate, int quantity, double subTotal, String bookingStatus) {
         this.bookingId = bookingId;
-        this.userId = userId;
+        this.orderId = orderId;
         this.tourId = tourId;
-        this.bookingDate = bookingDate;
-        this.numberOfPeople = numberOfPeople;
-        this.totalPrice = totalPrice;
-        this.status = status;
+        this.tourDate = tourDate;
+        this.quantity = quantity;
+        this.subTotal = subTotal;
+        this.bookingStatus = bookingStatus;
     }
 
+    // Getters and Setters
     public int getBookingId() { return bookingId; }
     public void setBookingId(int bookingId) { this.bookingId = bookingId; }
-
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
-
+    public int getOrderId() { return orderId; }
+    public void setOrderId(int orderId) { this.orderId = orderId; }
     public int getTourId() { return tourId; }
     public void setTourId(int tourId) { this.tourId = tourId; }
-
-    public Timestamp getBookingDate() { return bookingDate; }
-    public void setBookingDate(Timestamp bookingDate) { this.bookingDate = bookingDate; }
-
-    public int getNumberOfPeople() { return numberOfPeople; }
-    public void setNumberOfPeople(int numberOfPeople) { this.numberOfPeople = numberOfPeople; }
-
-    public double getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public Timestamp getTourDate() { return tourDate; }
+    public void setTourDate(Timestamp tourDate) { this.tourDate = tourDate; }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public double getSubTotal() { return subTotal; }
+    public void setSubTotal(double subTotal) { this.subTotal = subTotal; }
+    public String getBookingStatus() { return bookingStatus; }
+    public void setBookingStatus(String bookingStatus) { this.bookingStatus = bookingStatus; }
 }
