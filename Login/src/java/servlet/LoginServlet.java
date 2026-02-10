@@ -49,12 +49,8 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession(true);
         session.setAttribute("user", u);
 
-        // Role redirect
-        if ("ADMIN".equalsIgnoreCase(u.roleName)) {
-            response.sendRedirect("admin.jsp");
-        } else {
-            response.sendRedirect("user.jsp");
-        }
+        // Redirect về trang chủ (cả Admin và User)
+        response.sendRedirect("index.jsp");
     }
 
     @Override

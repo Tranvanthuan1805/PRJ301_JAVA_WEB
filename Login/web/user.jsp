@@ -54,9 +54,9 @@
 
     <div class="col-md-6">
       <div class="card card-soft p-3">
-        <div class="fw-semibold mb-1">Tính năng</div>
-        <div class="text-muted small mb-3">Bạn có thể thêm tính năng ở đây.</div>
-        <button class="btn btn-outline-success w-100" disabled>Demo (chưa làm)</button>
+        <div class="fw-semibold mb-1">Quản lý Tour</div>
+        <div class="text-muted small mb-3">Xem và đặt tour du lịch</div>
+        <a href="tour?action=list" class="btn btn-primary w-100">Xem danh sách Tour</a>
       </div>
     </div>
   </div>

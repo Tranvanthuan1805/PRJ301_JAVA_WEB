@@ -15,10 +15,9 @@ public class DBUtil {
         }
     }
 
-    // ⚠️ Nếu bạn dùng SQLEXPRESS thì đổi thành:
-    // jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=AdminUser;encrypt=true;trustServerCertificate=true;
+    // Database: TourManagement (kết hợp Users + Tours)
     private static final String URL =
-        "jdbc:sqlserver://localhost:1433;databaseName=AdminUser;encrypt=true;trustServerCertificate=true;";
+        "jdbc:sqlserver://localhost:1433;databaseName=TourManagement;encrypt=true;trustServerCertificate=true;";
 
     private static final String USER = "sa";
     private static final String PASS = "123456"; // mật khẩu SQL Server của user sa

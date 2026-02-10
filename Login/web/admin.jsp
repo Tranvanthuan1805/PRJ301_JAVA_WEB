@@ -48,21 +48,28 @@
   </div>
 
   <div class="row g-3">
-    <div class="col-md-4">
+    <div class="col-md-3">
+      <div class="card card-soft p-3">
+        <div class="fw-semibold mb-1">Quản lý Tour</div>
+        <div class="text-muted small mb-3">CRUD tour, availability</div>
+        <a href="tour?action=list" class="btn btn-primary w-100">Quản lý Tour</a>
+      </div>
+    </div>
+    <div class="col-md-3">
       <div class="card card-soft p-3">
         <div class="fw-semibold mb-1">Quản lý Users</div>
         <div class="text-muted small mb-3">Xem / thêm / khóa tài khoản</div>
         <button class="btn btn-outline-primary w-100" disabled>Demo (chưa làm)</button>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card card-soft p-3">
         <div class="fw-semibold mb-1">Quản lý Roles</div>
         <div class="text-muted small mb-3">Phân quyền admin/user</div>
         <button class="btn btn-outline-primary w-100" disabled>Demo (chưa làm)</button>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card card-soft p-3">
         <div class="fw-semibold mb-1">Thống kê</div>
         <div class="text-muted small mb-3">Tổng user, user active...</div>

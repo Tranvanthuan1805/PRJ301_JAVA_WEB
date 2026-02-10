@@ -1,0 +1,1879 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VietAir - Há»‡ thá»‘ng quáº£n lÃ½ tour du lá»‹ch hÃ ng Ä‘áº§u Viá»‡t Nam</title>
+    <link rel="stylesheet" href="css/vietair-style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <div class="logo-container">
+                    <i class="fas fa-plane-departure logo-icon"></i>
+                    <span class="logo-text">VietAir</span>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <a href="/TravelBooking/" class="nav-item active">Trang chá»§</a>
+                <a href="tour?action=list" class="nav-item">Tours</a>
+                <a href="customer?action=dashboard" class="nav-item">KhÃ¡ch hÃ ng</a>
+                <a href="booking?action=list" class="nav-item">Booking</a>
+            </nav>
+            <div class="nav-actions">
+                <button class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    ÄÄƒng Nháº­p
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>VietAir - Há»‡ thá»‘ng quáº£n lÃ½ tour du lá»‹ch</h1>
+                <p>KhÃ¡m phÃ¡ Viá»‡t Nam vá»›i nhá»¯ng tour du lá»‹ch cháº¥t lÆ°á»£ng cao</p>
+            </div>
+            
+            <!-- Service Tabs - Chá»‰ giá»¯ Tour du lá»‹ch -->
+            <div class="service-tabs">
+                <button class="tab-btn active" data-tab="tour">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Tour du lá»‹ch</span>
+                </button>
+            </div>
+
+            <!-- Search Form -->
+            <div class="search-container">
+                <div class="search-header">
+                    <h3>TÃ¬m tour du lá»‹ch trong mÆ¡ cá»§a báº¡n</h3>
+                    <div class="search-tabs">
+                        <button class="search-tab active" id="searchTab">TÃ¬m kiáº¿m Tour</button>
+                        <button class="search-tab" id="featuredTab">Tour ná»•i báº­t</button>
+                    </div>
+                </div>
+                
+                <!-- Search Form -->
+                <form class="search-form" id="searchForm" action="/TravelBooking/user-tours" method="get">
+                    <div class="search-grid">
+                        <div class="search-field destination-field">
+                            <label>
+                                <i class="fas fa-map-marker-alt"></i>
+                                Äiá»ƒm Ä‘áº¿n
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="text" id="destination" placeholder="Báº¡n muá»‘n Ä‘i Ä‘Ã¢u?" list="destinations">
+                                <datalist id="destinations">
+                                    <option value="Háº£i ChÃ¢u">Háº£i ChÃ¢u - Trung tÃ¢m ÄÃ  Náºµng</option>
+                                    <option value="Thanh KhÃª">Thanh KhÃª - Khu Ä‘Ã´ thá»‹ hiá»‡n Ä‘áº¡i</option>
+                                    <option value="SÆ¡n TrÃ ">SÆ¡n TrÃ  - BÃ¡n Ä‘áº£o SÆ¡n TrÃ </option>
+                                    <option value="NgÅ© HÃ nh SÆ¡n">NgÅ© HÃ nh SÆ¡n - NÃºi NgÅ© HÃ nh SÆ¡n</option>
+                                    <option value="LiÃªn Chiá»ƒu">LiÃªn Chiá»ƒu - Khu vá»±c sÃ¢n bay</option>
+                                    <option value="Cáº©m Lá»‡">Cáº©m Lá»‡ - Khu vá»±c nÃ´ng thÃ´n Ä‘Ã´ thá»‹</option>
+                                    <option value="HÃ²a Vang">HÃ²a Vang - BÃ  NÃ  Hills</option>
+                                    <option value="HoÃ ng Sa">HoÃ ng Sa - Quáº§n Ä‘áº£o HoÃ ng Sa</option>
+                                </datalist>
+                                <div class="suggestions" id="destinationSuggestions"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="search-field">
+                            <label>
+                                <i class="fas fa-calendar-alt"></i>
+                                NgÃ y khá»Ÿi hÃ nh
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="date" id="departDate" value="2026-02-04">
+                            </div>
+                        </div>
+                        
+                        <div class="search-field">
+                            <label>
+                                <i class="fas fa-users"></i>
+                                Sá»‘ ngÆ°á»i
+                            </label>
+                            <div class="input-wrapper">
+                                <select id="passengers">
+                                    <option value="1">1 ngÆ°á»i</option>
+                                    <option value="2" selected>2 ngÆ°á»i</option>
+                                    <option value="3">3 ngÆ°á»i</option>
+                                    <option value="4">4 ngÆ°á»i</option>
+                                    <option value="5">5 ngÆ°á»i</option>
+                                    <option value="6+">6+ ngÆ°á»i</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="search-field">
+                            <label>
+                                <i class="fas fa-wallet"></i>
+                                Khoáº£ng giÃ¡
+                            </label>
+                            <div class="input-wrapper">
+                                <select id="priceRange">
+                                    <option value="">Táº¥t cáº£</option>
+                                    <option value="0-1000000">DÆ°á»›i 1 triá»‡u</option>
+                                    <option value="1000000-3000000">1-3 triá»‡u</option>
+                                    <option value="3000000-5000000">3-5 triá»‡u</option>
+                                    <option value="5000000-10000000">5-10 triá»‡u</option>
+                                    <option value="10000000+">TrÃªn 10 triá»‡u</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="search-btn" style="background: #ff6b35 !important; color: white !important; padding: 16px 24px !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important;">
+                            <i class="fas fa-search" style="color: white !important; font-size: 18px !important;"></i>
+                            <span style="color: white !important; font-size: 16px !important; font-weight: 700 !important;">TÃ¬m kiáº¿m ngay</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Featured Tours Section -->
+                <div class="featured-tours-section" id="featuredToursSection" style="display: none;">
+                    <div class="featured-header">
+                        <h4>ðŸŒŸ Tour ná»•i báº­t Ä‘Æ°á»£c yÃªu thÃ­ch nháº¥t</h4>
+                        <p>Nhá»¯ng tour du lá»‹ch hot nháº¥t vá»›i Ä‘Ã¡nh giÃ¡ cao tá»« khÃ¡ch hÃ ng</p>
+                    </div>
+                    <div class="featured-tours-grid" id="featuredToursGrid">
+                        <!-- Loading placeholders -->
+                        <div class="featured-tour-item loading">
+                            <div class="loading-placeholder"></div>
+                            <div class="loading-text"></div>
+                            <div class="loading-text short"></div>
+                        </div>
+                        <div class="featured-tour-item loading">
+                            <div class="loading-placeholder"></div>
+                            <div class="loading-text"></div>
+                            <div class="loading-text short"></div>
+                        </div>
+                        <div class="featured-tour-item loading">
+                            <div class="loading-placeholder"></div>
+                            <div class="loading-text"></div>
+                            <div class="loading-text short"></div>
+                        </div>
+                    </div>
+                    <div class="featured-footer">
+                        <a href="/TravelBooking/user-tours" class="btn-view-featured">
+                            Xem táº¥t cáº£ tour ná»•i báº­t
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item professional-stat">
+                    <div class="stat-background">
+                        <div class="stat-gradient stat-gradient-1"></div>
+                        <div class="stat-pattern"></div>
+                    </div>
+                    <div class="stat-icon professional-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="15">0</h3>
+                        <div class="stat-plus">+</div>
+                        <p class="stat-label">Tour du lá»‹ch</p>
+                        <span class="stat-description">Äiá»ƒm Ä‘áº¿n háº¥p dáº«n</span>
+                    </div>
+                    <div class="stat-decoration">
+                        <div class="decoration-dot"></div>
+                        <div class="decoration-line"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-item professional-stat">
+                    <div class="stat-background">
+                        <div class="stat-gradient stat-gradient-2"></div>
+                        <div class="stat-pattern"></div>
+                    </div>
+                    <div class="stat-icon professional-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="1000">0</h3>
+                        <div class="stat-plus">+</div>
+                        <p class="stat-label">KhÃ¡ch hÃ ng hÃ i lÃ²ng</p>
+                        <span class="stat-description">Tin tÆ°á»Ÿng & yÃªu thÃ­ch VietAir</span>
+                    </div>
+                    <div class="stat-decoration">
+                        <div class="decoration-dot"></div>
+                        <div class="decoration-line"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-item professional-stat">
+                    <div class="stat-background">
+                        <div class="stat-gradient stat-gradient-3"></div>
+                        <div class="stat-pattern"></div>
+                    </div>
+                    <div class="stat-icon professional-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="500">0</h3>
+                        <div class="stat-plus">+</div>
+                        <p class="stat-label">Tour Ä‘Ã£ thá»±c hiá»‡n</p>
+                        <span class="stat-description">Chuyáº¿n Ä‘i thÃ nh cÃ´ng</span>
+                    </div>
+                    <div class="stat-decoration">
+                        <div class="decoration-dot"></div>
+                        <div class="decoration-line"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-item professional-stat">
+                    <div class="stat-background">
+                        <div class="stat-gradient stat-gradient-4"></div>
+                        <div class="stat-pattern"></div>
+                    </div>
+                    <div class="stat-icon professional-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="4.9">0</h3>
+                        <div class="stat-rating">/5</div>
+                        <p class="stat-label">ÄÃ¡nh giÃ¡ tá»« khÃ¡ch hÃ ng</p>
+                        <span class="stat-description">Cháº¥t lÆ°á»£ng dá»‹ch vá»¥ xuáº¥t sáº¯c</span>
+                    </div>
+                    <div class="stat-decoration">
+                        <div class="decoration-dot"></div>
+                        <div class="decoration-line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <div class="container">
+            <div class="section-header">
+                <h2>Há»‡ thá»‘ng quáº£n lÃ½ VietAir - ÄÃ  Náºµng</h2>
+                <p>Quáº£n lÃ½ tours, khÃ¡ch hÃ ng vÃ  booking trong pháº¡m vi thÃ nh phá»‘ ÄÃ  Náºµng</p>
+            </div>
+            <div class="action-grid">
+                <a href="tour?action=list" class="action-card tour-card">
+                    <div class="card-background"></div>
+                    <div class="card-overlay">
+                        <div class="card-icon">
+                            <i class="fas fa-globe-asia"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Quáº£n lÃ½ Tours</h3>
+                            <p>KhÃ¡m phÃ¡ vÃ  quáº£n lÃ½ cÃ¡c tour du lá»‹ch trong thÃ nh phá»‘ ÄÃ  Náºµng</p>
+                            <div class="card-stats">
+                                <span class="stat-badge">8 quáº­n/huyá»‡n</span>
+                                <span class="stat-text">Trong thÃ nh phá»‘ ÄÃ  Náºµng</span>
+                            </div>
+                            <div class="card-features">
+                                <span class="feature-item">ðŸ”ï¸ BÃ  NÃ  Hills</span>
+                                <span class="feature-item">ðŸ–ï¸ BÃ£i biá»ƒn Má»¹ KhÃª</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="customer?action=dashboard" class="action-card customer-card">
+                    <div class="card-background"></div>
+                    <div class="card-overlay">
+                        <div class="card-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Quáº£n lÃ½ KhÃ¡ch hÃ ng</h3>
+                            <p>ChÄƒm sÃ³c vÃ  quáº£n lÃ½ thÃ´ng tin khÃ¡ch hÃ ng thÃ¢n thiáº¿t táº¡i ÄÃ  Náºµng</p>
+                            <div class="card-stats">
+                                <span class="stat-badge">20+ khÃ¡ch hÃ ng</span>
+                                <span class="stat-text">Tá»« khu vá»±c ÄÃ  Náºµng</span>
+                            </div>
+                            <div class="card-features">
+                                <span class="feature-item">ðŸ‘‘ KhÃ¡ch VIP</span>
+                                <span class="feature-item">ðŸ’Ž Æ¯u Ä‘Ã£i Ä‘áº·c biá»‡t</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="booking?action=list" class="action-card booking-card">
+                    <div class="card-background"></div>
+                    <div class="card-overlay">
+                        <div class="card-icon">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Quáº£n lÃ½ Booking</h3>
+                            <p>Theo dÃµi vÃ  quáº£n lÃ½ táº¥t cáº£ vÃ© Ä‘áº·t tour vá»›i mÃ£ booking Ä‘á»™c quyá»n</p>
+                            <div class="card-stats">
+                                <span class="stat-badge">50+ booking</span>
+                                <span class="stat-text">ÄÃ£ Ä‘Æ°á»£c xÃ¡c nháº­n thÃ nh cÃ´ng</span>
+                            </div>
+                            <div class="card-features">
+                                <span class="feature-item">ðŸŽ« MÃ£ vÃ© VT</span>
+                                <span class="feature-item">âœ… XÃ¡c nháº­n nhanh</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="customer?action=ranking" class="action-card featured-card">
+                    <div class="card-background"></div>
+                    <div class="card-overlay">
+                        <div class="card-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ranking KhÃ¡ch hÃ ng</h3>
+                            <p>Xáº¿p háº¡ng vÃ  vinh danh nhá»¯ng khÃ¡ch hÃ ng thÃ¢n thiáº¿t nháº¥t cá»§a VietAir</p>
+                            <div class="card-stats">
+                                <span class="stat-badge">Top Ranking</span>
+                                <span class="stat-text">KhÃ¡ch hÃ ng VIP Ä‘áº·c biá»‡t</span>
+                            </div>
+                            <div class="card-features">
+                                <span class="feature-item">ðŸ† Báº£ng xáº¿p háº¡ng</span>
+                                <span class="feature-item">â­ Äiá»ƒm thÆ°á»Ÿng</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Tours Preview -->
+    <section class="destinations">
+        <div class="container">
+            <div class="section-header professional-header">
+                <h2>Tour ná»•i báº­t ÄÃ  Náºµng</h2>
+                <p>KhÃ¡m phÃ¡ nhá»¯ng Ä‘iá»ƒm Ä‘áº¿n tuyá»‡t vá»i trong thÃ nh phá»‘ ÄÃ  Náºµng</p>
+                <div class="header-decoration">
+                    <div class="decoration-line-left"></div>
+                    <div class="decoration-center">âœˆï¸</div>
+                    <div class="decoration-line-right"></div>
+                </div>
+            </div>
+            <div class="destination-grid professional-tours" id="popularTours">
+                <!-- Loading placeholders -->
+                <div class="destination-card professional-tour-card loading-card">
+                    <div class="tour-card-background">
+                        <div class="loading-placeholder"></div>
+                        <div class="tour-overlay"></div>
+                    </div>
+                    <div class="tour-content">
+                        <div class="loading-text"></div>
+                        <div class="loading-text short"></div>
+                    </div>
+                </div>
+                <div class="destination-card professional-tour-card loading-card">
+                    <div class="tour-card-background">
+                        <div class="loading-placeholder"></div>
+                        <div class="tour-overlay"></div>
+                    </div>
+                    <div class="tour-content">
+                        <div class="loading-text"></div>
+                        <div class="loading-text short"></div>
+                    </div>
+                </div>
+                <div class="destination-card professional-tour-card loading-card">
+                    <div class="tour-card-background">
+                        <div class="loading-placeholder"></div>
+                        <div class="tour-overlay"></div>
+                    </div>
+                    <div class="tour-content">
+                        <div class="loading-text"></div>
+                        <div class="loading-text short"></div>
+                    </div>
+                </div>
+                <div class="destination-card professional-tour-card loading-card">
+                    <div class="tour-card-background">
+                        <div class="loading-placeholder"></div>
+                        <div class="tour-overlay"></div>
+                    </div>
+                    <div class="tour-content">
+                        <div class="loading-text"></div>
+                        <div class="loading-text short"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-footer professional-footer">
+                <a href="/TravelBooking/tour?action=list" class="btn-view-all professional-btn">
+                    <span>KhÃ¡m phÃ¡ táº¥t cáº£ tour</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo-container">
+                        <i class="fas fa-plane-departure logo-icon"></i>
+                        <span class="logo-text">VietAir</span>
+                    </div>
+                    <p>Há»‡ thá»‘ng Ä‘áº·t tour du lá»‹ch hÃ ng Ä‘áº§u Viá»‡t Nam. KhÃ¡m phÃ¡ váº» Ä‘áº¹p Ä‘áº¥t nÆ°á»›c vá»›i nhá»¯ng tráº£i nghiá»‡m tuyá»‡t vá»i nháº¥t.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Vá» VietAir</h4>
+                    <ul>
+                        <li><a href="#">CÃ¡ch Ä‘áº·t tour</a></li>
+                        <li><a href="#">LiÃªn há»‡ chÃºng tÃ´i</a></li>
+                        <li><a href="#">Trá»£ giÃºp</a></li>
+                        <li><a href="#">Tuyá»ƒn dá»¥ng</a></li>
+                        <li><a href="#">Tin tá»©c</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Sáº£n pháº©m</h4>
+                    <ul>
+                        <li><a href="tour?action=list">Tour du lá»‹ch</a></li>
+                        <li><a href="booking?action=list">Äáº·t tour</a></li>
+                        <li><a href="customer?action=list">KhÃ¡ch hÃ ng</a></li>
+                        <li><a href="tour?action=available">Tour ná»•i báº­t</a></li>
+                        <li><a href="#">Combo tiáº¿t kiá»‡m</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Há»— trá»£</h4>
+                    <ul>
+                        <li><a href="#">ChÃ­nh sÃ¡ch há»§y tour</a></li>
+                        <li><a href="#">ChÃ­nh sÃ¡ch báº£o máº­t</a></li>
+                        <li><a href="#">Äiá»u khoáº£n sá»­ dá»¥ng</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">HÆ°á»›ng dáº«n thanh toÃ¡n</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>LiÃªn há»‡</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 1900 1234</li>
+                        <li><i class="fas fa-envelope"></i> support@vietair.vn</li>
+                        <li><i class="fas fa-map-marker-alt"></i> HÃ  Ná»™i, Viá»‡t Nam</li>
+                        <li><i class="fas fa-clock"></i> 24/7 há»— trá»£</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2026 VietAir. All rights reserved.</p>
+                    <div class="footer-links">
+                        <a href="#">ChÃ­nh sÃ¡ch báº£o máº­t</a>
+                        <a href="#">Äiá»u khoáº£n dá»‹ch vá»¥</a>
+                        <a href="#">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching functionality - Updated for functional tabs
+        document.getElementById('searchTab').addEventListener('click', () => {
+            // Switch to search tab
+            document.getElementById('searchTab').classList.add('active');
+            document.getElementById('featuredTab').classList.remove('active');
+            document.getElementById('searchForm').style.display = 'block';
+            document.getElementById('featuredToursSection').style.display = 'none';
+        });
+
+        document.getElementById('featuredTab').addEventListener('click', () => {
+            // Switch to featured tours tab
+            document.getElementById('featuredTab').classList.add('active');
+            document.getElementById('searchTab').classList.remove('active');
+            document.getElementById('searchForm').style.display = 'none';
+            document.getElementById('featuredToursSection').style.display = 'block';
+            
+            // Load featured tours when tab is clicked
+            loadFeaturedTours();
+        });
+
+        // Load featured tours function
+        async function loadFeaturedTours() {
+            try {
+                const response = await fetch('/TravelBooking/api/tours?action=popular');
+                const data = await response.json();
+                
+                if (data.tours && data.tours.length > 0) {
+                    const featuredGrid = document.getElementById('featuredToursGrid');
+                    // Chá»‰ láº¥y tour ÄÃ  Náºµng
+                    const danangTours = data.tours.filter(tour => 
+                        tour.destination && (
+                            tour.destination.includes('ÄÃ  Náºµng') ||
+                            tour.destination.includes('Háº£i ChÃ¢u') ||
+                            tour.destination.includes('Thanh KhÃª') ||
+                            tour.destination.includes('SÆ¡n TrÃ ') ||
+                            tour.destination.includes('NgÅ© HÃ nh SÆ¡n') ||
+                            tour.destination.includes('LiÃªn Chiá»ƒu') ||
+                            tour.destination.includes('Cáº©m Lá»‡') ||
+                            tour.destination.includes('HÃ²a Vang') ||
+                            tour.destination.includes('HoÃ ng Sa')
+                        )
+                    );
+                    
+                    featuredGrid.innerHTML = danangTours.slice(0, 6).map(tour => `
+                        <div class="featured-tour-item" onclick="window.location.href='/TravelBooking/tour-detail?id=${tour.id}'" style="cursor: pointer;">
+                            <div class="featured-tour-image">
+                                <img src="https://images.unsplash.com/photo-${getImageId(tour.destination)}?w=300&h=200&fit=crop&auto=format" alt="${tour.destination}">
+                                <div class="featured-badge ${getBadgeClass(tour)}">${getBadgeText(tour)}</div>
+                            </div>
+                            <div class="featured-tour-content">
+                                <h4>${tour.name}</h4>
+                                <p class="featured-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    ${tour.destination}
+                                </p>
+                                <div class="featured-price">
+                                    <span class="price">${tour.price.toLocaleString()} VNÄ</span>
+                                    <span class="duration">3N2Ä</span>
+                                </div>
+                                <div class="featured-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">4.9 (${Math.floor(Math.random() * 100) + 50} Ä‘Ã¡nh giÃ¡)</span>
+                                </div>
+                                <a href="/TravelBooking/tour-detail?id=${tour.id}" class="btn-book-now" onclick="event.stopPropagation();">
+                                    <i class="fas fa-info-circle"></i> Xem chi tiáº¿t
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    loadDefaultFeaturedTours();
+                }
+            } catch (error) {
+                console.error('Error loading featured tours:', error);
+                loadDefaultFeaturedTours();
+            }
+        }
+
+        function loadDefaultFeaturedTours() {
+            const featuredGrid = document.getElementById('featuredToursGrid');
+            featuredGrid.innerHTML = `
+                <div class="featured-tour-item" onclick="window.location.href='/TravelBooking/tour-detail?id=1'" style="cursor: pointer;">
+                    <div class="featured-tour-image">
+                        <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=300&h=200&fit=crop&auto=format" alt="Cáº§u VÃ ng BÃ  NÃ  Hills">
+                        <div class="featured-badge hot">Hot</div>
+                    </div>
+                    <div class="featured-tour-content">
+                        <h4>Tour Quáº­n Háº£i ChÃ¢u 3N2Ä</h4>
+                        <p class="featured-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Háº£i ChÃ¢u, ÄÃ  Náºµng
+                        </p>
+                        <div class="featured-price">
+                            <span class="price">1.800.000 VNÄ</span>
+                            <span class="duration">3N2Ä</span>
+                        </div>
+                        <div class="featured-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-text">4.9 (234 Ä‘Ã¡nh giÃ¡)</span>
+                        </div>
+                        <a href="/TravelBooking/tour-detail?id=1" class="btn-book-now" onclick="event.stopPropagation();">
+                            <i class="fas fa-info-circle"></i> Xem chi tiáº¿t
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="featured-tour-item" onclick="window.location.href='/TravelBooking/tour-detail?id=2'" style="cursor: pointer;">
+                    <div class="featured-tour-image">
+                        <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=300&h=200&fit=crop&auto=format" alt="BÃ£i biá»ƒn Má»¹ KhÃª">
+                        <div class="featured-badge trending">Trending</div>
+                    </div>
+                    <div class="featured-tour-content">
+                        <h4>Tour BÃ¡n Ä‘áº£o SÆ¡n TrÃ  4N3Ä</h4>
+                        <p class="featured-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            SÆ¡n TrÃ , ÄÃ  Náºµng
+                        </p>
+                        <div class="featured-price">
+                            <span class="price">2.200.000 VNÄ</span>
+                            <span class="duration">4N3Ä</span>
+                        </div>
+                        <div class="featured-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-text">4.8 (189 Ä‘Ã¡nh giÃ¡)</span>
+                        </div>
+                        <a href="/TravelBooking/tour-detail?id=2" class="btn-book-now" onclick="event.stopPropagation();">
+                            <i class="fas fa-info-circle"></i> Xem chi tiáº¿t
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="featured-tour-item" onclick="window.location.href='/TravelBooking/tour-detail?id=3'" style="cursor: pointer;">
+                    <div class="featured-tour-image">
+                        <img src="https://images.unsplash.com/photo-1528127269322-539801943592?w=300&h=200&fit=crop&auto=format" alt="BÃ¡n Ä‘áº£o SÆ¡n TrÃ ">
+                        <div class="featured-badge premium">Premium</div>
+                    </div>
+                    <div class="featured-tour-content">
+                        <h4>Tour NgÅ© HÃ nh SÆ¡n 3N2Ä</h4>
+                        <p class="featured-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            NgÅ© HÃ nh SÆ¡n, ÄÃ  Náºµng
+                        </p>
+                        <div class="featured-price">
+                            <span class="price">2.000.000 VNÄ</span>
+                            <span class="duration">3N2Ä</span>
+                        </div>
+                        <div class="featured-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-text">4.9 (156 Ä‘Ã¡nh giÃ¡)</span>
+                        </div>
+                        <a href="/TravelBooking/tour-detail?id=3" class="btn-book-now" onclick="event.stopPropagation();">
+                            <i class="fas fa-info-circle"></i> Xem chi tiáº¿t
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="featured-tour-item" onclick="window.location.href='/TravelBooking/tour-detail?id=4'" style="cursor: pointer;">
+                    <div class="featured-tour-image">
+                        <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=300&h=200&fit=crop&auto=format" alt="Cáº§u Rá»“ng ÄÃ  Náºµng">
+                        <div class="featured-badge hot">Hot</div>
+                    </div>
+                    <div class="featured-tour-content">
+                        <h4>Tour Thanh KhÃª 2N1Ä</h4>
+                        <p class="featured-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Thanh KhÃª, ÄÃ  Náºµng
+                        </p>
+                        <div class="featured-price">
+                            <span class="price">1.600.000 VNÄ</span>
+                            <span class="duration">2N1Ä</span>
+                        </div>
+                        <div class="featured-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-text">4.7 (142 Ä‘Ã¡nh giÃ¡)</span>
+                        </div>
+                        <a href="/TravelBooking/tour-detail?id=4" class="btn-book-now" onclick="event.stopPropagation();">
+                            <i class="fas fa-info-circle"></i> Xem chi tiáº¿t
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="featured-tour-item" onclick="window.location.href='/TravelBooking/tour-detail?id=5'" style="cursor: pointer;">
+                    <div class="featured-tour-image">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format" alt="NÃºi Tháº§n TÃ i">
+                        <div class="featured-badge trending">Trending</div>
+                    </div>
+                    <div class="featured-tour-content">
+                        <h4>Tour LiÃªn Chiá»ƒu 3N2Ä</h4>
+                        <p class="featured-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            LiÃªn Chiá»ƒu, ÄÃ  Náºµng
+                        </p>
+                        <div class="featured-price">
+                            <span class="price">1.500.000 VNÄ</span>
+                            <span class="duration">3N2Ä</span>
+                        </div>
+                        <div class="featured-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-text">4.8 (167 Ä‘Ã¡nh giÃ¡)</span>
+                        </div>
+                        <a href="/TravelBooking/tour-detail?id=5" class="btn-book-now" onclick="event.stopPropagation();">
+                            <i class="fas fa-info-circle"></i> Xem chi tiáº¿t
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="featured-tour-item" onclick="window.location.href='/TravelBooking/tour-detail?id=6'" style="cursor: pointer;">
+                    <div class="featured-tour-image">
+                        <img src="https://images.unsplash.com/photo-1551244072-5d12893278ab?w=300&h=200&fit=crop&auto=format" alt="LÃ ng Cá»• Há»™i An">
+                        <div class="featured-badge premium">Premium</div>
+                    </div>
+                    <div class="featured-tour-content">
+                        <h4>Tour Cáº©m Lá»‡ 2N1Ä</h4>
+                        <p class="featured-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Cáº©m Lá»‡, ÄÃ  Náºµng
+                        </p>
+                        <div class="featured-price">
+                            <span class="price">1.400.000 VNÄ</span>
+                            <span class="duration">2N1Ä</span>
+                        </div>
+                        <div class="featured-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-text">4.9 (201 Ä‘Ã¡nh giÃ¡)</span>
+                        </div>
+                        <a href="/TravelBooking/tour-detail?id=6" class="btn-book-now" onclick="event.stopPropagation();">
+                            <i class="fas fa-info-circle"></i> Xem chi tiáº¿t
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Loading animation styles
+        const loadingStyles = `
+            .loading-card {
+                pointer-events: none;
+                opacity: 0.7;
+            }
+            .loading-placeholder {
+                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                background-size: 200% 100%;
+                animation: loading 1.5s infinite;
+                height: 200px;
+                border-radius: 8px;
+            }
+            .loading-text {
+                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                background-size: 200% 100%;
+                animation: loading 1.5s infinite;
+                height: 16px;
+                border-radius: 4px;
+                margin-bottom: 8px;
+            }
+            .loading-text.short {
+                width: 60%;
+            }
+            @keyframes loading {
+                0% { background-position: 200% 0; }
+                100% { background-position: -200% 0; }
+            }
+        `;
+        
+        // Add loading styles to head
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = loadingStyles;
+        document.head.appendChild(styleSheet);
+
+        // Add modern card styles
+        const modernCardStyles = `
+            .modern-card {
+                position: relative;
+                overflow: hidden;
+                border-radius: 20px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+                transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+                border: 1px solid rgba(255,255,255,0.2);
+                backdrop-filter: blur(10px);
+            }
+            
+            .modern-card:hover {
+                transform: translateY(-8px) scale(1.02) !important;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+            }
+            
+            .card-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+            }
+            
+            .card-image-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+                opacity: 0.15;
+                overflow: hidden;
+                border-radius: 20px;
+            }
+            
+            .card-bg-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: blur(1px) brightness(1.2);
+                transition: all 0.3s ease;
+            }
+            
+            .modern-card:hover .card-bg-image {
+                transform: scale(1.05);
+                filter: blur(0.5px) brightness(1.4);
+            }
+            
+            .card-gradient {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                opacity: 0.85;
+                z-index: 2;
+            }
+            
+            .tour-gradient {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            
+            .customer-gradient {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            }
+            
+            .booking-gradient {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            }
+            
+            .featured-gradient {
+                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            }
+            
+            .card-pattern {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: 
+                    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+                opacity: 0.6;
+                z-index: 3;
+            }
+            
+            .card-features {
+                display: flex;
+                gap: 0.8rem;
+                margin-top: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .feature-item {
+                background: rgba(255,255,255,0.15) !important;
+                color: rgba(255,255,255,0.9) !important;
+                padding: 0.3rem 0.6rem !important;
+                border-radius: 12px !important;
+                font-size: 0.75rem !important;
+                font-weight: 500 !important;
+                border: 1px solid rgba(255,255,255,0.2) !important;
+                backdrop-filter: blur(5px) !important;
+            }
+            
+            .premium-badge {
+                background: linear-gradient(45deg, #667eea, #764ba2) !important;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+            }
+            
+            .success-badge {
+                background: linear-gradient(45deg, #f093fb, #f5576c) !important;
+                box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4) !important;
+            }
+            
+            .hot-badge {
+                background: linear-gradient(45deg, #4facfe, #00f2fe) !important;
+                box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4) !important;
+                animation: pulse 2s infinite;
+            }
+            
+            .vip-badge {
+                background: linear-gradient(45deg, #43e97b, #38f9d7) !important;
+                box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4) !important;
+            }
+            
+            .modern-icon {
+                position: relative;
+                z-index: 3;
+                width: 70px !important;
+                height: 70px !important;
+                border-radius: 20px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-size: 2rem !important;
+                color: white !important;
+                background: rgba(255,255,255,0.2) !important;
+                backdrop-filter: blur(10px) !important;
+                border: 1px solid rgba(255,255,255,0.3) !important;
+                margin-bottom: 1.5rem !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .modern-card:hover .modern-icon {
+                transform: scale(1.1) rotate(5deg);
+                background: rgba(255,255,255,0.3) !important;
+            }
+            
+            .modern-card .card-content {
+                position: relative;
+                z-index: 2;
+                color: white !important;
+            }
+            
+            .modern-card .card-content h3 {
+                color: white !important;
+                font-weight: 800 !important;
+                font-size: 1.5rem !important;
+                margin-bottom: 1rem !important;
+                text-shadow: 0 3px 6px rgba(0,0,0,0.4);
+                letter-spacing: 0.5px !important;
+            }
+            
+            .modern-card .card-content p {
+                color: rgba(255,255,255,0.95) !important;
+                font-size: 1rem !important;
+                line-height: 1.6 !important;
+                margin-bottom: 1.5rem !important;
+                font-weight: 400 !important;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            }
+            
+            .stat-badge {
+                background: rgba(255,255,255,0.25) !important;
+                color: white !important;
+                padding: 0.5rem 1rem !important;
+                border-radius: 25px !important;
+                font-size: 0.9rem !important;
+                font-weight: 700 !important;
+                border: 1px solid rgba(255,255,255,0.3) !important;
+                backdrop-filter: blur(10px) !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+            }
+            
+            .stat-badge.hot {
+                background: linear-gradient(45deg, #ff6b6b, #ee5a24) !important;
+                animation: pulse 2s infinite;
+            }
+            
+            .stat-text {
+                color: rgba(255,255,255,0.85) !important;
+                font-size: 0.85rem !important;
+                margin-left: 0.8rem !important;
+                font-weight: 500 !important;
+                font-style: italic !important;
+            }
+            
+            .modern-arrow {
+                position: relative;
+                z-index: 3;
+                width: 45px !important;
+                height: 45px !important;
+                border-radius: 50% !important;
+                background: rgba(255,255,255,0.25) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                color: white !important;
+                font-size: 1.3rem !important;
+                transition: all 0.3s ease !important;
+                backdrop-filter: blur(10px) !important;
+                border: 1px solid rgba(255,255,255,0.4) !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+            }
+            
+            .modern-card:hover .modern-arrow {
+                transform: translateX(8px) scale(1.15);
+                background: rgba(255,255,255,0.4) !important;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;
+            }
+            
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+            
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-5px); }
+            }
+            
+            .modern-card:nth-child(1) { animation: float 6s ease-in-out infinite; }
+            .modern-card:nth-child(2) { animation: float 6s ease-in-out infinite 1.5s; }
+            .modern-card:nth-child(3) { animation: float 6s ease-in-out infinite 3s; }
+            .modern-card:nth-child(4) { animation: float 6s ease-in-out infinite 4.5s; }
+        `;
+        
+        // Add professional stats styles
+        const professionalStatsStyles = `
+            .professional-stat {
+                position: relative !important;
+                background: white !important;
+                border-radius: 20px !important;
+                padding: 2.5rem 2rem !important;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important;
+                border: 1px solid rgba(0,0,0,0.05) !important;
+                transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+                overflow: hidden !important;
+                text-align: center !important;
+            }
+            
+            .professional-stat:hover {
+                transform: translateY(-8px) !important;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.12) !important;
+            }
+            
+            .stat-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                opacity: 0.05;
+            }
+            
+            .stat-gradient {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+            
+            .stat-gradient-1 {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            
+            .stat-gradient-2 {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            }
+            
+            .stat-gradient-3 {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            }
+            
+            .stat-gradient-4 {
+                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            }
+            
+            .stat-pattern {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: 
+                    radial-gradient(circle at 20% 80%, rgba(0,0,0,0.02) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(0,0,0,0.02) 0%, transparent 50%);
+            }
+            
+            .professional-icon {
+                position: relative;
+                z-index: 2;
+                width: 80px !important;
+                height: 80px !important;
+                margin: 0 auto 1.5rem auto !important;
+                border-radius: 20px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-size: 2.2rem !important;
+                color: white !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .professional-stat:nth-child(1) .professional-icon {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            }
+            
+            .professional-stat:nth-child(2) .professional-icon {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+            }
+            
+            .professional-stat:nth-child(3) .professional-icon {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+            }
+            
+            .professional-stat:nth-child(4) .professional-icon {
+                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+                box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
+            }
+            
+            .professional-stat:hover .professional-icon {
+                transform: scale(1.1) rotate(5deg);
+            }
+            
+            .stat-content {
+                position: relative;
+                z-index: 2;
+            }
+            
+            .stat-number {
+                font-size: 3.5rem !important;
+                font-weight: 900 !important;
+                color: #2c3e50 !important;
+                margin: 0 !important;
+                line-height: 1 !important;
+                display: inline-block !important;
+            }
+            
+            .stat-plus {
+                display: inline-block !important;
+                font-size: 2.5rem !important;
+                font-weight: 700 !important;
+                color: #3498db !important;
+                margin-left: 0.2rem !important;
+                vertical-align: top !important;
+            }
+            
+            .stat-rating {
+                display: inline-block !important;
+                font-size: 2rem !important;
+                font-weight: 600 !important;
+                color: #95a5a6 !important;
+                margin-left: 0.2rem !important;
+                vertical-align: top !important;
+            }
+            
+            .stat-label {
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
+                color: #2c3e50 !important;
+                margin: 0.8rem 0 0.5rem 0 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+            }
+            
+            .stat-description {
+                font-size: 0.9rem !important;
+                color: #7f8c8d !important;
+                font-weight: 500 !important;
+                font-style: italic !important;
+            }
+            
+            .stat-decoration {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                z-index: 1;
+            }
+            
+            .decoration-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #3498db;
+                margin-bottom: 0.5rem;
+                opacity: 0.6;
+            }
+            
+            .decoration-line {
+                width: 2px;
+                height: 30px;
+                background: linear-gradient(to bottom, #3498db, transparent);
+                opacity: 0.4;
+            }
+            
+            @keyframes countUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .stat-number {
+                animation: countUp 0.8s ease-out;
+            }
+            
+            .professional-stat:nth-child(1) { animation-delay: 0.1s; }
+            .professional-stat:nth-child(2) { animation-delay: 0.2s; }
+            .professional-stat:nth-child(3) { animation-delay: 0.3s; }
+            .professional-stat:nth-child(4) { animation-delay: 0.4s; }
+        `;
+        
+        // Add professional stats styles to head
+        const professionalStatsStyleSheet = document.createElement('style');
+        professionalStatsStyleSheet.textContent = professionalStatsStyles;
+        document.head.appendChild(professionalStatsStyleSheet);
+
+        // Counter animation function
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            counters.forEach(counter => {
+                const target = parseFloat(counter.getAttribute('data-target'));
+                const increment = target / 100;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target % 1 === 0 ? target : target.toFixed(1);
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = current % 1 === 0 ? Math.floor(current) : current.toFixed(1);
+                    }
+                }, 20);
+            });
+        }
+
+        // Intersection Observer for counter animation
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        // Add professional tour cards styles
+        const professionalTourStyles = `
+            .professional-header {
+                text-align: center;
+                margin-bottom: 4rem;
+                position: relative;
+            }
+            
+            .professional-header h2 {
+                font-size: 2.5rem !important;
+                font-weight: 800 !important;
+                color: #2c3e50 !important;
+                margin-bottom: 1rem !important;
+                letter-spacing: 0.5px !important;
+            }
+            
+            .professional-header p {
+                font-size: 1.1rem !important;
+                color: #7f8c8d !important;
+                max-width: 600px !important;
+                margin: 0 auto 2rem auto !important;
+                line-height: 1.6 !important;
+            }
+            
+            .header-decoration {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+            
+            .decoration-line-left, .decoration-line-right {
+                width: 60px;
+                height: 2px;
+                background: linear-gradient(to right, transparent, #3498db, transparent);
+            }
+            
+            .decoration-center {
+                font-size: 1.5rem;
+                color: #3498db;
+            }
+            
+            .professional-tours {
+                display: grid !important;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+                gap: 2rem !important;
+                margin-bottom: 3rem !important;
+            }
+            
+            .professional-tour-card {
+                position: relative !important;
+                background: white !important;
+                border-radius: 20px !important;
+                overflow: hidden !important;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important;
+                border: 1px solid rgba(0,0,0,0.05) !important;
+                transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+                cursor: pointer !important;
+                height: 420px !important;
+            }
+            
+            .professional-tour-card:hover {
+                transform: translateY(-12px) !important;
+                box-shadow: 0 25px 60px rgba(0,0,0,0.15) !important;
+            }
+            
+            .tour-card-background {
+                position: relative;
+                height: 250px;
+                overflow: hidden;
+            }
+            
+            .tour-bg-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: all 0.4s ease;
+            }
+            
+            .professional-tour-card:hover .tour-bg-image {
+                transform: scale(1.1);
+            }
+            
+            .tour-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.1);
+                z-index: 1;
+            }
+            
+            .tour-gradient-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 100px;
+                background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+                z-index: 2;
+            }
+            
+            .tour-badge {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                z-index: 3;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: white;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.2);
+            }
+            
+            .premium-tour {
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            }
+            
+            .trending-tour {
+                background: linear-gradient(45deg, #f093fb, #f5576c);
+                box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+            }
+            
+            .hot-tour {
+                background: linear-gradient(45deg, #4facfe, #00f2fe);
+                box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+                animation: pulse 2s infinite;
+            }
+            
+            .tour-content {
+                padding: 1.5rem;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .tour-location {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 0.8rem;
+                color: #3498db;
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+            
+            .tour-content h3 {
+                font-size: 1.3rem !important;
+                font-weight: 700 !important;
+                color: #2c3e50 !important;
+                margin-bottom: 0.8rem !important;
+                line-height: 1.3 !important;
+            }
+            
+            .tour-content p {
+                color: #7f8c8d !important;
+                font-size: 0.95rem !important;
+                line-height: 1.5 !important;
+                margin-bottom: 1.2rem !important;
+            }
+            
+            .tour-details {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 12px;
+                border: 1px solid #e9ecef;
+            }
+            
+            .tour-price {
+                display: flex;
+                align-items: baseline;
+                gap: 0.3rem;
+            }
+            
+            .price-label {
+                font-size: 0.8rem;
+                color: #95a5a6;
+                font-weight: 500;
+            }
+            
+            .price-amount {
+                font-size: 1.4rem;
+                font-weight: 800;
+                color: #e74c3c;
+            }
+            
+            .price-currency {
+                font-size: 0.9rem;
+                color: #95a5a6;
+                font-weight: 600;
+            }
+            
+            .tour-duration {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: #3498db;
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+            
+            .tour-features {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+            
+            .feature-tag {
+                background: #ecf0f1 !important;
+                color: #2c3e50 !important;
+                padding: 0.3rem 0.8rem !important;
+                border-radius: 15px !important;
+                font-size: 0.75rem !important;
+                font-weight: 600 !important;
+                border: 1px solid #bdc3c7 !important;
+            }
+            
+            .tour-action {
+                position: absolute;
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: linear-gradient(45deg, #3498db, #2980b9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            }
+            
+            .professional-tour-card:hover .tour-action {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            }
+            
+            .professional-footer {
+                text-align: center;
+                margin-top: 3rem;
+            }
+            
+            .professional-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 0.8rem !important;
+                padding: 1rem 2.5rem !important;
+                background: linear-gradient(45deg, #3498db, #2980b9) !important;
+                color: white !important;
+                text-decoration: none !important;
+                border-radius: 50px !important;
+                font-weight: 700 !important;
+                font-size: 1.1rem !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+                transition: all 0.3s ease !important;
+                box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3) !important;
+                border: none !important;
+            }
+            
+            .professional-btn:hover {
+                transform: translateY(-3px) !important;
+                box-shadow: 0 12px 35px rgba(52, 152, 219, 0.4) !important;
+                background: linear-gradient(45deg, #2980b9, #3498db) !important;
+            }
+            
+            .professional-btn i {
+                transition: transform 0.3s ease;
+            }
+            
+            .professional-btn:hover i {
+                transform: translateX(5px);
+            }
+        `;
+        
+        // Add professional tour styles to head
+        const professionalTourStyleSheet = document.createElement('style');
+        professionalTourStyleSheet.textContent = professionalTourStyles;
+        document.head.appendChild(professionalTourStyleSheet);
+
+        // Observe stats section when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const statsSection = document.querySelector('.stats-section');
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+            
+            // Load tours after DOM is ready
+            loadPopularTours();
+        });
+
+        // Destination suggestions with API call
+        const destinationInput = document.getElementById('destination');
+        const suggestionsDiv = document.getElementById('destinationSuggestions');
+
+        destinationInput.addEventListener('input', async (e) => {
+            const value = e.target.value.toLowerCase();
+            if (value.length < 2) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/TravelBooking/api/tours?action=destinations&q=${encodeURIComponent(value)}`);
+                const data = await response.json();
+                
+                if (data.suggestions && data.suggestions.length > 0) {
+                    suggestionsDiv.innerHTML = data.suggestions.map(item => 
+                        `<div class="suggestion-item" onclick="selectDestination('${item.destination}')">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <div class="suggestion-name">${item.destination}</div>
+                                <div class="suggestion-full">${item.description} - ${item.tourCount} tours tá»« ${item.minPrice.toLocaleString()} VNÄ</div>
+                            </div>
+                        </div>`
+                    ).join('');
+                    suggestionsDiv.style.display = 'block';
+                } else {
+                    suggestionsDiv.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+
+        destinationInput.addEventListener('blur', () => {
+            setTimeout(() => suggestionsDiv.style.display = 'none', 200);
+        });
+
+        function selectDestination(destination) {
+            destinationInput.value = destination;
+            suggestionsDiv.style.display = 'none';
+        }
+
+        // Load popular tours from API
+        async function loadPopularTours() {
+            try {
+                const response = await fetch('/TravelBooking/api/tours?action=popular');
+                const data = await response.json();
+                
+                if (data.tours && data.tours.length > 0) {
+                    const popularToursContainer = document.getElementById('popularTours');
+                    popularToursContainer.innerHTML = data.tours.map(tour => `
+                        <div class="destination-card" onclick="window.location.href='/TravelBooking/tour?action=view&id=${tour.id}'" style="cursor: pointer;">
+                            <div class="destination-image">
+                                <img src="https://images.unsplash.com/photo-${getImageId(tour.destination)}?w=400&h=300&fit=crop" alt="${tour.destination}">
+                                <div class="destination-overlay">
+                                    <div class="destination-badge ${getBadgeClass(tour)}">${getBadgeText(tour)}</div>
+                                </div>
+                            </div>
+                            <div class="destination-info">
+                                <h3>${tour.name}</h3>
+                                <p>${tour.destination} - ${tour.duration || '3N2Ä'}</p>
+                                <div class="destination-details">
+                                    <span class="tour-count">${tour.availableSlots || (tour.maxCapacity - tour.currentCapacity)} chá»— cÃ²n</span>
+                                    <span class="price-from">${tour.price.toLocaleString()} VNÄ</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    // Fallback vá»›i tours máº·c Ä‘á»‹nh náº¿u API khÃ´ng cÃ³ dá»¯ liá»‡u
+                    loadDefaultTours();
+                }
+            } catch (error) {
+                console.error('Error loading popular tours:', error);
+                // Fallback vá»›i tours máº·c Ä‘á»‹nh náº¿u API lá»—i
+                loadDefaultTours();
+            }
+        }
+
+        function loadDefaultTours() {
+            const popularToursContainer = document.getElementById('popularTours');
+            popularToursContainer.innerHTML = `
+                <div class="destination-card professional-tour-card" onclick="window.location.href='/TravelBooking/tour-detail?id=1'" style="cursor: pointer;">
+                    <div class="tour-card-background">
+                        <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=500&h=400&fit=crop&auto=format" alt="BÃ  NÃ  Hills" class="tour-bg-image">
+                        <div class="tour-overlay"></div>
+                        <div class="tour-gradient-overlay"></div>
+                    </div>
+                    <div class="tour-badge premium-tour">Phá»• biáº¿n</div>
+                    <div class="tour-content">
+                        <div class="tour-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>HÃ²a Vang, ÄÃ  Náºµng</span>
+                        </div>
+                        <h3>Tour BÃ  NÃ  Hills</h3>
+                        <p>KhÃ¡m phÃ¡ BÃ  NÃ  Hills vá»›i Cáº§u VÃ ng ná»•i tiáº¿ng vÃ  khu vui chÆ¡i Fantasy Park</p>
+                        <div class="tour-details">
+                            <div class="tour-price">
+                                <span class="price-label">Tá»«</span>
+                                <span class="price-amount">1.800.000</span>
+                                <span class="price-currency">VNÄ</span>
+                            </div>
+                            <div class="tour-duration">
+                                <i class="fas fa-clock"></i>
+                                <span>3N2Ä</span>
+                            </div>
+                        </div>
+                        <div class="tour-features">
+                            <span class="feature-tag">ðŸ”ï¸ NÃºi</span>
+                            <span class="feature-tag">ðŸŽ¢ Vui chÆ¡i</span>
+                        </div>
+                    </div>
+                    <div class="tour-action">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+                <div class="destination-card professional-tour-card" onclick="window.location.href='/TravelBooking/tour-detail?id=2'" style="cursor: pointer;">
+                    <div class="tour-card-background">
+                        <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=500&h=400&fit=crop&auto=format" alt="BÃ¡n Ä‘áº£o SÆ¡n TrÃ " class="tour-bg-image">
+                        <div class="tour-overlay"></div>
+                        <div class="tour-gradient-overlay"></div>
+                    </div>
+                    <div class="tour-badge trending-tour">Trending</div>
+                    <div class="tour-content">
+                        <div class="tour-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>SÆ¡n TrÃ , ÄÃ  Náºµng</span>
+                        </div>
+                        <h3>Tour BÃ¡n Ä‘áº£o SÆ¡n TrÃ </h3>
+                        <p>KhÃ¡m phÃ¡ bÃ¡n Ä‘áº£o SÆ¡n TrÃ  vá»›i chÃ¹a Linh á»¨ng vÃ  bÃ£i biá»ƒn tuyá»‡t Ä‘áº¹p</p>
+                        <div class="tour-details">
+                            <div class="tour-price">
+                                <span class="price-label">Tá»«</span>
+                                <span class="price-amount">2.200.000</span>
+                                <span class="price-currency">VNÄ</span>
+                            </div>
+                            <div class="tour-duration">
+                                <i class="fas fa-clock"></i>
+                                <span>4N3Ä</span>
+                            </div>
+                        </div>
+                        <div class="tour-features">
+                            <span class="feature-tag">ðŸ–ï¸ Biá»ƒn</span>
+                            <span class="feature-tag">ðŸ™ ChÃ¹a</span>
+                        </div>
+                    </div>
+                    <div class="tour-action">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+                <div class="destination-card professional-tour-card" onclick="window.location.href='/TravelBooking/tour-detail?id=3'" style="cursor: pointer;">
+                    <div class="tour-card-background">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop&auto=format" alt="NgÅ© HÃ nh SÆ¡n" class="tour-bg-image">
+                        <div class="tour-overlay"></div>
+                        <div class="tour-gradient-overlay"></div>
+                    </div>
+                    <div class="tour-badge hot-tour">Hot</div>
+                    <div class="tour-content">
+                        <div class="tour-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>NgÅ© HÃ nh SÆ¡n, ÄÃ  Náºµng</span>
+                        </div>
+                        <h3>Tour NgÅ© HÃ nh SÆ¡n</h3>
+                        <p>KhÃ¡m phÃ¡ 5 ngá»n nÃºi Ä‘Ã¡ vÃ´i vá»›i Ä‘á»™ng Huyá»n KhÃ´ng vÃ  chÃ¹a Tam Thai</p>
+                        <div class="tour-details">
+                            <div class="tour-price">
+                                <span class="price-label">Tá»«</span>
+                                <span class="price-amount">2.000.000</span>
+                                <span class="price-currency">VNÄ</span>
+                            </div>
+                            <div class="tour-duration">
+                                <i class="fas fa-clock"></i>
+                                <span>3N2Ä</span>
+                            </div>
+                        </div>
+                        <div class="tour-features">
+                            <span class="feature-tag">ðŸŠ BÆ¡i lá»™i</span>
+                            <span class="feature-tag">ðŸ  Láº·n biá»ƒn</span>
+                        </div>
+                    </div>
+                    <div class="tour-action">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+                <div class="destination-card professional-tour-card" onclick="window.location.href='/TravelBooking/tour-detail?id=4'" style="cursor: pointer;">
+                    <div class="tour-card-background">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop&auto=format" alt="Háº£i ChÃ¢u" class="tour-bg-image">
+                        <div class="tour-overlay"></div>
+                        <div class="tour-gradient-overlay"></div>
+                    </div>
+                    <div class="tour-badge premium-tour">Premium</div>
+                    <div class="tour-content">
+                        <div class="tour-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Háº£i ChÃ¢u, ÄÃ  Náºµng</span>
+                        </div>
+                        <h3>Tour Trung tÃ¢m Háº£i ChÃ¢u</h3>
+                        <p>KhÃ¡m phÃ¡ trung tÃ¢m thÃ nh phá»‘ vá»›i chá»£ HÃ n, cáº§u Rá»“ng vÃ  áº©m thá»±c Ä‘Æ°á»ng phá»‘</p>
+                        <div class="tour-details">
+                            <div class="tour-price">
+                                <span class="price-label">Tá»«</span>
+                                <span class="price-amount">1.800.000</span>
+                                <span class="price-currency">VNÄ</span>
+                            </div>
+                            <div class="tour-duration">
+                                <i class="fas fa-clock"></i>
+                                <span>3N2Ä</span>
+                            </div>
+                        </div>
+                        <div class="tour-features">
+                            <span class="feature-tag">ï¿½ï¸ ThÃ nh phá»‘</span>
+                            <span class="feature-tag">ï¿½ áº¨m thá»±c</span>
+                        </div>
+                    </div>
+                    <div class="tour-action">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getImageId(destination) {
+            const imageMap = {
+                // CÃ¡c quáº­n trong thÃ nh phá»‘ ÄÃ  Náºµng
+                'Háº£i ChÃ¢u': '1583417319070-4a69db38a482', // Cáº§u Rá»“ng vÃ  trung tÃ¢m ÄÃ  Náºµng
+                'Thanh KhÃª': '1559592413-7cec4d0cae2b', // Khu Ä‘Ã´ thá»‹ hiá»‡n Ä‘áº¡i
+                'SÆ¡n TrÃ ': '1528127269322-539801943592', // BÃ¡n Ä‘áº£o SÆ¡n TrÃ  vá»›i chÃ¹a Linh á»¨ng
+                'NgÅ© HÃ nh SÆ¡n': '1574263867128-ce3b8c1b6b8f', // NgÅ© HÃ nh SÆ¡n vá»›i hang Ä‘á»™ng
+                'LiÃªn Chiá»ƒu': '1578662996442-374dcbcbc495', // Khu vá»±c sÃ¢n bay vÃ  phÃ¡t triá»ƒn má»›i
+                'Cáº©m Lá»‡': '1506905925346-21bda4d32df4', // Khu vá»±c nÃ´ng thÃ´n káº¿t há»£p Ä‘Ã´ thá»‹
+                'HÃ²a Vang': '1583417319070-4a69db38a482', // BÃ  NÃ  Hills vá»›i cáº§u VÃ ng
+                'HoÃ ng Sa': '1559592413-7cec4d0cae2b' // Quáº§n Ä‘áº£o HoÃ ng Sa
+            };
+            return imageMap[destination] || '1583417319070-4a69db38a482';
+        }
+
+        function getBadgeClass(tour) {
+            const available = tour.maxCapacity - tour.currentCapacity;
+            if (available <= 0) return 'premium';
+            if (available <= 5) return 'trending';
+            return '';
+        }
+
+        function getBadgeText(tour) {
+            const available = tour.maxCapacity - tour.currentCapacity;
+            if (available <= 0) return 'Háº¿t chá»—';
+            if (available <= 5) return 'Sáº¯p háº¿t';
+            return 'CÃ²n chá»—';
+        }
+
+        // Load popular tours on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPopularTours();
+        });
+
+        // Form submission
+        document.getElementById('searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const destination = document.getElementById('destination').value;
+            const departDate = document.getElementById('departDate').value;
+            const passengers = document.getElementById('passengers').value;
+            const priceRange = document.getElementById('priceRange').value;
+            
+            let url = '/TravelBooking/user-tours';
+            const params = [];
+            if (destination) params.push(`destination=${encodeURIComponent(destination)}`);
+            if (departDate) params.push(`date=${departDate}`);
+            if (passengers) params.push(`passengers=${passengers}`);
+            if (priceRange) params.push(`price=${priceRange}`);
+            
+            if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+            
+            window.location.href = url;
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation to action cards
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
