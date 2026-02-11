@@ -48,6 +48,8 @@ public class LoginServlet extends HttpServlet {
         // Save session
         HttpSession session = request.getSession(true);
         session.setAttribute("user", u);
+        session.setAttribute("username", u.getUsername());
+        session.setAttribute("role", u.getRole());
 
         // Redirect về trang chủ (cả Admin và User)
         response.sendRedirect("index.jsp");

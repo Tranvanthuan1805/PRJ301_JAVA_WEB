@@ -1,5 +1,4 @@
 package servlet;
-
 import service.TourService;
 import model.Tour;
 import util.DatabaseConnection;
@@ -48,6 +47,12 @@ public class TourServlet extends HttpServlet {
                 searchTours(request, response);
             } else if (action.equals("available")) {
                 listAvailableTours(request, response);
+            } else if (action.equals("featured")) {
+                getFeaturedTours(request, response);
+            } else if (action.equals("analytics")) {
+                getAnalyticsData(request, response);
+            } else if (action.equals("current-month")) {
+                getCurrentMonthTours(request, response);
             }
         } catch (SQLException e) {
             throw new ServletException("Database error", e);
@@ -72,21 +77,47 @@ public class TourServlet extends HttpServlet {
     
     private void listTours(HttpServletRequest request, HttpServletResponse response) 
             throws SQLException, ServletException, IOException {
+        // Pagination parameters
+        int page = 1;
+        int toursPerPage = 12;
+        
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.trim().isEmpty()) {
+            try {
+                page = Integer.parseInt(pageParam);
+                if (page < 1) page = 1;
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+        
         // Kiểm tra có tìm kiếm theo destination không
         String destination = request.getParameter("destination");
-        List<Tour> tours;
+        List<Tour> allTours;
         
         if (destination != null && !destination.trim().isEmpty()) {
             // Tìm kiếm theo destination
-            tours = tourService.searchToursByDestination(destination);
+            allTours = tourService.searchToursByDestination(destination);
             request.setAttribute("searchDestination", destination);
         } else {
             // Lấy tất cả tours
-            tours = tourService.getAllTours();
+            allTours = tourService.getAllTours();
         }
         
+        // Calculate pagination
+        int totalTours = allTours.size();
+        int totalPages = (int) Math.ceil((double) totalTours / toursPerPage);
+        
+        // Get tours for current page
+        int startIndex = (page - 1) * toursPerPage;
+        int endIndex = Math.min(startIndex + toursPerPage, totalTours);
+        List<Tour> tours = allTours.subList(startIndex, endIndex);
+        
         request.setAttribute("tours", tours);
-        request.getRequestDispatcher("/tour-list.jsp").forward(request, response);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalTours", totalTours);
+        request.getRequestDispatcher("/jsp/tour-list.jsp").forward(request, response);
     }
     
     private void showAddForm(HttpServletRequest request, HttpServletResponse response) 
@@ -173,10 +204,24 @@ public class TourServlet extends HttpServlet {
     private void searchTours(HttpServletRequest request, HttpServletResponse response) 
             throws SQLException, ServletException, IOException {
         String destination = request.getParameter("destination");
-        List<Tour> tours = tourService.searchToursByDestination(destination);
+        String monthParam = request.getParameter("month");
+        String priceRange = request.getParameter("priceRange");
+        
+        Integer month = null;
+        if (monthParam != null && !monthParam.trim().isEmpty()) {
+            try {
+                month = Integer.parseInt(monthParam);
+            } catch (NumberFormatException e) {
+                // Ignore invalid month
+            }
+        }
+        
+        List<Tour> tours = tourService.searchTours(destination, month, priceRange);
         
         request.setAttribute("tours", tours);
         request.setAttribute("searchDestination", destination);
+        request.setAttribute("searchMonth", month);
+        request.setAttribute("searchPriceRange", priceRange);
         
         // Log search nếu có customer ID
         String customerIdParam = request.getParameter("customerId");
@@ -186,5 +231,82 @@ public class TourServlet extends HttpServlet {
         }
         
         request.getRequestDispatcher("/jsp/tour-list.jsp").forward(request, response);
+    }
+    
+    private void getFeaturedTours(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, IOException {
+        // Lấy tours nổi bật (giá cao, booking nhiều)
+        List<Tour> tours = tourService.getFeaturedTours(6);
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        StringBuilder json = new StringBuilder("{\"tours\":[");
+        for (int i = 0; i < tours.size(); i++) {
+            Tour tour = tours.get(i);
+            if (i > 0) json.append(",");
+            json.append("{")
+                .append("\"id\":").append(tour.getId()).append(",")
+                .append("\"name\":\"").append(escapeJson(tour.getName())).append("\",")
+                .append("\"destination\":\"").append(escapeJson(tour.getDestination())).append("\",")
+                .append("\"price\":").append(tour.getPrice()).append(",")
+                .append("\"maxCapacity\":").append(tour.getMaxCapacity()).append(",")
+                .append("\"currentCapacity\":").append(tour.getCurrentCapacity())
+                .append("}");
+        }
+        json.append("]}");
+        
+        response.getWriter().write(json.toString());
+    }
+    
+    private void getAnalyticsData(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, IOException {
+        // Lấy TẤT CẢ tours (kể cả cũ) để phân tích
+        List<Tour> tours = tourService.getAllToursIncludingPast();
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        StringBuilder json = new StringBuilder("{\"tours\":[");
+        for (int i = 0; i < tours.size(); i++) {
+            Tour tour = tours.get(i);
+            if (i > 0) json.append(",");
+            json.append("{")
+                .append("\"id\":").append(tour.getId()).append(",")
+                .append("\"name\":\"").append(escapeJson(tour.getName())).append("\",")
+                .append("\"destination\":\"").append(escapeJson(tour.getDestination())).append("\",")
+                .append("\"startDate\":\"").append(tour.getStartDate()).append("\",")
+                .append("\"price\":").append(tour.getPrice()).append(",")
+                .append("\"maxCapacity\":").append(tour.getMaxCapacity()).append(",")
+                .append("\"currentCapacity\":").append(tour.getCurrentCapacity())
+                .append("}");
+        }
+        json.append("]}");
+        
+        response.getWriter().write(json.toString());
+    }
+    
+    private void getCurrentMonthTours(HttpServletRequest request, HttpServletResponse response) 
+            throws SQLException, ServletException, IOException {
+        // Lấy tours trong tháng hiện tại
+        LocalDate now = LocalDate.now();
+        int currentMonth = now.getMonthValue();
+        int currentYear = now.getYear();
+        
+        List<Tour> tours = tourService.getToursByMonth(currentYear, currentMonth);
+        
+        request.setAttribute("tours", tours);
+        request.setAttribute("currentMonth", currentMonth);
+        request.setAttribute("currentYear", currentYear);
+        request.getRequestDispatcher("/jsp/tour-list.jsp").forward(request, response);
+    }
+    
+    private String escapeJson(String str) {
+        if (str == null) return "";
+        return str.replace("\\", "\\\\")
+                  .replace("\"", "\\\"")
+                  .replace("\n", "\\n")
+                  .replace("\r", "\\r")
+                  .replace("\t", "\\t");
     }
 }

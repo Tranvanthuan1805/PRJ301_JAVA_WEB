@@ -109,4 +109,24 @@ public class TourService {
             tourDAO.updateTourCapacity(tourId, tour.getMaxCapacity());
         }
     }
+    
+    public List<Tour> getFeaturedTours(int limit) throws SQLException {
+        // Lấy tours nổi bật (giá cao, booking nhiều, còn chỗ)
+        return tourDAO.getFeaturedTours(limit);
+    }
+    
+    public List<Tour> getToursByMonth(int year, int month) throws SQLException {
+        // Lấy tours theo tháng và năm
+        return tourDAO.getToursByMonth(year, month);
+    }
+    
+    public List<Tour> searchTours(String destination, Integer month, String priceRange) throws SQLException {
+        // Tìm kiếm tours với nhiều tiêu chí
+        return tourDAO.searchTours(destination, month, priceRange);
+    }
+    
+    public List<Tour> getAllToursIncludingPast() throws SQLException {
+        // Lấy TẤT CẢ tours kể cả cũ (cho analytics/history)
+        return tourDAO.getAllToursIncludingPast();
+    }
 }

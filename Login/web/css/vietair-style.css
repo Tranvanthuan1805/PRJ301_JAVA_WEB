@@ -126,27 +126,20 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 20px;
-    color: #ffffff;
+    padding: 10px 18px;
+    color: rgba(255, 255, 255, 0.95);
     text-decoration: none;
     border-radius: var(--border-radius-small);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 15px;
-    transition: var(--transition-fast);
+    transition: all 0.2s ease;
     position: relative;
     white-space: nowrap;
-    min-width: 100px;
-    justify-content: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.nav-item:hover,
-.nav-item.active {
-    background: rgba(255, 255, 255, 0.15);
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
     color: #ffffff;
-    transform: translateY(-1px);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-item i {
@@ -272,6 +265,43 @@ body {
     box-shadow: 0 4px 12px rgba(0, 212, 170, 0.4);
 }
 
+/* User Badge */
+.user-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: rgba(100, 150, 200, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--border-radius-small);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+}
+
 /* Hero Section */
 .hero {
     position: relative;
@@ -344,6 +374,34 @@ body {
     font-weight: 400;
     max-width: 600px;
     margin: 0 auto;
+}
+
+.hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    margin-top: 24px;
+    background: #ffffff;
+    color: var(--primary-color);
+    border: none;
+    border-radius: var(--border-radius-small);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: #f0f0f0;
+}
+
+.hero-cta i {
+    font-size: 18px;
 }
 
 /* Service Tabs */
@@ -496,6 +554,37 @@ body {
     font-weight: 400;
 }
 
+/* Form Controls */
+.form-select,
+.form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232c5aa0' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+}
+
+.form-input {
+    background-image: none;
+    padding-right: 16px;
+}
+
+.form-select:focus,
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+}
+
 .search-btn {
     display: flex !important;
     align-items: center !important;
@@ -517,6 +606,30 @@ body {
     justify-self: center !important;
     max-width: 400px !important;
     margin-top: 16px !important;
+}
+
+.search-btn-full {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: #ff6b35;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    width: 100%;
+}
+
+.search-btn-full:hover {
+    background: #ff5722;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
 }
 
 .search-btn span {

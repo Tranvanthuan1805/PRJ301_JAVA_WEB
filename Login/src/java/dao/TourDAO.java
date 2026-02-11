@@ -13,6 +13,21 @@ public class TourDAO implements ITourDAO {
         this.connection = connection;
     }
     
+    // Helper method to extract Tour from ResultSet with proper Unicode support
+    private Tour extractTourFromResultSet(ResultSet rs) throws SQLException {
+        return new Tour(
+            rs.getInt("id"),
+            rs.getNString("name"),           // Use getNString for Unicode
+            rs.getNString("destination"),    // Use getNString for Unicode
+            rs.getDate("startDate").toLocalDate(),
+            rs.getDate("endDate").toLocalDate(),
+            rs.getDouble("price"),
+            rs.getInt("maxCapacity"),
+            rs.getInt("currentCapacity"),
+            rs.getNString("description")     // Use getNString for Unicode
+        );
+    }
+    
     @Override
     public void addTour(Tour tour) throws SQLException {
         String sql = "INSERT INTO Tours (name, destination, startDate, endDate, price, maxCapacity, currentCapacity, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -43,17 +58,7 @@ public class TourDAO implements ITourDAO {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Tour(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("destination"),
-                        rs.getDate("startDate").toLocalDate(),
-                        rs.getDate("endDate").toLocalDate(),
-                        rs.getDouble("price"),
-                        rs.getInt("maxCapacity"),
-                        rs.getInt("currentCapacity"),
-                        rs.getString("description")
-                    );
+                    return extractTourFromResultSet(rs);
                 }
             }
         }
@@ -63,23 +68,14 @@ public class TourDAO implements ITourDAO {
     @Override
     public List<Tour> getAllTours() throws SQLException {
         List<Tour> tours = new ArrayList<>();
-        String sql = "SELECT * FROM Tours ORDER BY startDate";
+        // Chỉ lấy tours có startDate >= ngày hiện tại (tours mới)
+        String sql = "SELECT * FROM Tours WHERE startDate >= CAST(GETDATE() AS DATE) ORDER BY startDate";
         
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             
             while (rs.next()) {
-                tours.add(new Tour(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("destination"),
-                    rs.getDate("startDate").toLocalDate(),
-                    rs.getDate("endDate").toLocalDate(),
-                    rs.getDouble("price"),
-                    rs.getInt("maxCapacity"),
-                    rs.getInt("currentCapacity"),
-                    rs.getString("description")
-                ));
+                tours.add(extractTourFromResultSet(rs));
             }
         }
         return tours;
@@ -102,6 +98,7 @@ public class TourDAO implements ITourDAO {
             stmt.executeUpdate();
         }
     }
+
     
     @Override
     public void deleteTour(int id) throws SQLException {
@@ -121,17 +118,7 @@ public class TourDAO implements ITourDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
             
             while (rs.next()) {
-                tours.add(new Tour(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("destination"),
-                    rs.getDate("startDate").toLocalDate(),
-                    rs.getDate("endDate").toLocalDate(),
-                    rs.getDouble("price"),
-                    rs.getInt("maxCapacity"),
-                    rs.getInt("currentCapacity"),
-                    rs.getString("description")
-                ));
+                tours.add(extractTourFromResultSet(rs));
             }
         }
         return tours;
@@ -143,20 +130,10 @@ public class TourDAO implements ITourDAO {
         String sql = "SELECT * FROM Tours WHERE destination LIKE ? ORDER BY startDate";
         
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, "%" + destination + "%");
+            stmt.setNString(1, "%" + destination + "%");
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    tours.add(new Tour(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("destination"),
-                        rs.getDate("startDate").toLocalDate(),
-                        rs.getDate("endDate").toLocalDate(),
-                        rs.getDouble("price"),
-                        rs.getInt("maxCapacity"),
-                        rs.getInt("currentCapacity"),
-                        rs.getString("description")
-                    ));
+                    tours.add(extractTourFromResultSet(rs));
                 }
             }
         }
@@ -172,7 +149,9 @@ public class TourDAO implements ITourDAO {
             stmt.executeUpdate();
         }
     }
+
     
+    @Override
     public List<Tour> getPopularTours(int limit) throws SQLException {
         String sql = "SELECT TOP " + limit + " t.*, COUNT(b.id) as booking_count " +
                     "FROM Tours t " +
@@ -186,30 +165,13 @@ public class TourDAO implements ITourDAO {
              ResultSet rs = stmt.executeQuery()) {
             
             while (rs.next()) {
-                tours.add(new Tour(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("destination"),
-                    rs.getDate("startDate").toLocalDate(),
-                    rs.getDate("endDate").toLocalDate(),
-                    rs.getDouble("price"),
-                    rs.getInt("maxCapacity"),
-                    rs.getInt("currentCapacity"),
-                    rs.getString("description")
-                ));
+                tours.add(extractTourFromResultSet(rs));
             }
         }
         return tours;
     }
     
-    /**
-     * Kiểm tra availability của tour - CỰC KỲ QUAN TRỌNG
-     * Logic: (MaxPeople - Số khách đã đặt) >= quantity
-     * @param tourId ID của tour
-     * @param date Ngày khởi hành
-     * @param quantity Số lượng người muốn đặt
-     * @return true nếu còn đủ chỗ, false nếu không
-     */
+    @Override
     public boolean checkAvailability(int tourId, LocalDate date, int quantity) throws SQLException {
         String sql = "SELECT maxCapacity, currentCapacity, startDate FROM Tours WHERE id = ?";
         
@@ -221,11 +183,8 @@ public class TourDAO implements ITourDAO {
                     int currentCapacity = rs.getInt("currentCapacity");
                     LocalDate startDate = rs.getDate("startDate").toLocalDate();
                     
-                    // Kiểm tra còn đủ slot không
                     int availableSlots = maxCapacity - currentCapacity;
                     boolean hasEnoughSlots = availableSlots >= quantity;
-                    
-                    // Kiểm tra ngày chưa quá hạn
                     boolean notExpired = !date.isBefore(LocalDate.now()) && !startDate.isBefore(date);
                     
                     return hasEnoughSlots && notExpired;
@@ -235,11 +194,7 @@ public class TourDAO implements ITourDAO {
         return false;
     }
     
-    /**
-     * Lấy occupancy rate (tỷ lệ lấp đầy) của tour
-     * @param tourId ID của tour
-     * @return Tỷ lệ % (0-100)
-     */
+    @Override
     public double getOccupancyRate(int tourId) throws SQLException {
         String sql = "SELECT maxCapacity, currentCapacity FROM Tours WHERE id = ?";
         
@@ -257,12 +212,9 @@ public class TourDAO implements ITourDAO {
         }
         return 0;
     }
+
     
-    /**
-     * Kiểm tra và cập nhật trạng thái Active/Paused của tour
-     * @param tourId ID của tour
-     * @return true nếu Active, false nếu Paused
-     */
+    @Override
     public boolean checkAndUpdateStatus(int tourId) throws SQLException {
         Tour tour = getTourById(tourId);
         if (tour == null) return false;
@@ -273,4 +225,117 @@ public class TourDAO implements ITourDAO {
         
         return hasSlots && notExpired;
     }
+    
+    @Override
+    public List<Tour> getFeaturedTours(int limit) throws SQLException {
+        // Chỉ lấy tours mới (startDate >= hôm nay)
+        String sql = "SELECT TOP " + limit + " * FROM Tours " +
+                    "WHERE currentCapacity < maxCapacity AND startDate >= CAST(GETDATE() AS DATE) " +
+                    "ORDER BY price DESC, currentCapacity DESC";
+        
+        List<Tour> tours = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            while (rs.next()) {
+                tours.add(extractTourFromResultSet(rs));
+            }
+        }
+        return tours;
+    }
+    
+    @Override
+    public List<Tour> getToursByMonth(int year, int month) throws SQLException {
+        String sql = "SELECT * FROM Tours " +
+                    "WHERE YEAR(startDate) = ? AND MONTH(startDate) = ? " +
+                    "ORDER BY startDate";
+        
+        List<Tour> tours = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, year);
+            stmt.setInt(2, month);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    tours.add(extractTourFromResultSet(rs));
+                }
+            }
+        }
+        return tours;
+    }
+    
+    @Override
+    public List<Tour> searchTours(String destination, Integer month, String priceRange) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT * FROM Tours WHERE startDate >= CAST(GETDATE() AS DATE)");
+        List<Object> params = new ArrayList<>();
+        
+        // Filter by destination
+        if (destination != null && !destination.trim().isEmpty()) {
+            sql.append(" AND destination LIKE ?");
+            params.add("%" + destination + "%");
+        }
+        
+        // Filter by month
+        if (month != null && month > 0 && month <= 12) {
+            sql.append(" AND MONTH(startDate) = ?");
+            params.add(month);
+        }
+        
+        // Filter by price range
+        if (priceRange != null && !priceRange.trim().isEmpty()) {
+            switch (priceRange) {
+                case "under5":
+                    sql.append(" AND price < 5000000");
+                    break;
+                case "5to10":
+                    sql.append(" AND price BETWEEN 5000000 AND 10000000");
+                    break;
+                case "10to20":
+                    sql.append(" AND price BETWEEN 10000000 AND 20000000");
+                    break;
+                case "over20":
+                    sql.append(" AND price > 20000000");
+                    break;
+            }
+        }
+        
+        sql.append(" ORDER BY startDate");
+        
+        List<Tour> tours = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+            // Set parameters
+            for (int i = 0; i < params.size(); i++) {
+                Object param = params.get(i);
+                if (param instanceof String) {
+                    stmt.setString(i + 1, (String) param);
+                } else if (param instanceof Integer) {
+                    stmt.setInt(i + 1, (Integer) param);
+                }
+            }
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    tours.add(extractTourFromResultSet(rs));
+                }
+            }
+        }
+        return tours;
+    }
+    
+    @Override
+    public List<Tour> getAllToursIncludingPast() throws SQLException {
+        List<Tour> tours = new ArrayList<>();
+        // Lấy TẤT CẢ tours kể cả cũ (cho analytics/history)
+        String sql = "SELECT * FROM Tours ORDER BY startDate DESC";
+        
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                tours.add(extractTourFromResultSet(rs));
+            }
+        }
+        return tours;
+    }
+
 }

@@ -26,7 +26,7 @@ public class AuthFilter implements Filter {
 
         String path = request.getServletPath(); // /admin.jsp hoặc /user.jsp
 
-        if ("/admin.jsp".equals(path) && !"ADMIN".equalsIgnoreCase(u.roleName)) {
+        if ("/admin.jsp".equals(path) && !"ADMIN".equalsIgnoreCase(u.getRole())) {
             response.sendRedirect("error.jsp");
             return;
         }
