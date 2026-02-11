@@ -48,6 +48,16 @@
   </div>
 
   <div class="row g-3">
+    <!-- Order Management - YOUR MODULE -->
+    <div class="col-md-4">
+      <div class="card card-soft p-3 border-primary" style="border: 2px solid #667eea !important;">
+        <div class="fw-semibold mb-1 text-primary">Quản lý Đơn hàng</div>
+        <div class="text-muted small mb-3">Theo dõi và quản lý đơn đặt tour</div>
+        <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-primary w-100">
+          Truy cập
+        </a>
+      </div>
+    </div>
     <div class="col-md-4">
       <div class="card card-soft p-3">
         <div class="fw-semibold mb-1">Quản lý Users</div>

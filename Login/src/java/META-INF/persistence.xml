@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence">
+    
+  <persistence-unit name="OrderManagementPU">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    
+    <!-- Entity classes -->
+    <class>model.Order</class>
+    <class>model.Tour</class>
+    
+    <properties>
+      <!-- JDBC Connection Settings -->
+      <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=AdminUser;encrypt=true;trustServerCertificate=true;"/>
+      <property name="jakarta.persistence.jdbc.user" value="sa"/>
+      <property name="jakarta.persistence.jdbc.password" value="MinhHieu2816@"/>
+
+      <!-- Hibernate Settings -->
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+      
+      <!-- Connection Pool -->
+      <property name="hibernate.connection.pool_size" value="10"/>
+    </properties>
+  </persistence-unit>
+</persistence>

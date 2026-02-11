@@ -52,9 +52,20 @@
       </div>
     </div>
 
+    <!-- My Orders - Link to Order Management -->
+    <div class="col-md-6">
+      <div class="card card-soft p-3 border-success" style="border: 2px solid #22c55e !important;">
+        <div class="fw-semibold mb-1 text-success">Đơn hàng của tôi</div>
+        <div class="text-muted small mb-3">Xem lịch sử và trạng thái đơn đặt tour</div>
+        <a href="${pageContext.request.contextPath}/my-orders" class="btn btn-success w-100">
+          Xem đơn hàng
+        </a>
+      </div>
+    </div>
+    
     <div class="col-md-6">
       <div class="card card-soft p-3">
-        <div class="fw-semibold mb-1">Tính năng</div>
+        <div class="fw-semibold mb-1">Tính năng khác</div>
         <div class="text-muted small mb-3">Bạn có thể thêm tính năng ở đây.</div>
         <button class="btn btn-outline-success w-100" disabled>Demo (chưa làm)</button>
       </div>
