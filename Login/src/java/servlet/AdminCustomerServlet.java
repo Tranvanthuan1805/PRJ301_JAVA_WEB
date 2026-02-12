@@ -27,6 +27,11 @@ public class AdminCustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        // Set encoding
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        
         // Check authentication and authorization
         HttpSession session = request.getSession(false);
         User user = (session == null) ? null : (User) session.getAttribute("user");
@@ -66,7 +71,10 @@ public class AdminCustomerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        // Set encoding
         request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         
         // Check authentication and authorization
         HttpSession session = request.getSession(false);

@@ -120,6 +120,20 @@ public class CustomerActivityDAO {
     }
     
     /**
+     * Count activities by customer ID (alias for getActivityCount)
+     */
+    public int countActivitiesByCustomerId(int customerId) throws Exception {
+        return getActivityCount(customerId);
+    }
+    
+    /**
+     * Count activities by type (alias for getCountByActionType)
+     */
+    public int countActivitiesByType(int customerId, String actionType) throws Exception {
+        return getCountByActionType(customerId, actionType);
+    }
+    
+    /**
      * Map ResultSet to CustomerActivity object
      */
     private CustomerActivity mapResultSetToActivity(ResultSet rs) throws SQLException {
@@ -127,7 +141,7 @@ public class CustomerActivityDAO {
         activity.setId(rs.getInt("id"));
         activity.setCustomerId(rs.getInt("customer_id"));
         activity.setActionType(rs.getString("action_type"));
-        activity.setDescription(rs.getString("description"));
+        activity.setDescription(rs.getNString("description"));  // Use getNString for NVARCHAR
         activity.setMetadata(rs.getString("metadata"));
         activity.setCreatedAt(rs.getTimestamp("created_at"));
         return activity;

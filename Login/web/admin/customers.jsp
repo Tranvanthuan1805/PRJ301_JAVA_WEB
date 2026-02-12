@@ -1,8 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="model.User" %>
 <%
+    response.setCharacterEncoding("UTF-8");
+    request.setCharacterEncoding("UTF-8");
+    
     HttpSession s = request.getSession(false);
     User u = (s == null) ? null : (User) s.getAttribute("user");
     if (u == null || !"ADMIN".equalsIgnoreCase(u.roleName)) {
@@ -16,95 +19,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Khách hàng - VietAir Admin</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/vietair-style.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f7fafc;
-            color: #2d3748;
         }
         
-        /* Header - VietAir Style */
-        .header {
-            background: linear-gradient(135deg, #2c5aa0 0%, #1e4070 100%);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 64px;
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .logo-icon {
-            font-size: 28px;
-            color: #00d4aa;
-        }
-        
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-        
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
-        
-        .nav-item {
-            color: rgba(255,255,255,0.9);
-            text-decoration: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        
-        .nav-item:hover,
-        .nav-item.active {
-            background: rgba(255,255,255,0.15);
-            color: #ffffff;
-        }
-        
-        .user-info {
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .user-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        /* Main Content */
         .main-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -219,7 +142,28 @@
             background: #cbd5e0;
         }
         
-        /* Stats Cards */
+        .btn-logout {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-logout:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.8);
+            color: white;
+            text-decoration: none;
+        }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -393,25 +337,37 @@
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <a href="<%= request.getContextPath() %>/admin.jsp" class="logo-container">
-                <i class="fas fa-plane-departure logo-icon"></i>
-                <span class="logo-text">VietAir</span>
-            </a>
+            <div class="nav-brand">
+                <div class="logo-container">
+                    <i class="fas fa-plane-departure logo-icon"></i>
+                    <span class="logo-text">VietAir</span>
+                </div>
+            </div>
             <nav class="nav-menu">
                 <a href="<%= request.getContextPath() %>/" class="nav-item">Trang chủ</a>
                 <a href="#" class="nav-item">Tours</a>
                 <a href="<%= request.getContextPath() %>/admin/customers" class="nav-item active">Khách hàng</a>
-                <a href="<%= request.getContextPath() %>/admin.jsp" class="nav-item">ADMIN</a>
+                <% if ("ADMIN".equalsIgnoreCase(u.roleName)) { %>
+                    <a href="<%= request.getContextPath() %>/history.jsp" class="nav-item">Lịch sử</a>
+                <% } %>
             </nav>
-            <div class="user-info">
-                <span><%= u.username %></span>
-                <span class="user-badge">ADMIN</span>
-                <a href="<%= request.getContextPath() %>/logout" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            <div class="nav-actions">
+                <% if ("ADMIN".equalsIgnoreCase(u.roleName)) { %>
+                    <span class="user-badge">ADMIN</span>
+                <% } %>
+                <a href="<%= request.getContextPath() %>/logout" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Đăng xuất
                 </a>
             </div>
         </div>
     </header>
+
+    <!-- Hero Section -->
+    <div style="background: linear-gradient(135deg, #2c5aa0 0%, #1e4070 100%); padding: 60px 0; color: white; text-align: center;">
+        <h1 style="font-size: 2.5rem; margin: 0 0 0.5rem 0; font-weight: 800;">VietAir - Hệ thống quản lý tour du lịch</h1>
+        <p style="font-size: 1.1rem; margin: 0; opacity: 0.9;">Quản lý khách hàng chuyên nghiệp</p>
+    </div>
 
     <!-- Main Content -->
     <div class="main-content">

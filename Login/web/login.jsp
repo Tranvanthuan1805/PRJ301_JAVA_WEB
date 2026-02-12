@@ -49,15 +49,15 @@
       <div class="alert alert-danger py-2"><%= err %></div>
     <% } %>
 
-    <form action="login" method="post">
+    <form action="login" method="post" onsubmit="return validateForm()">
       <div class="mb-3">
         <label class="form-label">Username</label>
-        <input class="form-control" name="username" placeholder="Nhập username">
+        <input class="form-control" id="username" name="username" placeholder="Nhập username" autocomplete="off">
       </div>
 
       <div class="mb-3">
         <label class="form-label">Password</label>
-        <input class="form-control" name="password" type="password" placeholder="Nhập password">
+        <input class="form-control" id="password" name="password" type="password" placeholder="Nhập password" autocomplete="off">
       </div>
 
       <button class="btn btn-grad w-100 py-2" type="submit">Login</button>
@@ -66,6 +66,20 @@
         Chưa có tài khoản? <a href="register.jsp">Đăng ký</a>
       </div>
     </form>
+
+    <script>
+      function validateForm() {
+        var username = document.getElementById('username').value.trim();
+        var password = document.getElementById('password').value;
+        
+        if (username === '' || password === '') {
+          alert('Vui lòng nhập đầy đủ username và password');
+          return false;
+        }
+        
+        return true;
+      }
+    </script>
   </div>
 </body>
 </html>

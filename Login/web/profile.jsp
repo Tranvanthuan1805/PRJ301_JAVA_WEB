@@ -8,17 +8,18 @@
     
     HttpSession s = request.getSession(false);
     User u = (s == null) ? null : (User) s.getAttribute("user");
-    if (u == null || !"ADMIN".equalsIgnoreCase(u.roleName)) {
+    if (u == null) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
+    boolean isAdmin = "ADMIN".equalsIgnoreCase(u.roleName);
 %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết Khách hàng - VietAir Admin</title>
+    <title>Thông tin cá nhân - VietAir</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/vietair-style.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -81,42 +82,9 @@
             color: #2d3748;
         }
         
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-        
         .btn-sm {
             padding: 0.5rem 1rem;
             font-size: 13px;
-        }
-        
-        .btn-logout {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255,255,255,0.5);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-logout:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.8);
-            color: white;
-            text-decoration: none;
         }
         
         .content-grid {
@@ -321,12 +289,6 @@
             color: #721c24;
             border-left: 4px solid #dc3545;
         }
-        
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
     </style>
 </head>
 <body>
@@ -341,15 +303,19 @@
             </div>
             <nav class="nav-menu">
                 <a href="<%= request.getContextPath() %>/" class="nav-item">Trang chủ</a>
-                <a href="#" class="nav-item">Tours</a>
-                <a href="<%= request.getContextPath() %>/admin/customers" class="nav-item active">Khách hàng</a>
-                <% if ("ADMIN".equalsIgnoreCase(u.roleName)) { %>
+                <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item">Tours</a>
+                <% if (isAdmin) { %>
+                    <a href="<%= request.getContextPath() %>/admin/customers" class="nav-item">Khách hàng</a>
                     <a href="<%= request.getContextPath() %>/history.jsp" class="nav-item">Lịch sử</a>
+                <% } else { %>
+                    <a href="<%= request.getContextPath() %>/profile" class="nav-item active">Profile</a>
                 <% } %>
             </nav>
             <div class="nav-actions">
-                <% if ("ADMIN".equalsIgnoreCase(u.roleName)) { %>
+                <% if (isAdmin) { %>
                     <span class="user-badge">ADMIN</span>
+                <% } else { %>
+                    <span class="user-badge">USER</span>
                 <% } %>
                 <a href="<%= request.getContextPath() %>/logout" class="btn-logout">
                     <i class="fas fa-sign-out-alt"></i>
@@ -367,7 +333,7 @@
         <div class="hero-content" style="padding: 0;">
             <div class="hero-text" style="text-align: center;">
                 <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">VietAir - Hệ thống quản lý tour du lịch</h1>
-                <p style="font-size: 1.1rem; opacity: 0.9;">Chi tiết khách hàng</p>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Thông tin cá nhân</p>
             </div>
         </div>
     </section>
@@ -377,10 +343,10 @@
         <!-- Page Header -->
         <div class="page-header">
             <h1>
-                <i class="fas fa-user"></i>
-                Chi tiết Khách hàng
+                <i class="fas fa-user-circle"></i>
+                Thông tin cá nhân
             </h1>
-            <a href="<%= request.getContextPath() %>/admin/customers" class="btn btn-secondary">
+            <a href="<%= request.getContextPath() %>/" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Quay lại
             </a>
         </div>
@@ -389,10 +355,7 @@
         <c:if test="${not empty param.success}">
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i>
-                <c:choose>
-                    <c:when test="${param.success == 'updated'}">Cập nhật thông tin thành công!</c:when>
-                    <c:when test="${param.success == 'statusupdated'}">Cập nhật trạng thái thành công!</c:when>
-                </c:choose>
+                Cập nhật thông tin thành công!
             </div>
         </c:if>
 
@@ -459,33 +422,6 @@
                             <fmt:formatDate value="${customer.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
                         </div>
                     </div>
-                    
-                    <!-- Status Actions -->
-                    <div class="action-buttons">
-                        <c:choose>
-                            <c:when test="${customer.status == 'active'}">
-                                <form method="POST" action="<%= request.getContextPath() %>/admin/customers" style="display:inline;">
-                                    <input type="hidden" name="action" value="updateStatus">
-                                    <input type="hidden" name="customerId" value="${customer.id}">
-                                    <input type="hidden" name="status" value="banned">
-                                    <button type="submit" class="btn btn-danger btn-sm" 
-                                            onclick="return confirm('Bạn có chắc muốn khóa tài khoản này?')">
-                                        <i class="fas fa-lock"></i> Khóa tài khoản
-                                    </button>
-                                </form>
-                            </c:when>
-                            <c:otherwise>
-                                <form method="POST" action="<%= request.getContextPath() %>/admin/customers" style="display:inline;">
-                                    <input type="hidden" name="action" value="updateStatus">
-                                    <input type="hidden" name="customerId" value="${customer.id}">
-                                    <input type="hidden" name="status" value="active">
-                                    <button type="submit" class="btn btn-success btn-sm">
-                                        <i class="fas fa-unlock"></i> Mở khóa
-                                    </button>
-                                </form>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
                 </div>
             </div>
 
@@ -497,18 +433,10 @@
                         <h2><i class="fas fa-edit"></i> Chỉnh sửa thông tin</h2>
                     </div>
                     
-                    <form method="POST" action="<%= request.getContextPath() %>/admin/customers">
-                        <input type="hidden" name="action" value="update">
-                        <input type="hidden" name="customerId" value="${customer.id}">
-                        
+                    <form method="POST" action="<%= request.getContextPath() %>/profile">
                         <div class="form-group">
                             <label>Họ tên</label>
                             <input type="text" name="fullName" value="${customer.fullName}" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" name="email" value="${customer.email}" required>
                         </div>
                         
                         <div class="form-group">

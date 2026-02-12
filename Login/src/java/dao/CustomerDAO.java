@@ -106,6 +106,26 @@ public class CustomerDAO {
     }
     
     /**
+     * Get customer by email
+     */
+    public Customer getCustomerByEmail(String email) throws Exception {
+        String sql = "SELECT * FROM Customers WHERE email = ?";
+        
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, email);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToCustomer(rs);
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
      * Update customer information
      */
     public boolean updateCustomer(Customer customer) throws Exception {
@@ -209,10 +229,12 @@ public class CustomerDAO {
     private Customer mapResultSetToCustomer(ResultSet rs) throws SQLException {
         Customer c = new Customer();
         c.setId(rs.getInt("id"));
-        c.setFullName(rs.getString("full_name"));
+        
+        // Read NVARCHAR columns directly - SQL Server should handle encoding
+        c.setFullName(rs.getNString("full_name"));  // Use getNString for NVARCHAR
         c.setEmail(rs.getString("email"));
         c.setPhone(rs.getString("phone"));
-        c.setAddress(rs.getString("address"));
+        c.setAddress(rs.getNString("address"));  // Use getNString for NVARCHAR
         c.setDateOfBirth(rs.getDate("date_of_birth"));
         c.setStatus(rs.getString("status"));
         c.setCreatedAt(rs.getTimestamp("created_at"));

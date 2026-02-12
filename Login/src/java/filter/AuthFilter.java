@@ -19,20 +19,40 @@ public class AuthFilter implements Filter {
         HttpSession session = request.getSession(false);
         User u = (session == null) ? null : (User) session.getAttribute("user");
 
+        String path = request.getServletPath();
+        
+        // DEBUG
+        System.out.println(">>> AuthFilter: path=" + path);
+        System.out.println(">>> AuthFilter: user=" + (u == null ? "null" : u.username));
+        System.out.println(">>> AuthFilter: role=" + (u == null ? "null" : u.roleName));
+
         if (u == null) {
+            System.out.println(">>> AuthFilter: No user in session, redirect to login");
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        String path = request.getServletPath(); // /admin.jsp, /user.jsp, or /admin/*
-
-        // Check if accessing admin resources
-        if ((path.startsWith("/admin") || "/admin.jsp".equals(path)) 
-            && !"ADMIN".equalsIgnoreCase(u.roleName)) {
-            response.sendRedirect(request.getContextPath() + "/error.jsp");
+        // ADMIN can access everything
+        if ("ADMIN".equalsIgnoreCase(u.roleName)) {
+            System.out.println(">>> AuthFilter: ADMIN access granted");
+            chain.doFilter(req, res);
             return;
         }
 
-        chain.doFilter(req, res);
+        // USER can only access /user.jsp
+        if ("USER".equalsIgnoreCase(u.roleName)) {
+            if (path.startsWith("/admin") || "/admin.jsp".equals(path)) {
+                System.out.println(">>> AuthFilter: USER blocked from admin area");
+                response.sendRedirect(request.getContextPath() + "/error.jsp");
+                return;
+            }
+            System.out.println(">>> AuthFilter: USER access granted to " + path);
+            chain.doFilter(req, res);
+            return;
+        }
+
+        // Unknown role - deny access
+        System.out.println(">>> AuthFilter: Unknown role, access denied");
+        response.sendRedirect(request.getContextPath() + "/error.jsp");
     }
 }
