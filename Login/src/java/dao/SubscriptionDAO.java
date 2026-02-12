@@ -51,8 +51,9 @@ public class SubscriptionDAO {
     public ProviderSubscription getCurrentSubscription(int userId) {
         EntityManager em = getEntityManager();
         try {
+            // Get highest priced active subscription (Elite > Pro > Explorer)
             List<ProviderSubscription> results = em.createQuery(
-                "SELECT s FROM ProviderSubscription s JOIN FETCH s.plan WHERE s.userId = :uid AND s.status = 'Active' AND s.endDate > :now ORDER BY s.startDate DESC", 
+                "SELECT s FROM ProviderSubscription s JOIN FETCH s.plan WHERE s.userId = :uid AND s.status = 'Active' AND s.endDate > :now ORDER BY s.plan.price DESC", 
                 ProviderSubscription.class)
                 .setParameter("uid", userId)
                 .setParameter("now", new Date())
@@ -60,6 +61,22 @@ public class SubscriptionDAO {
                 .getResultList();
                 
             return results.isEmpty() ? null : results.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<ProviderSubscription> getSubscriptionHistory(int userId) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery(
+                "SELECT s FROM ProviderSubscription s JOIN FETCH s.plan WHERE s.userId = :uid ORDER BY s.startDate DESC", 
+                ProviderSubscription.class)
+                .setParameter("uid", userId)
+                .getResultList();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

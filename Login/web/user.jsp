@@ -55,8 +55,9 @@
     <div class="col-md-6">
       <div class="card card-soft p-3">
         <div class="fw-semibold mb-1">Tính năng</div>
-        <div class="text-muted small mb-3">Bạn có thể thêm tính năng ở đây.</div>
-        <a href="pricing" class="btn btn-outline-success w-100">Upgrade Plan</a>
+        <div class="text-muted small mb-3">Quản lý gói đăng ký và thanh toán.</div>
+        <a href="pricing" class="btn btn-outline-success w-100 mb-2">Upgrade Plan</a>
+        <a href="history" class="btn btn-outline-primary w-100">Billing History</a>
       </div>
     </div>
   </div>

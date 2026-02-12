@@ -57,6 +57,23 @@ CREATE TABLE PaymentTransactions (
     CONSTRAINT FK_Trans_Users FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 
+-- 5. Sepay Transaction Table
+CREATE TABLE SepayTransactions (
+    Id INT PRIMARY KEY,              -- Matches "id": 92704 from SePay
+    Gateway NVARCHAR(50),            -- "Vietcombank"
+    TransactionDate DATETIME,        -- "2023-03-25 14:02:37"
+	SubAccount NVARCHAR(50),
+    AccountNumber NVARCHAR(20),      -- "0123499999"
+    Code NVARCHAR(50),               -- "null" or auto-detected code
+    Content NVARCHAR(200),           -- "chuyen tien mua iphone"
+    TransferType NVARCHAR(10),       -- "in" or "out"
+    TransferAmount DECIMAL(18,2),    -- 2277000
+    Accumulated DECIMAL(18,2),       -- 19077000
+    ReferenceCode NVARCHAR(100),     -- "MBVCB.3278907687"
+    Description NVARCHAR(500),       -- Full SMS content
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
 -- 5. Seed Subscription Plans (NEW PRICES)
 INSERT INTO SubscriptionPlans (PlanName, PlanCode, Price, DurationDays, Description, Features)
 VALUES 
@@ -69,3 +86,6 @@ CREATE INDEX IX_Subs_UserId ON ProviderSubscriptions(UserId);
 CREATE INDEX IX_Trans_Code ON PaymentTransactions(TransactionCode);
 
 SELECT * FROM PaymentTransactions;
+SELECT * FROM SepayTransactions;
+SELECT * FROM SubscriptionPlans;
+SELECT * FROM ProviderSubscriptions;

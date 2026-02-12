@@ -38,8 +38,10 @@
     <div class="row justify-content-center">
         <c:forEach items="${plans}" var="p">
             <div class="col-md-4 mb-4">
-                <!-- Highlight if current plan -->
-                <c:set var="isCurrent" value="${currentSub != null && currentSub.plan.planId == p.planId}" />
+                <!-- Logic: Current plan is the highest priced active one, or Explorer if none -->
+                <c:set var="isCurrent" value="${(currentSub == null && p.price == 0) || (currentSub != null && currentSub.plan.planId == p.planId)}" />
+                <!-- Logic: Can only upgrade to higher priced plans -->
+                <c:set var="canUpgrade" value="${currentSub == null || currentSub.plan.price < p.price}" />
                 
                 <div class="pricing-card h-100 bg-white ${isCurrent ? 'current-plan' : ''}">
                     <h3 class="fw-bold">${p.planName}</h3>
@@ -61,8 +63,11 @@
                             <c:when test="${isCurrent}">
                                 <button class="btn btn-success w-100" disabled>Current Plan</button>
                             </c:when>
+                            <c:when test="${!canUpgrade}">
+                                <button class="btn btn-secondary w-100" disabled>Owned</button>
+                            </c:when>
                             <c:otherwise>
-                                <a href="payment?planId=${p.planId}" class="btn btn-primary w-100">Choose Plan</a>
+                                <a href="payment?planId=${p.planId}" class="btn btn-primary w-100">Upgrade</a>
                             </c:otherwise>
                         </c:choose>
                     </div>
