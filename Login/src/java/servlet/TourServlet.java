@@ -91,17 +91,54 @@ public class TourServlet extends HttpServlet {
             }
         }
         
-        // Kiểm tra có tìm kiếm theo destination không
+        // Get filter parameters
+        String search = request.getParameter("search");
         String destination = request.getParameter("destination");
-        List<Tour> allTours;
+        String sortBy = request.getParameter("sortBy");
         
+        // Get all tours
+        List<Tour> allTours = tourService.getAllTours();
+        
+        // Apply search filter
+        if (search != null && !search.trim().isEmpty()) {
+            final String query = search.toLowerCase();
+            allTours = allTours.stream()
+                .filter(t -> t.getName().toLowerCase().contains(query) ||
+                           t.getDestination().toLowerCase().contains(query))
+                .collect(java.util.stream.Collectors.toList());
+            request.setAttribute("searchQuery", search);
+        }
+        
+        // Apply destination filter
         if (destination != null && !destination.trim().isEmpty()) {
-            // Tìm kiếm theo destination
             allTours = tourService.searchToursByDestination(destination);
             request.setAttribute("searchDestination", destination);
-        } else {
-            // Lấy tất cả tours
-            allTours = tourService.getAllTours();
+        }
+        
+        // Apply sorting
+        if (sortBy != null && !sortBy.trim().isEmpty()) {
+            switch (sortBy) {
+                case "name":
+                    allTours.sort((t1, t2) -> t1.getName().compareTo(t2.getName()));
+                    break;
+                case "price_asc":
+                    allTours.sort((t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
+                    break;
+                case "price_desc":
+                    allTours.sort((t1, t2) -> Double.compare(t2.getPrice(), t1.getPrice()));
+                    break;
+                case "date":
+                    allTours.sort((t1, t2) -> t1.getStartDate().compareTo(t2.getStartDate()));
+                    break;
+                case "available":
+                    allTours.sort((t1, t2) -> {
+                        int available1 = t1.getMaxCapacity() - t1.getCurrentCapacity();
+                        int available2 = t2.getMaxCapacity() - t2.getCurrentCapacity();
+                        return Integer.compare(available2, available1); // Descending
+                    });
+                    break;
+            }
+            request.setAttribute("sortBy", sortBy);
         }
         
         // Calculate pagination

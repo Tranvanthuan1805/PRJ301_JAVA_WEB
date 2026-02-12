@@ -254,10 +254,13 @@
             </div>
             <nav class="nav-menu">
                 <a href="index.jsp" class="nav-item">Trang chủ</a>
-                <a href="tour?action=list" class="nav-item">Tours</a>
-                <a href="#" class="nav-item">Khách hàng</a>
-                <a href="#" class="nav-item">Booking</a>
-                <a href="history.jsp" class="nav-item active">Lịch sử</a>
+                <% if (isAdmin) { %>
+                    <a href="admin/tours" class="nav-item">Tours</a>
+                    <a href="admin/customers" class="nav-item">Khách hàng</a>
+                    <a href="history.jsp" class="nav-item active">Lịch sử</a>
+                <% } else { %>
+                    <a href="tour?action=list" class="nav-item">Tours</a>
+                <% } %>
             </nav>
             <div class="nav-actions">
                 <span class="user-badge">ADMIN</span>

@@ -31,185 +31,154 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="<%= request.getContextPath() %>/css/vietair-style.css" rel="stylesheet">
     <style>
-        .tours-hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            padding: 3rem 0 2rem;
-            color: white;
+        body {
+            background: #f5f7fa;
         }
         
         .tours-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
         }
         
-        .tours-header {
+        .page-header {
             text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
             margin-bottom: 2rem;
         }
         
-        .tours-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        
-        .tours-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.95;
-        }
-        
-        .tours-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .tour-card {
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .tour-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .tour-image {
+        table {
             width: 100%;
-            height: 220px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
+            border-collapse: collapse;
         }
         
-        .tour-content {
-            padding: 1.5rem;
+        thead {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        tbody tr:hover {
+            background: #f9fafb;
         }
         
         .tour-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: #1f2937;
         }
         
-        .tour-info-row {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+        .price-text {
+            font-weight: 600;
+            color: #059669;
         }
         
-        .tour-info-row i {
-            color: var(--primary-color);
-            width: 20px;
-        }
-        
-        .tour-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .tour-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        
-        .tour-capacity {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        .capacity-available {
-            color: #10b981;
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
         }
         
-        .capacity-full {
-            color: #ef4444;
+        .status-available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-full {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .btn-view-detail {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
         }
         
-        .no-tours {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-        }
-        
-        .no-tours i {
-            font-size: 4rem;
-            color: var(--border-color);
-            margin-bottom: 1rem;
+        .btn-view-detail:hover {
+            background: var(--primary-dark);
         }
         
         .pagination {
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 0.5rem;
-            margin: 3rem 0;
+            margin: 2rem 0;
         }
         
-        .pagination a,
-        .pagination span {
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            background: white;
             border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
             text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 500;
-            transition: all 0.2s ease;
+            color: #374151;
         }
         
-        .pagination a:hover {
+        .page-btn:hover {
+            background: #f9fafb;
+        }
+        
+        .page-btn.active {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
-        }
-        
-        .pagination .active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        .pagination .disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
         }
         
         .tours-info {
             text-align: center;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
-        
-        @media (max-width: 768px) {
-            .tours-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .tours-title {
-                font-size: 2rem;
-            }
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -225,18 +194,20 @@
             </div>
             <nav class="nav-menu">
                 <a href="<%= request.getContextPath() %>/index.jsp" class="nav-item">Trang chủ</a>
-                <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item active">Tours</a>
-                <a href="<%= isLoggedIn ? "#" : request.getContextPath() + "/login.jsp" %>" class="nav-item">Khách hàng</a>
-                <a href="<%= isLoggedIn ? "#" : request.getContextPath() + "/login.jsp" %>" class="nav-item">Booking</a>
                 <% if (isAdmin) { %>
+                    <a href="<%= request.getContextPath() %>/admin/tours" class="nav-item active">Tours</a>
+                    <a href="<%= request.getContextPath() %>/admin/customers" class="nav-item">Khách hàng</a>
                     <a href="<%= request.getContextPath() %>/history.jsp" class="nav-item">Lịch sử</a>
+                <% } else if (isLoggedIn) { %>
+                    <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item active">Tours</a>
+                    <a href="<%= request.getContextPath() %>/profile" class="nav-item">Profile</a>
+                <% } else { %>
+                    <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item active">Tours</a>
                 <% } %>
             </nav>
             <div class="nav-actions">
                 <% if (isLoggedIn) { %>
-                    <% if (isAdmin) { %>
-                        <span class="user-badge">ADMIN</span>
-                    <% } %>
+                    <span class="user-badge"><%= isAdmin ? "ADMIN" : "USER" %></span>
                     <a href="<%= request.getContextPath() %>/logout" class="btn-logout">
                         <i class="fas fa-sign-out-alt"></i>
                         Đăng xuất
@@ -255,26 +226,60 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <div class="tours-hero">
-        <div class="tours-container">
-            <div class="tours-header">
-                <h1 class="tours-title">Khám phá Đà Nẵng</h1>
-                <p class="tours-subtitle">Tìm tour du lịch phù hợp với bạn</p>
-                <% if (isAdmin) { %>
-                    <div style="margin-top: 1.5rem;">
-                        <a href="<%= request.getContextPath() %>/tour?action=add" class="btn-primary" style="background: white; color: var(--primary-color); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600;">
-                            <i class="fas fa-plus"></i>
-                            Thêm Tour Mới
-                        </a>
-                    </div>
-                <% } %>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Content -->
-    <div class="tours-container" style="padding-bottom: 4rem;">
+    <div class="tours-container" style="padding: 3rem 0 4rem;">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Khám phá Đà Nẵng</h1>
+            <p class="page-subtitle">Tìm tour du lịch phù hợp với bạn</p>
+            <% if (isAdmin) { %>
+                <div style="margin-top: 1rem;">
+                    <a href="<%= request.getContextPath() %>/tour?action=add" style="display: inline-flex; align-items: center; gap: 8px; padding: 0.75rem 1.5rem; background: var(--primary-color); color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                        <i class="fas fa-plus"></i>
+                        Thêm Tour Mới
+                    </a>
+                </div>
+            <% } %>
+        </div>
+        
+        <!-- Search and Filter (for ALL users) -->
+        <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #e5e7eb;">
+            <form method="get" action="<%= request.getContextPath() %>/tour" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
+                <input type="hidden" name="action" value="list">
+                <div style="flex: 1; min-width: 250px;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-size: 14px; font-weight: 600; color: #374151;">Tìm kiếm</label>
+                    <input type="text" name="search" placeholder="Tìm theo tên tour, điểm đến..." value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                </div>
+                <div style="min-width: 200px;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-size: 14px; font-weight: 600; color: #374151;">Điểm đến</label>
+                    <select name="destination" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white;">
+                        <option value="">Tất cả</option>
+                        <option value="Bà Nà Hills" <%= "Bà Nà Hills".equals(request.getParameter("destination")) ? "selected" : "" %>>Bà Nà Hills</option>
+                        <option value="Ngũ Hành Sơn" <%= "Ngũ Hành Sơn".equals(request.getParameter("destination")) ? "selected" : "" %>>Ngũ Hành Sơn</option>
+                        <option value="Cù Lao Chàm" <%= "Cù Lao Chàm".equals(request.getParameter("destination")) ? "selected" : "" %>>Cù Lao Chàm</option>
+                        <option value="Sơn Trà" <%= "Sơn Trà".equals(request.getParameter("destination")) ? "selected" : "" %>>Sơn Trà</option>
+                        <option value="Huế" <%= "Huế".equals(request.getParameter("destination")) ? "selected" : "" %>>Huế</option>
+                        <option value="Núi Thần Tài" <%= "Núi Thần Tài".equals(request.getParameter("destination")) ? "selected" : "" %>>Núi Thần Tài</option>
+                    </select>
+                </div>
+                <div style="min-width: 180px;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-size: 14px; font-weight: 600; color: #374151;">Sắp xếp</label>
+                    <select name="sortBy" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white;">
+                        <option value="">Mặc định</option>
+                        <option value="name" <%= "name".equals(request.getParameter("sortBy")) ? "selected" : "" %>>Tên A-Z</option>
+                        <option value="price_asc" <%= "price_asc".equals(request.getParameter("sortBy")) ? "selected" : "" %>>Giá thấp đến cao</option>
+                        <option value="price_desc" <%= "price_desc".equals(request.getParameter("sortBy")) ? "selected" : "" %>>Giá cao đến thấp</option>
+                        <option value="date" <%= "date".equals(request.getParameter("sortBy")) ? "selected" : "" %>>Ngày khởi hành</option>
+                        <option value="available" <%= "available".equals(request.getParameter("sortBy")) ? "selected" : "" %>>Còn chỗ nhiều nhất</option>
+                    </select>
+                </div>
+                <button type="submit" style="padding: 0.75rem 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-search"></i>
+                    Tìm kiếm
+                </button>
+            </form>
+        </div>
+        
         <!-- Tours Info -->
         <% if (totalTours > 0) { %>
             <div class="tours-info">
@@ -282,136 +287,86 @@
             </div>
         <% } %>
         
-        <!-- Tours Grid -->
-        <% if (tours != null && !tours.isEmpty()) { %>
-            <div class="tours-grid">
-                <% for (Tour tour : tours) {
-                    String startDateStr = tour.getStartDate().format(formatter);
-                    String endDateStr = tour.getEndDate().format(formatter);
-                    boolean isAvailable = tour.getCurrentCapacity() < tour.getMaxCapacity();
-                    String priceFormatted = String.format("%,.0f", tour.getPrice());
-                %>
-                    <div class="tour-card">
-                        <div class="tour-image">
-                            <i class="fas fa-map-marked-alt"></i>
-                        </div>
-                        <div class="tour-content">
-                            <h3 class="tour-name"><%= tour.getName() %></h3>
-                            
-                            <div class="tour-info-row">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span><%= tour.getDestination() %></span>
-                            </div>
-                            
-                            <div class="tour-info-row">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span><%= startDateStr %> - <%= endDateStr %></span>
-                            </div>
-                            
-                            <div class="tour-info-row">
-                                <i class="fas fa-users"></i>
-                                <span>Sức chứa: <%= tour.getMaxCapacity() %> người</span>
-                            </div>
-                            
-                            <div class="tour-footer">
-                                <div>
-                                    <div class="tour-price"><%= priceFormatted %>₫</div>
-                                    <div class="tour-capacity <%= isAvailable ? "capacity-available" : "capacity-full" %>">
-                                        <% if (isAvailable) { %>
-                                            <i class="fas fa-check-circle"></i> Còn <%= tour.getMaxCapacity() - tour.getCurrentCapacity() %> chỗ
-                                        <% } else { %>
-                                            <i class="fas fa-times-circle"></i> Đã hết chỗ
-                                        <% } %>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Action Buttons -->
-                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                                <a href="<%= request.getContextPath() %>/tour?action=view&id=<%= tour.getId() %>" 
-                                   class="btn-primary" 
-                                   style="flex: 1; text-align: center; padding: 0.75rem; text-decoration: none; border-radius: 6px; font-size: 0.9rem;">
-                                    <i class="fas fa-eye"></i> Xem chi tiết
-                                </a>
-                                <% if (isAdmin) { %>
-                                    <a href="<%= request.getContextPath() %>/tour?action=edit&id=<%= tour.getId() %>" 
-                                       class="btn-secondary" 
-                                       style="padding: 0.75rem 1rem; text-decoration: none; border-radius: 6px; background: #f59e0b; color: white;"
-                                       onclick="event.stopPropagation();">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="<%= request.getContextPath() %>/tour?action=delete&id=<%= tour.getId() %>" 
-                                       class="btn-danger" 
-                                       style="padding: 0.75rem 1rem; text-decoration: none; border-radius: 6px; background: #ef4444; color: white;"
-                                       onclick="event.stopPropagation(); return confirm('Bạn có chắc muốn xóa tour này?');">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                <% } %>
-                            </div>
-                        </div>
-                    </div>
-                <% } %>
-            </div>
-            
-            <!-- Pagination -->
-            <% if (totalPages > 1) { %>
-                <div class="pagination">
-                    <!-- Previous Button -->
-                    <% if (currentPage > 1) { %>
-                        <a href="<%= request.getContextPath() %>/tour?action=list&page=<%= currentPage - 1 %>">
-                            <i class="fas fa-chevron-left"></i> Trước
-                        </a>
-                    <% } else { %>
-                        <span class="disabled">
-                            <i class="fas fa-chevron-left"></i> Trước
-                        </span>
-                    <% } %>
-                    
-                    <!-- Page Numbers -->
-                    <% 
-                        int startPage = Math.max(1, currentPage - 2);
-                        int endPage = Math.min(totalPages, currentPage + 2);
-                        
-                        if (startPage > 1) {
+        <!-- Tours Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>TÊN TOUR</th>
+                        <th>ĐIỂM ĐẾN</th>
+                        <th>NGÀY KHỞI HÀNH</th>
+                        <th>GIÁ</th>
+                        <th>SỐ NGƯỜI</th>
+                        <th>TRẠNG THÁI</th>
+                        <th>HÀNH ĐỘNG</th>
+                        <% if (isAdmin) { %>
+                            <th style="width: 120px;">QUẢN LÝ</th>
+                        <% } %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (tours != null && !tours.isEmpty()) {
+                        for (Tour tour : tours) { 
+                            boolean isAvailable = tour.getCurrentCapacity() < tour.getMaxCapacity();
                     %>
-                        <a href="<%= request.getContextPath() %>/tour?action=list&page=1">1</a>
-                        <% if (startPage > 2) { %>
-                            <span>...</span>
-                        <% } %>
+                            <tr>
+                                <td><%= tour.getId() %></td>
+                                <td class="tour-name"><%= tour.getName() %></td>
+                                <td><%= tour.getDestination() %></td>
+                                <td><%= tour.getStartDate().format(formatter) %></td>
+                                <td class="price-text"><%= String.format("%,d", (int)tour.getPrice()) %> VNĐ</td>
+                                <td><%= tour.getCurrentCapacity() %>/<%= tour.getMaxCapacity() %></td>
+                                <td>
+                                    <span class="status-badge <%= isAvailable ? "status-available" : "status-full" %>">
+                                        <%= isAvailable ? "Còn chỗ" : "Đã đầy" %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="<%= request.getContextPath() %>/jsp/tour-view.jsp?id=<%= tour.getId() %>" class="btn-view-detail">
+                                        <i class="fas fa-eye"></i>
+                                        Xem chi tiết
+                                    </a>
+                                </td>
+                                <% if (isAdmin) { %>
+                                    <td>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <a href="<%= request.getContextPath() %>/tour?action=edit&id=<%= tour.getId() %>" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #fef3c7; color: #92400e; border-radius: 6px; text-decoration: none;" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button onclick="if(confirm('Bạn có chắc muốn xóa tour này?')) window.location.href='<%= request.getContextPath() %>/tour?action=delete&id=<%= tour.getId() %>'" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #fee2e2; color: #991b1b; border: none; border-radius: 6px; cursor: pointer;" title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                <% } %>
+                            </tr>
+                    <% }
+                    } else { %>
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 2rem; color: #9ca3af;">
+                                Không có tour nào
+                            </td>
+                        </tr>
                     <% } %>
-                    
-                    <% for (int i = startPage; i <= endPage; i++) { %>
-                        <% if (i == currentPage) { %>
-                            <span class="active"><%= i %></span>
-                        <% } else { %>
-                            <a href="<%= request.getContextPath() %>/tour?action=list&page=<%= i %>"><%= i %></a>
-                        <% } %>
-                    <% } %>
-                    
-                    <% if (endPage < totalPages) { %>
-                        <% if (endPage < totalPages - 1) { %>
-                            <span>...</span>
-                        <% } %>
-                        <a href="<%= request.getContextPath() %>/tour?action=list&page=<%= totalPages %>"><%= totalPages %></a>
-                    <% } %>
-                    
-                    <!-- Next Button -->
-                    <% if (currentPage < totalPages) { %>
-                        <a href="<%= request.getContextPath() %>/tour?action=list&page=<%= currentPage + 1 %>">
-                            Sau <i class="fas fa-chevron-right"></i>
-                        </a>
-                    <% } else { %>
-                        <span class="disabled">
-                            Sau <i class="fas fa-chevron-right"></i>
-                        </span>
-                    <% } %>
-                </div>
-            <% } %>
-        <% } else { %>
-            <div class="no-tours">
-                <i class="fas fa-search"></i>
-                <h3>Không tìm thấy tour nào</h3>
-                <p>Vui lòng thử lại với bộ lọc khác</p>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <% if (totalPages > 1) { %>
+            <div class="pagination">
+                <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>" class="page-btn">« Trước</a>
+                <% } %>
+                
+                <% for (int i = 1; i <= totalPages; i++) { %>
+                    <a href="?page=<%= i %>" class="page-btn <%= i == currentPage ? "active" : "" %>"><%= i %></a>
+                <% } %>
+                
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>" class="page-btn">Sau »</a>
+                <% } %>
             </div>
         <% } %>
     </div>

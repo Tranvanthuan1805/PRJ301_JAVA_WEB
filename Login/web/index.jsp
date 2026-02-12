@@ -1,11 +1,29 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="model.Tour" %>
+<%@ page import="dao.TourDAO" %>
+<%@ page import="util.DatabaseConnection" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%
     // Check if user is logged in
     String username = (String) session.getAttribute("username");
     String role = (String) session.getAttribute("role");
     boolean isLoggedIn = username != null;
     boolean isAdmin = "ADMIN".equals(role);
+    
+    // Load featured tours
+    List<Tour> featuredTours = null;
+    try {
+        Connection conn = DatabaseConnection.getNewConnection();
+        TourDAO tourDAO = new TourDAO(conn);
+        featuredTours = tourDAO.getFeaturedTours(6);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -31,17 +49,16 @@
             <nav class="nav-menu">
                 <a href="index.jsp" class="nav-item">Trang chủ</a>
                 <a href="tour?action=list" class="nav-item">Tours</a>
-                <a href="<%= isLoggedIn ? "#" : "login.jsp" %>" class="nav-item">Khách hàng</a>
-                <a href="<%= isLoggedIn ? "#" : "login.jsp" %>" class="nav-item">Booking</a>
                 <% if (isAdmin) { %>
+                    <a href="admin/customers" class="nav-item">Khách hàng</a>
                     <a href="history.jsp" class="nav-item">Lịch sử</a>
+                <% } else if (isLoggedIn) { %>
+                    <a href="profile" class="nav-item">Profile</a>
                 <% } %>
             </nav>
             <div class="nav-actions">
                 <% if (isLoggedIn) { %>
-                    <% if (isAdmin) { %>
-                        <span class="user-badge">ADMIN</span>
-                    <% } %>
+                    <span class="user-badge"><%= isAdmin ? "ADMIN" : "USER" %></span>
                     <a href="logout" class="btn-logout">
                         <i class="fas fa-sign-out-alt"></i>
                         Đăng xuất
@@ -151,9 +168,31 @@
                         <p>Những tour du lịch hot nhất với giá tốt nhất</p>
                     </div>
                     <div class="featured-tours-grid" id="featuredToursGrid">
-                        <div class="featured-tour-item loading">
-                            <div class="loading-placeholder"></div>
-                        </div>
+                        <% if (featuredTours != null && !featuredTours.isEmpty()) { 
+                            for (Tour tour : featuredTours) { %>
+                                <div class="featured-tour-item" onclick="window.location.href='jsp/tour-view.jsp?id=<%= tour.getId() %>'" style="cursor: pointer;">
+                                    <div class="featured-tour-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        <div class="featured-badge"><%= String.format("%,.0f", tour.getPrice()) %> VNĐ</div>
+                                    </div>
+                                    <div class="featured-tour-content">
+                                        <h4><%= tour.getName() %></h4>
+                                        <p class="featured-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <%= tour.getDestination() %>
+                                        </p>
+                                        <div class="featured-tour-info">
+                                            <span><i class="fas fa-calendar"></i> <%= tour.getStartDate().format(formatter) %></span>
+                                            <span><i class="fas fa-users"></i> <%= tour.getCurrentCapacity() %>/<%= tour.getMaxCapacity() %></span>
+                                        </div>
+                                        <a href="jsp/tour-view.jsp?id=<%= tour.getId() %>" class="btn-book-now" onclick="event.stopPropagation();">
+                                            <i class="fas fa-info-circle"></i> Xem chi tiết
+                                        </a>
+                                    </div>
+                                </div>
+                        <% } 
+                        } else { %>
+                            <p style="text-align: center; padding: 2rem; color: #666; grid-column: 1 / -1;">Không có tours nào</p>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -266,37 +305,7 @@
             document.getElementById('searchTab').classList.remove('active');
             document.getElementById('searchForm').style.display = 'none';
             document.getElementById('featuredToursSection').style.display = 'block';
-            loadFeaturedTours();
         });
-
-        // Load featured tours
-        function loadFeaturedTours() {
-            fetch('tour?action=featured')
-                .then(response => response.json())
-                .then(data => {
-                    const grid = document.getElementById('featuredToursGrid');
-                    if (data.tours && data.tours.length > 0) {
-                        grid.innerHTML = data.tours.slice(0, 6).map(tour => `
-                            <div class="featured-tour-item" onclick="window.location.href='jsp/tour-view.jsp?id=${tour.id}'" style="cursor: pointer;">
-                                <div class="featured-tour-image">
-                                    <div class="featured-badge">${tour.price.toLocaleString()} VNĐ</div>
-                                </div>
-                                <div class="featured-tour-content">
-                                    <h4>${tour.name}</h4>
-                                    <p class="featured-location">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        ${tour.destination}
-                                    </p>
-                                    <a href="jsp/tour-view.jsp?id=${tour.id}" class="btn-book-now">
-                                        <i class="fas fa-info-circle"></i> Xem chi tiết
-                                    </a>
-                                </div>
-                            </div>
-                        `).join('');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
     </script>
 </body>
 </html>

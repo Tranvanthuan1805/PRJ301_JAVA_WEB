@@ -228,9 +228,8 @@ public class TourDAO implements ITourDAO {
     
     @Override
     public List<Tour> getFeaturedTours(int limit) throws SQLException {
-        // Chỉ lấy tours mới (startDate >= hôm nay)
+        // Lấy tất cả tours (kể cả cũ) để hiển thị
         String sql = "SELECT TOP " + limit + " * FROM Tours " +
-                    "WHERE currentCapacity < maxCapacity AND startDate >= CAST(GETDATE() AS DATE) " +
                     "ORDER BY price DESC, currentCapacity DESC";
         
         List<Tour> tours = new ArrayList<>();
