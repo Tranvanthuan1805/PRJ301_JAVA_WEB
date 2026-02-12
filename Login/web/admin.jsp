@@ -21,6 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Admin</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body{ background:#f6f7fb; }
     .card-soft{ border:0; border-radius:16px; box-shadow:0 12px 30px rgba(0,0,0,.08); }
@@ -50,15 +51,17 @@
   <div class="row g-3">
     <div class="col-md-4">
       <div class="card card-soft p-3">
-        <div class="fw-semibold mb-1">Quản lý Users</div>
-        <div class="text-muted small mb-3">Xem / thêm / khóa tài khoản</div>
-        <button class="btn btn-outline-primary w-100" disabled>Demo (chưa làm)</button>
+        <div class="fw-semibold mb-1">Quản lý Khách hàng</div>
+        <div class="text-muted small mb-3">Xem, tìm kiếm và quản lý khách hàng</div>
+        <a href="<%= request.getContextPath() %>/admin/customers" class="btn btn-primary w-100">
+          <i class="fas fa-users"></i> Truy cập
+        </a>
       </div>
     </div>
     <div class="col-md-4">
       <div class="card card-soft p-3">
-        <div class="fw-semibold mb-1">Quản lý Roles</div>
-        <div class="text-muted small mb-3">Phân quyền admin/user</div>
+        <div class="fw-semibold mb-1">Quản lý Users</div>
+        <div class="text-muted small mb-3">Xem / thêm / khóa tài khoản</div>
         <button class="btn btn-outline-primary w-100" disabled>Demo (chưa làm)</button>
       </div>
     </div>

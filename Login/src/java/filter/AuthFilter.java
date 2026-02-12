@@ -6,7 +6,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import model.User;
 
-@WebFilter(urlPatterns = {"/admin.jsp", "/user.jsp"})
+@WebFilter(urlPatterns = {"/admin.jsp", "/user.jsp", "/admin/*"})
 public class AuthFilter implements Filter {
 
     @Override
@@ -20,14 +20,16 @@ public class AuthFilter implements Filter {
         User u = (session == null) ? null : (User) session.getAttribute("user");
 
         if (u == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        String path = request.getServletPath(); // /admin.jsp hoặc /user.jsp
+        String path = request.getServletPath(); // /admin.jsp, /user.jsp, or /admin/*
 
-        if ("/admin.jsp".equals(path) && !"ADMIN".equalsIgnoreCase(u.roleName)) {
-            response.sendRedirect("error.jsp");
+        // Check if accessing admin resources
+        if ((path.startsWith("/admin") || "/admin.jsp".equals(path)) 
+            && !"ADMIN".equalsIgnoreCase(u.roleName)) {
+            response.sendRedirect(request.getContextPath() + "/error.jsp");
             return;
         }
 
