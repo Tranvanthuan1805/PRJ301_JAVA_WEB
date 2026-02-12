@@ -21,7 +21,7 @@ public class DBUtil {
         "jdbc:sqlserver://localhost:1433;databaseName=AdminUser;encrypt=true;trustServerCertificate=true;";
 
     private static final String USER = "sa";
-    private static final String PASS = "123456"; // mật khẩu SQL Server của user sa
+    private static final String PASS = "MinhHieu2816@"; // mật khẩu SQL Server của user sa
 
     public static Connection getConnection() throws Exception {
         return DriverManager.getConnection(URL, USER, PASS);

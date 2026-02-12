@@ -56,7 +56,7 @@
       <div class="card card-soft p-3">
         <div class="fw-semibold mb-1">Tính năng</div>
         <div class="text-muted small mb-3">Bạn có thể thêm tính năng ở đây.</div>
-        <button class="btn btn-outline-success w-100" disabled>Demo (chưa làm)</button>
+        <a href="pricing" class="btn btn-outline-success w-100">Upgrade Plan</a>
       </div>
     </div>
   </div>

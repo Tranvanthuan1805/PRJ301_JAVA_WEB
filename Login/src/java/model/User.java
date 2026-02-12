@@ -10,4 +10,8 @@ public class User {
         this.username = username;
         this.roleName = roleName;
     }
+
+    public int getUserId() { return userId; }
+    public String getUsername() { return username; }
+    public String getRoleName() { return roleName; }
 }
