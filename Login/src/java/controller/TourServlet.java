@@ -1,4 +1,4 @@
-package servlet;
+package controller;
 import service.TourService;
 import model.Tour;
 import util.DatabaseConnection;

@@ -1,4 +1,4 @@
-package servlet;
+package controller;
 
 import dao.TourDAO;
 import model.Tour;

@@ -47,13 +47,16 @@
                 </div>
             </div>
             <nav class="nav-menu">
-                <a href="index.jsp" class="nav-item">Trang chủ</a>
-                <a href="tour?action=list" class="nav-item">Tours</a>
+                <a href="<%= request.getContextPath() %>/index.jsp" class="nav-item">Trang chủ</a>
                 <% if (isAdmin) { %>
-                    <a href="admin/customers" class="nav-item">Khách hàng</a>
-                    <a href="history.jsp" class="nav-item">Lịch sử</a>
-                <% } else if (isLoggedIn) { %>
-                    <a href="profile" class="nav-item">Profile</a>
+                    <a href="<%= request.getContextPath() %>/admin/tours.jsp" class="nav-item">Tours</a>
+                    <a href="<%= request.getContextPath() %>/admin/customers" class="nav-item">Khách hàng</a>
+                    <a href="<%= request.getContextPath() %>/admin/history.jsp" class="nav-item">Lịch sử</a>
+                <% } else { %>
+                    <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item">Tours</a>
+                    <% if (isLoggedIn) { %>
+                        <a href="<%= request.getContextPath() %>/profile" class="nav-item">Profile</a>
+                    <% } %>
                 <% } %>
             </nav>
             <div class="nav-actions">

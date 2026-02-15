@@ -435,7 +435,7 @@
                         <i class="fas fa-map-marked-alt"></i>
                         <span>Quản lý tour</span>
                     </a>
-                    <a href="<%= request.getContextPath() %>/history.jsp" class="menu-item">
+                    <a href="<%= request.getContextPath() %>/admin/history.jsp" class="menu-item">
                         <i class="fas fa-history"></i>
                         <span>Lịch sử</span>
                     </a>
