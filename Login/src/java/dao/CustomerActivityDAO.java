@@ -16,8 +16,8 @@ public class CustomerActivityDAO {
      */
     public List<CustomerActivity> getActivitiesByCustomerId(int customerId, int limit) throws Exception {
         List<CustomerActivity> list = new ArrayList<>();
-        String sql = "SELECT TOP (?) * FROM CustomerActivities " +
-                     "WHERE customer_id = ? ORDER BY created_at DESC";
+        String sql = "SELECT TOP (?) * FROM CustomerActivity " +
+                     "WHERE CustomerId = ? ORDER BY CreatedAt DESC";
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -62,16 +62,15 @@ public class CustomerActivityDAO {
      * Add new activity
      */
     public boolean addActivity(CustomerActivity activity) throws Exception {
-        String sql = "INSERT INTO CustomerActivities (customer_id, action_type, description, metadata) " +
-                     "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO CustomerActivity (CustomerId, ActionType, ActionDetails, CreatedAt) " +
+                     "VALUES (?, ?, ?, GETDATE())";
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setInt(1, activity.getCustomerId());
-            ps.setString(2, activity.getActionType());
-            ps.setString(3, activity.getDescription());
-            ps.setString(4, activity.getMetadata());
+            ps.setNString(2, activity.getActionType());
+            ps.setNString(3, activity.getDescription());
             
             return ps.executeUpdate() > 0;
         }
@@ -81,7 +80,7 @@ public class CustomerActivityDAO {
      * Get activity count by customer
      */
     public int getActivityCount(int customerId) throws Exception {
-        String sql = "SELECT COUNT(*) FROM CustomerActivities WHERE customer_id = ?";
+        String sql = "SELECT COUNT(*) FROM CustomerActivity WHERE CustomerId = ?";
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -101,8 +100,8 @@ public class CustomerActivityDAO {
      * Get count by action type
      */
     public int getCountByActionType(int customerId, String actionType) throws Exception {
-        String sql = "SELECT COUNT(*) FROM CustomerActivities " +
-                     "WHERE customer_id = ? AND action_type = ?";
+        String sql = "SELECT COUNT(*) FROM CustomerActivity " +
+                     "WHERE CustomerId = ? AND ActionType = ?";
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -138,12 +137,11 @@ public class CustomerActivityDAO {
      */
     private CustomerActivity mapResultSetToActivity(ResultSet rs) throws SQLException {
         CustomerActivity activity = new CustomerActivity();
-        activity.setId(rs.getInt("id"));
-        activity.setCustomerId(rs.getInt("customer_id"));
-        activity.setActionType(rs.getString("action_type"));
-        activity.setDescription(rs.getNString("description"));  // Use getNString for NVARCHAR
-        activity.setMetadata(rs.getString("metadata"));
-        activity.setCreatedAt(rs.getTimestamp("created_at"));
+        activity.setId(rs.getInt("Id"));
+        activity.setCustomerId(rs.getInt("CustomerId"));
+        activity.setActionType(rs.getString("ActionType"));
+        activity.setDescription(rs.getNString("ActionDetails"));  // Use getNString for NVARCHAR
+        activity.setCreatedAt(rs.getTimestamp("CreatedAt"));
         return activity;
     }
 }

@@ -15,13 +15,17 @@ public class DBUtil {
         }
     }
 
-    // ⚠️ Nếu bạn dùng SQLEXPRESS thì đổi thành:
-    // jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=AdminUser;encrypt=true;trustServerCertificate=true;
+    // Connection string with UTF-8 support
     private static final String URL =
-        "jdbc:sqlserver://localhost:1433;databaseName=AdminUser;encrypt=true;trustServerCertificate=true;characterEncoding=UTF-8;sendStringParametersAsUnicode=true;";
+        "jdbc:sqlserver://localhost:1433;" +
+        "databaseName=AdminUser;" +
+        "encrypt=true;" +
+        "trustServerCertificate=true;" +
+        "sendStringParametersAsUnicode=true;" +
+        "characterEncoding=UTF-8;";
 
     private static final String USER = "sa";
-    private static final String PASS = "123456"; // mật khẩu SQL Server của user sa
+    private static final String PASS = "123456";
 
     public static Connection getConnection() throws Exception {
         return DriverManager.getConnection(URL, USER, PASS);

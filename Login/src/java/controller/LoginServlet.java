@@ -1,4 +1,4 @@
-package servlet;
+package controller;
 
 import dao.UserDAO;
 import model.User;
@@ -48,12 +48,14 @@ public class LoginServlet extends HttpServlet {
         // Save session
         HttpSession session = request.getSession(true);
         session.setAttribute("user", u);
+        session.setAttribute("username", u.username);
+        session.setAttribute("role", u.roleName);
 
         // Role redirect
         if ("ADMIN".equalsIgnoreCase(u.roleName)) {
-            response.sendRedirect("admin/customers");
+            response.sendRedirect("admin/customers.jsp");
         } else {
-            response.sendRedirect("user.jsp");
+            response.sendRedirect("profile");
         }
     }
 

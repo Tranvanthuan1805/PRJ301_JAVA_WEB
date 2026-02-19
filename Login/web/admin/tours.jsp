@@ -1,13 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%@ page import="model.Customer" %>
-<%@ page import="dao.CustomerDAO" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="model.Tour" %>
+<%@ page import="dao.TourDAO" %>
+<%@ page import="util.DatabaseConnection" %>
+<%@ page import="java.sql.Connection" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%
-// Set encoding
-response.setCharacterEncoding("UTF-8");
-request.setCharacterEncoding("UTF-8");
-
 // Check admin access
 String username = (String) session.getAttribute("username");
 String role = (String) session.getAttribute("role");
@@ -16,42 +14,29 @@ if (username == null || !"ADMIN".equals(role)) {
     return;
 }
 
-// Get data from servlet or load directly
-List<Customer> customers = (List<Customer>) request.getAttribute("customers");
-Integer currentPage = (Integer) request.getAttribute("currentPage");
-Integer totalPages = (Integer) request.getAttribute("totalPages");
-Integer totalCustomers = (Integer) request.getAttribute("totalCustomers");
-String keyword = (String) request.getAttribute("keyword");
-String filterStatus = (String) request.getAttribute("filterStatus");
-
-// If no data from servlet, load directly
-if (customers == null) {
-    try {
-        CustomerDAO customerDAO = new CustomerDAO();
-        customers = customerDAO.getAllCustomers(0, 100);
-        totalCustomers = customerDAO.getTotalCustomers();
-        totalPages = (int) Math.ceil((double) totalCustomers / 10.0);
-    } catch (Exception e) {
-        e.printStackTrace();
-        customers = new java.util.ArrayList<>();
-    }
+// Load tours
+List<Tour> tours = null;
+int totalTours = 0;
+int currentPage = 1;
+int totalPages = 1;
+try {
+    Connection conn = DatabaseConnection.getNewConnection();
+    TourDAO tourDAO = new TourDAO(conn);
+    tours = tourDAO.getAllTours();
+    totalTours = tours != null ? tours.size() : 0;
+    totalPages = (int) Math.ceil((double) totalTours / 10.0);
+} catch (Exception e) {
+    e.printStackTrace();
 }
 
-if (currentPage == null) currentPage = 1;
-if (totalPages == null) totalPages = 1;
-if (totalCustomers == null) totalCustomers = 0;
-
-SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Khách Hàng - VietAir Admin</title>
+    <title>Quản Lý Tour - VietAir Admin</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="<%= request.getContextPath() %>/css/vietair-style.css" rel="stylesheet">
     <style>
@@ -308,7 +293,7 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             background: #f9fafb;
         }
         
-        .customer-name {
+        .tour-name {
             font-weight: 600;
             color: #1f2937;
         }
@@ -331,9 +316,9 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             color: #991b1b;
         }
         
-        .status-banned {
-            background: #fecaca;
-            color: #7f1d1d;
+        .price-text {
+            font-weight: 600;
+            color: #059669;
         }
         
         .action-buttons {
@@ -351,7 +336,6 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
-            text-decoration: none;
         }
         
         .btn-view {
@@ -407,8 +391,6 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             font-size: 14px;
             cursor: pointer;
             transition: all 0.2s;
-            text-decoration: none;
-            color: #374151;
         }
         
         .page-btn:hover {
@@ -442,11 +424,11 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         <i class="fas fa-chart-line"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="<%= request.getContextPath() %>/admin/customers" class="menu-item active">
+                    <a href="<%= request.getContextPath() %>/admin/customers.jsp" class="menu-item">
                         <i class="fas fa-users"></i>
                         <span>Quản lý khách hàng</span>
                     </a>
-                    <a href="<%= request.getContextPath() %>/admin/tours.jsp" class="menu-item">
+                    <a href="<%= request.getContextPath() %>/admin/tours.jsp" class="menu-item active">
                         <i class="fas fa-map-marked-alt"></i>
                         <span>Quản lý tour</span>
                     </a>
@@ -473,34 +455,49 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         <main class="main-content">
             <div class="top-bar">
                 <div class="top-bar-title">
-                    <h1>Quản Lý Khách Hàng</h1>
+                    <h1>Quản Lý Tour</h1>
                 </div>
                 <div class="top-bar-actions">
-                    <a href="<%= request.getContextPath() %>/admin/customers?action=add" class="btn-add">
+                    <a href="<%= request.getContextPath() %>/tour?action=list" class="btn-export">
+                        <i class="fas fa-eye"></i>
+                        Xem giao diện người dùng
+                    </a>
+                    <a href="<%= request.getContextPath() %>/tour?action=add" class="btn-add">
                         <i class="fas fa-plus"></i>
-                        Thêm khách hàng mới
+                        Thêm tour mới
                     </a>
                 </div>
             </div>
             
             <div class="content-area">
                 <div class="content-header">
-                    <form method="get" action="<%= request.getContextPath() %>/admin/customers" class="search-filter">
+                    <form method="get" action="<%= request.getContextPath() %>/admin/tours" class="search-filter">
                         <div class="search-box">
                             <i class="fas fa-search"></i>
-                            <input type="text" name="keyword" placeholder="Tìm kiếm theo tên, email, số điện thoại..." 
-                                   value="<%= keyword != null ? keyword : "" %>">
+                            <input type="text" name="search" placeholder="Tìm kiếm theo tên tour, điểm đến..." 
+                                   value="<%= request.getAttribute("searchQuery") != null ? request.getAttribute("searchQuery") : "" %>">
                         </div>
-                        <select name="status" class="filter-select" onchange="this.form.submit()">
-                            <option value="">Tất cả trạng thái</option>
-                            <option value="active" <%= "active".equals(filterStatus) ? "selected" : "" %>>Hoạt động</option>
-                            <option value="inactive" <%= "inactive".equals(filterStatus) ? "selected" : "" %>>Không hoạt động</option>
-                            <option value="banned" <%= "banned".equals(filterStatus) ? "selected" : "" %>>Bị cấm</option>
+                        <select name="destination" class="filter-select" onchange="this.form.submit()">
+                            <option value="all">Tất cả điểm đến</option>
+                            <option value="Bà Nà Hills" <%= "Bà Nà Hills".equals(request.getAttribute("destinationFilter")) ? "selected" : "" %>>Bà Nà Hills</option>
+                            <option value="Ngũ Hành Sơn" <%= "Ngũ Hành Sơn".equals(request.getAttribute("destinationFilter")) ? "selected" : "" %>>Ngũ Hành Sơn</option>
+                            <option value="Cù Lao Chàm" <%= "Cù Lao Chàm".equals(request.getAttribute("destinationFilter")) ? "selected" : "" %>>Cù Lao Chàm</option>
+                            <option value="Sơn Trà" <%= "Sơn Trà".equals(request.getAttribute("destinationFilter")) ? "selected" : "" %>>Sơn Trà</option>
+                            <option value="Huế" <%= "Huế".equals(request.getAttribute("destinationFilter")) ? "selected" : "" %>>Huế</option>
+                            <option value="Núi Thần Tài" <%= "Núi Thần Tài".equals(request.getAttribute("destinationFilter")) ? "selected" : "" %>>Núi Thần Tài</option>
                         </select>
-                        <select name="sortBy" class="filter-select">
+                        <select name="status" class="filter-select" onchange="this.form.submit()">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="available" <%= "available".equals(request.getAttribute("statusFilter")) ? "selected" : "" %>>Còn chỗ</option>
+                            <option value="full" <%= "full".equals(request.getAttribute("statusFilter")) ? "selected" : "" %>>Đã đầy</option>
+                        </select>
+                        <select name="sortBy" class="filter-select" onchange="this.form.submit()">
                             <option value="">Mặc định</option>
-                            <option value="name">Tên A-Z</option>
-                            <option value="date">Ngày tạo</option>
+                            <option value="name" <%= "name".equals(request.getAttribute("sortBy")) ? "selected" : "" %>>Tên A-Z</option>
+                            <option value="price" <%= "price".equals(request.getAttribute("sortBy")) ? "selected" : "" %>>Giá thấp đến cao</option>
+                            <option value="price_desc" <%= "price_desc".equals(request.getAttribute("sortBy")) ? "selected" : "" %>>Giá cao đến thấp</option>
+                            <option value="date" <%= "date".equals(request.getAttribute("sortBy")) ? "selected" : "" %>>Ngày khởi hành</option>
+                            <option value="available" <%= "available".equals(request.getAttribute("sortBy")) ? "selected" : "" %>>Còn chỗ nhiều nhất</option>
                         </select>
                         <button type="submit" class="btn-export">
                             <i class="fas fa-search"></i>
@@ -514,52 +511,44 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>HỌ TÊN</th>
-                                <th>EMAIL</th>
-                                <th>SỐ ĐIỆN THOẠI</th>
-                                <th>ĐỊA CHỈ</th>
+                                <th>TÊN TOUR</th>
+                                <th>ĐIỂM ĐẾN</th>
+                                <th>NGÀY KHỞI HÀNH</th>
+                                <th>GIÁ</th>
+                                <th>SỐ NGƯỜI</th>
                                 <th>TRẠNG THÁI</th>
                                 <th>HÀNH ĐỘNG</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% if (customers != null && !customers.isEmpty()) {
-                                for (Customer customer : customers) { 
-                                    String status = customer.getStatus();
-                                    String statusClass = "status-full";
-                                    String statusText = "Không hoạt động";
-                                    
-                                    if ("active".equals(status)) {
-                                        statusClass = "status-available";
-                                        statusText = "Hoạt động";
-                                    } else if ("banned".equals(status)) {
-                                        statusClass = "status-banned";
-                                        statusText = "Bị cấm";
-                                    }
+                            <% if (tours != null && !tours.isEmpty()) {
+                                for (Tour tour : tours) { 
+                                    boolean isAvailable = tour.getCurrentCapacity() < tour.getMaxCapacity();
                             %>
                             <tr>
-                                <td><%= customer.getId() %></td>
-                                <td class="customer-name"><%= customer.getFullName() %></td>
-                                <td><%= customer.getEmail() %></td>
-                                <td><%= customer.getPhone() %></td>
-                                <td><%= customer.getAddress() != null ? customer.getAddress() : "" %></td>
+                                <td><%= tour.getId() %></td>
+                                <td class="tour-name"><%= tour.getName() %></td>
+                                <td><%= tour.getDestination() %></td>
+                                <td><%= tour.getStartDate().format(formatter) %></td>
+                                <td class="price-text"><%= String.format("%,d", (int)tour.getPrice()) %> VNĐ</td>
+                                <td><%= tour.getCurrentCapacity() %>/<%= tour.getMaxCapacity() %></td>
                                 <td>
-                                    <span class="status-badge <%= statusClass %>">
-                                        <%= statusText %>
+                                    <span class="status-badge <%= isAvailable ? "status-available" : "status-full" %>">
+                                        <%= isAvailable ? "Còn chỗ" : "Đã đầy" %>
                                     </span>
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="<%= request.getContextPath() %>/admin/customers?action=view&id=<%= customer.getId() %>" 
+                                        <a href="<%= request.getContextPath() %>/jsp/tour-view.jsp?id=<%= tour.getId() %>" 
                                            class="btn-icon btn-view" title="Xem chi tiết">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="<%= request.getContextPath() %>/admin/customers?action=edit&id=<%= customer.getId() %>" 
+                                        <a href="<%= request.getContextPath() %>/tour?action=edit&id=<%= tour.getId() %>" 
                                            class="btn-icon btn-edit" title="Chỉnh sửa">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button class="btn-icon btn-delete" title="Xóa" 
-                                                onclick="if(confirm('Bạn có chắc muốn xóa khách hàng này?')) window.location.href='<%= request.getContextPath() %>/admin/customers?action=delete&id=<%= customer.getId() %>'">
+                                                onclick="if(confirm('Bạn có chắc muốn xóa tour này?')) window.location.href='<%= request.getContextPath() %>/tour?action=delete&id=<%= tour.getId() %>'">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -570,8 +559,8 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                             } else { 
                             %>
                             <tr>
-                                <td colspan="7" style="text-align: center; padding: 2rem; color: #9ca3af;">
-                                    Không có khách hàng nào
+                                <td colspan="8" style="text-align: center; padding: 2rem; color: #9ca3af;">
+                                    Không có tour nào
                                 </td>
                             </tr>
                             <% } %>
@@ -580,11 +569,11 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                     
                     <div class="pagination">
                         <div class="pagination-info">
-                            Hiển thị <%= (currentPage - 1) * 10 + 1 %> - <%= Math.min(currentPage * 10, totalCustomers) %> trong tổng số <%= totalCustomers %> kết quả
+                            Hiển thị <%= (currentPage - 1) * 10 + 1 %> - <%= Math.min(currentPage * 10, totalTours) %> trong tổng số <%= totalTours %> kết quả
                         </div>
                         <div class="pagination-buttons">
                             <% if (currentPage > 1) { %>
-                                <a href="?page=<%= currentPage - 1 %><%= keyword != null ? "&keyword=" + keyword : "" %><%= filterStatus != null ? "&status=" + filterStatus : "" %>" 
+                                <a href="?page=<%= currentPage - 1 %><%= request.getAttribute("searchQuery") != null ? "&search=" + request.getAttribute("searchQuery") : "" %><%= request.getAttribute("destinationFilter") != null ? "&destination=" + request.getAttribute("destinationFilter") : "" %><%= request.getAttribute("statusFilter") != null ? "&status=" + request.getAttribute("statusFilter") : "" %><%= request.getAttribute("sortBy") != null ? "&sortBy=" + request.getAttribute("sortBy") : "" %>" 
                                    class="page-btn">«</a>
                             <% } %>
                             
@@ -593,12 +582,12 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                                 int endPage = Math.min(totalPages, currentPage + 2);
                                 for (int i = startPage; i <= endPage; i++) { 
                             %>
-                                <a href="?page=<%= i %><%= keyword != null ? "&keyword=" + keyword : "" %><%= filterStatus != null ? "&status=" + filterStatus : "" %>" 
+                                <a href="?page=<%= i %><%= request.getAttribute("searchQuery") != null ? "&search=" + request.getAttribute("searchQuery") : "" %><%= request.getAttribute("destinationFilter") != null ? "&destination=" + request.getAttribute("destinationFilter") : "" %><%= request.getAttribute("statusFilter") != null ? "&status=" + request.getAttribute("statusFilter") : "" %><%= request.getAttribute("sortBy") != null ? "&sortBy=" + request.getAttribute("sortBy") : "" %>" 
                                    class="page-btn <%= i == currentPage ? "active" : "" %>"><%= i %></a>
                             <% } %>
                             
                             <% if (currentPage < totalPages) { %>
-                                <a href="?page=<%= currentPage + 1 %><%= keyword != null ? "&keyword=" + keyword : "" %><%= filterStatus != null ? "&status=" + filterStatus : "" %>" 
+                                <a href="?page=<%= currentPage + 1 %><%= request.getAttribute("searchQuery") != null ? "&search=" + request.getAttribute("searchQuery") : "" %><%= request.getAttribute("destinationFilter") != null ? "&destination=" + request.getAttribute("destinationFilter") : "" %><%= request.getAttribute("statusFilter") != null ? "&status=" + request.getAttribute("statusFilter") : "" %><%= request.getAttribute("sortBy") != null ? "&sortBy=" + request.getAttribute("sortBy") : "" %>" 
                                    class="page-btn">»</a>
                             <% } %>
                         </div>

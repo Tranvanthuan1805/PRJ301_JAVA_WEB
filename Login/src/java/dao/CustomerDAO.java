@@ -46,9 +46,9 @@ public class CustomerDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             String searchPattern = "%" + keyword + "%";
-            ps.setString(1, searchPattern);
-            ps.setString(2, searchPattern);
-            ps.setString(3, searchPattern);
+            ps.setNString(1, searchPattern);
+            ps.setNString(2, searchPattern);
+            ps.setNString(3, searchPattern);
             ps.setInt(4, offset);
             ps.setInt(5, limit);
             
@@ -126,6 +126,26 @@ public class CustomerDAO {
     }
     
     /**
+     * Get customer by user ID (for profile lookup)
+     */
+    public Customer getCustomerByUserId(int userId) throws Exception {
+        String sql = "SELECT * FROM Customers WHERE user_id = ?";
+        
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, userId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToCustomer(rs);
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
      * Update customer information
      */
     public boolean updateCustomer(Customer customer) throws Exception {
@@ -135,10 +155,10 @@ public class CustomerDAO {
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
-            ps.setString(1, customer.getFullName());
-            ps.setString(2, customer.getEmail());
-            ps.setString(3, customer.getPhone());
-            ps.setString(4, customer.getAddress());
+            ps.setNString(1, customer.getFullName());
+            ps.setNString(2, customer.getEmail());
+            ps.setNString(3, customer.getPhone());
+            ps.setNString(4, customer.getAddress());
             ps.setDate(5, customer.getDateOfBirth());
             ps.setInt(6, customer.getId());
             
@@ -190,9 +210,9 @@ public class CustomerDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             String searchPattern = "%" + keyword + "%";
-            ps.setString(1, searchPattern);
-            ps.setString(2, searchPattern);
-            ps.setString(3, searchPattern);
+            ps.setNString(1, searchPattern);
+            ps.setNString(2, searchPattern);
+            ps.setNString(3, searchPattern);
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -224,17 +244,53 @@ public class CustomerDAO {
     }
     
     /**
+     * Add new customer
+     */
+    public boolean addCustomer(Customer customer) throws Exception {
+        String sql = "INSERT INTO Customers (full_name, email, phone, address, date_of_birth, status, created_at) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, GETDATE())";
+        
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setNString(1, customer.getFullName());
+            ps.setNString(2, customer.getEmail());
+            ps.setNString(3, customer.getPhone());
+            ps.setNString(4, customer.getAddress());
+            ps.setDate(5, customer.getDateOfBirth());
+            ps.setNString(6, customer.getStatus());
+            
+            return ps.executeUpdate() > 0;
+        }
+    }
+    
+    /**
+     * Delete customer
+     */
+    public boolean deleteCustomer(int customerId) throws Exception {
+        String sql = "DELETE FROM Customers WHERE id = ?";
+        
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, customerId);
+            
+            return ps.executeUpdate() > 0;
+        }
+    }
+    
+    /**
      * Map ResultSet to Customer object
      */
     private Customer mapResultSetToCustomer(ResultSet rs) throws SQLException {
         Customer c = new Customer();
         c.setId(rs.getInt("id"));
         
-        // Read NVARCHAR columns directly - SQL Server should handle encoding
-        c.setFullName(rs.getNString("full_name"));  // Use getNString for NVARCHAR
+        // Use getNString for NVARCHAR columns
+        c.setFullName(rs.getNString("full_name"));
         c.setEmail(rs.getString("email"));
         c.setPhone(rs.getString("phone"));
-        c.setAddress(rs.getNString("address"));  // Use getNString for NVARCHAR
+        c.setAddress(rs.getNString("address"));
         c.setDateOfBirth(rs.getDate("date_of_birth"));
         c.setStatus(rs.getString("status"));
         c.setCreatedAt(rs.getTimestamp("created_at"));

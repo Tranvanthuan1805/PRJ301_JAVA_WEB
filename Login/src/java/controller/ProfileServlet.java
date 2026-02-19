@@ -1,4 +1,4 @@
-package servlet;
+package controller;
 
 import dao.CustomerDAO;
 import dao.CustomerActivityDAO;
@@ -45,16 +45,17 @@ public class ProfileServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         
         System.out.println(">>> ProfileServlet: user=" + user.username);
+        System.out.println(">>> ProfileServlet: userId=" + user.userId);
         System.out.println(">>> ProfileServlet: role=" + user.roleName);
         
         try {
-            // Get customer by email (username is the email)
-            Customer customer = customerDAO.getCustomerByEmail(user.username);
+            // Get customer by user_id (linked via foreign key)
+            Customer customer = customerDAO.getCustomerByUserId(user.userId);
             
             System.out.println(">>> ProfileServlet: customer=" + (customer == null ? "null" : customer.getFullName()));
             
             if (customer == null) {
-                System.out.println(">>> ProfileServlet: Customer not found for email=" + user.username);
+                System.out.println(">>> ProfileServlet: Customer not found for userId=" + user.userId);
                 request.setAttribute("error", "Không tìm thấy thông tin khách hàng cho tài khoản: " + user.username);
                 request.setAttribute("username", user.username);
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
@@ -107,8 +108,8 @@ public class ProfileServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         
         try {
-            // Get customer by email
-            Customer customer = customerDAO.getCustomerByEmail(user.username);
+            // Get customer by user_id
+            Customer customer = customerDAO.getCustomerByUserId(user.userId);
             
             if (customer == null) {
                 response.sendRedirect(request.getContextPath() + "/profile?error=notfound");
@@ -121,9 +122,11 @@ public class ProfileServlet extends HttpServlet {
             String address = request.getParameter("address");
             String dobStr = request.getParameter("dateOfBirth");
             
+            // Keep existing email (don't allow changing email)
             customer.setFullName(fullName);
             customer.setPhone(phone);
             customer.setAddress(address);
+            // Email stays the same - don't update it
             
             if (dobStr != null && !dobStr.isEmpty()) {
                 customer.setDateOfBirth(java.sql.Date.valueOf(dobStr));
@@ -132,20 +135,31 @@ public class ProfileServlet extends HttpServlet {
             boolean updated = customerDAO.updateCustomer(customer);
             
             if (updated) {
-                // Log activity
-                CustomerActivity activity = new CustomerActivity();
-                activity.setCustomerId(customer.getId());
-                activity.setActionType("UPDATE_PROFILE");
-                activity.setDescription("Cập nhật thông tin cá nhân");
-                activityDAO.addActivity(activity);
+                // Log activity (optional - skip if causes error)
+                try {
+                    CustomerActivity activity = new CustomerActivity();
+                    activity.setCustomerId(customer.getId());
+                    activity.setActionType("UPDATE_PROFILE");
+                    activity.setDescription("Cập nhật thông tin cá nhân");
+                    activityDAO.addActivity(activity);
+                } catch (Exception activityError) {
+                    System.out.println(">>> Activity logging failed: " + activityError.getMessage());
+                    // Continue anyway - activity logging is not critical
+                }
                 
                 response.sendRedirect(request.getContextPath() + "/profile?success=updated");
             } else {
+                System.out.println(">>> Update failed - customerDAO.updateCustomer returned false");
                 response.sendRedirect(request.getContextPath() + "/profile?error=updatefailed");
             }
             
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(">>> ProfileServlet doPost ERROR: " + e.getMessage());
+            System.out.println(">>> Error class: " + e.getClass().getName());
+            if (e.getCause() != null) {
+                System.out.println(">>> Cause: " + e.getCause().getMessage());
+            }
             response.sendRedirect(request.getContextPath() + "/profile?error=exception");
         }
     }

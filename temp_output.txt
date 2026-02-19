@@ -1,5 +1,0 @@
-id full_name email
--- --------- -----
-1 Nguyễn Văn An nguyenvanan@gmail.com
-2 Trần Thị Bình tranthibinh@gmail.com
-3 Lê Hoàng Cường lehoangcuong@gmail.com

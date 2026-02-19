@@ -1,4 +1,4 @@
-package servlet;
+package controller;
 
 import dao.CustomerDAO;
 import dao.CustomerActivityDAO;
@@ -57,6 +57,15 @@ public class AdminCustomerServlet extends HttpServlet {
                 case "view":
                     handleView(request, response);
                     break;
+                case "add":
+                    handleAddForm(request, response);
+                    break;
+                case "edit":
+                    handleEditForm(request, response);
+                    break;
+                case "delete":
+                    handleDelete(request, response);
+                    break;
                 default:
                     handleList(request, response);
             }
@@ -89,6 +98,9 @@ public class AdminCustomerServlet extends HttpServlet {
         
         try {
             switch (action) {
+                case "add":
+                    handleAddCustomer(request, response);
+                    break;
                 case "update":
                     handleUpdate(request, response);
                     break;
@@ -244,6 +256,87 @@ public class AdminCustomerServlet extends HttpServlet {
         } else {
             response.sendRedirect(request.getContextPath() + 
                 "/admin/customers?action=view&id=" + customerId + "&error=statusfailed");
+        }
+    }
+    
+    /**
+     * Show add customer form
+     */
+    private void handleAddForm(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        request.getRequestDispatcher("/admin/customer-form.jsp").forward(request, response);
+    }
+    
+    /**
+     * Show edit customer form
+     */
+    private void handleEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        String idStr = request.getParameter("id");
+        if (idStr == null || idStr.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/customers");
+            return;
+        }
+        
+        int customerId = Integer.parseInt(idStr);
+        Customer customer = customerDAO.getCustomerById(customerId);
+        
+        if (customer == null) {
+            response.sendRedirect(request.getContextPath() + "/admin/customers?error=notfound");
+            return;
+        }
+        
+        request.setAttribute("customer", customer);
+        request.getRequestDispatcher("/admin/customer-form.jsp").forward(request, response);
+    }
+    
+    /**
+     * Handle add new customer
+     */
+    private void handleAddCustomer(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        
+        Customer customer = new Customer();
+        customer.setFullName(request.getParameter("fullName"));
+        customer.setEmail(request.getParameter("email"));
+        customer.setPhone(request.getParameter("phone"));
+        customer.setAddress(request.getParameter("address"));
+        
+        String dobStr = request.getParameter("dateOfBirth");
+        if (dobStr != null && !dobStr.isEmpty()) {
+            customer.setDateOfBirth(java.sql.Date.valueOf(dobStr));
+        }
+        
+        customer.setStatus("active");
+        
+        boolean success = customerDAO.addCustomer(customer);
+        
+        if (success) {
+            response.sendRedirect(request.getContextPath() + "/admin/customers?success=added");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/admin/customers?error=addfailed");
+        }
+    }
+    
+    /**
+     * Handle delete customer
+     */
+    private void handleDelete(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        
+        String idStr = request.getParameter("id");
+        if (idStr == null || idStr.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/customers");
+            return;
+        }
+        
+        int customerId = Integer.parseInt(idStr);
+        boolean success = customerDAO.deleteCustomer(customerId);
+        
+        if (success) {
+            response.sendRedirect(request.getContextPath() + "/admin/customers?success=deleted");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/admin/customers?error=deletefailed");
         }
     }
 }
