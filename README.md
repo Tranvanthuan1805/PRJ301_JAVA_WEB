@@ -1,89 +1,39 @@
-# VietAir - Hệ thống Quản lý Tour Du lịch
+# Module: Quản lý Đơn hàng (Order Management)
 
-## Giới thiệu
-Web application quản lý và đặt tour du lịch Đà Nẵng với phân quyền Admin/User và phân tích dữ liệu.
+## 1. Mục tiêu
+Quản lý vòng đời của các giao dịch trên hệ thống, từ khi khách hàng đặt chỗ cho đến khi hoàn thành tour hoặc hủy đơn. Đây là module trung tâm để kiểm soát dòng tiền và xác nhận dịch vụ.
 
-## Công nghệ
-- **Backend:** Java Servlet, JSP
-- **Database:** SQL Server (504 tours)
-- **Frontend:** HTML5, CSS3, JavaScript, Chart.js
-- **Server:** Apache Tomcat 10.1
+## 2. Các chức năng đã hoàn thành
+- ✔ Theo dõi trạng thái đơn hàng (Pending, Confirmed, Completed, Cancelled)
+- ✔ Xem chi tiết đơn hàng (Order Details) và các mục tour đi kèm
+- ✔ Cập nhật trạng thái thủ công bởi Admin
+- ✔ Ghi nhận xác thực thanh toán
+- ✔ Servlet: `OrderServlet.java`
+- ✔ JSP: `order-list.jsp`, `order-detail.jsp`
+- ✔ DAO/Entity: `OrderDAO.java`, `Order.java`
 
-## Tính năng
+## 3. Cấu trúc thư mục
+- `src/main/java/controller/OrderServlet.java`: Quản lý danh sách giao dịch và quy trình xử lý đơn hàng.
+- `src/main/java/model/entity/Order.java`: Chứa thông tin tổng quan (tổng tiền, khách hàng, ngày đặt).
+- `src/main/java/model/dao/OrderDAO.java`: Truy vấn danh sách đơn hàng kèm tên khách hàng.
+- `src/main/webapp/views/order-management/`: Giao diện quản trị giao dịch.
 
-### User
-- Xem danh sách tours (12 tours/trang)
-- Tìm kiếm, lọc tours
-- Đặt tour với form đầy đủ (tên, email, SĐT, địa chỉ, số người)
+## 4. Luồng xử lý (Business Flow)
+1. Admin truy cập Registry.
+2. `OrderServlet` lấy dữ liệu JOIN từ `Orders` + `Users`.
+3. Khi cập nhật trạng thái -> Servlet gọi `OrderDAO.updateOrderStatus()`.
+4. Trạng thái "Completed" sẽ kích hoạt việc tính toán doanh thu trong tương lai.
 
-### Admin
-- CRUD tours (Thêm, Sửa, Xóa)
-- Xem analytics:
-  - Biểu đồ lượt khách theo tháng
-  - Biểu đồ giá trung bình
-  - Top 5 tháng cao điểm
-  - Bảng dữ liệu chi tiết
+## 5. Các chức năng CHƯA hoàn thành
+- ❌ Tự động hoàn tiền (Refund handling) qua API ngân hàng.
+- ❌ Xuất hóa đơn (Invoice PDF generation).
+- ❌ Thông báo cho Provider khi có đơn hàng mới (Push Notifications).
 
-## Cài đặt
+## 6. Hướng dẫn cho người phát triển tiếp
+- Cần kết nối với Module Subscription để trừ hoa hồng (commissions).
+- Xây dựng logic tự động chuyển trạng thái "Completed" sau khi ngày tour kết thúc.
 
-### 1. Setup Database
-```sql
--- Chạy file trong SQL Server Management Studio
-SETUP_DATABASE.sql
-ADD_450_TOURS_HISTORY.sql  -- 432 tours lịch sử (2020-2025)
-ADD_NEW_TOURS_2026.sql     -- 72 tours mới (2026)
-```
-
-### 2. Cấu hình Database Connection
-File: `Login/src/java/util/DatabaseConnection.java`
-```java
-URL = "jdbc:sqlserver://localhost:1433;databaseName=TourManagement;..."
-USERNAME = "sa"
-PASSWORD = "123456"  // Đổi password của bạn
-```
-
-### 3. Build & Deploy
-1. Mở NetBeans
-2. Clean and Build (Shift+F11)
-3. Run (F6)
-
-### 4. Truy cập
-```
-http://localhost:8080/Login/
-```
-
-## Tài khoản mặc định
-- **Admin:** admin / admin
-- **User:** user / user
-
-## Cấu trúc Database
-- **Users** - Tài khoản (admin/user)
-- **Tours** - Thông tin tours (NVARCHAR cho tiếng Việt)
-- **Customers** - Khách hàng
-- **Bookings** - Đơn đặt tour
-- **InteractionHistory** - Lịch sử hành động
-
-## Dữ liệu
-- 432 tours lịch sử (2020-2025) từ file CSV
-- 72 tours mới (2026) - 6 tours/tháng
-- Tổng: 504 tours
-
-## Tính năng nổi bật
-✅ Hỗ trợ Unicode (tiếng Việt)  
-✅ Phân trang tours  
-✅ Phân quyền Admin/User  
-✅ Analytics với Chart.js  
-✅ Booking với form đầy đủ  
-✅ Responsive design
-
-## Files quan trọng
-- `SETUP_DATABASE.sql` - Tạo database và tables
-- `ADD_450_TOURS_HISTORY.sql` - Import tours lịch sử
-- `ADD_NEW_TOURS_2026.sql` - Import tours mới
-- `CLEAR_TOMCAT_CACHE.bat` - Clear cache khi cần
-
-## Lưu ý
-- Database phải dùng NVARCHAR cho tiếng Việt
-- TourDAO dùng `getNString()` để đọc Unicode
-- Tours page chỉ hiển thị tours tương lai
-- History page hiển thị tất cả tours (analytics)
+## 7. Ghi chú kỹ thuật
+- **Phụ thuộc**: Nhận dữ liệu từ Module Cart & Booking.
+- **Bảng DB chia sẻ**: `Orders`, `Bookings`.
+- **Dữ liệu AI**: Cung cấp Volume giao dịch cho AI Forecasting.

@@ -5,7 +5,7 @@ import java.io.IOException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
-@WebFilter(urlPatterns = {"/admin.jsp", "/user.jsp", "/admin/*"})
+@WebFilter(urlPatterns = {"/admin.jsp", "/user.jsp", "/admin/*", "/my-orders"})
 public class AuthFilter implements Filter {
 
     @Override
@@ -14,6 +14,7 @@ public class AuthFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+        String contextPath = request.getContextPath();
 
         String uri = request.getRequestURI();
 
@@ -24,34 +25,26 @@ public class AuthFilter implements Filter {
         System.out.println(">>> AuthFilter: user=" + (u == null ? "null" : u.username));
         System.out.println(">>> AuthFilter: role=" + (u == null ? "null" : u.roleName));
 
+        // Not logged in -> redirect to login
         if (u == null) {
-            System.out.println(">>> AuthFilter: No user in session, redirect to login");
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(contextPath + "/login.jsp");
             return;
         }
 
-        String path = request.getServletPath(); // /admin.jsp hoặc /user.jsp
+        String path = request.getServletPath(); // e.g., /admin.jsp, /admin/orders, /my-orders
 
-        if ("/admin.jsp".equals(path) && !"ADMIN".equalsIgnoreCase(u.getRole())) {
-            response.sendRedirect("error.jsp");
+        // Admin-only paths: /admin.jsp and /admin/*
+        boolean isAdminPath = "/admin.jsp".equals(path) || path.startsWith("/admin/");
+        
+        if (isAdminPath && !"ADMIN".equalsIgnoreCase(u.roleName)) {
+            response.sendRedirect(contextPath + "/error.jsp");
             return;
         }
 
-        // USER can only access /user.jsp
-        if ("USER".equalsIgnoreCase(u.roleName)) {
-            if (path.startsWith("/admin") || "/admin.jsp".equals(path)) {
-                System.out.println(">>> AuthFilter: USER blocked from admin area");
-                response.sendRedirect(request.getContextPath() + "/error.jsp");
-                return;
-            }
-            System.out.println(">>> AuthFilter: USER access granted to " + path);
-            chain.doFilter(req, res);
-            return;
-        }
+        // User paths: /my-orders (any logged-in user can access)
+        // No additional check needed - already verified user is logged in
 
-        // Unknown role - deny access
-        System.out.println(">>> AuthFilter: Unknown role, access denied");
-        response.sendRedirect(request.getContextPath() + "/error.jsp");
+        chain.doFilter(req, res);
     }
 
 }
