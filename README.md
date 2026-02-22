@@ -1,39 +1,37 @@
-# Module: Giỏ hàng và Đặt chỗ (Cart & Booking)
+# Module: Dự báo nhu cầu bằng AI (AI Demand Forecasting)
 
 ## 1. Mục tiêu
-Xử lý quy trình đặt tour của khách hàng, duy trì trạng thái giỏ hàng trong phiên (session) và tiến hành đặt chỗ (booking) sau khi kiểm tra tính khả dụng.
+Cung cấp dự báo kinh doanh thông minh cho các đối tác cao cấp. Sử dụng dữ liệu lịch sử và yếu tố mùa vụ để dự đoán doanh thu và đưa ra khuyến nghị hành động.
 
 ## 2. Các chức năng đã hoàn thành
-- ✔ Thêm tour vào giỏ hàng (Session-based Cart)
-- ✔ Kiểm tra slot trống theo thời gian thực (Real-time slot validation)
-- ✔ Quản lý số lượng và ngày khởi hành (Travel Date)
-- ✔ Quy trình Checkout cơ bản
-- ✔ Servlet: `CartServlet.java`, `CheckoutServlet.java`
-- ✔ JSP: `cart.jsp`, `confirmation.jsp`
-- ✔ DAO/Entity: `BookingDAO.java`, `Cart.java`, `CartItem.java`
+- ✔ Biểu đồ dự báo doanh thu 12 tháng (Chart.js)
+- ✔ Phân tích xu hướng mùa vụ (Jan - Dec)
+- ✔ Đưa ra khuyến nghị tăng/giảm giá (AI Recommendations)
+- ✔ Cảnh báo năng lực vận hành (Resource Warning)
+- ✔ Servlet: `ForecastServlet.java`
+- ✔ JSP: `forecast-dashboard.jsp`
+- ✔ Integration: Gated access cho Pro users
 
 ## 3. Cấu trúc thư mục
-- `src/main/java/controller/CartServlet.java`: Quản lý thêm/xóa/sửa tour trong giỏ hàng (session).
-- `src/main/java/controller/CheckoutServlet.java`: Chuyển đổi dữ liệu giỏ hàng thành bản ghi `Orders` và `Bookings` trong DB.
-- `src/main/java/model/entity/CartItem.java`: Đối tượng đại diện cho một tour đã chọn, kèm số khách và ngày đi.
-- `src/main/webapp/views/cart-booking/`: Giao diện giỏ hàng và thanh toán.
+- `src/main/java/controller/ForecastServlet.java`: Chứa thuật toán mô phỏng nhu cầu dựa trên các biến số mùa vụ.
+- `src/main/webapp/views/ai-forecasting/forecast-dashboard.jsp`: Dashboard hiển thị biểu đồ và phân tích.
 
 ## 4. Luồng xử lý (Business Flow)
-1. Khách hàng chọn tour và ngày đi -> Gửi tới `CartServlet?action=add`.
-2. Servlet gọi `TourDAO.checkAvailability()`. Nếu OK -> Lưu vào `session.getAttribute("cart_obj")`.
-3. Khi Checkout -> `CheckoutServlet` tạo 1 `Order` mới, sau đó duyệt Cart để tạo nhiều `Booking` (line items) tương ứng.
-4. Xóa session cart và chuyển tới `confirmation.jsp`.
+1. Servlet lấy dữ liệu doanh thu thực tế (hiện đang giả lập).
+2. Áp dụng hệ số mùa vụ (Summer factor: 1.8x, Monsoon factor: 0.8x).
+3. Trả về mảng JSON cho Chart.js vẽ biểu đồ.
+4. Hiển thị "Confidence Score" dựa trên độ lệch chuẩn của dữ liệu.
 
 ## 5. Các chức năng CHƯA hoàn thành
-- ❌ Lưu giỏ hàng vào DB (Abandoned Cart) để nhắc nhở khách hàng.
-- ❌ Áp dụng Mã giảm giá (Promo Code).
-- ❌ Thay đổi ngày đi ngay trong giỏ hàng.
+- ❌ Kết nối với Python/TensorFlow API để dự báo thực tế.
+- ❌ Tự động điều chỉnh giá tour dựa trên dự báo (Dynamic Pricing execution).
+- ❌ Dự báo cho từng loại tour riêng biệt.
 
 ## 6. Hướng dẫn cho người phát triển tiếp
-- Tích hợp Module Payment (/payment) vào cuối quy trình Checkout.
-- Bổ sung validation số lượng khách không vượt quá `MaxPeople`.
+- Cần viết DAO để lấy dữ liệu thực từ bảng `Orders` trong 12 tháng qua.
+- Tích hợp thêm dữ liệu thời tiết thực tế từ API bên ngoài.
 
 ## 7. Ghi chú kỹ thuật
-- **Phụ thuộc**: Phụ thuộc cực lớn vào Module Quản lý Tour.
-- **Bảng DB chia sẻ**: `Orders`, `Bookings`, `Tours`.
-- **Dữ liệu AI**: Cung cấp dữ liệu Giỏ hàng bị bỏ rơi (Abandoned Carts) cho AI Marketing.
+- **Phụ thuộc**: Phụ thuộc vào Module Order Management và Subscription (để xác thực quyền).
+- **Bảng DB chia sẻ**: `Orders`, `MonthlyRevenue`.
+- **Dữ liệu AI**: Tiêu thụ dữ liệu từ toàn bộ hệ thống để tạo output.
