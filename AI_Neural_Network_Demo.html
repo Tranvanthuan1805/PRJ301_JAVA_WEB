@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Thuật Toán Mạng Nơ-ron - VietAir AI Forecasting</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.header{background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 50%,#1a1a2e 100%);padding:2rem;text-align:center;border-bottom:2px solid #2c5aa0}
+.header h1{font-size:2rem;background:linear-gradient(135deg,#60a5fa,#a78bfa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
+.header p{color:#94a3b8;font-size:.95rem}
+.container{max-width:1300px;margin:0 auto;padding:1.5rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem}
+.card{background:#1e293b;border-radius:16px;padding:1.5rem;border:1px solid #334155;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#3b82f6,#8b5cf6,#ec4899)}
+.card h2{font-size:1.1rem;color:#60a5fa;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.card h2 span{font-size:1.3rem}
+.full-width{grid-column:1/-1}
+.controls{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.btn{padding:.6rem 1.2rem;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(59,130,246,.4)}
+.btn-secondary{background:#374151;color:#d1d5db;border:1px solid #4b5563}
+.btn-secondary:hover{background:#4b5563}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.param-group{display:flex;align-items:center;gap:.5rem;background:#0f172a;padding:.4rem .8rem;border-radius:8px;font-size:.8rem}
+.param-group label{color:#94a3b8;white-space:nowrap}
+.param-group input,.param-group select{background:#1e293b;border:1px solid #475569;color:#e2e8f0;padding:.3rem .5rem;border-radius:4px;width:70px;font-size:.8rem}
+canvas{max-height:320px}
+.log-box{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:1rem;max-height:300px;overflow-y:auto;font-family:'Courier New',monospace;font-size:.78rem;line-height:1.6}
+.log-box .epoch{color:#60a5fa}.log-box .loss{color:#f59e0b}.log-box .good{color:#34d399}
+.network-viz{display:flex;justify-content:center;align-items:center;gap:2rem;padding:1rem 0}
+.layer{display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.layer-label{font-size:.7rem;color:#94a3b8;margin-bottom:.3rem;font-weight:600;text-transform:uppercase}
+.neuron{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;border:2px solid;transition:all .3s}
+.neuron.input{background:#1e3a5f;border-color:#3b82f6;color:#93c5fd}
+.neuron.hidden{background:#3b1f5e;border-color:#8b5cf6;color:#c4b5fd}
+.neuron.output{background:#1a3a2a;border-color:#22c55e;color:#86efac}
+.neuron.active{box-shadow:0 0 15px currentColor;transform:scale(1.15)}
+.arrows{display:flex;flex-direction:column;gap:.3rem;color:#475569;font-size:1.2rem}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1rem}
+.stat-item{background:#0f172a;padding:.8rem;border-radius:8px;text-align:center}
+.stat-item .value{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-item .label{font-size:.7rem;color:#64748b;margin-top:.2rem}
+.algo-step{background:#0f172a;border-left:3px solid #3b82f6;padding:.8rem 1rem;margin-bottom:.6rem;border-radius:0 8px 8px 0;font-size:.82rem;line-height:1.5}
+.algo-step strong{color:#60a5fa}
+.algo-step code{background:#1e293b;padding:.1rem .4rem;border-radius:3px;color:#f59e0b;font-size:.78rem}
+.prediction-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:.5rem}
+.prediction-table th{background:#0f172a;color:#60a5fa;padding:.6rem;text-align:left;border-bottom:2px solid #334155}
+.prediction-table td{padding:.5rem .6rem;border-bottom:1px solid #1e293b}
+.prediction-table tr:hover td{background:#1e293b}
+.badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.7rem;font-weight:600}
+.badge-up{background:#064e3b;color:#34d399}.badge-down{background:#7f1d1d;color:#fca5a5}
+.progress-bar{height:6px;background:#1e293b;border-radius:3px;overflow:hidden;margin-top:.5rem}
+.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width .3s;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🧠 Demo Thuật Toán Mạng Nơ-ron Nhân Tạo (ANN)</h1>
+  <p>Ứng dụng dự báo xu hướng du lịch Đà Nẵng 2020–2025 → Dự đoán 2026 | PRJ301 Java Web - VietAir</p>
+</div>
+<div class="container">
+  <div class="stat-grid">
+    <div class="stat-item"><div class="value" id="statEpochs">0</div><div class="label">Epochs đã huấn luyện</div></div>
+    <div class="stat-item"><div class="value" id="statLoss">—</div><div class="label">Loss (MSE) hiện tại</div></div>
+    <div class="stat-item"><div class="value" id="statAccuracy">—</div><div class="label">Accuracy (%)</div></div>
+    <div class="stat-item"><div class="value" id="statPrediction">—</div><div class="label">Dự báo 2026 (Tỷ VNĐ)</div></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="grid">
+    <!-- Network Architecture -->
+    <div class="card">
+      <h2><span>🔗</span> Kiến trúc Mạng Nơ-ron (3 Lớp)</h2>
+      <div class="network-viz">
+        <div class="layer">
+          <div class="layer-label">Input Layer</div>
+          <div class="neuron input" id="n-i0">Năm</div>
+          <div class="neuron input" id="n-i1">Tháng</div>
+          <div class="neuron input" id="n-i2">Mùa</div>
+        </div>
+        <div class="arrows" id="arrows1">→<br>→<br>→<br>→</div>
+        <div class="layer">
+          <div class="layer-label">Hidden Layer (4 neurons)</div>
+          <div class="neuron hidden" id="n-h0">H₁</div>
+          <div class="neuron hidden" id="n-h1">H₂</div>
+          <div class="neuron hidden" id="n-h2">H₃</div>
+          <div class="neuron hidden" id="n-h3">H₄</div>
+        </div>
+        <div class="arrows" id="arrows2">→<br>→</div>
+        <div class="layer">
+          <div class="layer-label">Output Layer</div>
+          <div class="neuron output" id="n-o0">DT</div>
+        </div>
+      </div>
+      <div class="algo-step"><strong>Input (3 features):</strong> Năm (normalized), Tháng (sin/cos encoding), Mùa vụ (0/1/2)</div>
+      <div class="algo-step"><strong>Hidden (4 neurons):</strong> Activation = <code>ReLU(W·X + b)</code></div>
+      <div class="algo-step"><strong>Output (1 neuron):</strong> Doanh thu dự đoán (denormalized → Triệu VNĐ)</div>
+    </div>
+
+    <!-- Controls & Training Log -->
+    <div class="card">
+      <h2><span>⚙️</span> Bảng điều khiển huấn luyện</h2>
+      <div class="controls">
+        <div class="param-group"><label>Learning Rate:</label><input type="number" id="lr" value="0.01" step="0.005" min="0.001" max="0.1"></div>
+        <div class="param-group"><label>Epochs:</label><input type="number" id="epochs" value="500" step="100" min="100" max="5000"></div>
+        <div class="param-group"><label>Hidden Neurons:</label><select id="hiddenSize"><option value="4" selected>4</option><option value="6">6</option><option value="8">8</option></select></div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-primary" id="btnTrain" onclick="startTraining()">▶ Huấn luyện mạng</button>
+        <button class="btn btn-secondary" onclick="resetNetwork()">🔄 Reset</button>
+        <button class="btn btn-secondary" onclick="stepOnce()">⏭ Chạy 1 Epoch</button>
+      </div>
+      <div class="log-box" id="logBox">
+        <div style="color:#64748b">📌 Nhấn "Huấn luyện mạng" để bắt đầu...</div>
+        <div style="color:#64748b">Thuật toán sẽ tự động Forward → Loss → Backward → Update Weights</div>
+      </div>
+    </div>
+
+    <!-- Loss Chart -->
+    <div class="card">
+      <h2><span>📉</span> Biểu đồ Loss (Hàm mất mát MSE)</h2>
+      <canvas id="lossChart"></canvas>
+    </div>
+
+    <!-- Prediction Chart -->
+    <div class="card">
+      <h2><span>📊</span> Thực tế vs Dự đoán (Doanh thu theo năm)</h2>
+      <canvas id="predChart"></canvas>
+    </div>
+
+    <!-- Algorithm Explanation -->
+    <div class="card full-width">
+      <h2><span>📖</span> Cơ chế hoạt động thuật toán Mạng Nơ-ron (Step-by-step)</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div>
+          <div class="algo-step"><strong>Bước 1 - Khởi tạo (Initialization):</strong><br>Khởi tạo trọng số <code>W</code> ngẫu nhiên nhỏ (Xavier Init) và bias <code>b = 0</code>. Mỗi kết nối giữa 2 neuron có 1 trọng số riêng.</div>
+          <div class="algo-step"><strong>Bước 2 - Forward Propagation:</strong><br>Dữ liệu đi từ Input → Hidden → Output.<br>
+          <code>z = W·x + b</code> (tổ hợp tuyến tính)<br>
+          <code>a = ReLU(z) = max(0, z)</code> (kích hoạt phi tuyến)<br>
+          Hidden layer học các đặc trưng ẩn (mùa vụ, xu hướng tăng trưởng).</div>
+          <div class="algo-step"><strong>Bước 3 - Tính Loss (MSE):</strong><br>
+          <code>Loss = (1/n) × Σ(ŷᵢ - yᵢ)²</code><br>
+          So sánh doanh thu dự đoán (ŷ) với doanh thu thực tế (y). Loss càng nhỏ → dự đoán càng chính xác.</div>
+        </div>
+        <div>
+          <div class="algo-step"><strong>Bước 4 - Backpropagation:</strong><br>Tính gradient (đạo hàm riêng) của Loss theo từng trọng số bằng <strong>Chain Rule</strong>:<br>
+          <code>∂L/∂W = ∂L/∂ŷ × ∂ŷ/∂z × ∂z/∂W</code><br>
+          Gradient cho biết trọng số cần tăng hay giảm để Loss giảm.</div>
+          <div class="algo-step"><strong>Bước 5 - Cập nhật trọng số (SGD):</strong><br>
+          <code>W_new = W_old - lr × ∂L/∂W</code><br>
+          <code>lr</code> (learning rate) quyết định bước nhảy. Quá lớn → bỏ lỡ điểm tối ưu. Quá nhỏ → hội tụ chậm.</div>
+          <div class="algo-step"><strong>Bước 6 - Lặp lại (Epochs):</strong><br>Lặp Bước 2→5 nhiều lần. Mỗi vòng lặp = 1 epoch. Loss giảm dần theo thời gian → Mô hình học được pattern từ dữ liệu.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prediction Results -->
+    <div class="card full-width">
+      <h2><span>🔮</span> Kết quả dự báo năm 2026 (sau huấn luyện)</h2>
+      <table class="prediction-table" id="predTable">
+        <thead><tr><th>Tháng</th><th>Mùa vụ</th><th>Doanh thu 2025 (Triệu)</th><th>Dự báo 2026 (Triệu)</th><th>Tăng trưởng</th></tr></thead>
+        <tbody id="predBody"><tr><td colspan="5" style="text-align:center;color:#64748b">Huấn luyện mạng trước để xem kết quả dự báo</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== RAW DATA (aggregated monthly revenue from CSV) ==========
+const RAW_DATA = [
+  // [year, month, season(0=low,1=normal,2=high), totalRevenue(TrieuVND)]
+  [2020,1,0,170680],[2020,2,0,77502],[2020,3,0,173998],[2020,4,1,441224],
+  [2020,5,1,693382],[2020,6,2,1200853],[2020,7,2,1543291],[2020,8,2,1335760],
+  [2020,9,1,614922],[2020,10,1,386449],[2020,11,1,259543],[2020,12,1,178350],
+  [2021,1,0,199000],[2021,2,0,90200],[2021,3,0,195000],[2021,4,1,510000],
+  [2021,5,1,780000],[2021,6,2,1380000],[2021,7,2,1750000],[2021,8,2,1520000],
+  [2021,9,1,700000],[2021,10,1,440000],[2021,11,1,295000],[2021,12,1,205000],
+  [2022,1,0,225000],[2022,2,0,102000],[2022,3,0,220000],[2022,4,1,575000],
+  [2022,5,1,885000],[2022,6,2,1560000],[2022,7,2,1980000],[2022,8,2,1720000],
+  [2022,9,1,790000],[2022,10,1,495000],[2022,11,1,335000],[2022,12,1,230000],
+  [2023,1,0,255000],[2023,2,0,115000],[2023,3,0,248000],[2023,4,1,650000],
+  [2023,5,1,1000000],[2023,6,2,1760000],[2023,7,2,2240000],[2023,8,2,1950000],
+  [2023,9,1,895000],[2023,10,1,560000],[2023,11,1,378000],[2023,12,1,260000],
+  [2024,1,0,290000],[2024,2,0,130000],[2024,3,0,280000],[2024,4,1,735000],
+  [2024,5,1,1130000],[2024,6,2,1990000],[2024,7,2,2530000],[2024,8,2,2200000],
+  [2024,9,1,1010000],[2024,10,1,635000],[2024,11,1,428000],[2024,12,1,295000],
+  [2025,1,0,328000],[2025,2,0,148000],[2025,3,0,318000],[2025,4,1,832000],
+  [2025,5,1,1280000],[2025,6,2,2250000],[2025,7,2,2860000],[2025,8,2,2490000],
+  [2025,9,1,1140000],[2025,10,1,720000],[2025,11,1,484000],[2025,12,1,335000],
+];
+
+// ========== NEURAL NETWORK ==========
+class NeuralNetwork {
+  constructor(inputSize, hiddenSize, outputSize, lr) {
+    this.lr = lr;
+    this.hiddenSize = hiddenSize;
+    // Xavier initialization
+    this.W1 = this.randMatrix(hiddenSize, inputSize, inputSize);
+    this.b1 = new Array(hiddenSize).fill(0);
+    this.W2 = this.randMatrix(outputSize, hiddenSize, hiddenSize);
+    this.b2 = new Array(outputSize).fill(0);
+    this.lossHistory = [];
+  }
+
+  randMatrix(rows, cols, fanIn) {
+    const std = Math.sqrt(2 / fanIn);
+    return Array.from({length:rows}, () => Array.from({length:cols}, () => (Math.random()*2-1)*std));
+  }
+
+  relu(x) { return x.map(v => Math.max(0, v)); }
+  reluDeriv(x) { return x.map(v => v > 0 ? 1 : 0); }
+
+  forward(x) {
+    // Hidden layer: z1 = W1·x + b1, a1 = ReLU(z1)
+    this.x = x;
+    this.z1 = this.W1.map((row, i) => row.reduce((s,w,j) => s + w*x[j], 0) + this.b1[i]);
+    this.a1 = this.relu(this.z1);
+    // Output layer: z2 = W2·a1 + b2
+    this.z2 = this.W2.map((row, i) => row.reduce((s,w,j) => s + w*this.a1[j], 0) + this.b2[i]);
+    return this.z2[0]; // single output
+  }
+
+  backward(yPred, yTrue) {
+    // dL/dz2 = 2*(yPred - yTrue)/n
+    const dz2 = 2 * (yPred - yTrue);
+    // Update W2, b2
+    for (let i = 0; i < this.W2.length; i++) {
+      for (let j = 0; j < this.W2[i].length; j++) {
+        this.W2[i][j] -= this.lr * dz2 * this.a1[j];
+      }
+      this.b2[i] -= this.lr * dz2;
+    }
+    // dL/da1 = W2^T · dz2
+    const da1 = this.W2[0].map(w => w * dz2);
+    const dz1 = da1.map((v, i) => v * (this.z1[i] > 0 ? 1 : 0));
+    // Update W1, b1
+    for (let i = 0; i < this.W1.length; i++) {
+      for (let j = 0; j < this.W1[i].length; j++) {
+        this.W1[i][j] -= this.lr * dz1[i] * this.x[j];
+      }
+      this.b1[i] -= this.lr * dz1[i];
+    }
+  }
+
+  trainEpoch(X, Y) {
+    let totalLoss = 0;
+    for (let i = 0; i < X.length; i++) {
+      const pred = this.forward(X[i]);
+      const loss = (pred - Y[i]) ** 2;
+      totalLoss += loss;
+      this.backward(pred, Y[i]);
+    }
+    const mse = totalLoss / X.length;
+    this.lossHistory.push(mse);
+    return mse;
+  }
+
+  predict(x) { return this.forward(x); }
+}
+
+// ========== DATA PREPROCESSING ==========
+let xMin, xMax, yMin, yMax;
+function normalize(data) {
+  const X = data.map(d => [d[0], Math.sin(2*Math.PI*d[1]/12), d[2]]);
+  const Y = data.map(d => d[3]);
+  xMin = X[0].map((_,j) => Math.min(...X.map(r=>r[j])));
+  xMax = X[0].map((_,j) => Math.max(...X.map(r=>r[j])));
+  yMin = Math.min(...Y); yMax = Math.max(...Y);
+  const Xn = X.map(r => r.map((v,j) => xMax[j]-xMin[j]===0?0:(v-xMin[j])/(xMax[j]-xMin[j])));
+  const Yn = Y.map(v => (v-yMin)/(yMax-yMin));
+  return {X:Xn, Y:Yn};
+}
+function denormY(v) { return v*(yMax-yMin)+yMin; }
+
+// ========== GLOBALS ==========
+let nn, trainX, trainY, epochCount=0, isTraining=false, animId=null;
+let lossChart, predChart;
+
+// ========== CHARTS ==========
+function initCharts() {
+  const lossCtx = document.getElementById('lossChart').getContext('2d');
+  lossChart = new Chart(lossCtx, {
+    type:'line', data:{labels:[], datasets:[{label:'MSE Loss',data:[],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.1)',fill:true,tension:.4,pointRadius:0,borderWidth:2}]},
+    options:{responsive:true,scales:{y:{beginAtZero:true,ticks:{color:'#94a3b8'},grid:{color:'#1e293b'}},x:{ticks:{color:'#94a3b8',maxTicksLimit:10},grid:{color:'#1e293b'}}},plugins:{legend:{labels:{color:'#e2e8f0'}}}}
+  });
+  const predCtx = document.getElementById('predChart').getContext('2d');
+  predChart = new Chart(predCtx, {
+    type:'bar', data:{labels:['2020','2021','2022','2023','2024','2025','2026 (Dự báo)'],
+    datasets:[
+      {label:'Thực tế',data:[],backgroundColor:'rgba(59,130,246,.7)',borderRadius:4},
+      {label:'Dự đoán',data:[],backgroundColor:'rgba(168,85,247,.7)',borderRadius:4}
+    ]},
+    options:{responsive:true,scales:{y:{ticks:{color:'#94a3b8',callback:v=>(v/1e6).toFixed(1)+'Tỷ'},grid:{color:'#1e293b'}},x:{ticks:{color:'#94a3b8'},grid:{color:'#1e293b'}}},plugins:{legend:{labels:{color:'#e2e8f0'}}}}
+  });
+}
+
+// ========== TRAINING ==========
+function initNetwork() {
+  const lr = parseFloat(document.getElementById('lr').value);
+  const hs = parseInt(document.getElementById('hiddenSize').value);
+  const {X,Y} = normalize(RAW_DATA);
+  trainX = X; trainY = Y;
+  nn = new NeuralNetwork(3, hs, 1, lr);
+  epochCount = 0;
+}
+
+function startTraining() {
+  if (isTraining) { isTraining=false; document.getElementById('btnTrain').textContent='▶ Tiếp tục'; return; }
+  if (!nn) initNetwork();
+  isTraining = true;
+  document.getElementById('btnTrain').textContent='⏸ Tạm dừng';
+  const targetEpochs = parseInt(document.getElementById('epochs').value);
+  const startEpoch = epochCount;
+  function step() {
+    if (!isTraining || epochCount >= startEpoch + targetEpochs) {
+      isTraining = false; document.getElementById('btnTrain').textContent='▶ Huấn luyện tiếp';
+      updatePredictions(); return;
+    }
+    const loss = nn.trainEpoch(trainX, trainY);
+    epochCount++;
+    if (epochCount % 5 === 0 || epochCount <= 10) updateUI(loss);
+    animId = requestAnimationFrame(step);
+  }
+  step();
+}
+
+function stepOnce() {
+  if (!nn) initNetwork();
+  const loss = nn.trainEpoch(trainX, trainY);
+  epochCount++;
+  updateUI(loss);
+  updatePredictions();
+}
+
+function resetNetwork() {
+  isTraining = false; nn = null; epochCount = 0;
+  document.getElementById('btnTrain').textContent='▶ Huấn luyện mạng';
+  document.getElementById('logBox').innerHTML='<div style="color:#64748b">🔄 Mạng đã được reset. Trọng số ngẫu nhiên mới.</div>';
+  document.getElementById('statEpochs').textContent='0';
+  document.getElementById('statLoss').textContent='—';
+  document.getElementById('statAccuracy').textContent='—';
+  document.getElementById('statPrediction').textContent='—';
+  document.getElementById('progressFill').style.width='0%';
+  if(lossChart){lossChart.data.labels=[];lossChart.data.datasets[0].data=[];lossChart.update();}
+  if(predChart){predChart.data.datasets[0].data=[];predChart.data.datasets[1].data=[];predChart.update();}
+  document.querySelectorAll('.neuron').forEach(n=>n.classList.remove('active'));
+}
+
+function updateUI(loss) {
+  const maxE = parseInt(document.getElementById('epochs').value);
+  document.getElementById('statEpochs').textContent = epochCount;
+  document.getElementById('statLoss').textContent = loss.toFixed(6);
+  document.getElementById('progressFill').style.width = Math.min(100, (epochCount/maxE)*100)+'%';
+
+  // Accuracy estimation
+  let totalErr = 0;
+  for (let i=0;i<trainX.length;i++) {
+    const p = denormY(nn.predict(trainX[i]));
+    const a = denormY(trainY[i]);
+    totalErr += Math.abs((p-a)/a);
+  }
+  const acc = Math.max(0, (1 - totalErr/trainX.length)*100);
+  document.getElementById('statAccuracy').textContent = acc.toFixed(1)+'%';
+
+  // Loss chart
+  lossChart.data.labels.push(epochCount);
+  lossChart.data.datasets[0].data.push(loss);
+  if (lossChart.data.labels.length > 200) { lossChart.data.labels.shift(); lossChart.data.datasets[0].data.shift(); }
+  lossChart.update('none');
+
+  // Animate neurons
+  document.querySelectorAll('.neuron').forEach(n => {
+    n.classList.toggle('active', Math.random() > 0.4);
+    setTimeout(() => n.classList.remove('active'), 300);
+  });
+
+  // Log
+  const logBox = document.getElementById('logBox');
+  const logLine = `<span class="epoch">Epoch ${epochCount}</span> | <span class="loss">Loss: ${loss.toFixed(6)}</span> | <span class="good">Acc: ${acc.toFixed(1)}%</span>`;
+  if (epochCount <= 20 || epochCount % 50 === 0) {
+    logBox.innerHTML += '<div>'+logLine+'</div>';
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+}
+
+function updatePredictions() {
+  // Yearly totals
+  const yearlyActual = {};
+  RAW_DATA.forEach(d => { yearlyActual[d[0]] = (yearlyActual[d[0]]||0) + d[3]; });
+  const yearlyPred = {};
+  RAW_DATA.forEach(d => {
+    const x = [(d[0]-xMin[0])/(xMax[0]-xMin[0]), (Math.sin(2*Math.PI*d[1]/12)-xMin[1])/(xMax[1]-xMin[1]), (d[2]-xMin[2])/(xMax[2]-xMin[2])];
+    yearlyPred[d[0]] = (yearlyPred[d[0]]||0) + denormY(nn.predict(x));
+  });
+
+  // Predict 2026
+  const seasons2026 = [0,0,0,1,1,2,2,2,1,1,1,1];
+  let total2026 = 0;
+  const monthly2026 = [];
+  for (let m=1; m<=12; m++) {
+    const yearNorm = (2026-xMin[0])/(xMax[0]-xMin[0]);
+    const monthNorm = (Math.sin(2*Math.PI*m/12)-xMin[1])/(xMax[1]-xMin[1]);
+    const seasonNorm = (seasons2026[m-1]-xMin[2])/(xMax[2]-xMin[2]);
+    const pred = denormY(nn.predict([yearNorm, monthNorm, seasonNorm]));
+    const val = Math.max(0, pred);
+    monthly2026.push(val);
+    total2026 += val;
+  }
+
+  document.getElementById('statPrediction').textContent = (total2026/1e6).toFixed(2);
+
+  // Bar chart
+  const years = [2020,2021,2022,2023,2024,2025];
+  predChart.data.datasets[0].data = [...years.map(y=>yearlyActual[y]), null];
+  predChart.data.datasets[1].data = [...years.map(y=>yearlyPred[y]), total2026];
+  predChart.update();
+
+  // Table
+  const seasonNames = ['Thấp điểm','Bình thường','Cao điểm'];
+  const months2025 = RAW_DATA.filter(d=>d[0]===2025);
+  let tbody = '';
+  for (let i=0; i<12; i++) {
+    const actual2025 = months2025[i] ? months2025[i][3] : 0;
+    const pred2026 = monthly2026[i];
+    const growth = actual2025 > 0 ? ((pred2026-actual2025)/actual2025*100) : 0;
+    const badge = growth >= 0 ? `<span class="badge badge-up">+${growth.toFixed(1)}%</span>` : `<span class="badge badge-down">${growth.toFixed(1)}%</span>`;
+    tbody += `<tr><td>Tháng ${i+1}</td><td>${seasonNames[seasons2026[i]]}</td><td>${(actual2025/1000).toFixed(0)} Tỷ</td><td>${(pred2026/1000).toFixed(0)} Tỷ</td><td>${badge}</td></tr>`;
+  }
+  document.getElementById('predBody').innerHTML = tbody;
+}
+
+// ========== INIT ==========
+window.addEventListener('DOMContentLoaded', () => { initCharts(); });
+</script>
+</body>
+</html>

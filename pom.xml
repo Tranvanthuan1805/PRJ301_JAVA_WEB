@@ -64,6 +64,7 @@
 
     <!-- ================= BUILD ================= -->
     <build>
+        <sourceDirectory>Login/src/java</sourceDirectory>
         <plugins>
 
             <!-- Java 17 Compiler -->
@@ -77,13 +78,14 @@
                 </configuration>
             </plugin>
 
-            <!-- WAR Plugin FIX cho Java 17 -->
+            <!-- WAR Plugin CONFIG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warSourceDirectory>Login/web</warSourceDirectory>
                 </configuration>
             </plugin>
 
@@ -95,6 +97,9 @@
                 <configuration>
                     <webApp>
                         <contextPath>/</contextPath>
+                        <resourceBases>
+                            <resourceBase>Login/web</resourceBase>
+                        </resourceBases>
                     </webApp>
                     <httpConnector>
                         <port>8080</port>
