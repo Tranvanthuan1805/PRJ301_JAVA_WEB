@@ -25,7 +25,7 @@ public class DBUtil {
         "characterEncoding=UTF-8;";
 
     private static final String USER = "sa";
-    private static final String PASS = "123456";
+    private static final String PASS = "MinhHieu2816@"; // mật khẩu SQL Server của user sa
 
     public static Connection getConnection() throws Exception {
         return DriverManager.getConnection(URL, USER, PASS);
