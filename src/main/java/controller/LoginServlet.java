@@ -4,7 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import model.User;
+import model.entity.User;
 import userDao.UserDAO;
 
 @WebServlet("/login")

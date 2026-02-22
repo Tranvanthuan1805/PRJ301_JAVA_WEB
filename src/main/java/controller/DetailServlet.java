@@ -1,7 +1,7 @@
 package controller;
 
-import dao.TourDAO;
-import model.Tour;
+import model.entity.dao.TourDAO;
+import model.entity.Tour;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

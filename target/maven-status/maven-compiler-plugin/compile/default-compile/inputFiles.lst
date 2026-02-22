@@ -1,11 +1,17 @@
 E:\PRJ301_JAVA_WEB\src\main\java\controller\HomeServlet.java
+E:\PRJ301_JAVA_WEB\src\main\java\model\Provider.java
 E:\PRJ301_JAVA_WEB\src\main\java\controller\RegisterServlet.java
 E:\PRJ301_JAVA_WEB\src\main\java\model\Tour.java
 E:\PRJ301_JAVA_WEB\src\main\java\userDao\UserDAO.java
 E:\PRJ301_JAVA_WEB\src\main\java\dao\DBUtil.java
+E:\PRJ301_JAVA_WEB\src\main\java\dao\ProviderDAO.java
+E:\PRJ301_JAVA_WEB\src\main\java\controller\CartServlet.java
 E:\PRJ301_JAVA_WEB\src\main\java\SupabaseMain.java
 E:\PRJ301_JAVA_WEB\src\main\java\dao\TourDAO.java
 E:\PRJ301_JAVA_WEB\src\main\java\filter\AuthFilter.java
+E:\PRJ301_JAVA_WEB\src\main\java\model\CartItem.java
+E:\PRJ301_JAVA_WEB\src\main\java\dao\BookingDAO.java
+E:\PRJ301_JAVA_WEB\src\main\java\model\Booking.java
 E:\PRJ301_JAVA_WEB\src\main\java\util\ValidateUtil.java
 E:\PRJ301_JAVA_WEB\src\main\java\model\User.java
 E:\PRJ301_JAVA_WEB\src\main\java\controller\LoginServlet.java

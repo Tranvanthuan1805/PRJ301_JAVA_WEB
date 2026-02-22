@@ -11,10 +11,10 @@ public class UserDAO {
     public User checklogin(String username, String passwordPlain) {
 
         String sql = """
-            SELECT u.UserId, u.Username, r.RoleName
+            SELECT u.UserId, u.Email, u.Username, u.RoleId, r.RoleName
             FROM Users u
             JOIN Roles r ON u.RoleId = r.RoleId
-            WHERE u.Username = ?
+            WHERE (u.Username = ? OR u.Email = ?)
               AND u.PasswordHash = ?
               AND u.IsActive = 1
         """;
@@ -25,14 +25,17 @@ public class UserDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, username);
-            ps.setString(2, hash);
+            ps.setString(2, username);
+            ps.setString(3, hash);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 return new User(
                     rs.getInt("UserId"),
+                    rs.getString("Email"),
                     rs.getString("Username"),
+                    rs.getInt("RoleId"),
                     rs.getString("RoleName")
                 );
             }

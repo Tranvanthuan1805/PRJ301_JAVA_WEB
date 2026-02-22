@@ -31,27 +31,33 @@
       <div class="error"><%= err %></div>
     <% } %>
 
-    <form action="login" method="post">
-      <div class="input-group">
-        <input name="username" placeholder="Username" required>
+    <form action="login" method="post" onsubmit="return validateForm()">
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input class="form-control" id="username" name="username" placeholder="Nhập username" autocomplete="off">
       </div>
 
-      <div class="input-group">
-        <input type="password" name="password" placeholder="Password" required>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input class="form-control" id="password" name="password" type="password" placeholder="Nhập password" autocomplete="off">
       </div>
 
       <button class="btn">LOGIN</button>
     </form>
 
-    <div class="social">
-      <img src="images/google.png">
-      <img src="images/facebook.png">
-      <img src="images/github.png">
-    </div>
-
-    <div class="switch">
-      <a href="register.jsp">Create new account</a>
-    </div>
+    <script>
+      function validateForm() {
+        var username = document.getElementById('username').value.trim();
+        var password = document.getElementById('password').value;
+        
+        if (username === '' || password === '') {
+          alert('Vui lòng nhập đầy đủ username và password');
+          return false;
+        }
+        
+        return true;
+      }
+    </script>
   </div>
 
 </div>

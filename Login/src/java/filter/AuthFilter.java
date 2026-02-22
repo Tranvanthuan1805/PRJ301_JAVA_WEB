@@ -5,6 +5,7 @@ import java.io.IOException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
+@WebFilter(urlPatterns = {"/admin.jsp", "/user.jsp", "/admin/*", "/my-orders"})
 public class AuthFilter implements Filter {
 
     @Override
@@ -13,41 +14,35 @@ public class AuthFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+        String contextPath = request.getContextPath();
 
         String uri = request.getRequestURI();
 
-        // ✅ CHO QUA LOGIN / REGISTER / CSS / IMG
-        if (uri.endsWith("login")
-            || uri.endsWith("login.jsp")
-            || uri.endsWith("register")
-            || uri.endsWith("register.jsp")
-            || uri.contains("/css/")
-            || uri.contains("/images/")
-            || uri.contains("/img/")) {
+        String path = request.getServletPath();
+        
+        // DEBUG
+        System.out.println(">>> AuthFilter: path=" + path);
+        System.out.println(">>> AuthFilter: user=" + (u == null ? "null" : u.username));
+        System.out.println(">>> AuthFilter: role=" + (u == null ? "null" : u.roleName));
 
-            chain.doFilter(req, res);
+        // Not logged in -> redirect to login
+        if (u == null) {
+            response.sendRedirect(contextPath + "/login.jsp");
             return;
         }
 
-        HttpSession session = request.getSession(false);
-        User user = (session == null) ? null : (User) session.getAttribute("user");
+        String path = request.getServletPath(); // e.g., /admin.jsp, /admin/orders, /my-orders
 
-        // ❌ chưa login
-        if (user == null) {
-            response.sendRedirect("login.jsp");
+        // Admin-only paths: /admin.jsp and /admin/*
+        boolean isAdminPath = "/admin.jsp".equals(path) || path.startsWith("/admin/");
+        
+        if (isAdminPath && !"ADMIN".equalsIgnoreCase(u.roleName)) {
+            response.sendRedirect(contextPath + "/error.jsp");
             return;
         }
 
-        // phân quyền
-        if (uri.contains("admin") && !"ADMIN".equalsIgnoreCase(user.getRoleName())) {
-            response.sendRedirect("error.jsp");
-            return;
-        }
-
-        if (uri.contains("user") && !"USER".equalsIgnoreCase(user.getRoleName())) {
-            response.sendRedirect("error.jsp");
-            return;
-        }
+        // User paths: /my-orders (any logged-in user can access)
+        // No additional check needed - already verified user is logged in
 
         chain.doFilter(req, res);
     }
