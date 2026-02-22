@@ -604,5 +604,8 @@
             </div>
         </div>
     </div>
+
+    <!-- VietAir AI Chatbot -->
+    <jsp:include page="/views/ai-chatbot/chatbot.jsp" />
 </body>
 </html>

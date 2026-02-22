@@ -310,5 +310,8 @@
             document.getElementById('featuredToursSection').style.display = 'block';
         });
     </script>
+
+    <!-- VietAir AI Chatbot -->
+    <jsp:include page="/views/ai-chatbot/chatbot.jsp" />
 </body>
 </html>
