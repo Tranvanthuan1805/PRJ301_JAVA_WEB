@@ -1,39 +1,39 @@
-# Module: Quản lý Đơn hàng (Order Management)
+# Module: Giỏ hàng và Đặt chỗ (Cart & Booking)
 
 ## 1. Mục tiêu
-Quản lý vòng đời của các giao dịch trên hệ thống, từ khi khách hàng đặt chỗ cho đến khi hoàn thành tour hoặc hủy đơn. Đây là module trung tâm để kiểm soát dòng tiền và xác nhận dịch vụ.
+Xử lý quy trình đặt tour của khách hàng, duy trì trạng thái giỏ hàng trong phiên (session) và tiến hành đặt chỗ (booking) sau khi kiểm tra tính khả dụng.
 
 ## 2. Các chức năng đã hoàn thành
-- ✔ Theo dõi trạng thái đơn hàng (Pending, Confirmed, Completed, Cancelled)
-- ✔ Xem chi tiết đơn hàng (Order Details) và các mục tour đi kèm
-- ✔ Cập nhật trạng thái thủ công bởi Admin
-- ✔ Ghi nhận xác thực thanh toán
-- ✔ Servlet: `OrderServlet.java`
-- ✔ JSP: `order-list.jsp`, `order-detail.jsp`
-- ✔ DAO/Entity: `OrderDAO.java`, `Order.java`
+- ✔ Thêm tour vào giỏ hàng (Session-based Cart)
+- ✔ Kiểm tra slot trống theo thời gian thực (Real-time slot validation)
+- ✔ Quản lý số lượng và ngày khởi hành (Travel Date)
+- ✔ Quy trình Checkout cơ bản
+- ✔ Servlet: `CartServlet.java`, `CheckoutServlet.java`
+- ✔ JSP: `cart.jsp`, `confirmation.jsp`
+- ✔ DAO/Entity: `BookingDAO.java`, `Cart.java`, `CartItem.java`
 
 ## 3. Cấu trúc thư mục
-- `src/main/java/controller/OrderServlet.java`: Quản lý danh sách giao dịch và quy trình xử lý đơn hàng.
-- `src/main/java/model/entity/Order.java`: Chứa thông tin tổng quan (tổng tiền, khách hàng, ngày đặt).
-- `src/main/java/model/dao/OrderDAO.java`: Truy vấn danh sách đơn hàng kèm tên khách hàng.
-- `src/main/webapp/views/order-management/`: Giao diện quản trị giao dịch.
+- `src/main/java/controller/CartServlet.java`: Quản lý thêm/xóa/sửa tour trong giỏ hàng (session).
+- `src/main/java/controller/CheckoutServlet.java`: Chuyển đổi dữ liệu giỏ hàng thành bản ghi `Orders` và `Bookings` trong DB.
+- `src/main/java/model/entity/CartItem.java`: Đối tượng đại diện cho một tour đã chọn, kèm số khách và ngày đi.
+- `src/main/webapp/views/cart-booking/`: Giao diện giỏ hàng và thanh toán.
 
 ## 4. Luồng xử lý (Business Flow)
-1. Admin truy cập Registry.
-2. `OrderServlet` lấy dữ liệu JOIN từ `Orders` + `Users`.
-3. Khi cập nhật trạng thái -> Servlet gọi `OrderDAO.updateOrderStatus()`.
-4. Trạng thái "Completed" sẽ kích hoạt việc tính toán doanh thu trong tương lai.
+1. Khách hàng chọn tour và ngày đi -> Gửi tới `CartServlet?action=add`.
+2. Servlet gọi `TourDAO.checkAvailability()`. Nếu OK -> Lưu vào `session.getAttribute("cart_obj")`.
+3. Khi Checkout -> `CheckoutServlet` tạo 1 `Order` mới, sau đó duyệt Cart để tạo nhiều `Booking` (line items) tương ứng.
+4. Xóa session cart và chuyển tới `confirmation.jsp`.
 
 ## 5. Các chức năng CHƯA hoàn thành
-- ❌ Tự động hoàn tiền (Refund handling) qua API ngân hàng.
-- ❌ Xuất hóa đơn (Invoice PDF generation).
-- ❌ Thông báo cho Provider khi có đơn hàng mới (Push Notifications).
+- ❌ Lưu giỏ hàng vào DB (Abandoned Cart) để nhắc nhở khách hàng.
+- ❌ Áp dụng Mã giảm giá (Promo Code).
+- ❌ Thay đổi ngày đi ngay trong giỏ hàng.
 
 ## 6. Hướng dẫn cho người phát triển tiếp
-- Cần kết nối với Module Subscription để trừ hoa hồng (commissions).
-- Xây dựng logic tự động chuyển trạng thái "Completed" sau khi ngày tour kết thúc.
+- Tích hợp Module Payment (/payment) vào cuối quy trình Checkout.
+- Bổ sung validation số lượng khách không vượt quá `MaxPeople`.
 
 ## 7. Ghi chú kỹ thuật
-- **Phụ thuộc**: Nhận dữ liệu từ Module Cart & Booking.
-- **Bảng DB chia sẻ**: `Orders`, `Bookings`.
-- **Dữ liệu AI**: Cung cấp Volume giao dịch cho AI Forecasting.
+- **Phụ thuộc**: Phụ thuộc cực lớn vào Module Quản lý Tour.
+- **Bảng DB chia sẻ**: `Orders`, `Bookings`, `Tours`.
+- **Dữ liệu AI**: Cung cấp dữ liệu Giỏ hàng bị bỏ rơi (Abandoned Carts) cho AI Marketing.
