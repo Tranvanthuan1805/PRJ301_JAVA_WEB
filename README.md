@@ -1,38 +1,89 @@
-# Module: Đăng ký thành viên và Thanh toán (Subscription & Payment)
+# VietAir - Hệ thống Quản lý Tour Du lịch
 
-## 1. Mục tiêu
-Mô hình hóa doanh thu của nền tảng bằng các gói dịch vụ (Subscriptions) dành cho đối tác. Module này kiểm soát quyền truy cập vào các tính năng cao cấp như AI Intelligence.
+## Giới thiệu
+Web application quản lý và đặt tour du lịch Đà Nẵng với phân quyền Admin/User và phân tích dữ liệu.
 
-## 2. Các chức năng đã hoàn thành
-- ✔ Bảng giá đa tầng (Explorer, Professional, Elite)
-- ✔ Mô phỏng thanh toán qua mã QR (Bank Transfer Simulation)
-- ✔ Ghi nhận và quản lý kỳ hạn Subscription
-- ✔ Phân quyền tính năng dựa trên Plan (Gated Access)
-- ✔ Servlet: `PaymentServlet.java`
-- ✔ JSP: `pricing.jsp`, `payment.jsp`
-- ✔ DAO/Entity: `SubscriptionDAO.java`, `Subscription.java`
+## Công nghệ
+- **Backend:** Java Servlet, JSP
+- **Database:** SQL Server (504 tours)
+- **Frontend:** HTML5, CSS3, JavaScript, Chart.js
+- **Server:** Apache Tomcat 10.1
 
-## 3. Cấu trúc thư mục
-- `src/main/java/controller/PaymentServlet.java`: Xử lý chọn gói và xác thực thanh toán giả lập.
-- `src/main/java/model/dao/SubscriptionDAO.java`: Kiểm tra trạng thái "Active" của gói dịch vụ.
-- `src/main/webapp/views/subscription-payment/`: Giao diện thanh toán và bảng giá.
+## Tính năng
 
-## 4. Luồng xử lý (Business Flow)
-1. Đối tác vào `pricing.jsp` -> Chọn gói "Pro".
-2. Hệ thống tạo QR code mô phỏng tại `payment.jsp`.
-3. Khi nhấn "Confirm", `PaymentServlet` lưu bản ghi vào `ProviderSubscriptions` với hiệu lực 30 ngày.
-4. Session cập nhật `user_plan = 'Professional'`, mở khóa menu "AI Forecast".
+### User
+- Xem danh sách tours (12 tours/trang)
+- Tìm kiếm, lọc tours
+- Đặt tour với form đầy đủ (tên, email, SĐT, địa chỉ, số người)
 
-## 5. Các chức năng CHƯA hoàn thành
-- ❌ Tích hợp API SePay thực tế để tự động xác nhận chuyển khoản.
-- ❌ Tự động gia hạn (Auto-renewal).
-- ❌ Quản lý lịch sử hóa đơn (Billing History).
+### Admin
+- CRUD tours (Thêm, Sửa, Xóa)
+- Xem analytics:
+  - Biểu đồ lượt khách theo tháng
+  - Biểu đồ giá trung bình
+  - Top 5 tháng cao điểm
+  - Bảng dữ liệu chi tiết
 
-## 6. Hướng dẫn cho người phát triển tiếp
-- Cần bổ sung Webhook listener để nhận thông báo từ ngân hàng.
-- Nâng cấp logic hết hạn gói để tự động hạ cấp (downgrade) tài khoản.
+## Cài đặt
 
-## 7. Ghi chú kỹ thuật
-- **Phụ thuộc**: Độc lập, nhưng cung cấp quyền cho các module AI.
-- **Bảng DB chia sẻ**: `ProviderSubscriptions`, `Users`.
-- **Dữ liệu AI**: Kiểm soát lưu lượng truy cập Chatbot và Forecasting.
+### 1. Setup Database
+```sql
+-- Chạy file trong SQL Server Management Studio
+SETUP_DATABASE.sql
+ADD_450_TOURS_HISTORY.sql  -- 432 tours lịch sử (2020-2025)
+ADD_NEW_TOURS_2026.sql     -- 72 tours mới (2026)
+```
+
+### 2. Cấu hình Database Connection
+File: `Login/src/java/util/DatabaseConnection.java`
+```java
+URL = "jdbc:sqlserver://localhost:1433;databaseName=TourManagement;..."
+USERNAME = "sa"
+PASSWORD = "123456"  // Đổi password của bạn
+```
+
+### 3. Build & Deploy
+1. Mở NetBeans
+2. Clean and Build (Shift+F11)
+3. Run (F6)
+
+### 4. Truy cập
+```
+http://localhost:8080/Login/
+```
+
+## Tài khoản mặc định
+- **Admin:** admin / admin
+- **User:** user / user
+
+## Cấu trúc Database
+- **Users** - Tài khoản (admin/user)
+- **Tours** - Thông tin tours (NVARCHAR cho tiếng Việt)
+- **Customers** - Khách hàng
+- **Bookings** - Đơn đặt tour
+- **InteractionHistory** - Lịch sử hành động
+
+## Dữ liệu
+- 432 tours lịch sử (2020-2025) từ file CSV
+- 72 tours mới (2026) - 6 tours/tháng
+- Tổng: 504 tours
+
+## Tính năng nổi bật
+✅ Hỗ trợ Unicode (tiếng Việt)  
+✅ Phân trang tours  
+✅ Phân quyền Admin/User  
+✅ Analytics với Chart.js  
+✅ Booking với form đầy đủ  
+✅ Responsive design
+
+## Files quan trọng
+- `SETUP_DATABASE.sql` - Tạo database và tables
+- `ADD_450_TOURS_HISTORY.sql` - Import tours lịch sử
+- `ADD_NEW_TOURS_2026.sql` - Import tours mới
+- `CLEAR_TOMCAT_CACHE.bat` - Clear cache khi cần
+
+## Lưu ý
+- Database phải dùng NVARCHAR cho tiếng Việt
+- TourDAO dùng `getNString()` để đọc Unicode
+- Tours page chỉ hiển thị tours tương lai
+- History page hiển thị tất cả tours (analytics)

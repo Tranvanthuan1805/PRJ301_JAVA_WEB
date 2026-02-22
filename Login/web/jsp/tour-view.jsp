@@ -362,18 +362,20 @@
             </div>
             <nav class="nav-menu">
                 <a href="<%= request.getContextPath() %>/index.jsp" class="nav-item">Trang chủ</a>
-                <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item active">Tours</a>
-                <a href="<%= isLoggedIn ? "#" : request.getContextPath() + "/login.jsp" %>" class="nav-item">Khách hàng</a>
-                <a href="<%= isLoggedIn ? "#" : request.getContextPath() + "/login.jsp" %>" class="nav-item">Booking</a>
                 <% if (isAdmin) { %>
+                    <a href="<%= request.getContextPath() %>/admin/tours" class="nav-item active">Tours</a>
+                    <a href="<%= request.getContextPath() %>/admin/customers" class="nav-item">Khách hàng</a>
                     <a href="<%= request.getContextPath() %>/history.jsp" class="nav-item">Lịch sử</a>
+                <% } else if (isLoggedIn) { %>
+                    <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item active">Tours</a>
+                    <a href="<%= request.getContextPath() %>/profile" class="nav-item">Profile</a>
+                <% } else { %>
+                    <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item active">Tours</a>
                 <% } %>
             </nav>
             <div class="nav-actions">
                 <% if (isLoggedIn) { %>
-                    <% if (isAdmin) { %>
-                        <span class="user-badge">ADMIN</span>
-                    <% } %>
+                    <span class="user-badge"><%= isAdmin ? "ADMIN" : "USER" %></span>
                     <a href="<%= request.getContextPath() %>/logout" class="btn-logout">
                         <i class="fas fa-sign-out-alt"></i>
                         Đăng xuất
@@ -514,7 +516,20 @@
                             <% } %>
                         </div>
                         
-                        <% if (isLoggedIn && isAvailable && !"ADMIN".equals(role)) { %>
+                        <% if (!isAvailable) { %>
+                            <button class="btn-book" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                <i class="fas fa-times-circle"></i> Đã hết chỗ
+                            </button>
+                        <% } else if (isAdmin) { %>
+                            <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; color: white;">
+                                <i class="fas fa-user-shield" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.8;"></i>
+                                <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Bạn đang xem với quyền Admin</p>
+                            </div>
+                        <% } else if (!isLoggedIn) { %>
+                            <a href="<%= request.getContextPath() %>/login.jsp" class="btn-book">
+                                <i class="fas fa-sign-in-alt"></i> Đăng nhập để đặt tour
+                            </a>
+                        <% } else { %>
                             <form action="<%= request.getContextPath() %>/booking" method="post" style="margin: 0;">
                                 <input type="hidden" name="action" value="book">
                                 <input type="hidden" name="tourId" value="<%= tour.getId() %>">
@@ -579,14 +594,6 @@
                                     <i class="fas fa-ticket-alt"></i> Đặt tour ngay
                                 </button>
                             </form>
-                        <% } else if (!isLoggedIn) { %>
-                            <a href="<%= request.getContextPath() %>/login.jsp" class="btn-book">
-                                <i class="fas fa-sign-in-alt"></i> Đăng nhập để đặt tour
-                            </a>
-                        <% } else { %>
-                            <button class="btn-book" disabled style="opacity: 0.5; cursor: not-allowed;">
-                                <i class="fas fa-times-circle"></i> Đã hết chỗ
-                            </button>
                         <% } %>
                         
                         <a href="<%= request.getContextPath() %>/tour" class="btn-back">

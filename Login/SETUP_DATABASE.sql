@@ -1,168 +1,194 @@
--- ========================================
--- SETUP TOÀN BỘ DATABASE
--- ========================================
-USE AdminUser;
+-- =============================================
+-- SETUP DATABASE: TourManagement
+-- Kết hợp database.sql (Tours) + SQLQuery1.sql (Users)
+-- =============================================
+
+USE master;
 GO
 
--- ========================================
--- 1. TẠO BẢNG
--- ========================================
-
--- Bảng Users (Tài khoản đăng nhập)
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users')
+-- Xóa database cũ nếu tồn tại
+IF EXISTS (SELECT name FROM sys.databases WHERE name = 'TourManagement')
 BEGIN
-    CREATE TABLE Users (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        username NVARCHAR(50) NOT NULL UNIQUE,
-        password NVARCHAR(255) NOT NULL,
-        role NVARCHAR(20) NOT NULL CHECK (role IN ('admin', 'user')),
-        created_at DATETIME DEFAULT GETDATE()
-    );
+    ALTER DATABASE TourManagement SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE TourManagement;
 END
 GO
 
--- Bảng Customers (Thông tin khách hàng)
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Customers')
-BEGIN
-    CREATE TABLE Customers (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        user_id INT NULL,
-        full_name NVARCHAR(100) NOT NULL,
-        email NVARCHAR(100) NOT NULL UNIQUE,
-        phone NVARCHAR(20),
-        address NVARCHAR(255),
-        city NVARCHAR(50),
-        status NVARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'banned')),
-        created_at DATETIME DEFAULT GETDATE(),
-        updated_at DATETIME DEFAULT GETDATE(),
-        FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL
-    );
-END
+-- Tạo database mới
+CREATE DATABASE TourManagement;
 GO
 
--- Bảng CustomerActivity (Lịch sử hoạt động)
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'CustomerActivity')
-BEGIN
-    CREATE TABLE CustomerActivity (
-        Id INT IDENTITY(1,1) PRIMARY KEY,
-        CustomerId INT NOT NULL,
-        ActionType NVARCHAR(50) NOT NULL,
-        ActionDetails NVARCHAR(MAX),
-        CreatedAt DATETIME DEFAULT GETDATE(),
-        FOREIGN KEY (CustomerId) REFERENCES Customers(id) ON DELETE CASCADE
-    );
-END
+USE TourManagement;
 GO
 
--- ========================================
--- 2. XÓA DỮ LIỆU CŨ (NẾU CÓ)
--- ========================================
-DELETE FROM CustomerActivity;
-DELETE FROM Customers;
-DELETE FROM Users;
-GO
+-- =============================================
+-- PHẦN 1: USERS & ROLES (từ SQLQuery1.sql)
+-- =============================================
 
--- Reset identity
-DBCC CHECKIDENT ('CustomerActivity', RESEED, 0);
-DBCC CHECKIDENT ('Customers', RESEED, 0);
-DBCC CHECKIDENT ('Users', RESEED, 0);
-GO
+-- Bảng Roles
+CREATE TABLE Roles (
+    RoleId INT IDENTITY(1,1) PRIMARY KEY,
+    RoleName NVARCHAR(50) NOT NULL UNIQUE
+);
 
--- ========================================
--- 3. INSERT ADMIN USER
--- ========================================
--- Check if admin exists
-IF NOT EXISTS (SELECT 1 FROM Users WHERE Username = 'admin')
-BEGIN
-    INSERT INTO Users (Username, PasswordHash, RoleId, IsActive) 
-    VALUES ('admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 1, 1);
-END
-GO
+-- Bảng Users
+CREATE TABLE Users (
+    UserId INT IDENTITY(1,1) PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(64) NOT NULL,
+    RoleId INT NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleId) REFERENCES Roles(RoleId)
+);
 
--- ========================================
--- 4. INSERT 10 KHÁCH HÀNG
--- ========================================
-SET IDENTITY_INSERT Customers ON;
+-- Thêm Roles
+INSERT INTO Roles (RoleName) VALUES ('ADMIN');
+INSERT INTO Roles (RoleName) VALUES ('USER');
 
-INSERT INTO Customers (id, user_id, full_name, email, phone, address, date_of_birth, status, created_at, updated_at) VALUES
-(1, NULL, N'Nguyễn Văn An', N'an@gmail.com', N'0901234567', N'123 Lê Lợi, Hồ Chí Minh', '1990-01-15', N'active', GETDATE(), GETDATE()),
-(2, NULL, N'Trần Thị Bình', N'binh@gmail.com', N'0902345678', N'456 Trần Hưng Đạo, Hà Nội', '1992-03-20', N'active', GETDATE(), GETDATE()),
-(3, NULL, N'Lê Văn Cường', N'cuong@gmail.com', N'0903456789', N'789 Nguyễn Huệ, Đà Nẵng', '1988-07-10', N'inactive', GETDATE(), GETDATE()),
-(4, NULL, N'Phạm Thị Dung', N'dung@gmail.com', N'0904567890', N'321 Hai Bà Trưng, Hồ Chí Minh', '1995-11-25', N'active', GETDATE(), GETDATE()),
-(5, NULL, N'Hoàng Văn Em', N'em@gmail.com', N'0905678901', N'654 Lý Thường Kiệt, Cần Thơ', '1991-05-30', N'banned', GETDATE(), GETDATE()),
-(6, NULL, N'Vũ Thị Phương', N'phuong@gmail.com', N'0906789012', N'987 Điện Biên Phủ, Hà Nội', '1993-09-12', N'active', GETDATE(), GETDATE()),
-(7, NULL, N'Đặng Văn Giang', N'giang@gmail.com', N'0907890123', N'147 Võ Văn Tần, Đà Nẵng', '1989-02-18', N'active', GETDATE(), GETDATE()),
-(8, NULL, N'Bùi Thị Hoa', N'hoa@gmail.com', N'0908901234', N'258 Pasteur, Hồ Chí Minh', '1994-06-22', N'inactive', GETDATE(), GETDATE()),
-(9, NULL, N'Ngô Văn Inh', N'inh@gmail.com', N'0909012345', N'369 Cách Mạng Tháng 8, Huế', '1990-12-05', N'active', GETDATE(), GETDATE()),
-(10, NULL, N'Trương Thị Kim', N'kim@gmail.com', N'0900123456', N'741 Nguyễn Thị Minh Khai, Hà Nội', '1996-04-08', N'active', GETDATE(), GETDATE());
+-- Thêm Users (password: 123456)
+-- Hash SHA-256 của "123456" = 8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
+INSERT INTO Users (Username, PasswordHash, RoleId) VALUES 
+('admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 1),
+('user', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2);
 
-SET IDENTITY_INSERT Customers OFF;
-GO
+-- =============================================
+-- PHẦN 2: TOUR MANAGEMENT (từ database.sql)
+-- =============================================
 
--- ========================================
--- 5. TẠO TÀI KHOẢN CHO 10 KHÁCH HÀNG
--- ========================================
-INSERT INTO Users (Username, PasswordHash, RoleId, IsActive) VALUES
-(N'nvan', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'tbinh', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'lcuong', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'pdung', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'hvem', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'vtphuong', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'dvgiang', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'bthoa', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'nvinh', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1),
-(N'ttkim', N'8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 1);
-GO
+-- Bảng Customers
+CREATE TABLE Customers (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    fullName NVARCHAR(100) NOT NULL,
+    email NVARCHAR(100) UNIQUE NOT NULL,
+    phone NVARCHAR(20),
+    address NVARCHAR(255),
+    createdAt DATETIME2 DEFAULT GETDATE(),
+    updatedAt DATETIME2 DEFAULT GETDATE()
+);
 
--- ========================================
--- 6. LINK USERS VỚI CUSTOMERS
--- ========================================
-DECLARE @adminId INT = (SELECT UserId FROM Users WHERE Username = 'admin');
-DECLARE @startId INT = @adminId + 1;
+-- Bảng Tours
+CREATE TABLE Tours (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(200) NOT NULL,
+    destination NVARCHAR(100) NOT NULL,
+    startDate DATE NOT NULL,
+    endDate DATE NOT NULL,
+    startTime NVARCHAR(10) DEFAULT '08:00',
+    endTime NVARCHAR(10) DEFAULT '18:00',
+    price DECIMAL(10,2) NOT NULL,
+    maxCapacity INT NOT NULL,
+    currentCapacity INT DEFAULT 0,
+    description NTEXT,
+    createdAt DATETIME2 DEFAULT GETDATE(),
+    updatedAt DATETIME2 DEFAULT GETDATE()
+);
 
-UPDATE Customers SET user_id = @startId WHERE id = 1;      -- an
-UPDATE Customers SET user_id = @startId + 1 WHERE id = 2;  -- binh
-UPDATE Customers SET user_id = @startId + 2 WHERE id = 3;  -- cuong
-UPDATE Customers SET user_id = @startId + 3 WHERE id = 4;  -- dung
-UPDATE Customers SET user_id = @startId + 4 WHERE id = 5;  -- em
-UPDATE Customers SET user_id = @startId + 5 WHERE id = 6;  -- phuong
-UPDATE Customers SET user_id = @startId + 6 WHERE id = 7;  -- giang
-UPDATE Customers SET user_id = @startId + 7 WHERE id = 8;  -- hoa
-UPDATE Customers SET user_id = @startId + 8 WHERE id = 9;  -- inh
-UPDATE Customers SET user_id = @startId + 9 WHERE id = 10; -- kim
-GO
+-- Bảng Bookings
+CREATE TABLE Bookings (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    customerId INT NOT NULL,
+    tourId INT NOT NULL,
+    bookingDate DATETIME2 DEFAULT GETDATE(),
+    status NVARCHAR(20) DEFAULT 'CONFIRMED',
+    bookingCode NVARCHAR(20) UNIQUE,
+    createdAt DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (customerId) REFERENCES Customers(id) ON DELETE CASCADE,
+    FOREIGN KEY (tourId) REFERENCES Tours(id) ON DELETE CASCADE
+);
 
--- ========================================
--- 7. INSERT DỮ LIỆU MẪU CUSTOMERACTIVITY
--- ========================================
-INSERT INTO CustomerActivity (CustomerId, ActionType, ActionDetails) VALUES
-(1, N'Đăng ký', N'Khách hàng đăng ký tài khoản mới'),
-(1, N'Cập nhật thông tin', N'Cập nhật số điện thoại và địa chỉ'),
-(2, N'Đăng ký', N'Khách hàng đăng ký tài khoản mới'),
-(3, N'Đăng ký', N'Khách hàng đăng ký tài khoản mới'),
-(3, N'Vô hiệu hóa', N'Tài khoản bị vô hiệu hóa do vi phạm'),
-(4, N'Đăng ký', N'Khách hàng đăng ký tài khoản mới'),
-(5, N'Đăng ký', N'Khách hàng đăng ký tài khoản mới'),
-(5, N'Cấm', N'Tài khoản bị cấm do spam'),
-(6, N'Đăng ký', N'Khách hàng đăng ký tài khoản mới'),
-(7, N'Đăng ký', N'Khách hàng đăng ký tài khoản mới');
-GO
+-- Bảng InteractionHistory
+CREATE TABLE InteractionHistory (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    customerId INT NOT NULL,
+    action NVARCHAR(100) NOT NULL,
+    createdAt DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (customerId) REFERENCES Customers(id) ON DELETE CASCADE
+);
 
--- ========================================
--- HOÀN TẤT
--- ========================================
-PRINT '========================================';
-PRINT 'SETUP DATABASE THÀNH CÔNG!';
-PRINT '========================================';
+-- =============================================
+-- PHẦN 3: INDEXES
+-- =============================================
+
+CREATE INDEX IX_Customers_email ON Customers(email);
+CREATE INDEX IX_Tours_destination ON Tours(destination);
+CREATE INDEX IX_Tours_startDate ON Tours(startDate);
+CREATE INDEX IX_Bookings_customerId ON Bookings(customerId);
+CREATE INDEX IX_Bookings_tourId ON Bookings(tourId);
+CREATE INDEX IX_InteractionHistory_customerId ON InteractionHistory(customerId);
+CREATE INDEX IX_InteractionHistory_createdAt ON InteractionHistory(createdAt);
+
+-- =============================================
+-- PHẦN 4: DỮ LIỆU MẪU
+-- =============================================
+
+-- Thêm Customers (20 khách hàng từ Đà Nẵng)
+INSERT INTO Customers (fullName, email, phone, address) VALUES
+(N'Nguyễn Văn An', 'an.nguyen@email.com', '0901234567', N'123 Đường Lê Duẩn, Quận Hải Châu, Đà Nẵng'),
+(N'Trần Thị Bình', 'binh.tran@email.com', '0912345678', N'456 Đường Trần Phú, Quận Hải Châu, Đà Nẵng'),
+(N'Lê Văn Cường', 'cuong.le@email.com', '0923456789', N'789 Đường Hoàng Diệu, Quận Hải Châu, Đà Nẵng'),
+(N'Phạm Thị Dung', 'dung.pham@email.com', '0934567890', N'321 Đường Bạch Đằng, Quận Hải Châu, Đà Nẵng'),
+(N'Hoàng Văn Em', 'em.hoang@email.com', '0945678901', N'654 Đường Nguyễn Văn Linh, Quận Thanh Khê, Đà Nẵng'),
+(N'Vũ Thị Hoa', 'hoa.vu@email.com', '0956789012', N'987 Đường Điện Biên Phủ, Quận Thanh Khê, Đà Nẵng'),
+(N'Đặng Văn Giang', 'giang.dang@email.com', '0967890123', N'147 Đường Lê Lợi, Quận Thanh Khê, Đà Nẵng'),
+(N'Bùi Thị Lan', 'lan.bui@email.com', '0978901234', N'258 Đường Nguyễn Hữu Thọ, Quận Thanh Khê, Đà Nẵng'),
+(N'Ngô Văn Minh', 'minh.ngo@email.com', '0989012345', N'369 Đường Võ Nguyên Giáp, Quận Sơn Trà, Đà Nẵng'),
+(N'Lý Thị Nga', 'nga.ly@email.com', '0990123456', N'741 Đường Hoàng Sa, Quận Sơn Trà, Đà Nẵng'),
+(N'Trương Văn Phúc', 'phuc.truong@email.com', '0901357924', N'852 Đường Nguyễn Tất Thành, Quận Ngũ Hành Sơn, Đà Nẵng'),
+(N'Phan Thị Quỳnh', 'quynh.phan@email.com', '0912468135', N'963 Đường Trường Sa, Quận Ngũ Hành Sơn, Đà Nẵng'),
+(N'Võ Văn Sơn', 'son.vo@email.com', '0923579246', N'159 Đường Tôn Đức Thắng, Quận Liên Chiểu, Đà Nẵng'),
+(N'Đinh Thị Tâm', 'tam.dinh@email.com', '0934680357', N'357 Đường Nguyễn Duy Trinh, Quận Liên Chiểu, Đà Nẵng'),
+(N'Huỳnh Văn Tùng', 'tung.huynh@email.com', '0945791468', N'468 Đường Cách Mạng Tháng Tám, Quận Cẩm Lệ, Đà Nẵng'),
+(N'Mai Thị Uyên', 'uyen.mai@email.com', '0956802579', N'579 Đường Hùng Vương, Quận Cẩm Lệ, Đà Nẵng'),
+(N'Lưu Văn Vinh', 'vinh.luu@email.com', '0967913680', N'680 Đường Hồ Chí Minh, Huyện Hòa Vang, Đà Nẵng'),
+(N'Cao Thị Xuân', 'xuan.cao@email.com', '0978024791', N'791 Đường Quốc lộ 14B, Huyện Hòa Vang, Đà Nẵng'),
+(N'Đỗ Văn Yên', 'yen.do@email.com', '0989135802', N'802 Đường 2/9, Quận Hải Châu, Đà Nẵng'),
+(N'Hồ Thị Zara', 'zara.ho@email.com', '0990246913', N'913 Đường Phan Châu Trinh, Quận Hải Châu, Đà Nẵng');
+
+-- Thêm Tours (15 tours trong Đà Nẵng)
+INSERT INTO Tours (name, destination, startDate, endDate, startTime, endTime, price, maxCapacity, currentCapacity, description) VALUES
+(N'Tour Quận Hải Châu 3N2Đ', N'Hải Châu', '2026-03-15', '2026-03-17', '07:30', '18:00', 1800000, 30, 8, N'Khám phá trung tâm Đà Nẵng với cầu Rồng, chợ Hàn, bãi biển Mỹ Khê'),
+(N'Tour Bán đảo Sơn Trà 4N3Đ', N'Sơn Trà', '2026-04-01', '2026-04-04', '06:00', '19:30', 2200000, 25, 12, N'Tham quan chùa Linh Ứng, tượng Phật Quan Âm và rừng nguyên sinh Sơn Trà'),
+(N'Tour Ngũ Hành Sơn 3N2Đ', N'Ngũ Hành Sơn', '2026-05-10', '2026-05-12', '09:00', '20:00', 2000000, 40, 18, N'Khám phá 5 ngọn núi đá vôi, hang động và làng đá Non Nước nổi tiếng'),
+(N'Tour Thanh Khê 2N1Đ', N'Thanh Khê', '2026-06-05', '2026-06-06', '08:00', '17:30', 1600000, 35, 22, N'Tham quan khu đô thị hiện đại với trường đại học và công viên Châu Á'),
+(N'Tour Liên Chiểu 3N2Đ', N'Liên Chiểu', '2026-07-20', '2026-07-22', '07:00', '18:30', 1500000, 45, 30, N'Khám phá khu vực phát triển mới với sân bay quốc tế và khu công nghiệp'),
+(N'Tour Cẩm Lệ 2N1Đ', N'Cẩm Lệ', '2026-08-15', '2026-08-16', '08:30', '19:00', 1400000, 30, 15, N'Trải nghiệm khu vực nông thôn kết hợp đô thị với làng nghề truyền thống'),
+(N'Tour Bà Nà Hills 4N3Đ', N'Hòa Vang', '2026-03-20', '2026-03-23', '06:30', '17:00', 2500000, 28, 10, N'Khám phá Bà Nà Hills với cầu Vàng nổi tiếng, làng Pháp và cáp treo'),
+(N'Tour Hoàng Sa 5N4Đ', N'Hoàng Sa', '2026-04-10', '2026-04-14', '07:00', '18:00', 3500000, 20, 6, N'Tour đặc biệt đến quần đảo Hoàng Sa - chủ quyền thiêng liêng của Việt Nam'),
+(N'Tour Hải Châu - Sơn Trà 3N2Đ', N'Hải Châu', '2026-05-01', '2026-05-03', '08:00', '19:00', 1900000, 40, 25, N'Kết hợp trung tâm thành phố và bán đảo Sơn Trà trong một chuyến đi'),
+(N'Tour Ngũ Hành Sơn - Hòa Vang 4N3Đ', N'Ngũ Hành Sơn', '2026-06-15', '2026-06-18', '07:30', '18:30', 2300000, 32, 16, N'Từ Ngũ Hành Sơn đến Bà Nà Hills, trải nghiệm đầy đủ vẻ đẹp Đà Nẵng'),
+(N'Tour Thanh Khê - Liên Chiểu 2N1Đ', N'Thanh Khê', '2026-07-05', '2026-07-06', '06:00', '17:30', 1700000, 30, 12, N'Khám phá hai quận hiện đại nhất của Đà Nẵng'),
+(N'Tour Cẩm Lệ - Hòa Vang 3N2Đ', N'Cẩm Lệ', '2026-08-01', '2026-08-03', '08:00', '19:30', 2100000, 25, 8, N'Từ nông thôn đến núi non, trải nghiệm đa dạng địa hình Đà Nẵng'),
+(N'Tour Toàn cảnh Đà Nẵng 5N4Đ', N'Hải Châu', '2026-09-10', '2026-09-14', '09:00', '20:00', 2800000, 35, 20, N'Tour tổng hợp tất cả các quận huyện trong thành phố Đà Nẵng'),
+(N'Tour Sơn Trà - Ngũ Hành Sơn 3N2Đ', N'Sơn Trà', '2026-10-01', '2026-10-03', '07:00', '18:00', 2200000, 30, 14, N'Kết hợp bán đảo Sơn Trà và Ngũ Hành Sơn trong cùng một tour'),
+(N'Tour Hòa Vang - Hoàng Sa 6N5Đ', N'Hòa Vang', '2026-11-15', '2026-11-20', '08:30', '17:00', 4000000, 20, 9, N'Tour cao cấp từ Bà Nà Hills đến quần đảo Hoàng Sa');
+
+-- =============================================
+-- PHẦN 5: KIỂM TRA
+-- =============================================
+
+PRINT '==============================================';
+PRINT 'DATABASE TourManagement ĐÃ TẠO THÀNH CÔNG!';
+PRINT '==============================================';
 PRINT '';
-PRINT 'ADMIN ACCOUNT:';
-PRINT '  Username: admin';
-PRINT '  Password: 123456';
+PRINT 'USERS:';
+SELECT u.Username, r.RoleName, u.IsActive 
+FROM Users u 
+JOIN Roles r ON u.RoleId = r.RoleId;
 PRINT '';
-PRINT 'USER ACCOUNTS (10 khách hàng):';
-PRINT '  nvan/tbinh/lcuong/pdung/hvem/vtphuong/dvgiang/bthoa/nvinh/ttkim';
-PRINT '  Password: 123456';
+PRINT 'TOURS:';
+SELECT COUNT(*) AS TotalTours FROM Tours;
 PRINT '';
-PRINT '========================================';
-GO
+PRINT 'CUSTOMERS:';
+SELECT COUNT(*) AS TotalCustomers FROM Customers;
+PRINT '';
+PRINT '==============================================';
+PRINT 'THÔNG TIN ĐĂNG NHẬP:';
+PRINT 'Username: admin | Password: 123456 | Role: ADMIN';
+PRINT 'Username: user  | Password: 123456 | Role: USER';
+PRINT '==============================================';
+PRINT 'DATABASE: TourManagement';
+PRINT 'SERVER: localhost (hoặc .\SQLEXPRESS)';
+PRINT 'AUTH: SQL Server Authentication';
+PRINT 'User: sa | Password: 123456';
+PRINT '==============================================';

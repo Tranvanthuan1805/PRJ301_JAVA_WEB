@@ -12,9 +12,9 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        resp.sendRedirect("register.jsp");
+        response.sendRedirect("register.jsp");
     }
 
     @Override
@@ -23,13 +23,14 @@ public class RegisterServlet extends HttpServlet {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String confirm  = request.getParameter("confirm");
+        String confirmPassword = request.getParameter("confirmPassword");
 
+        // Trim username
         username = (username == null) ? "" : username.trim();
         password = (password == null) ? "" : password;
-        confirm  = (confirm  == null) ? "" : confirm;
+        confirmPassword = (confirmPassword == null) ? "" : confirmPassword;
 
-        // 1) Validate
+        // Validate username
         String uErr = ValidateUtil.username(username);
         if (uErr != null) {
             request.setAttribute("error", uErr);
@@ -37,6 +38,7 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        // Validate password
         String pErr = ValidateUtil.password(password);
         if (pErr != null) {
             request.setAttribute("error", pErr);
@@ -44,32 +46,30 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        String cErr = ValidateUtil.confirmPassword(password, confirm);
-        if (cErr != null) {
-            request.setAttribute("error", cErr);
+        // Check password match
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("error", "Mật khẩu xác nhận không khớp!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        UserDAO dao = new UserDAO();
-
-        // 2) Check tồn tại username
-        if (dao.existsUsername(username)) {
-            request.setAttribute("error", "Username đã tồn tại!");
+        // Check if username exists
+        UserDAO userDAO = new UserDAO();
+        if (userDAO.existsUsername(username)) {
+            request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        // 3) Insert DB
-        boolean ok = dao.registerUser(username, password);
-        if (!ok) {
-            request.setAttribute("error", "Đăng ký thất bại (lỗi DB)!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
+        // Register user
+        boolean success = userDAO.registerUser(username, password);
 
-        // 4) Thành công → quay về login
-        request.setAttribute("msg", "Đăng ký thành công! Hãy đăng nhập.");
-        request.getRequestDispatcher("register.jsp").forward(request, response);
+        if (success) {
+            request.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
+            request.setAttribute("error", "Đăng ký thất bại! Vui lòng thử lại.");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+        }
     }
 }

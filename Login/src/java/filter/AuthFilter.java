@@ -30,10 +30,10 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // ADMIN can access everything
-        if ("ADMIN".equalsIgnoreCase(u.roleName)) {
-            System.out.println(">>> AuthFilter: ADMIN access granted");
-            chain.doFilter(req, res);
+        String path = request.getServletPath(); // /admin.jsp hoặc /user.jsp
+
+        if ("/admin.jsp".equals(path) && !"ADMIN".equalsIgnoreCase(u.getRole())) {
+            response.sendRedirect("error.jsp");
             return;
         }
 

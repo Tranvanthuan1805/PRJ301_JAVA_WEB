@@ -15,14 +15,9 @@ public class DBUtil {
         }
     }
 
-    // Connection string with UTF-8 support
+    // Database: TourManagement (kết hợp Users + Tours)
     private static final String URL =
-        "jdbc:sqlserver://localhost:1433;" +
-        "databaseName=AdminUser;" +
-        "encrypt=true;" +
-        "trustServerCertificate=true;" +
-        "sendStringParametersAsUnicode=true;" +
-        "characterEncoding=UTF-8;";
+        "jdbc:sqlserver://localhost:1433;databaseName=TourManagement;encrypt=true;trustServerCertificate=true;";
 
     private static final String USER = "sa";
     private static final String PASS = "MinhHieu2816@"; // mật khẩu SQL Server của user sa
