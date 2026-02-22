@@ -5,6 +5,7 @@ import java.io.IOException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
+@WebFilter(urlPatterns = {"/admin.jsp", "/user.jsp", "/admin/*"})
 public class AuthFilter implements Filter {
 
     @Override
@@ -16,40 +17,41 @@ public class AuthFilter implements Filter {
 
         String uri = request.getRequestURI();
 
-        // ✅ CHO QUA LOGIN / REGISTER / CSS / IMG
-        if (uri.endsWith("login")
-            || uri.endsWith("login.jsp")
-            || uri.endsWith("register")
-            || uri.endsWith("register.jsp")
-            || uri.contains("/css/")
-            || uri.contains("/images/")
-            || uri.contains("/img/")) {
+        String path = request.getServletPath();
+        
+        // DEBUG
+        System.out.println(">>> AuthFilter: path=" + path);
+        System.out.println(">>> AuthFilter: user=" + (u == null ? "null" : u.username));
+        System.out.println(">>> AuthFilter: role=" + (u == null ? "null" : u.roleName));
 
+        if (u == null) {
+            System.out.println(">>> AuthFilter: No user in session, redirect to login");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // ADMIN can access everything
+        if ("ADMIN".equalsIgnoreCase(u.roleName)) {
+            System.out.println(">>> AuthFilter: ADMIN access granted");
             chain.doFilter(req, res);
             return;
         }
 
-        HttpSession session = request.getSession(false);
-        User user = (session == null) ? null : (User) session.getAttribute("user");
-
-        // ❌ chưa login
-        if (user == null) {
-            response.sendRedirect("login.jsp");
+        // USER can only access /user.jsp
+        if ("USER".equalsIgnoreCase(u.roleName)) {
+            if (path.startsWith("/admin") || "/admin.jsp".equals(path)) {
+                System.out.println(">>> AuthFilter: USER blocked from admin area");
+                response.sendRedirect(request.getContextPath() + "/error.jsp");
+                return;
+            }
+            System.out.println(">>> AuthFilter: USER access granted to " + path);
+            chain.doFilter(req, res);
             return;
         }
 
-        // phân quyền
-        if (uri.contains("admin") && !"ADMIN".equalsIgnoreCase(user.getRoleName())) {
-            response.sendRedirect("error.jsp");
-            return;
-        }
-
-        if (uri.contains("user") && !"USER".equalsIgnoreCase(user.getRoleName())) {
-            response.sendRedirect("error.jsp");
-            return;
-        }
-
-        chain.doFilter(req, res);
+        // Unknown role - deny access
+        System.out.println(">>> AuthFilter: Unknown role, access denied");
+        response.sendRedirect(request.getContextPath() + "/error.jsp");
     }
 
 }

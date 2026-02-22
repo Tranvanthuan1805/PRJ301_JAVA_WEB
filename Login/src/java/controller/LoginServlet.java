@@ -1,11 +1,13 @@
 package controller;
 
+import dao.UserDAO;
+import model.User;
+import util.ValidateUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import model.User;
-import userDao.UserDAO;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -17,22 +19,49 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        UserDAO dao = new UserDAO();
-        User user = dao.checklogin(username, password);
+        // ✅ tránh null
+        username = (username == null) ? "" : username.trim();
+        password = (password == null) ? "" : password;
 
-        if (user == null) {
-            request.setAttribute("error", "Sai tài khoản hoặc mật khẩu");
+        System.out.println("LOGIN USER = " + username);
+        System.out.println("HASH = " + util.PasswordUtil.sha256(password));
+
+        // Validate
+        String uErr = ValidateUtil.username(username);
+        String pErr = ValidateUtil.password(password);
+
+        if (uErr != null || pErr != null) {
+            request.setAttribute("error", (uErr != null) ? uErr : pErr);
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }
 
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user);
+        // Check DB
+        User u = new UserDAO().login(username, password);
 
-        if ("ADMIN".equalsIgnoreCase(user.getRoleName())) {
-            response.sendRedirect("admin.jsp");
-        } else {
-            response.sendRedirect("user.jsp");
+        if (u == null) {
+            request.setAttribute("error", "Sai tài khoản hoặc mật khẩu!");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
+
+        // Save session
+        HttpSession session = request.getSession(true);
+        session.setAttribute("user", u);
+        session.setAttribute("username", u.username);
+        session.setAttribute("role", u.roleName);
+
+        // Role redirect
+        if ("ADMIN".equalsIgnoreCase(u.roleName)) {
+            response.sendRedirect("admin/customers.jsp");
+        } else {
+            response.sendRedirect("profile");
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        resp.sendRedirect("login.jsp");
     }
 }
