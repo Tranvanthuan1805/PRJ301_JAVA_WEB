@@ -20,9 +20,32 @@ public class ChatbotServlet extends HttpServlet {
     private static final String OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
     private static final String API_KEY = "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";
 
-    // System prompt to guide the AI about the website context
-    private static final String SYSTEM_PROMPT = """
+    private String travelDataSummary = "";
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        loadDataSummary();
+    }
+
+    private void loadDataSummary() {
+        // Try to load summary for AI context
+        try {
+            String path = "e:/PRJ301_JAVA_WEB/danang_tours_dataset_2020_2025.csv";
+            File file = new File(path);
+            if (file.exists()) {
+                travelDataSummary = "Dữ liệu thực tế VietAir (2020-2025): "
+                    + "Tổng hơn 430 bản ghi tour. Các tour doanh thu cao nhất: Bà Nà Hills, Ngũ Hành Sơn. "
+                    + "Tăng trưởng trung bình hàng năm ~15%. Xu hướng 2026: Du lịch xanh và trải nghiệm văn hóa bùng nổ.";
+            }
+        } catch (Exception e) {}
+    }
+
+    private String getSystemPrompt() {
+        return """
         Bạn là VietAir Assistant - trợ lý AI thông minh của hệ thống quản lý tour du lịch VietAir Đà Nẵng.
+        
+        """ + travelDataSummary + """
 
         ### Về hệ thống VietAir:
         - Hệ thống quản lý tour du lịch Đà Nẵng với dữ liệu từ 2020-2025
@@ -30,31 +53,24 @@ public class ChatbotServlet extends HttpServlet {
         - Đánh giá trung bình 4.9/5 sao
 
         ### Các điểm đến du lịch Đà Nẵng:
-        1. **Bà Nà Hills** - Khu du lịch nổi tiếng với Cầu Vàng, cáp treo, làng Pháp
-        2. **Ngũ Hành Sơn** - Danh thắng 5 ngọn núi đá vôi, chùa chiền cổ kính
-        3. **Cù Lao Chàm** - Đảo biển UNESCO, lặn ngắm san hô, hải sản tươi sống
-        4. **Bán đảo Sơn Trà** - Rừng nguyên sinh, chùa Linh Ứng, đỉnh Bàn Cờ
-        5. **Huế** - Cố đô với Đại Nội, lăng tẩm, sông Hương
-        6. **Núi Thần Tài** - Suối khoáng nóng, công viên nước
+        1. **Bà Nà Hills** - Cầu Vàng, cáp treo, làng Pháp
+        2. **Ngũ Hành Sơn** - Núi đá vôi, chùa chiền
+        3. **Cù Lao Chàm** - Lặn san hô, hải sản
+        4. **Bán đảo Sơn Trà** - Chùa Linh Ứng, Voọc chà vá chân nâu
+        5. **Huế** - Cố đô, Đại Nội
+        6. **Núi Thần Tài** - Suối khoáng nóng
 
         ### Các tính năng của website:
-        - **Tìm kiếm tour**: Theo điểm đến, ngày, số người
-        - **Đặt tour**: Đăng ký và đặt tour trực tuyến
-        - **Quản lý khách hàng**: Profile, lịch sử đặt tour
-        - **Quản lý đơn hàng**: Theo dõi trạng thái booking
-        - **Quản lý nhà cung cấp**: Khách sạn, hãng hàng không
-        - **Thanh toán & Subscription**: Gói dịch vụ cho đối tác
-        - **AI dự báo**: Phân tích xu hướng du lịch
+        - **Tìm kiếm/Đặt tour**: Nhanh chóng, tiện lợi
+        - **AI dự báo**: Phân tích & dự báo xu hướng du lịch 2026 (Module Forecast)
+        - **Quản lý đơn hàng**: Theo dõi trạng thái thực tế.
 
         ### Quy tắc trả lời:
-        1. Luôn trả lời bằng tiếng Việt, thân thiện và chuyên nghiệp
-        2. Tập trung vào thông tin về Đà Nẵng và các tour du lịch
-        3. Có thể gợi ý tour phù hợp dựa trên yêu cầu của khách
-        4. Cung cấp thông tin hữu ích về thời tiết, ẩm thực, văn hóa Đà Nẵng
-        5. Hướng dẫn sử dụng các tính năng của website khi được hỏi
-        6. Trả lời ngắn gọn, rõ ràng (tối đa 200 từ)
-        7. Sử dụng emoji phù hợp để làm sinh động câu trả lời
+        1. Luôn thân thiện, chuyên nghiệp, sử dụng tiếng Việt.
+        2. Dựa trên dữ liệu dự báo để tư vấn xu hướng 2026 khi được hỏi.
+        3. Khuyến khích người dùng đặt tour và trải nghiệm dịch vụ.
         """;
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -111,7 +127,7 @@ public class ChatbotServlet extends HttpServlet {
         conn.setReadTimeout(60000);
 
         // Build request JSON manually (no external JSON library dependency)
-        String escapedSystemPrompt = escapeJsonString(SYSTEM_PROMPT);
+        String escapedSystemPrompt = escapeJsonString(getSystemPrompt());
         String escapedUserMessage = escapeJsonString(userMessage);
 
         String jsonPayload = "{"

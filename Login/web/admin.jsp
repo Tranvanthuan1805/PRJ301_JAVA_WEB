@@ -47,10 +47,12 @@ if (u == null || !"ADMIN".equalsIgnoreCase(u.getRoleName())) {
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card card-soft p-3">
-        <div class="fw-semibold mb-1">Thống kê</div>
-        <div class="text-muted small mb-3">Tổng user, user active...</div>
-        <button class="btn btn-outline-primary w-100" disabled>Demo (chưa làm)</button>
+      <div class="card card-soft p-3 border-info" style="border: 2px solid #00d4aa !important;">
+        <div class="fw-semibold mb-1 text-info"><i class="fas fa-brain"></i> Dự báo AI</div>
+        <div class="text-muted small mb-3">Phân tích xu hướng du lịch 2026</div>
+        <a href="${pageContext.request.contextPath}/admin/forecast" class="btn btn-info w-100" style="background-color: #00d4aa; color: white;">
+          Truy cập AI
+        </a>
       </div>
     </div>
   </div>
