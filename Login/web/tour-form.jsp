@@ -1,248 +1,153 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%
+    String username = (String) session.getAttribute("username");
+    String role = (String) session.getAttribute("role");
+    boolean isAdmin = "ADMIN".equals(role);
+    
+    if (username == null || !isAdmin) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${tour != null ? 'Sửa' : 'Thêm'} Tour - VietAir</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">   
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>${tour != null ? 'Sửa' : 'Thêm'} Tour - VietAir Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/css/vietair-style.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        .form-wrapper {
-            width: 100%;
-            max-width: 720px;
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .form-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 32px;
-            text-align: center;
-            color: white;
-        }
-
-        .form-header i {
-            font-size: 48px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .form-header h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .form-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .form-body {
-            padding: 40px;
-        }
-
-        .alert {
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #fee;
-            color: #c33;
-            border: 1px solid #fcc;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .required {
-            color: #e74c3c;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e0e6ed;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-control::placeholder {
-            color: #a0aec0;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 120px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .form-control:read-only {
-            background: #e9ecef;
-            cursor: not-allowed;
-        }
-
-        .help-text {
-            font-size: 13px;
-            color: #718096;
-            margin-top: 6px;
-        }
-
-        .form-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-top: 32px;
-        }
-
-        .btn {
-            padding: 16px 32px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-cancel {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-
-        .btn-cancel:hover {
-            background: #cbd5e0;
-            transform: translateY(-2px);
-        }
-
-        .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-
-        .occupancy-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 6px;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; }
+        
+        .admin-container { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background: white; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 1.5rem; border-bottom: 1px solid #e5e7eb; }
+        .sidebar-brand { display: flex; align-items: center; gap: 12px; color: var(--primary-color); }
+        .sidebar-brand i { font-size: 24px; }
+        .sidebar-brand-text h3 { font-size: 16px; font-weight: 700; color: #1f2937; }
+        .sidebar-brand-text p { font-size: 12px; color: #6b7280; }
+        .sidebar-menu { flex: 1; padding: 1rem 0; }
+        .menu-section { margin-bottom: 1.5rem; }
+        .menu-title { padding: 0 1.5rem; font-size: 11px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 0.75rem 1.5rem; color: #6b7280; text-decoration: none; transition: all 0.2s; }
+        .menu-item:hover { background: #f9fafb; color: var(--primary-color); }
+        .menu-item.active { background: #eff6ff; color: var(--primary-color); border-right: 3px solid var(--primary-color); font-weight: 600; }
+        .menu-item i { width: 20px; text-align: center; }
+        
+        /* Main Content */
+        .main-content { flex: 1; display: flex; flex-direction: column; }
+        .top-bar { background: white; border-bottom: 1px solid #e5e7eb; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar-title h1 { font-size: 20px; font-weight: 700; color: #1f2937; }
+        .content-area { flex: 1; padding: 2rem; overflow-y: auto; }
+        
+        /* Form Card */
+        .form-card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
+        .form-header { padding: 1.5rem 2rem; border-bottom: 1px solid #e5e7eb; }
+        .form-header h2 { font-size: 18px; font-weight: 600; color: #1f2937; display: flex; align-items: center; gap: 10px; }
+        .form-header h2 i { color: var(--primary-color); }
+        .form-body { padding: 2rem; }
+        
+        .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-label { font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+        .required { color: #ef4444; }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit; transition: all 0.2s; }
+        .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1); }
+        .form-control:read-only { background: #f3f4f6; cursor: not-allowed; }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+        
+        .occupancy-badge { display: inline-block; padding: 4px 10px; background: #eff6ff; color: var(--primary-color); border-radius: 12px; font-size: 12px; font-weight: 600; margin-top: 6px; }
+        
+        .form-actions { display: flex; gap: 12px; justify-content: flex-end; padding-top: 20px; border-top: 1px solid #e5e7eb; margin-top: 20px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; }
+        .btn-cancel { background: #f3f4f6; color: #6b7280; }
+        .btn-cancel:hover { background: #e5e7eb; }
+        .btn-submit { background: var(--primary-color); color: white; }
+        .btn-submit:hover { background: var(--primary-dark); }
+        
         @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .form-actions {
-                grid-template-columns: 1fr;
-            }
-
-            .form-body {
-                padding: 24px;
-            }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="form-wrapper">
-        <div class="form-header">
-            <i class="fas fa-${tour != null ? 'edit' : 'plus-circle'}"></i>
-            <h2>${tour != null ? 'Sửa' : 'Thêm'} Tour Du lịch</h2>
-            <p>Điền thông tin tin tour vào form bên dưới</p>
-        </div>
-
-        <div class="form-body">
-            <c:if test="${not empty error}">
-                <div class="alert">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>${error}</span>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <i class="fas fa-plane-departure"></i>
+                    <div class="sidebar-brand-text">
+                        <h3>VietAir</h3>
+                        <p>Admin</p>
+                    </div>
                 </div>
-            </c:if>
+            </div>
+            <nav class="sidebar-menu">
+                <div class="menu-section">
+                    <div class="menu-title">Quản lý chính</div>
+                    <a href="<%= request.getContextPath() %>/admin/tours" class="menu-item active">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Quản lý tour</span>
+                    </a>
+                    <a href="<%= request.getContextPath() %>/admin/orders" class="menu-item">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Quản lý đơn hàng</span>
+                    </a>
+                    <a href="<%= request.getContextPath() %>/admin/history.jsp" class="menu-item">
+                        <i class="fas fa-history"></i>
+                        <span>Lịch sử</span>
+                    </a>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">Hệ thống</div>
+                    <a href="<%= request.getContextPath() %>/index.jsp" class="menu-item">
+                        <i class="fas fa-home"></i>
+                        <span>Về trang chủ</span>
+                    </a>
+                    <a href="<%= request.getContextPath() %>/logout" class="menu-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Đăng xuất</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-title">
+                    <h1>${tour != null ? 'Sửa' : 'Thêm'} Tour Du lịch</h1>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2>
+                            <i class="fas fa-${tour != null ? 'edit' : 'plus-circle'}"></i>
+                            Thông tin tour
+                        </h2>
+                    </div>
+                    
+                    <div class="form-body">
+                        <c:if test="${not empty error}">
+                            <div class="alert">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>${error}</span>
+                            </div>
+                        </c:if>
 
-            <form action="tour" method="post">
+            <form action="<%= request.getContextPath() %>/tour" method="post">
                 <input type="hidden" name="action" value="${tour != null ? 'update' : 'create'}">
                 <c:if test="${tour != null}">
                     <input type="hidden" name="id" value="${tour.id}">
@@ -328,19 +233,22 @@
                     </div>
                 </div>
 
-                <div class="form-actions">
-                    <a href="tour?action=list" class="btn btn-cancel">
-                        <i class="fas fa-times"></i>
-                        <span>Hủy</span>
-                    </a>
-                    <button type="submit" class="btn btn-submit">
-                        <i class="fas fa-${tour != null ? 'save' : 'plus'}"></i>
-                        <span>${tour != null ? 'Cập nhật' : 'Tạo mới'}</span>
-                    </button>
+                        <div class="form-actions">
+                            <a href="<%= request.getContextPath() %>/admin/tours" class="btn btn-cancel">
+                                <i class="fas fa-times"></i>
+                                <span>Hủy</span>
+                            </a>
+                            <button type="submit" class="btn btn-submit">
+                                <i class="fas fa-${tour != null ? 'save' : 'plus'}"></i>
+                                <span>${tour != null ? 'Cập nhật' : 'Tạo mới'}</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </main>
+</div>
 
     <script>
         // Validate dates

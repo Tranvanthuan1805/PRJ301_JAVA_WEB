@@ -127,21 +127,7 @@ public class TourDAO implements ITourDAO {
         // Delete related records first to avoid foreign key constraint violations
         // Order matters: delete child records before parent
         
-        // 1. Delete from CartInteractions
-        String deleteCartInteractions = "DELETE FROM CartInteractions WHERE tourId = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(deleteCartInteractions)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        }
-        
-        // 2. Delete from AbandonedCarts
-        String deleteAbandonedCarts = "DELETE FROM AbandonedCarts WHERE tourId = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(deleteAbandonedCarts)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        }
-        
-        // 3. Delete from Cart
+        // 1. Delete from Cart
         String deleteCart = "DELETE FROM Cart WHERE tourId = ?";
         try (PreparedStatement stmt = connection.prepareStatement(deleteCart)) {
             stmt.setInt(1, id);

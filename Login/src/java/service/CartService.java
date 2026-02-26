@@ -23,12 +23,10 @@ public class CartService {
     private static final String SESSION_CART_KEY = "sessionCart";
     private CartDAO cartDAO;
     private TourDAO tourDAO;
-    private AbandonedCartService abandonedCartService;
     
     public CartService() {
         this.cartDAO = new CartDAO();
         this.tourDAO = new TourDAO();
-        this.abandonedCartService = new AbandonedCartService();
     }
     
     /**
@@ -78,12 +76,6 @@ public class CartService {
                 System.out.println("Adding to session cart");
                 success = addToSessionCart(session, tourId, quantity);
                 System.out.println("Session add result: " + success);
-            }
-            
-            // Track interaction
-            if (success) {
-                System.out.println("Tracking interaction...");
-                abandonedCartService.trackAddToCart(session, userId, tourId, quantity);
             }
             
             System.out.println("Final result: " + success);
@@ -299,19 +291,11 @@ public class CartService {
      * Xóa item khỏi giỏ hàng
      */
     public boolean removeFromCart(HttpSession session, Integer userId, int tourId) {
-        boolean success;
         if (userId != null) {
-            success = cartDAO.removeFromCart(userId, tourId);
+            return cartDAO.removeFromCart(userId, tourId);
         } else {
-            success = removeFromSessionCart(session, tourId);
+            return removeFromSessionCart(session, tourId);
         }
-        
-        // Track interaction
-        if (success) {
-            abandonedCartService.trackRemoveFromCart(session, userId, tourId);
-        }
-        
-        return success;
     }
     
     /**

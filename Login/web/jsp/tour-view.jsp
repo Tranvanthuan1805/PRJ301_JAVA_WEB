@@ -570,7 +570,7 @@
                             </form>
                         <% } %>
                         
-                        <a href="<%= request.getContextPath() %>/tour" class="btn-back">
+                        <a href="<%= isAdmin ? request.getContextPath() + "/admin/tours" : request.getContextPath() + "/tour" %>" class="btn-back">
                             <i class="fas fa-arrow-left"></i> Quay lại danh sách
                         </a>
                     </div>

@@ -180,13 +180,6 @@ public class TourServlet extends HttpServlet {
         request.setAttribute("tour", tour);
         request.setAttribute("seasonalPrice", seasonalPrice);
         
-        // Log tour view nếu có customer ID
-        String customerIdParam = request.getParameter("customerId");
-        if (customerIdParam != null) {
-            int customerId = Integer.parseInt(customerIdParam);
-            tourService.logTourView(customerId, id);
-        }
-        
         request.getRequestDispatcher("/jsp/tour-view.jsp").forward(request, response);
     }
     
@@ -280,13 +273,6 @@ public class TourServlet extends HttpServlet {
         request.setAttribute("searchDestination", destination);
         request.setAttribute("searchMonth", month);
         request.setAttribute("searchPriceRange", priceRange);
-        
-        // Log search nếu có customer ID
-        String customerIdParam = request.getParameter("customerId");
-        if (customerIdParam != null) {
-            int customerId = Integer.parseInt(customerIdParam);
-            tourService.logTourSearch(customerId, destination);
-        }
         
         request.getRequestDispatcher("/jsp/tour-list.jsp").forward(request, response);
     }

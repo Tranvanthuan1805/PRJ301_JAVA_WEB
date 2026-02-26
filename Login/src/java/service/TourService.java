@@ -1,9 +1,7 @@
 package service;
 
 import dao.TourDAO;
-import dao.InteractionHistoryDAO;
 import model.Tour;
-import model.InteractionHistory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,11 +10,9 @@ import java.util.List;
 
 public class TourService {
     private TourDAO tourDAO;
-    private InteractionHistoryDAO interactionDAO;
     
     public TourService(Connection connection) {
         this.tourDAO = new TourDAO(connection);
-        this.interactionDAO = new InteractionHistoryDAO(connection);
     }
     
     public void createTour(Tour tour) throws SQLException {
@@ -64,22 +60,6 @@ public class TourService {
         if (tour != null && tour.getCurrentCapacity() > 0) {
             tourDAO.updateTourCapacity(tourId, tour.getCurrentCapacity() - 1);
         }
-    }
-    
-    public void logTourSearch(int customerId, String destination) throws SQLException {
-        InteractionHistory interaction = new InteractionHistory();
-        interaction.setCustomerId(customerId);
-        interaction.setAction("TOUR_SEARCH: " + destination);
-        interaction.setCreatedAt(LocalDateTime.now());
-        interactionDAO.addInteraction(interaction);
-    }
-    
-    public void logTourView(int customerId, int tourId) throws SQLException {
-        InteractionHistory interaction = new InteractionHistory();
-        interaction.setCustomerId(customerId);
-        interaction.setAction("TOUR_VIEWED: " + tourId);
-        interaction.setCreatedAt(LocalDateTime.now());
-        interactionDAO.addInteraction(interaction);
     }
     
     public double calculateSeasonalPrice(Tour tour) {
