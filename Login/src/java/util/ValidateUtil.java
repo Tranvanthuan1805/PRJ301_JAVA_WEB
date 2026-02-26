@@ -14,10 +14,10 @@ public class ValidateUtil {
         if (p.length() < 6) return "Password tối thiểu 6 ký tự";
         return null;
     }
+    
     public static String confirmPassword(String p, String c) {
-    if (c == null || c.isEmpty()) return "Confirm password không được để trống";
-    if (!p.equals(c)) return "Password và Confirm password không khớp";
-    return null;
-}
-
+        if (c == null || c.isEmpty()) return "Confirm password không được để trống";
+        if (!p.equals(c)) return "Password và Confirm password không khớp";
+        return null;
+    }
 }

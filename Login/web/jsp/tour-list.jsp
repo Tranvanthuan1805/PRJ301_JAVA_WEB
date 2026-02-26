@@ -206,6 +206,14 @@
                 <% } %>
             </nav>
             <div class="nav-actions">
+                <% if (!isAdmin) { %>
+                    <a href="<%= request.getContextPath() %>/cart" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: white; border: 2px solid var(--primary-color); color: var(--primary-color); border-radius: 8px; text-decoration: none; transition: all 0.2s; margin-right: 0.5rem;" title="Giỏ hàng">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                    <a href="<%= request.getContextPath() %>/orders" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--primary-color); border: 2px solid var(--primary-color); color: white; border-radius: 8px; text-decoration: none; transition: all 0.2s; margin-right: 1rem;" title="Đơn hàng">
+                        <i class="fas fa-receipt"></i>
+                    </a>
+                <% } %>
                 <% if (isLoggedIn) { %>
                     <span class="user-badge"><%= isAdmin ? "ADMIN" : "USER" %></span>
                     <a href="<%= request.getContextPath() %>/logout" class="btn-logout">

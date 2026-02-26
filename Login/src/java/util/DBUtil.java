@@ -2,6 +2,7 @@ package util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBUtil {
 
@@ -17,12 +18,17 @@ public class DBUtil {
 
     // Database: TourManagement (kết hợp Users + Tours)
     private static final String URL =
-        "jdbc:sqlserver://localhost:1433;databaseName=TourManagement;encrypt=true;trustServerCertificate=true;";
+        "jdbc:sqlserver://localhost:1433;" +
+        "databaseName=TourManagement;" +
+        "encrypt=true;" +
+        "trustServerCertificate=true;" +
+        "sendStringParametersAsUnicode=true;" +
+        "characterEncoding=UTF-8;";
 
     private static final String USER = "sa";
     private static final String PASS = "123456"; // mật khẩu SQL Server của user sa
 
-    public static Connection getConnection() throws Exception {
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASS);
     }
 }

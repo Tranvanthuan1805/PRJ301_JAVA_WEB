@@ -47,10 +47,11 @@
                 </div>
             </div>
             <nav class="nav-menu">
-                <a href="<%= request.getContextPath() %>/index.jsp" class="nav-item">Trang chủ</a>
+                <a href="<%= request.getContextPath() %>/index.jsp" class="nav-item active">Trang chủ</a>
                 <% if (isAdmin) { %>
-                    <a href="<%= request.getContextPath() %>/admin/tours.jsp" class="nav-item">Tours</a>
+                    <a href="<%= request.getContextPath() %>/admin/tours" class="nav-item">Tours</a>
                     <a href="<%= request.getContextPath() %>/admin/customers" class="nav-item">Khách hàng</a>
+                    <a href="<%= request.getContextPath() %>/admin/orders" class="nav-item">Đơn hàng</a>
                     <a href="<%= request.getContextPath() %>/admin/history.jsp" class="nav-item">Lịch sử</a>
                 <% } else { %>
                     <a href="<%= request.getContextPath() %>/tour?action=list" class="nav-item">Tours</a>
@@ -61,17 +62,27 @@
             </nav>
             <div class="nav-actions">
                 <% if (isLoggedIn) { %>
+                    <% if (!isAdmin) { %>
+                        <a href="<%= request.getContextPath() %>/cart" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: white; border: 2px solid var(--primary-color); color: var(--primary-color); border-radius: 8px; text-decoration: none; transition: all 0.2s; margin-right: 0.5rem;" title="Giỏ hàng">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                        <a href="<%= request.getContextPath() %>/orders" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--primary-color); border: 2px solid var(--primary-color); color: white; border-radius: 8px; text-decoration: none; transition: all 0.2s; margin-right: 1rem;" title="Đơn hàng">
+                            <i class="fas fa-receipt"></i>
+                        </a>
+                    <% } %>
+                <% } %>
+                <% if (isLoggedIn) { %>
                     <span class="user-badge"><%= isAdmin ? "ADMIN" : "USER" %></span>
-                    <a href="logout" class="btn-logout">
+                    <a href="<%= request.getContextPath() %>/logout" class="btn-logout">
                         <i class="fas fa-sign-out-alt"></i>
                         Đăng xuất
                     </a>
                 <% } else { %>
-                    <a href="login.jsp" class="btn-login">
+                    <a href="<%= request.getContextPath() %>/login.jsp" class="btn-login">
                         <i class="fas fa-sign-in-alt"></i>
                         Đăng Nhập
                     </a>
-                    <a href="register.jsp" class="btn-register">
+                    <a href="<%= request.getContextPath() %>/register.jsp" class="btn-register">
                         <i class="fas fa-user-plus"></i>
                         Đăng Ký
                     </a>

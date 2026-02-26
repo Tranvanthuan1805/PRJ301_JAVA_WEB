@@ -15,21 +15,22 @@
         return;
     }
     
-    // Load tours
-    List<Tour> tours = null;
-    int totalTours = 0;
-    int currentPage = 1;
-    int totalPages = 1;
+    // Get data from servlet
+    List<Tour> tours = (List<Tour>) request.getAttribute("tours");
     
-    try {
-        Connection conn = DatabaseConnection.getNewConnection();
-        TourDAO tourDAO = new TourDAO(conn);
-        tours = tourDAO.getAllTours();
-        totalTours = tours != null ? tours.size() : 0;
-        totalPages = (int) Math.ceil((double) totalTours / 10.0);
-    } catch (Exception e) {
-        e.printStackTrace();
+    // If accessed directly (not from servlet), redirect to servlet
+    if (tours == null) {
+        response.sendRedirect(request.getContextPath() + "/admin/tours");
+        return;
     }
+    
+    Integer totalToursObj = (Integer) request.getAttribute("totalTours");
+    Integer currentPageObj = (Integer) request.getAttribute("currentPage");
+    Integer totalPagesObj = (Integer) request.getAttribute("totalPages");
+    
+    int totalTours = totalToursObj != null ? totalToursObj : 0;
+    int currentPage = currentPageObj != null ? currentPageObj : 1;
+    int totalPages = totalPagesObj != null ? totalPagesObj : 1;
     
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 %>
@@ -431,9 +432,13 @@
                         <i class="fas fa-users"></i>
                         <span>Quản lý khách hàng</span>
                     </a>
-                    <a href="<%= request.getContextPath() %>/admin/tours.jsp" class="menu-item active">
+                    <a href="<%= request.getContextPath() %>/admin/tours" class="menu-item active">
                         <i class="fas fa-map-marked-alt"></i>
                         <span>Quản lý tour</span>
+                    </a>
+                    <a href="<%= request.getContextPath() %>/admin/orders" class="menu-item">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Quản lý đơn hàng</span>
                     </a>
                     <a href="<%= request.getContextPath() %>/admin/history.jsp" class="menu-item">
                         <i class="fas fa-history"></i>
@@ -548,7 +553,7 @@
                                                 <a href="<%= request.getContextPath() %>/tour?action=edit&id=<%= tour.getId() %>" class="btn-icon btn-edit" title="Chỉnh sửa">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <button class="btn-icon btn-delete" title="Xóa" onclick="if(confirm('Bạn có chắc muốn xóa tour này?')) window.location.href='<%= request.getContextPath() %>/tour?action=delete&id=<%= tour.getId() %>'">
+                                                <button class="btn-icon btn-delete" title="Xóa" onclick="if(confirm('Bạn có chắc muốn xóa tour này?')) window.location.href='<%= request.getContextPath() %>/tour?action=delete&id=<%= tour.getId() %>&fromAdmin=true'">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -570,8 +575,29 @@
                             Hiển thị <%= (currentPage - 1) * 10 + 1 %> - <%= Math.min(currentPage * 10, totalTours) %> trong tổng số <%= totalTours %> kết quả
                         </div>
                         <div class="pagination-buttons">
+                            <% 
+                            String searchQuery = (String) request.getAttribute("searchQuery");
+                            String destinationFilter = (String) request.getAttribute("destinationFilter");
+                            String statusFilter = (String) request.getAttribute("statusFilter");
+                            String sortBy = (String) request.getAttribute("sortBy");
+                            
+                            String queryParams = "";
+                            if (searchQuery != null && !searchQuery.isEmpty()) {
+                                queryParams += "&search=" + searchQuery;
+                            }
+                            if (destinationFilter != null && !destinationFilter.isEmpty() && !"all".equals(destinationFilter)) {
+                                queryParams += "&destination=" + destinationFilter;
+                            }
+                            if (statusFilter != null && !statusFilter.isEmpty() && !"all".equals(statusFilter)) {
+                                queryParams += "&status=" + statusFilter;
+                            }
+                            if (sortBy != null && !sortBy.isEmpty()) {
+                                queryParams += "&sortBy=" + sortBy;
+                            }
+                            %>
+                            
                             <% if (currentPage > 1) { %>
-                                <a href="?page=<%= currentPage - 1 %><%= request.getAttribute("searchQuery") != null ? "&search=" + request.getAttribute("searchQuery") : "" %><%= request.getAttribute("destinationFilter") != null ? "&destination=" + request.getAttribute("destinationFilter") : "" %><%= request.getAttribute("statusFilter") != null ? "&status=" + request.getAttribute("statusFilter") : "" %><%= request.getAttribute("sortBy") != null ? "&sortBy=" + request.getAttribute("sortBy") : "" %>" class="page-btn">«</a>
+                                <a href="<%= request.getContextPath() %>/admin/tours?page=<%= currentPage - 1 %><%= queryParams %>" class="page-btn">«</a>
                             <% } %>
                             
                             <% 
@@ -580,11 +606,11 @@
                             
                             for (int i = startPage; i <= endPage; i++) { 
                             %>
-                                <a href="?page=<%= i %><%= request.getAttribute("searchQuery") != null ? "&search=" + request.getAttribute("searchQuery") : "" %><%= request.getAttribute("destinationFilter") != null ? "&destination=" + request.getAttribute("destinationFilter") : "" %><%= request.getAttribute("statusFilter") != null ? "&status=" + request.getAttribute("statusFilter") : "" %><%= request.getAttribute("sortBy") != null ? "&sortBy=" + request.getAttribute("sortBy") : "" %>" class="page-btn <%= i == currentPage ? "active" : "" %>"><%= i %></a>
+                                <a href="<%= request.getContextPath() %>/admin/tours?page=<%= i %><%= queryParams %>" class="page-btn <%= i == currentPage ? "active" : "" %>"><%= i %></a>
                             <% } %>
                             
                             <% if (currentPage < totalPages) { %>
-                                <a href="?page=<%= currentPage + 1 %><%= request.getAttribute("searchQuery") != null ? "&search=" + request.getAttribute("searchQuery") : "" %><%= request.getAttribute("destinationFilter") != null ? "&destination=" + request.getAttribute("destinationFilter") : "" %><%= request.getAttribute("statusFilter") != null ? "&status=" + request.getAttribute("statusFilter") : "" %><%= request.getAttribute("sortBy") != null ? "&sortBy=" + request.getAttribute("sortBy") : "" %>" class="page-btn">»</a>
+                                <a href="<%= request.getContextPath() %>/admin/tours?page=<%= currentPage + 1 %><%= queryParams %>" class="page-btn">»</a>
                             <% } %>
                         </div>
                     </div>

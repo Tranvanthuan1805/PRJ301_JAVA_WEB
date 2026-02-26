@@ -96,8 +96,8 @@ public class TourServlet extends HttpServlet {
         String destination = request.getParameter("destination");
         String sortBy = request.getParameter("sortBy");
         
-        // Get all tours
-        List<Tour> allTours = tourService.getAllTours();
+        // Get available tours only (2026+)
+        List<Tour> allTours = tourService.getAvailableTours();
         
         // Apply search filter
         if (search != null && !search.trim().isEmpty()) {
@@ -207,11 +207,18 @@ public class TourServlet extends HttpServlet {
         tour.setEndDate(LocalDate.parse(request.getParameter("endDate")));
         tour.setPrice(Double.parseDouble(request.getParameter("price")));
         tour.setMaxCapacity(Integer.parseInt(request.getParameter("maxCapacity")));
-        tour.setCurrentCapacity(0); // Bắt đầu với 0
+        tour.setCurrentCapacity(0);
         tour.setDescription(request.getParameter("description"));
         
         tourService.createTour(tour);
-        response.sendRedirect("tour?action=list&success=created");
+        
+        // Check if request came from admin
+        String fromAdmin = request.getParameter("fromAdmin");
+        if ("true".equals(fromAdmin)) {
+            response.sendRedirect(request.getContextPath() + "/admin/tours?success=created");
+        } else {
+            response.sendRedirect("tour?action=list&success=created");
+        }
     }
     
     private void updateTour(HttpServletRequest request, HttpServletResponse response) 
@@ -228,14 +235,28 @@ public class TourServlet extends HttpServlet {
         tour.setDescription(request.getParameter("description"));
         
         tourService.updateTour(tour);
-        response.sendRedirect("tour?action=view&id=" + tour.getId() + "&success=updated");
+        
+        // Check if request came from admin
+        String fromAdmin = request.getParameter("fromAdmin");
+        if ("true".equals(fromAdmin)) {
+            response.sendRedirect(request.getContextPath() + "/admin/tours?success=updated");
+        } else {
+            response.sendRedirect("tour?action=view&id=" + tour.getId() + "&success=updated");
+        }
     }
     
     private void deleteTour(HttpServletRequest request, HttpServletResponse response) 
             throws SQLException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         tourService.deleteTour(id);
-        response.sendRedirect("tour?action=list&success=deleted");
+        
+        // Check if request came from admin
+        String fromAdmin = request.getParameter("fromAdmin");
+        if ("true".equals(fromAdmin)) {
+            response.sendRedirect(request.getContextPath() + "/admin/tours?success=deleted");
+        } else {
+            response.sendRedirect("tour?action=list&success=deleted");
+        }
     }
     
     private void searchTours(HttpServletRequest request, HttpServletResponse response) 

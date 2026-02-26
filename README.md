@@ -18,6 +18,10 @@ Web application quản lý và đặt tour du lịch Đà Nẵng với phân quy
 
 ### Admin
 - CRUD tours (Thêm, Sửa, Xóa)
+- Quản lý đơn hàng:
+  - Xem tất cả đơn hàng
+  - Tìm kiếm theo mã đơn hoặc tên khách hàng
+  - Cập nhật trạng thái đơn hàng (Chờ xử lý, Đã xác nhận, Hoàn thành, Đã hủy)
 - Xem analytics:
   - Biểu đồ lượt khách theo tháng
   - Biểu đồ giá trung bình
@@ -29,9 +33,9 @@ Web application quản lý và đặt tour du lịch Đà Nẵng với phân quy
 ### 1. Setup Database
 ```sql
 -- Chạy file trong SQL Server Management Studio
-SETUP_DATABASE.sql
-ADD_450_TOURS_HISTORY.sql  -- 432 tours lịch sử (2020-2025)
-ADD_NEW_TOURS_2026.sql     -- 72 tours mới (2026)
+SETUP_DATABASE.sql           -- Tạo database, tables, users, customers
+ADD_450_TOURS_HISTORY.sql    -- 450 tours lịch sử (2020-2025) - Optional
+ADD_NEW_TOURS_2026.sql       -- 72 tours mới (2026) - Required
 ```
 
 ### 2. Cấu hình Database Connection
@@ -64,9 +68,10 @@ http://localhost:8080/Login/
 - **InteractionHistory** - Lịch sử hành động
 
 ## Dữ liệu
-- 432 tours lịch sử (2020-2025) từ file CSV
-- 72 tours mới (2026) - 6 tours/tháng
-- Tổng: 504 tours
+- 20 customers mẫu
+- 2 users (admin/user)
+- 72 tours năm 2026 (từ ADD_NEW_TOURS_2026.sql)
+- 450 tours lịch sử 2020-2025 (từ ADD_450_TOURS_HISTORY.sql - optional)
 
 ## Tính năng nổi bật
 ✅ Hỗ trợ Unicode (tiếng Việt)  
@@ -85,5 +90,16 @@ http://localhost:8080/Login/
 ## Lưu ý
 - Database phải dùng NVARCHAR cho tiếng Việt
 - TourDAO dùng `getNString()` để đọc Unicode
-- Tours page chỉ hiển thị tours tương lai
+- Tours page chỉ hiển thị tours tương lai (2026+)
 - History page hiển thị tất cả tours (analytics)
+- **Sau khi xóa tours ở Admin**: User cần hard refresh (Ctrl+Shift+R) để xóa cache trình duyệt
+- **Sau khi sửa Java code**: Phải restart Tomcat trong NetBeans
+
+## Xử lý vấn đề đồng bộ Admin-User
+Khi admin xóa tours nhưng user vẫn thấy:
+1. **Nguyên nhân**: Browser cache
+2. **Giải pháp**:
+   - User: Nhấn `Ctrl + Shift + R` (hard refresh)
+   - Hoặc: Xóa cache trình duyệt
+   - Hoặc: Mở Incognito/Private mode
+3. **Kiểm tra database**: Chạy `CHECK_ALL_TOURS_2026.sql` để xác nhận tours đã xóa

@@ -374,6 +374,14 @@
                 <% } %>
             </nav>
             <div class="nav-actions">
+                <% if (!isAdmin) { %>
+                    <a href="<%= request.getContextPath() %>/cart" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: white; border: 2px solid var(--primary-color); color: var(--primary-color); border-radius: 8px; text-decoration: none; transition: all 0.2s; margin-right: 0.5rem;" title="Giỏ hàng">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                    <a href="<%= request.getContextPath() %>/orders" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--primary-color); border: 2px solid var(--primary-color); color: white; border-radius: 8px; text-decoration: none; transition: all 0.2s; margin-right: 1rem;" title="Đơn hàng">
+                        <i class="fas fa-receipt"></i>
+                    </a>
+                <% } %>
                 <% if (isLoggedIn) { %>
                     <span class="user-badge"><%= isAdmin ? "ADMIN" : "USER" %></span>
                     <a href="<%= request.getContextPath() %>/logout" class="btn-logout">
@@ -530,61 +538,18 @@
                                 <i class="fas fa-sign-in-alt"></i> Đăng nhập để đặt tour
                             </a>
                         <% } else { %>
-                            <form action="<%= request.getContextPath() %>/booking" method="post" style="margin: 0;">
-                                <input type="hidden" name="action" value="book">
-                                <input type="hidden" name="tourId" value="<%= tour.getId() %>">
-                                
-                                <div style="margin-bottom: 1rem;">
-                                    <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem; opacity: 0.9;">
-                                        Họ và tên: <span style="color: #fca5a5;">*</span>
-                                    </label>
-                                    <input type="text" name="fullName" required
-                                           placeholder="Nguyễn Văn A"
-                                           style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255,255,255,0.3); 
-                                                  border-radius: 8px; background: rgba(255,255,255,0.1); color: white; 
-                                                  font-size: 1rem; font-weight: 500;">
-                                </div>
-                                
-                                <div style="margin-bottom: 1rem;">
-                                    <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem; opacity: 0.9;">
-                                        Email: <span style="color: #fca5a5;">*</span>
-                                    </label>
-                                    <input type="email" name="email" required
-                                           placeholder="example@email.com"
-                                           style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255,255,255,0.3); 
-                                                  border-radius: 8px; background: rgba(255,255,255,0.1); color: white; 
-                                                  font-size: 1rem; font-weight: 500;">
-                                </div>
-                                
-                                <div style="margin-bottom: 1rem;">
-                                    <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem; opacity: 0.9;">
-                                        Số điện thoại: <span style="color: #fca5a5;">*</span>
-                                    </label>
-                                    <input type="tel" name="phone" required
-                                           placeholder="0901234567"
-                                           pattern="[0-9]{10,11}"
-                                           style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255,255,255,0.3); 
-                                                  border-radius: 8px; background: rgba(255,255,255,0.1); color: white; 
-                                                  font-size: 1rem; font-weight: 500;">
-                                </div>
-                                
-                                <div style="margin-bottom: 1rem;">
-                                    <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem; opacity: 0.9;">
-                                        Địa chỉ:
-                                    </label>
-                                    <input type="text" name="address"
-                                           placeholder="123 Đường ABC, Quận XYZ, Đà Nẵng"
-                                           style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255,255,255,0.3); 
-                                                  border-radius: 8px; background: rgba(255,255,255,0.1); color: white; 
-                                                  font-size: 1rem; font-weight: 500;">
-                                </div>
+                            <!-- Buy Now - Go to Checkout -->
+                            <form action="<%= request.getContextPath() %>/checkout" method="get" style="margin: 0;">
+                                <input type="hidden" name="buyNowTourId" value="<%= tour.getId() %>">
+                                <input type="hidden" name="buyNowQuantity" id="buyNowQuantity" value="1">
                                 
                                 <div style="margin-bottom: 1.5rem;">
                                     <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem; opacity: 0.9;">
                                         Số lượng người: <span style="color: #fca5a5;">*</span>
                                     </label>
-                                    <input type="number" name="numberOfPeople" min="1" max="<%= tour.getMaxCapacity() - tour.getCurrentCapacity() %>" 
+                                    <input type="number" id="numberOfPeople" min="1" max="<%= tour.getMaxCapacity() - tour.getCurrentCapacity() %>" 
                                            value="1" required
+                                           onchange="document.getElementById('buyNowQuantity').value = this.value; document.getElementById('cartQuantity').value = this.value;"
                                            style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255,255,255,0.3); 
                                                   border-radius: 8px; background: rgba(255,255,255,0.1); color: white; 
                                                   font-size: 1rem; font-weight: 600;">
@@ -592,6 +557,15 @@
                                 
                                 <button type="submit" class="btn-book">
                                     <i class="fas fa-ticket-alt"></i> Đặt tour ngay
+                                </button>
+                            </form>
+                            
+                            <!-- Add to Cart Button -->
+                            <form action="<%= request.getContextPath() %>/cart/add" method="post" style="margin: 0; margin-top: 1rem;">
+                                <input type="hidden" name="tourId" value="<%= tour.getId() %>">
+                                <input type="hidden" name="quantity" id="cartQuantity" value="1">
+                                <button type="submit" class="btn-book" style="background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.3);">
+                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
                                 </button>
                             </form>
                         <% } %>

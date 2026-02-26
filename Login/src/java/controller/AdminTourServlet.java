@@ -65,8 +65,14 @@ public class AdminTourServlet extends HttpServlet {
             }
         }
         
-        // Get all tours
+        // Get all tours (CHỈ LẤY TOURS SẮP TỚI - chưa qua ngày)
         List<Tour> allTours = tourDAO.getAllTours();
+        
+        // Filter: Chỉ lấy tours có startDate >= hôm nay
+        java.time.LocalDate today = java.time.LocalDate.now();
+        allTours = allTours.stream()
+            .filter(t -> !t.getStartDate().isBefore(today))
+            .collect(Collectors.toList());
         
         // Apply search filter
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {

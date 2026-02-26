@@ -2,6 +2,7 @@ package controller;
 
 import dao.UserDAO;
 import model.User;
+import service.CartService;
 import util.ValidateUtil;
 
 import jakarta.servlet.ServletException;
@@ -50,6 +51,10 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("user", u);
         session.setAttribute("username", u.getUsername());
         session.setAttribute("role", u.getRole());
+
+        // Migrate giỏ hàng từ session sang database
+        CartService cartService = new CartService();
+        cartService.migrateSessionCartToDatabase(session, u.getUserId());
 
         // Redirect về trang chủ (cả Admin và User)
         response.sendRedirect("index.jsp");

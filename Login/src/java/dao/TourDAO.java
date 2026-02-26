@@ -13,6 +13,11 @@ public class TourDAO implements ITourDAO {
         this.connection = connection;
     }
     
+    public TourDAO() {
+        // Constructor không tham số cho Service classes
+        // Connection sẽ được tạo khi cần
+    }
+    
     // Helper method to extract Tour from ResultSet with proper Unicode support
     private Tour extractTourFromResultSet(ResultSet rs) throws SQLException {
         return new Tour(
@@ -32,14 +37,14 @@ public class TourDAO implements ITourDAO {
     public void addTour(Tour tour) throws SQLException {
         String sql = "INSERT INTO Tours (name, destination, startDate, endDate, price, maxCapacity, currentCapacity, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, tour.getName());
-            stmt.setString(2, tour.getDestination());
+            stmt.setNString(1, tour.getName());
+            stmt.setNString(2, tour.getDestination());
             stmt.setDate(3, Date.valueOf(tour.getStartDate()));
             stmt.setDate(4, Date.valueOf(tour.getEndDate()));
             stmt.setDouble(5, tour.getPrice());
             stmt.setInt(6, tour.getMaxCapacity());
             stmt.setInt(7, tour.getCurrentCapacity());
-            stmt.setString(8, tour.getDescription());
+            stmt.setNString(8, tour.getDescription());
             
             stmt.executeUpdate();
             
@@ -52,24 +57,41 @@ public class TourDAO implements ITourDAO {
     }
     
     @Override
-    public Tour getTourById(int id) throws SQLException {
-        String sql = "SELECT * FROM Tours WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return extractTourFromResultSet(rs);
+        public Tour getTourById(int id) throws SQLException {
+            String sql = "SELECT * FROM Tours WHERE id = ?";
+
+            // Nếu connection đã được set (từ constructor), dùng nó
+            if (this.connection != null) {
+                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                    stmt.setInt(1, id);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            return extractTourFromResultSet(rs);
+                        }
+                    }
+                }
+            } else {
+                // Nếu không có connection, tạo connection mới (cho Service classes)
+                try (Connection conn = util.DBUtil.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setInt(1, id);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            return extractTourFromResultSet(rs);
+                        }
+                    }
                 }
             }
+
+            return null;
         }
-        return null;
-    }
+
     
     @Override
     public List<Tour> getAllTours() throws SQLException {
         List<Tour> tours = new ArrayList<>();
-        // Chỉ lấy tours có startDate >= ngày hiện tại (tours mới)
-        String sql = "SELECT * FROM Tours WHERE startDate >= CAST(GETDATE() AS DATE) ORDER BY startDate";
+        // Lấy TẤT CẢ tours, sắp xếp tháng gần nhất lên đầu (ASC)
+        String sql = "SELECT * FROM Tours ORDER BY startDate ASC";
         
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -85,14 +107,14 @@ public class TourDAO implements ITourDAO {
     public void updateTour(Tour tour) throws SQLException {
         String sql = "UPDATE Tours SET name = ?, destination = ?, startDate = ?, endDate = ?, price = ?, maxCapacity = ?, currentCapacity = ?, description = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, tour.getName());
-            stmt.setString(2, tour.getDestination());
+            stmt.setNString(1, tour.getName());
+            stmt.setNString(2, tour.getDestination());
             stmt.setDate(3, Date.valueOf(tour.getStartDate()));
             stmt.setDate(4, Date.valueOf(tour.getEndDate()));
             stmt.setDouble(5, tour.getPrice());
             stmt.setInt(6, tour.getMaxCapacity());
             stmt.setInt(7, tour.getCurrentCapacity());
-            stmt.setString(8, tour.getDescription());
+            stmt.setNString(8, tour.getDescription());
             stmt.setInt(9, tour.getId());
             
             stmt.executeUpdate();
@@ -102,8 +124,47 @@ public class TourDAO implements ITourDAO {
     
     @Override
     public void deleteTour(int id) throws SQLException {
-        String sql = "DELETE FROM Tours WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        // Delete related records first to avoid foreign key constraint violations
+        // Order matters: delete child records before parent
+        
+        // 1. Delete from CartInteractions
+        String deleteCartInteractions = "DELETE FROM CartInteractions WHERE tourId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(deleteCartInteractions)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+        
+        // 2. Delete from AbandonedCarts
+        String deleteAbandonedCarts = "DELETE FROM AbandonedCarts WHERE tourId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(deleteAbandonedCarts)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+        
+        // 3. Delete from Cart
+        String deleteCart = "DELETE FROM Cart WHERE tourId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(deleteCart)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+        
+        // 4. Delete from OrderItems (but keep Orders for history)
+        String deleteOrderItems = "DELETE FROM OrderItems WHERE tourId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(deleteOrderItems)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+        
+        // 5. Delete from Bookings
+        String deleteBookings = "DELETE FROM Bookings WHERE tourId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(deleteBookings)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+        
+        // 6. Finally delete the tour itself
+        String deleteTour = "DELETE FROM Tours WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(deleteTour)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
@@ -112,7 +173,8 @@ public class TourDAO implements ITourDAO {
     @Override
     public List<Tour> getAvailableTours() throws SQLException {
         List<Tour> tours = new ArrayList<>();
-        String sql = "SELECT * FROM Tours WHERE currentCapacity < maxCapacity AND startDate > GETDATE() ORDER BY startDate";
+        // Chỉ lấy tours năm 2026 trở đi (tours mới để đặt)
+        String sql = "SELECT * FROM Tours WHERE currentCapacity < maxCapacity AND YEAR(startDate) >= 2026 ORDER BY startDate ASC";
         
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -337,4 +399,25 @@ public class TourDAO implements ITourDAO {
         return tours;
     }
 
+
+    /**
+     * Cập nhật capacity của tour
+     * @param tourId Tour ID
+     * @param quantityChange Số lượng thay đổi (dương = tăng, âm = giảm)
+     * @return true nếu thành công
+     */
+    public boolean updateCapacity(int tourId, int quantityChange) {
+        String sql = "UPDATE Tours SET currentCapacity = currentCapacity + ? WHERE id = ?";
+
+        try (Connection conn = util.DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, quantityChange);
+            stmt.setInt(2, tourId);
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

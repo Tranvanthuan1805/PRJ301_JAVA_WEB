@@ -106,6 +106,102 @@ CREATE TABLE InteractionHistory (
     FOREIGN KEY (customerId) REFERENCES Customers(id) ON DELETE CASCADE
 );
 
+-- Bảng Cart (Giỏ hàng cho user đã đăng nhập)
+CREATE TABLE Cart (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    userId INT NOT NULL,
+    tourId INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    addedAt DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (userId) REFERENCES Users(UserId) ON DELETE CASCADE,
+    FOREIGN KEY (tourId) REFERENCES Tours(id) ON DELETE CASCADE,
+    CONSTRAINT UQ_Cart_UserTour UNIQUE(userId, tourId)
+);
+
+-- Bảng Orders (Đơn đặt tour)
+CREATE TABLE Orders (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    userId INT NOT NULL,
+    orderCode NVARCHAR(20) UNIQUE NOT NULL,
+    customerName NVARCHAR(100) NOT NULL,
+    customerEmail NVARCHAR(100) NOT NULL,
+    customerPhone NVARCHAR(20) NOT NULL,
+    customerAddress NVARCHAR(255),
+    totalAmount DECIMAL(12,2) NOT NULL,
+    status NVARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    paymentStatus NVARCHAR(20) NOT NULL DEFAULT 'UNPAID',
+    paymentMethod NVARCHAR(50),
+    notes NTEXT,
+    createdAt DATETIME2 DEFAULT GETDATE(),
+    updatedAt DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (userId) REFERENCES Users(UserId),
+    CONSTRAINT CK_Order_Status CHECK (status IN ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED')),
+    CONSTRAINT CK_Payment_Status CHECK (paymentStatus IN ('UNPAID', 'PAID', 'REFUNDED'))
+);
+
+-- Bảng OrderItems (Chi tiết đơn hàng)
+CREATE TABLE OrderItems (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    orderId INT NOT NULL,
+    tourId INT NOT NULL,
+    tourName NVARCHAR(200) NOT NULL,
+    tourPrice DECIMAL(10,2) NOT NULL,
+    quantity INT NOT NULL,
+    subtotal DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (orderId) REFERENCES Orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (tourId) REFERENCES Tours(id)
+);
+
+-- Bảng Payments (Lịch sử thanh toán)
+CREATE TABLE Payments (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    orderId INT NOT NULL,
+    paymentCode NVARCHAR(50) UNIQUE NOT NULL,
+    amount DECIMAL(12,2) NOT NULL,
+    paymentMethod NVARCHAR(50) NOT NULL,
+    paymentStatus NVARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    transactionId NVARCHAR(100),
+    paymentDate DATETIME2,
+    createdAt DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (orderId) REFERENCES Orders(id) ON DELETE CASCADE,
+    CONSTRAINT CK_Payment_Method CHECK (paymentMethod IN ('CASH', 'BANK_TRANSFER', 'CREDIT_CARD', 'MOMO', 'VNPAY')),
+    CONSTRAINT CK_Payment_Status_Detail CHECK (paymentStatus IN ('PENDING', 'SUCCESS', 'FAILED', 'CANCELLED'))
+);
+
+-- Bảng AbandonedCarts (Giỏ hàng bị bỏ quên)
+CREATE TABLE AbandonedCarts (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    userId INT,
+    sessionId NVARCHAR(100),
+    tourId INT NOT NULL,
+    quantity INT NOT NULL,
+    addedAt DATETIME2 NOT NULL,
+    lastViewedAt DATETIME2 NOT NULL,
+    abandonedAt DATETIME2,
+    reminderSent BIT DEFAULT 0,
+    reminderSentAt DATETIME2,
+    converted BIT DEFAULT 0,
+    convertedAt DATETIME2,
+    orderId INT,
+    FOREIGN KEY (userId) REFERENCES Users(UserId),
+    FOREIGN KEY (tourId) REFERENCES Tours(id),
+    FOREIGN KEY (orderId) REFERENCES Orders(id)
+);
+
+-- Bảng CartInteractions (Tương tác với giỏ hàng)
+CREATE TABLE CartInteractions (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    userId INT,
+    sessionId NVARCHAR(100),
+    tourId INT NOT NULL,
+    action NVARCHAR(50) NOT NULL,
+    quantity INT,
+    createdAt DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (userId) REFERENCES Users(UserId),
+    FOREIGN KEY (tourId) REFERENCES Tours(id),
+    CONSTRAINT CK_Cart_Action CHECK (action IN ('ADD', 'UPDATE', 'REMOVE', 'VIEW', 'CHECKOUT_START', 'CHECKOUT_COMPLETE'))
+);
+
 -- =============================================
 -- PHẦN 3: INDEXES
 -- =============================================
@@ -117,6 +213,25 @@ CREATE INDEX IX_Bookings_customerId ON Bookings(customerId);
 CREATE INDEX IX_Bookings_tourId ON Bookings(tourId);
 CREATE INDEX IX_InteractionHistory_customerId ON InteractionHistory(customerId);
 CREATE INDEX IX_InteractionHistory_createdAt ON InteractionHistory(createdAt);
+CREATE INDEX IX_Cart_userId ON Cart(userId);
+CREATE INDEX IX_Cart_tourId ON Cart(tourId);
+CREATE INDEX IX_Orders_userId ON Orders(userId);
+CREATE INDEX IX_Orders_orderCode ON Orders(orderCode);
+CREATE INDEX IX_Orders_status ON Orders(status);
+CREATE INDEX IX_OrderItems_orderId ON OrderItems(orderId);
+CREATE INDEX IX_OrderItems_tourId ON OrderItems(tourId);
+CREATE INDEX IX_Payments_orderId ON Payments(orderId);
+CREATE INDEX IX_Payments_paymentCode ON Payments(paymentCode);
+CREATE INDEX IX_AbandonedCarts_userId ON AbandonedCarts(userId);
+CREATE INDEX IX_AbandonedCarts_sessionId ON AbandonedCarts(sessionId);
+CREATE INDEX IX_AbandonedCarts_tourId ON AbandonedCarts(tourId);
+CREATE INDEX IX_AbandonedCarts_abandonedAt ON AbandonedCarts(abandonedAt);
+CREATE INDEX IX_AbandonedCarts_reminderSent ON AbandonedCarts(reminderSent);
+CREATE INDEX IX_CartInteractions_userId ON CartInteractions(userId);
+CREATE INDEX IX_CartInteractions_sessionId ON CartInteractions(sessionId);
+CREATE INDEX IX_CartInteractions_tourId ON CartInteractions(tourId);
+CREATE INDEX IX_CartInteractions_action ON CartInteractions(action);
+CREATE INDEX IX_CartInteractions_createdAt ON CartInteractions(createdAt);
 
 -- =============================================
 -- PHẦN 4: DỮ LIỆU MẪU
@@ -145,23 +260,8 @@ INSERT INTO Customers (fullName, email, phone, address) VALUES
 (N'Đỗ Văn Yên', 'yen.do@email.com', '0989135802', N'802 Đường 2/9, Quận Hải Châu, Đà Nẵng'),
 (N'Hồ Thị Zara', 'zara.ho@email.com', '0990246913', N'913 Đường Phan Châu Trinh, Quận Hải Châu, Đà Nẵng');
 
--- Thêm Tours (15 tours trong Đà Nẵng)
-INSERT INTO Tours (name, destination, startDate, endDate, startTime, endTime, price, maxCapacity, currentCapacity, description) VALUES
-(N'Tour Quận Hải Châu 3N2Đ', N'Hải Châu', '2026-03-15', '2026-03-17', '07:30', '18:00', 1800000, 30, 8, N'Khám phá trung tâm Đà Nẵng với cầu Rồng, chợ Hàn, bãi biển Mỹ Khê'),
-(N'Tour Bán đảo Sơn Trà 4N3Đ', N'Sơn Trà', '2026-04-01', '2026-04-04', '06:00', '19:30', 2200000, 25, 12, N'Tham quan chùa Linh Ứng, tượng Phật Quan Âm và rừng nguyên sinh Sơn Trà'),
-(N'Tour Ngũ Hành Sơn 3N2Đ', N'Ngũ Hành Sơn', '2026-05-10', '2026-05-12', '09:00', '20:00', 2000000, 40, 18, N'Khám phá 5 ngọn núi đá vôi, hang động và làng đá Non Nước nổi tiếng'),
-(N'Tour Thanh Khê 2N1Đ', N'Thanh Khê', '2026-06-05', '2026-06-06', '08:00', '17:30', 1600000, 35, 22, N'Tham quan khu đô thị hiện đại với trường đại học và công viên Châu Á'),
-(N'Tour Liên Chiểu 3N2Đ', N'Liên Chiểu', '2026-07-20', '2026-07-22', '07:00', '18:30', 1500000, 45, 30, N'Khám phá khu vực phát triển mới với sân bay quốc tế và khu công nghiệp'),
-(N'Tour Cẩm Lệ 2N1Đ', N'Cẩm Lệ', '2026-08-15', '2026-08-16', '08:30', '19:00', 1400000, 30, 15, N'Trải nghiệm khu vực nông thôn kết hợp đô thị với làng nghề truyền thống'),
-(N'Tour Bà Nà Hills 4N3Đ', N'Hòa Vang', '2026-03-20', '2026-03-23', '06:30', '17:00', 2500000, 28, 10, N'Khám phá Bà Nà Hills với cầu Vàng nổi tiếng, làng Pháp và cáp treo'),
-(N'Tour Hoàng Sa 5N4Đ', N'Hoàng Sa', '2026-04-10', '2026-04-14', '07:00', '18:00', 3500000, 20, 6, N'Tour đặc biệt đến quần đảo Hoàng Sa - chủ quyền thiêng liêng của Việt Nam'),
-(N'Tour Hải Châu - Sơn Trà 3N2Đ', N'Hải Châu', '2026-05-01', '2026-05-03', '08:00', '19:00', 1900000, 40, 25, N'Kết hợp trung tâm thành phố và bán đảo Sơn Trà trong một chuyến đi'),
-(N'Tour Ngũ Hành Sơn - Hòa Vang 4N3Đ', N'Ngũ Hành Sơn', '2026-06-15', '2026-06-18', '07:30', '18:30', 2300000, 32, 16, N'Từ Ngũ Hành Sơn đến Bà Nà Hills, trải nghiệm đầy đủ vẻ đẹp Đà Nẵng'),
-(N'Tour Thanh Khê - Liên Chiểu 2N1Đ', N'Thanh Khê', '2026-07-05', '2026-07-06', '06:00', '17:30', 1700000, 30, 12, N'Khám phá hai quận hiện đại nhất của Đà Nẵng'),
-(N'Tour Cẩm Lệ - Hòa Vang 3N2Đ', N'Cẩm Lệ', '2026-08-01', '2026-08-03', '08:00', '19:30', 2100000, 25, 8, N'Từ nông thôn đến núi non, trải nghiệm đa dạng địa hình Đà Nẵng'),
-(N'Tour Toàn cảnh Đà Nẵng 5N4Đ', N'Hải Châu', '2026-09-10', '2026-09-14', '09:00', '20:00', 2800000, 35, 20, N'Tour tổng hợp tất cả các quận huyện trong thành phố Đà Nẵng'),
-(N'Tour Sơn Trà - Ngũ Hành Sơn 3N2Đ', N'Sơn Trà', '2026-10-01', '2026-10-03', '07:00', '18:00', 2200000, 30, 14, N'Kết hợp bán đảo Sơn Trà và Ngũ Hành Sơn trong cùng một tour'),
-(N'Tour Hòa Vang - Hoàng Sa 6N5Đ', N'Hòa Vang', '2026-11-15', '2026-11-20', '08:30', '17:00', 4000000, 20, 9, N'Tour cao cấp từ Bà Nà Hills đến quần đảo Hoàng Sa');
+-- LƯU Ý: Tours sẽ được thêm từ file ADD_NEW_TOURS_2026.sql
+-- Không thêm tours mẫu ở đây để tránh trùng lặp
 
 -- =============================================
 -- PHẦN 5: KIỂM TRA
@@ -178,6 +278,7 @@ JOIN Roles r ON u.RoleId = r.RoleId;
 PRINT '';
 PRINT 'TOURS:';
 SELECT COUNT(*) AS TotalTours FROM Tours;
+PRINT 'LƯU Ý: Chạy ADD_NEW_TOURS_2026.sql để thêm 72 tours năm 2026';
 PRINT '';
 PRINT 'CUSTOMERS:';
 SELECT COUNT(*) AS TotalCustomers FROM Customers;

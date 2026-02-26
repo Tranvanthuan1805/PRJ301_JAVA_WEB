@@ -4,15 +4,15 @@ import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 public class ValidationUtil {
-    
+
     // Email validation pattern
-    private static final Pattern EMAIL_PATTERN = 
+    private static final Pattern EMAIL_PATTERN =
         Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$");
-    
+
     // Phone validation pattern (Vietnamese phone numbers)
-    private static final Pattern PHONE_PATTERN = 
+    private static final Pattern PHONE_PATTERN =
         Pattern.compile("^(\\+84|0)[1-9][0-9]{8,9}$");
-    
+
     /**
      * Validate email format
      */
@@ -22,7 +22,7 @@ public class ValidationUtil {
         }
         return EMAIL_PATTERN.matcher(email.trim()).matches();
     }
-    
+
     /**
      * Validate phone number format
      */
@@ -32,7 +32,7 @@ public class ValidationUtil {
         }
         return PHONE_PATTERN.matcher(phone.trim().replaceAll("\\s+", "")).matches();
     }
-    
+
     /**
      * Validate required string field
      */
@@ -43,28 +43,28 @@ public class ValidationUtil {
         int length = value.trim().length();
         return length >= minLength && length <= maxLength;
     }
-    
+
     /**
      * Validate customer name
      */
     public static boolean isValidCustomerName(String name) {
         return isValidString(name, 2, 100);
     }
-    
+
     /**
      * Validate tour name
      */
     public static boolean isValidTourName(String name) {
         return isValidString(name, 5, 200);
     }
-    
+
     /**
      * Validate destination
      */
     public static boolean isValidDestination(String destination) {
         return isValidString(destination, 2, 100);
     }
-    
+
     /**
      * Validate address
      */
@@ -74,21 +74,21 @@ public class ValidationUtil {
         }
         return address.trim().length() <= 255;
     }
-    
+
     /**
      * Validate tour price
      */
     public static boolean isValidPrice(double price) {
         return price > 0 && price <= 999999999.99;
     }
-    
+
     /**
      * Validate tour capacity
      */
     public static boolean isValidCapacity(int capacity) {
         return capacity > 0 && capacity <= 1000;
     }
-    
+
     /**
      * Validate date range for tour
      */
@@ -99,7 +99,7 @@ public class ValidationUtil {
         LocalDate today = LocalDate.now();
         return startDate.isAfter(today) && endDate.isAfter(startDate);
     }
-    
+
     /**
      * Validate tour description
      */
@@ -109,7 +109,7 @@ public class ValidationUtil {
         }
         return description.trim().length() <= 2000;
     }
-    
+
     /**
      * Sanitize string input to prevent XSS
      */
@@ -124,7 +124,7 @@ public class ValidationUtil {
                    .replaceAll("'", "&#x27;")
                    .replaceAll("/", "&#x2F;");
     }
-    
+
     /**
      * Check if string contains only letters, numbers, spaces and common punctuation
      */
@@ -134,7 +134,7 @@ public class ValidationUtil {
         }
         return input.matches("^[a-zA-Z0-9\\s.,!?()-]+$");
     }
-    
+
     /**
      * Validate ID parameter
      */
@@ -149,7 +149,7 @@ public class ValidationUtil {
             return false;
         }
     }
-    
+
     /**
      * Parse and validate integer parameter
      */
@@ -167,7 +167,7 @@ public class ValidationUtil {
         }
         return null;
     }
-    
+
     /**
      * Parse and validate double parameter
      */
