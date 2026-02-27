@@ -1,31 +1,11 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="model.Tour" %>
-<%@ page import="dao.TourDAO" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
 <%
     // Check if user is logged in
     String username = (String) session.getAttribute("username");
     String role = (String) session.getAttribute("role");
     boolean isLoggedIn = username != null;
     boolean isAdmin = "ADMIN".equals(role);
-    
-    // Load featured tours (skip if DB not available)
-    List<Tour> featuredTours = new java.util.ArrayList<>();
-    try {
-        // Only try DB if connection is available
-        featuredTours = new TourDAO().getAllActiveTours();
-        if (featuredTours != null && featuredTours.size() > 6) {
-            featuredTours = featuredTours.subList(0, 6);
-        }
-    } catch (Exception e) {
-        // DB not available - show page without tours
-        System.out.println("DB not available, showing static page: " + e.getMessage());
-    }
-    if (featuredTours == null) featuredTours = new java.util.ArrayList<>();
-    
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 %>
 <!DOCTYPE html>
 <html lang="vi">
