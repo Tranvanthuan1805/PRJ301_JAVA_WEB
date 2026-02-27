@@ -2,6 +2,26 @@
 /Login/nbproject/private/
 /Login/build/
 /Login/dist/
+/Login/target/
 /TravelBooking/build/
 /TravelBooking/dist/
 /TravelBooking/nbproject/private/
+/nbproject/private/
+/build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build artifacts
+target/
+*.class
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Secrets
+*.env
+*.pem

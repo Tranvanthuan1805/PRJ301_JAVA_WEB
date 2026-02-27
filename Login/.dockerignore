@@ -1,0 +1,16 @@
+# =========================================
+# Login/.dockerignore
+# =========================================
+.git
+.gitignore
+*.md
+nbproject/private/
+build/
+dist/
+target/
+*.iml
+.idea/
+.vscode/
+*.log
+docker-compose*.yml
+Dockerfile

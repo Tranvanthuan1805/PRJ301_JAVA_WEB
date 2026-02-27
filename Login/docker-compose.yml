@@ -1,0 +1,21 @@
+# Docker Compose - Dev environment
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-1433}
+      - DB_NAME=${DB_NAME:-VietAirDB}
+      - DB_USER=${DB_USER:-sa}
+      - DB_PASS=${DB_PASS:-password}
+    restart: unless-stopped
+    networks:
+      - vietair-net
+
+networks:
+  vietair-net:
+    driver: bridge
