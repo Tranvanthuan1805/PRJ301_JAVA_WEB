@@ -1,7 +1,7 @@
 package dao;
 
 import model.CustomerActivity;
-import util.DBUtil;
+import dao.DBUtil;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

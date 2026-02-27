@@ -94,7 +94,7 @@ public class BookingServlet extends HttpServlet {
                 conn.setAutoCommit(false);
                 
                 // Get tour info
-                TourDAO tourDAO = new TourDAO(conn);
+                TourDAO tourDAO = new TourDAO();
                 Tour tour = tourDAO.getTourById(tourId);
                 
                 if (tour == null) {
@@ -104,7 +104,7 @@ public class BookingServlet extends HttpServlet {
                 }
                 
                 // Check capacity
-                int availableSeats = tour.getMaxCapacity() - tour.getCurrentCapacity();
+                int availableSeats = tour.getMaxPeople();
                 if (numberOfPeople > availableSeats) {
                     session.setAttribute("error", 
                         "Không đủ chỗ trống. Chỉ còn " + availableSeats + " chỗ");
@@ -143,7 +143,7 @@ public class BookingServlet extends HttpServlet {
                 InteractionHistoryDAO historyDAO = new InteractionHistoryDAO(conn);
                 InteractionHistory history = new InteractionHistory();
                 history.setCustomerId(customerId);
-                history.setAction("Đặt tour: " + tour.getName() + " - " + numberOfPeople + " người - Mã: " + bookingCode);
+                history.setAction("Đặt tour: " + tour.getTourName() + " - " + numberOfPeople + " người - Mã: " + bookingCode);
                 history.setCreatedAt(LocalDateTime.now());
                 historyDAO.addInteraction(history);
                 

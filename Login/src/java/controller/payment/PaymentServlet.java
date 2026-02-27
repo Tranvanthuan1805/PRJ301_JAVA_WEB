@@ -41,11 +41,11 @@ public class PaymentServlet extends HttpServlet {
 
         // 1. Create Transaction Code (e.g. PRJ1699999U123)
         // Ensure it's unique enough or random. Use 'U' instead of '_' to avoid bank apps stripping it.
-        String transCode = "PRJ" + System.currentTimeMillis() + "U" + user.userId;
+        String transCode = "PRJ" + System.currentTimeMillis() + "U" + user.getUserId();
 
         // 2. Create Pending Transaction Record
         PaymentTransaction trans = new PaymentTransaction();
-        trans.setUserId(user.userId);
+        trans.setUserId(user.getUserId());
         trans.setPlanId(plan.getPlanId());
         trans.setAmount(plan.getPrice());
         trans.setTransactionCode(transCode);

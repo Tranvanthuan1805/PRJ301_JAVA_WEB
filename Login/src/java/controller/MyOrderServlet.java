@@ -88,7 +88,7 @@ public class MyOrderServlet extends HttpServlet {
     private void listMyOrders(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
         
-        List<OrderDetailDTO> orders = orderDAO.getOrderDetailsByUserId(user.userId);
+        List<OrderDetailDTO> orders = orderDAO.getOrderDetailsByUserId(user.getUserId());
         
         // Count user's orders by status
         long pendingCount = orders.stream().filter(o -> "Pending".equals(o.getStatus())).count();
@@ -122,7 +122,7 @@ public class MyOrderServlet extends HttpServlet {
         OrderDetailDTO order = orderDAO.getOrderDetailById(orderId);
         
         // Security check: only show if order belongs to this user
-        if (order == null || order.getUserId() != user.userId) {
+        if (order == null || order.getUserId() != user.getUserId()) {
             request.setAttribute("error", "Không tìm thấy đơn hàng hoặc bạn không có quyền xem đơn hàng này.");
             listMyOrders(request, response, user);
             return;
@@ -144,7 +144,7 @@ public class MyOrderServlet extends HttpServlet {
         
         // Security check: verify order belongs to this user
         Order order = orderDAO.getOrderById(orderId);
-        if (order == null || order.getUserId() != user.userId) {
+        if (order == null || order.getUserId() != user.getUserId()) {
             response.sendRedirect("my-orders?error=unauthorized");
             return;
         }

@@ -103,8 +103,8 @@ public class TourServlet extends HttpServlet {
         if (search != null && !search.trim().isEmpty()) {
             final String query = search.toLowerCase();
             allTours = allTours.stream()
-                .filter(t -> t.getName().toLowerCase().contains(query) ||
-                           t.getDestination().toLowerCase().contains(query))
+                .filter(t -> t.getTourName().toLowerCase().contains(query) ||
+                           (t.getStartLocation() != null && t.getStartLocation().toLowerCase().contains(query)))
                 .collect(java.util.stream.Collectors.toList());
             request.setAttribute("searchQuery", search);
         }
@@ -119,7 +119,7 @@ public class TourServlet extends HttpServlet {
         if (sortBy != null && !sortBy.trim().isEmpty()) {
             switch (sortBy) {
                 case "name":
-                    allTours.sort((t1, t2) -> t1.getName().compareTo(t2.getName()));
+                    allTours.sort((t1, t2) -> t1.getTourName().compareTo(t2.getTourName()));
                     break;
                 case "price_asc":
                     allTours.sort((t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
@@ -128,14 +128,13 @@ public class TourServlet extends HttpServlet {
                     allTours.sort((t1, t2) -> Double.compare(t2.getPrice(), t1.getPrice()));
                     break;
                 case "date":
-                    allTours.sort((t1, t2) -> t1.getStartDate().compareTo(t2.getStartDate()));
+                    allTours.sort((t1, t2) -> {
+                        if (t1.getCreatedAt() == null || t2.getCreatedAt() == null) return 0;
+                        return t1.getCreatedAt().compareTo(t2.getCreatedAt());
+                    });
                     break;
                 case "available":
-                    allTours.sort((t1, t2) -> {
-                        int available1 = t1.getMaxCapacity() - t1.getCurrentCapacity();
-                        int available2 = t2.getMaxCapacity() - t2.getCurrentCapacity();
-                        return Integer.compare(available2, available1); // Descending
-                    });
+                    allTours.sort((t1, t2) -> Integer.compare(t2.getMaxPeople(), t1.getMaxPeople()));
                     break;
             }
             request.setAttribute("sortBy", sortBy);
@@ -201,13 +200,11 @@ public class TourServlet extends HttpServlet {
     private void createTour(HttpServletRequest request, HttpServletResponse response) 
             throws SQLException, IOException {
         Tour tour = new Tour();
-        tour.setName(request.getParameter("name"));
-        tour.setDestination(request.getParameter("destination"));
-        tour.setStartDate(LocalDate.parse(request.getParameter("startDate")));
-        tour.setEndDate(LocalDate.parse(request.getParameter("endDate")));
+        tour.setTourName(request.getParameter("name"));
+        tour.setStartLocation(request.getParameter("destination"));
+        tour.setDuration(request.getParameter("duration"));
         tour.setPrice(Double.parseDouble(request.getParameter("price")));
-        tour.setMaxCapacity(Integer.parseInt(request.getParameter("maxCapacity")));
-        tour.setCurrentCapacity(0); // Bắt đầu với 0
+        tour.setMaxPeople(Integer.parseInt(request.getParameter("maxCapacity")));
         tour.setDescription(request.getParameter("description"));
         
         tourService.createTour(tour);
@@ -217,18 +214,16 @@ public class TourServlet extends HttpServlet {
     private void updateTour(HttpServletRequest request, HttpServletResponse response) 
             throws SQLException, IOException {
         Tour tour = new Tour();
-        tour.setId(Integer.parseInt(request.getParameter("id")));
-        tour.setName(request.getParameter("name"));
-        tour.setDestination(request.getParameter("destination"));
-        tour.setStartDate(LocalDate.parse(request.getParameter("startDate")));
-        tour.setEndDate(LocalDate.parse(request.getParameter("endDate")));
+        tour.setTourId(Integer.parseInt(request.getParameter("id")));
+        tour.setTourName(request.getParameter("name"));
+        tour.setStartLocation(request.getParameter("destination"));
+        tour.setDuration(request.getParameter("duration"));
         tour.setPrice(Double.parseDouble(request.getParameter("price")));
-        tour.setMaxCapacity(Integer.parseInt(request.getParameter("maxCapacity")));
-        tour.setCurrentCapacity(Integer.parseInt(request.getParameter("currentCapacity")));
+        tour.setMaxPeople(Integer.parseInt(request.getParameter("maxCapacity")));
         tour.setDescription(request.getParameter("description"));
         
         tourService.updateTour(tour);
-        response.sendRedirect("tour?action=view&id=" + tour.getId() + "&success=updated");
+        response.sendRedirect("tour?action=view&id=" + tour.getTourId() + "&success=updated");
     }
     
     private void deleteTour(HttpServletRequest request, HttpServletResponse response) 
@@ -283,12 +278,11 @@ public class TourServlet extends HttpServlet {
             Tour tour = tours.get(i);
             if (i > 0) json.append(",");
             json.append("{")
-                .append("\"id\":").append(tour.getId()).append(",")
-                .append("\"name\":\"").append(escapeJson(tour.getName())).append("\",")
-                .append("\"destination\":\"").append(escapeJson(tour.getDestination())).append("\",")
+                .append("\"id\":").append(tour.getTourId()).append(",")
+                .append("\"name\":\"").append(escapeJson(tour.getTourName())).append("\",")
+                .append("\"destination\":\"").append(escapeJson(tour.getStartLocation())).append("\",")
                 .append("\"price\":").append(tour.getPrice()).append(",")
-                .append("\"maxCapacity\":").append(tour.getMaxCapacity()).append(",")
-                .append("\"currentCapacity\":").append(tour.getCurrentCapacity())
+                .append("\"maxCapacity\":").append(tour.getMaxPeople())
                 .append("}");
         }
         json.append("]}");
@@ -309,13 +303,12 @@ public class TourServlet extends HttpServlet {
             Tour tour = tours.get(i);
             if (i > 0) json.append(",");
             json.append("{")
-                .append("\"id\":").append(tour.getId()).append(",")
-                .append("\"name\":\"").append(escapeJson(tour.getName())).append("\",")
-                .append("\"destination\":\"").append(escapeJson(tour.getDestination())).append("\",")
-                .append("\"startDate\":\"").append(tour.getStartDate()).append("\",")
+                .append("\"id\":").append(tour.getTourId()).append(",")
+                .append("\"name\":\"").append(escapeJson(tour.getTourName())).append("\",")
+                .append("\"destination\":\"").append(escapeJson(tour.getStartLocation())).append("\",")
+                .append("\"startDate\":\"").append(tour.getCreatedAt()).append("\",")
                 .append("\"price\":").append(tour.getPrice()).append(",")
-                .append("\"maxCapacity\":").append(tour.getMaxCapacity()).append(",")
-                .append("\"currentCapacity\":").append(tour.getCurrentCapacity())
+                .append("\"maxCapacity\":").append(tour.getMaxPeople())
                 .append("}");
         }
         json.append("]}");

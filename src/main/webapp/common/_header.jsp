@@ -1,43 +1,62 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<header class="navbar">
-    <div class="container nav-content">
-        <a href="${pageContext.request.contextPath}/home" class="brand">
-            <span style="color: #ff6b6b;">DN</span> HUB
-        </a>
-        
-        <ul class="nav-links">
-            <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
-            <li><a href="${pageContext.request.contextPath}/tours">Tours</a></li>
-            <li><a href="${pageContext.request.contextPath}/about">About Da Nang</a></li>
-        </ul>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 
-        <div class="nav-actions" style="display: flex; align-items: center; gap: 20px;">
-            <c:choose>
-                <c:when test="${not empty sessionScope.user}">
-                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 0.9rem;">Welcome, <strong>${sessionScope.user.username}</strong></span>
-                        <c:if test="${sessionScope.user.roleName == 'ADMIN'}">
-                            <a href="${pageContext.request.contextPath}/admin/dashboard" class="btn btn-primary" style="padding: 5px 15px; font-size: 0.8rem;">Admin</a>
-                        </c:if>
-                        <a href="${pageContext.request.contextPath}/logout" style="color: #ff6b6b; font-size: 0.9rem;">Logout</a>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <a href="${pageContext.request.contextPath}/login" style="margin-right: 15px;">Login</a>
-                    <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Join Now</a>
-                </c:otherwise>
-            </c:choose>
-            
-            <a href="${pageContext.request.contextPath}/customer/cart" style="position: relative;">
-                <i class="fas fa-shopping-cart"></i>
-                <span id="cart-count" style="position: absolute; top: -10px; right: -10px; background: #ff6b6b; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem;">
-                    ${not empty sessionScope.cart_count ? sessionScope.cart_count : 0}
-                </span>
+<header class="navbar" id="mainNav">
+    <div class="container">
+        <div class="nav-content">
+            <a href="${pageContext.request.contextPath}/" class="brand">
+                <span class="accent">🏖️</span> DN HUB
             </a>
+
+            <ul class="nav-links">
+                <li><a href="${pageContext.request.contextPath}/">Trang Chủ</a></li>
+                <li><a href="${pageContext.request.contextPath}/tour">Khám Phá</a></li>
+                <li><a href="${pageContext.request.contextPath}/my-orders">Đơn Hàng</a></li>
+                <li><a href="${pageContext.request.contextPath}/pricing">Gói VIP</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <c:choose>
+                    <c:when test="${not empty sessionScope.user}">
+                        <div class="user-profile">
+                            <c:if test="${sessionScope.user.role.roleName == 'ADMIN'}">
+                                <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-primary" style="padding: 7px 16px; font-size: 0.78rem;">
+                                    <i class="fas fa-bolt"></i> Admin
+                                </a>
+                            </c:if>
+                            <a href="${pageContext.request.contextPath}/profile" style="display:flex;align-items:center;gap:6px;">
+                                <span style="width:32px;height:32px;border-radius:50%;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:white;">
+                                    ${sessionScope.user.username.substring(0,1).toUpperCase()}
+                                </span>
+                            </a>
+                            <a href="${pageContext.request.contextPath}/logout" style="font-size:0.85rem;">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </a>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/login.jsp" class="btn-ghost" style="color: rgba(255,255,255,0.8);">Đăng Nhập</a>
+                        <a href="${pageContext.request.contextPath}/register.jsp" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.82rem;">
+                            Đăng Ký <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </div>
 </header>
-<!-- Font Awesome for Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const nav = document.getElementById('mainNav');
+        if (window.scrollY > 60) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+</script>

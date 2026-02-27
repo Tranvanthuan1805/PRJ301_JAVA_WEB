@@ -34,7 +34,7 @@ public class PricingServlet extends HttpServlet {
         List<SubscriptionPlan> plans = dao.getAllPlans();
         
         // 3. Get Current Subscription (to disable button)
-        ProviderSubscription currentSub = dao.getCurrentSubscription(user.userId);
+        ProviderSubscription currentSub = dao.getCurrentSubscription(user.getUserId());
 
         request.setAttribute("plans", plans);
         request.setAttribute("currentSub", currentSub);

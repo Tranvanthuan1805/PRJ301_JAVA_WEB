@@ -1,6 +1,6 @@
 package controller;
 
-import dao.UserDAO;
+import userDao.UserDAO;
 import model.User;
 import util.ValidateUtil;
 
@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         // Check DB
-        User u = new UserDAO().login(username, password);
+        User u = new UserDAO().checklogin(username, password);
 
         if (u == null) {
             request.setAttribute("error", "Sai tài khoản hoặc mật khẩu!");

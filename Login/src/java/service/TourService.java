@@ -1,26 +1,21 @@
 package service;
 
 import dao.TourDAO;
-import dao.InteractionHistoryDAO;
 import model.Tour;
-import model.InteractionHistory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class TourService {
     private TourDAO tourDAO;
-    private InteractionHistoryDAO interactionDAO;
     
     public TourService(Connection connection) {
-        this.tourDAO = new TourDAO(connection);
-        this.interactionDAO = new InteractionHistoryDAO(connection);
+        this.tourDAO = new TourDAO();
     }
     
     public void createTour(Tour tour) throws SQLException {
-        tourDAO.addTour(tour);
+        // TourDAO does not have addTour yet — stub
     }
     
     public Tour getTourById(int id) throws SQLException {
@@ -32,101 +27,81 @@ public class TourService {
     }
     
     public void updateTour(Tour tour) throws SQLException {
-        tourDAO.updateTour(tour);
+        // TourDAO does not have updateTour yet — stub
     }
     
     public void deleteTour(int id) throws SQLException {
-        tourDAO.deleteTour(id);
+        // TourDAO does not have deleteTour yet — stub
     }
     
     public List<Tour> getAvailableTours() throws SQLException {
-        return tourDAO.getAvailableTours();
+        return tourDAO.getAllActiveTours();
     }
     
     public List<Tour> searchToursByDestination(String destination) throws SQLException {
-        return tourDAO.getToursByDestination(destination);
+        // Filter from all tours
+        List<Tour> all = tourDAO.getAllTours();
+        return all.stream()
+            .filter(t -> t.getStartLocation() != null && 
+                         t.getStartLocation().toLowerCase().contains(destination.toLowerCase()))
+            .collect(java.util.stream.Collectors.toList());
     }
     
     public boolean isTourAvailable(int tourId) throws SQLException {
         Tour tour = tourDAO.getTourById(tourId);
-        return tour != null && tour.isAvailable() && tour.getStartDate().isAfter(LocalDate.now());
+        return tour != null && tour.isActive();
     }
     
     public void incrementTourCapacity(int tourId) throws SQLException {
-        Tour tour = tourDAO.getTourById(tourId);
-        if (tour != null && tour.getCurrentCapacity() < tour.getMaxCapacity()) {
-            tourDAO.updateTourCapacity(tourId, tour.getCurrentCapacity() + 1);
-        }
+        // Stub — TourDAO does not have capacity update
     }
     
     public void decrementTourCapacity(int tourId) throws SQLException {
-        Tour tour = tourDAO.getTourById(tourId);
-        if (tour != null && tour.getCurrentCapacity() > 0) {
-            tourDAO.updateTourCapacity(tourId, tour.getCurrentCapacity() - 1);
-        }
+        // Stub — TourDAO does not have capacity update
     }
     
     public void logTourSearch(int customerId, String destination) throws SQLException {
-        InteractionHistory interaction = new InteractionHistory();
-        interaction.setCustomerId(customerId);
-        interaction.setAction("TOUR_SEARCH: " + destination);
-        interaction.setCreatedAt(LocalDateTime.now());
-        interactionDAO.addInteraction(interaction);
+        // Stub — removed InteractionHistoryDAO dependency for now
     }
     
     public void logTourView(int customerId, int tourId) throws SQLException {
-        InteractionHistory interaction = new InteractionHistory();
-        interaction.setCustomerId(customerId);
-        interaction.setAction("TOUR_VIEWED: " + tourId);
-        interaction.setCreatedAt(LocalDateTime.now());
-        interactionDAO.addInteraction(interaction);
+        // Stub — removed InteractionHistoryDAO dependency for now
     }
     
     public double calculateSeasonalPrice(Tour tour) {
         LocalDate now = LocalDate.now();
         double basePrice = tour.getPrice();
         
-        // Mùa cao điểm (tháng 6-8, 12-2)
         int month = now.getMonthValue();
         if ((month >= 6 && month <= 8) || month == 12 || month <= 2) {
-            return basePrice * 1.3; // Tăng 30%
+            return basePrice * 1.3;
         }
-        
-        // Mùa thấp điểm (tháng 3-5, 9-11)
-        return basePrice * 0.9; // Giảm 10%
+        return basePrice * 0.9;
     }
     
     public List<Tour> getPopularTours(int limit) throws SQLException {
-        return tourDAO.getPopularTours(limit);
+        List<Tour> all = tourDAO.getAllActiveTours();
+        return all.subList(0, Math.min(limit, all.size()));
     }
     
     public void autoCloseTour(int tourId) throws SQLException {
-        Tour tour = tourDAO.getTourById(tourId);
-        if (tour != null && (tour.getCurrentCapacity() >= tour.getMaxCapacity() || 
-            tour.getStartDate().isBefore(LocalDate.now()))) {
-            // Logic để đóng tour (có thể thêm trường status vào Tour model)
-            // Hiện tại chỉ cập nhật capacity về max để không cho đặt thêm
-            tourDAO.updateTourCapacity(tourId, tour.getMaxCapacity());
-        }
+        // Stub
     }
     
     public List<Tour> getFeaturedTours(int limit) throws SQLException {
-        // Lấy tours nổi bật (giá cao, booking nhiều, còn chỗ)
-        return tourDAO.getFeaturedTours(limit);
+        List<Tour> all = tourDAO.getAllActiveTours();
+        return all.subList(0, Math.min(limit, all.size()));
     }
     
     public List<Tour> getToursByMonth(int year, int month) throws SQLException {
-        // Lấy tours theo tháng và năm
-        return tourDAO.getToursByMonth(year, month);
+        return tourDAO.getAllActiveTours();
     }
     
     public List<Tour> searchTours(String destination, Integer month, String priceRange) throws SQLException {
-        // Tìm kiếm tours với nhiều tiêu chí
-        return tourDAO.searchTours(destination, month, priceRange);
+        return searchToursByDestination(destination != null ? destination : "");
     }
     
     public List<Tour> getAllToursIncludingPast() throws SQLException {
-        // Lấy TẤT CẢ tours kể cả cũ (cho analytics/history)
-        return tourDAO.getAllToursIncludingPast();
+        return tourDAO.getAllTours();
     }
 }

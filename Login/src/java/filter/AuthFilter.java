@@ -3,6 +3,7 @@ package filter;
 import model.User;
 import java.io.IOException;
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.*;
 
 @WebFilter(urlPatterns = {"/admin.jsp", "/user.jsp", "/admin/*", "/my-orders"})
@@ -16,14 +17,10 @@ public class AuthFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         String contextPath = request.getContextPath();
 
-        String uri = request.getRequestURI();
+        HttpSession session = request.getSession(false);
+        User u = (session == null) ? null : (User) session.getAttribute("user");
 
         String path = request.getServletPath();
-        
-        // DEBUG
-        System.out.println(">>> AuthFilter: path=" + path);
-        System.out.println(">>> AuthFilter: user=" + (u == null ? "null" : u.username));
-        System.out.println(">>> AuthFilter: role=" + (u == null ? "null" : u.roleName));
 
         // Not logged in -> redirect to login
         if (u == null) {
@@ -31,18 +28,13 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        String path = request.getServletPath(); // e.g., /admin.jsp, /admin/orders, /my-orders
-
-        // Admin-only paths: /admin.jsp and /admin/*
+        // Admin-only paths
         boolean isAdminPath = "/admin.jsp".equals(path) || path.startsWith("/admin/");
         
-        if (isAdminPath && !"ADMIN".equalsIgnoreCase(u.roleName)) {
+        if (isAdminPath && !"ADMIN".equalsIgnoreCase(u.getRoleName())) {
             response.sendRedirect(contextPath + "/error.jsp");
             return;
         }
-
-        // User paths: /my-orders (any logged-in user can access)
-        // No additional check needed - already verified user is logged in
 
         chain.doFilter(req, res);
     }

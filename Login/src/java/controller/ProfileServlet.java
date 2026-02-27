@@ -44,20 +44,20 @@ public class ProfileServlet extends HttpServlet {
         
         User user = (User) session.getAttribute("user");
         
-        System.out.println(">>> ProfileServlet: user=" + user.username);
-        System.out.println(">>> ProfileServlet: userId=" + user.userId);
-        System.out.println(">>> ProfileServlet: role=" + user.roleName);
+        System.out.println(">>> ProfileServlet: user=" + user.getUsername());
+        System.out.println(">>> ProfileServlet: userId=" + user.getUserId());
+        System.out.println(">>> ProfileServlet: role=" + user.getRoleName());
         
         try {
             // Get customer by user_id (linked via foreign key)
-            Customer customer = customerDAO.getCustomerByUserId(user.userId);
+            Customer customer = customerDAO.getCustomerByUserId(user.getUserId());
             
             System.out.println(">>> ProfileServlet: customer=" + (customer == null ? "null" : customer.getFullName()));
             
             if (customer == null) {
-                System.out.println(">>> ProfileServlet: Customer not found for userId=" + user.userId);
-                request.setAttribute("error", "Không tìm thấy thông tin khách hàng cho tài khoản: " + user.username);
-                request.setAttribute("username", user.username);
+                System.out.println(">>> ProfileServlet: Customer not found for userId=" + user.getUserId());
+                request.setAttribute("error", "Không tìm thấy thông tin khách hàng cho tài khoản: " + user.getUsername());
+                request.setAttribute("username", user.getUsername());
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
                 return;
             }
@@ -109,7 +109,7 @@ public class ProfileServlet extends HttpServlet {
         
         try {
             // Get customer by user_id
-            Customer customer = customerDAO.getCustomerByUserId(user.userId);
+            Customer customer = customerDAO.getCustomerByUserId(user.getUserId());
             
             if (customer == null) {
                 response.sendRedirect(request.getContextPath() + "/profile?error=notfound");

@@ -251,6 +251,6 @@ public class OrderServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         if (user == null) return false;
         
-        return "ADMIN".equalsIgnoreCase(user.roleName);
+        return "ADMIN".equalsIgnoreCase(user.getRoleName());
     }
 }

@@ -41,7 +41,7 @@ public class AdminCustomerServlet extends HttpServlet {
             return;
         }
         
-        if (!"ADMIN".equalsIgnoreCase(user.roleName)) {
+        if (!"ADMIN".equalsIgnoreCase(user.getRoleName())) {
             response.sendRedirect(request.getContextPath() + "/error.jsp");
             return;
         }
@@ -89,7 +89,7 @@ public class AdminCustomerServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         User user = (session == null) ? null : (User) session.getAttribute("user");
         
-        if (user == null || !"ADMIN".equalsIgnoreCase(user.roleName)) {
+        if (user == null || !"ADMIN".equalsIgnoreCase(user.getRoleName())) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
