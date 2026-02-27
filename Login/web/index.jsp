@@ -2,8 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.Tour" %>
 <%@ page import="dao.TourDAO" %>
-<%@ page import="util.DatabaseConnection" %>
-<%@ page import="java.sql.Connection" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%
@@ -13,15 +11,19 @@
     boolean isLoggedIn = username != null;
     boolean isAdmin = "ADMIN".equals(role);
     
-    // Load featured tours
-    List<Tour> featuredTours = null;
+    // Load featured tours (skip if DB not available)
+    List<Tour> featuredTours = new java.util.ArrayList<>();
     try {
-        Connection conn = DatabaseConnection.getNewConnection();
-        TourDAO tourDAO = new TourDAO(conn);
-        featuredTours = tourDAO.getFeaturedTours(6);
+        // Only try DB if connection is available
+        featuredTours = new TourDAO().getAllActiveTours();
+        if (featuredTours != null && featuredTours.size() > 6) {
+            featuredTours = featuredTours.subList(0, 6);
+        }
     } catch (Exception e) {
-        e.printStackTrace();
+        // DB not available - show page without tours
+        System.out.println("DB not available, showing static page: " + e.getMessage());
     }
+    if (featuredTours == null) featuredTours = new java.util.ArrayList<>();
     
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 %>
