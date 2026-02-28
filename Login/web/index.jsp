@@ -153,31 +153,7 @@
                         <p>Những tour du lịch hot nhất với giá tốt nhất</p>
                     </div>
                     <div class="featured-tours-grid" id="featuredToursGrid">
-                        <% if (featuredTours != null && !featuredTours.isEmpty()) { 
-                            for (Tour tour : featuredTours) { %>
-                                <div class="featured-tour-item" onclick="window.location.href='jsp/tour-view.jsp?id=<%= tour.getId() %>'" style="cursor: pointer;">
-                                    <div class="featured-tour-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                        <div class="featured-badge"><%= String.format("%,.0f", tour.getPrice()) %> VNĐ</div>
-                                    </div>
-                                    <div class="featured-tour-content">
-                                        <h4><%= tour.getName() %></h4>
-                                        <p class="featured-location">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            <%= tour.getDestination() %>
-                                        </p>
-                                        <div class="featured-tour-info">
-                                            <span><i class="fas fa-calendar"></i> <%= tour.getStartDate().format(formatter) %></span>
-                                            <span><i class="fas fa-users"></i> <%= tour.getCurrentCapacity() %>/<%= tour.getMaxCapacity() %></span>
-                                        </div>
-                                        <a href="jsp/tour-view.jsp?id=<%= tour.getId() %>" class="btn-book-now" onclick="event.stopPropagation();">
-                                            <i class="fas fa-info-circle"></i> Xem chi tiết
-                                        </a>
-                                    </div>
-                                </div>
-                        <% } 
-                        } else { %>
-                            <p style="text-align: center; padding: 2rem; color: #666; grid-column: 1 / -1;">Không có tours nào</p>
-                        <% } %>
+                        <p style="text-align: center; padding: 2rem; color: #666; grid-column: 1 / -1;">Đang cập nhật tours nổi bật...</p>
                     </div>
                 </div>
             </div>
