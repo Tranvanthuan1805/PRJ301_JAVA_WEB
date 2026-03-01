@@ -1019,6 +1019,16 @@
                             </div>
                         </a>
 
+                        <!-- Asia Park -->
+                        <a href="${pageContext.request.contextPath}/tour?search=asia+park" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="https://images.unsplash.com/photo-1571984405176-5958bd9ac31e?auto=format&fit=crop&w=600&q=80" alt="Asia Park" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
+                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">ASIA PARK</div>
+                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Sun World · Vòng quay Sun Wheel</div>
+                            </div>
+                        </a>
+
                         <!-- Biển Mỹ Khê - Span 2 cols -->
                         <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="rv" style="grid-column:span 2;position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
                             <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
@@ -1066,6 +1076,16 @@
                             <div style="position:absolute;bottom:14px;left:14px;color:#fff">
                                 <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">CHÙA LINH ỨNG</div>
                                 <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Tượng Phật Bà · Linh thiêng</div>
+                            </div>
+                        </a>
+
+                        <!-- Bãi biển Non Nước -->
+                        <a href="${pageContext.request.contextPath}/tour?search=non+nuoc" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" alt="Non Nước" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
+                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">BÃI BIỂN NON NƯỚC</div>
+                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Bãi tắm đẹp · Làng đá mỹ nghệ</div>
                             </div>
                         </a>
                     </div>
