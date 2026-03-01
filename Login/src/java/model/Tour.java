@@ -5,8 +5,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Tour Entity - Maps to Tours table in database
- * Used for displaying tour information with orders
+ * Tour Entity - Maps to Tours table in TourManagement database
  */
 @Entity
 @Table(name = "Tours")
@@ -14,44 +13,54 @@ public class Tour implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TourId")
+    @Column(name = "id")
     private int tourId;
     
-    @Column(name = "TourName", nullable = false, length = 200)
+    @Column(name = "name", nullable = false, length = 255)
     private String tourName;
     
-    @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
-    private String description;
-    
-    @Column(name = "ShortDesc", length = 500)
-    private String shortDesc;
-    
-    @Column(name = "Price", nullable = false)
-    private double price;
-    
-    @Column(name = "ImageUrl", length = 500)
-    private String imageUrl;
-    
-    @Column(name = "Duration", length = 50)
-    private String duration;
-    
-    @Column(name = "StartLocation", length = 100)
+    @Column(name = "destination", length = 255)
     private String startLocation;
     
-    @Column(name = "Itinerary", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "startDate")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
+    
+    @Column(name = "endDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+    
+    @Column(name = "price", nullable = false)
+    private double price;
+    
+    @Column(name = "maxCapacity")
+    private int maxCapacity = 30;
+    
+    @Column(name = "currentCapacity")
+    private int currentCapacity = 0;
+    
+    @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
+    private String description;
+    
+    @Transient
+    private String shortDesc;
+    
+    @Transient
+    private String imageUrl;
+    
+    @Transient
+    private String duration;
+    
+    @Transient
     private String itinerary;
     
-    @Column(name = "Transport", length = 100)
+    @Transient
     private String transport;
     
-    @Column(name = "MaxPeople")
-    private int maxPeople = 30;
-    
-    @Column(name = "IsActive")
+    @Transient
     private boolean isActive = true;
     
-    @Column(name = "CreatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Transient
     private Date createdAt;
 
     // ==================== Constructors ====================
@@ -68,10 +77,36 @@ public class Tour implements Serializable {
     // ==================== Helper Methods ====================
     
     /**
+     * Get available slots
+     */
+    public int getMaxPeople() {
+        return maxCapacity - currentCapacity;
+    }
+    
+    public void setMaxPeople(int maxPeople) {
+        this.maxCapacity = maxPeople;
+    }
+    
+    /**
      * Format price for display
      */
     public String getFormattedPrice() {
         return String.format("%,.0f VND", price);
+    }
+    
+    /**
+     * Check if tour has available slots
+     */
+    public boolean hasAvailableSlots() {
+        return (maxCapacity - currentCapacity) > 0;
+    }
+    
+    /**
+     * Get year of tour
+     */
+    public int getYear() {
+        if (startDate == null) return 0;
+        return startDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate().getYear();
     }
 
     // ==================== Getters and Setters ====================
@@ -156,14 +191,6 @@ public class Tour implements Serializable {
         this.transport = transport;
     }
 
-    public int getMaxPeople() {
-        return maxPeople;
-    }
-
-    public void setMaxPeople(int maxPeople) {
-        this.maxPeople = maxPeople;
-    }
-
     public boolean isActive() {
         return isActive;
     }
@@ -173,11 +200,43 @@ public class Tour implements Serializable {
     }
 
     public Date getCreatedAt() {
-        return createdAt;
+        return createdAt != null ? createdAt : startDate;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+    
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public int getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
+
+    public int getCurrentCapacity() {
+        return currentCapacity;
+    }
+
+    public void setCurrentCapacity(int currentCapacity) {
+        this.currentCapacity = currentCapacity;
     }
     
     @Override
@@ -186,6 +245,7 @@ public class Tour implements Serializable {
                 "tourId=" + tourId +
                 ", tourName='" + tourName + '\'' +
                 ", price=" + price +
+                ", available=" + (maxCapacity - currentCapacity) +
                 '}';
     }
 }
