@@ -181,6 +181,10 @@
                     <label>Số điện thoại</label>
                     <input type="tel" name="phoneNumber" value="${profileUser.phoneNumber}" placeholder="0901 234 567">
                 </div>
+                <div class="form-group">
+                    <label>Ngày sinh</label>
+                    <input type="date" name="dateOfBirth" value="<fmt:formatDate value='${profileUser.dateOfBirth}' pattern='yyyy-MM-dd'/>">
+                </div>
                 <div class="form-group full">
                     <label>Địa chỉ</label>
                     <input type="text" name="address" value="${profileUser.address}" placeholder="Nhập địa chỉ của bạn">

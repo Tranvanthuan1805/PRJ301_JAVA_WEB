@@ -136,9 +136,9 @@
 @keyframes tooltipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* Toggle Button */
-.chat-toggle-btn{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#1B1F3B,#2D3561);color:#fff;border:none;cursor:pointer;box-shadow:0 8px 30px rgba(27,31,59,.35);display:flex;align-items:center;justify-content:center;transition:.4s cubic-bezier(.175,.885,.32,1.275);position:relative;font-size:1.5rem}
-.chat-toggle-btn:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(27,31,59,.45)}
-.chat-notif{position:absolute;top:0;right:0;width:16px;height:16px;background:#FF6F61;border:3px solid #fff;border-radius:50%;display:none;animation:bounce .5s ease}
+.chat-toggle-btn{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#1E40AF,#3B82F6);color:#fff;border:none;cursor:pointer;box-shadow:0 8px 30px rgba(37,99,235,.35);display:flex;align-items:center;justify-content:center;transition:.4s cubic-bezier(.175,.885,.32,1.275);position:relative;font-size:1.5rem}
+.chat-toggle-btn:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(37,99,235,.45)}
+.chat-notif{position:absolute;top:0;right:0;width:16px;height:16px;background:#EF4444;border:3px solid #fff;border-radius:50%;display:none;animation:bounce .5s ease}
 @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
 
 /* Chat Window - BIGGER */
@@ -146,7 +146,7 @@
 @keyframes chatOpen{from{opacity:0;transform:translateY(15px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 /* Header */
-.chat-header{background:linear-gradient(135deg,#1B1F3B,#2D3561);color:#fff;padding:18px 20px;display:flex;align-items:center;justify-content:space-between}
+.chat-header{background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;padding:18px 20px;display:flex;align-items:center;justify-content:space-between}
 .chat-header-info{display:flex;align-items:center;gap:12px}
 .ai-avatar{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;position:relative}
 .online-dot{position:absolute;bottom:-1px;right:-1px;width:10px;height:10px;background:#06D6A0;border:2px solid #1B1F3B;border-radius:50%}

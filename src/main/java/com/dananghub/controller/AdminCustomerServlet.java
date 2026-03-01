@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @WebServlet("/admin/customers")
@@ -158,11 +159,29 @@ public class AdminCustomerServlet extends HttpServlet {
 
     private void handleUpdate(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
+        request.setCharacterEncoding("UTF-8");
         int customerId = Integer.parseInt(request.getParameter("customerId"));
         Customer customer = customerDAO.findById(customerId);
         if (customer == null) {
             response.sendRedirect(request.getContextPath() + "/admin/customers?error=notfound");
             return;
+        }
+
+        String fullName = request.getParameter("fullName");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String status = request.getParameter("status");
+        String dobStr = request.getParameter("dateOfBirth");
+
+        if (fullName != null && customer.getUser() != null) customer.getUser().setFullName(fullName.trim());
+        if (phone != null && customer.getUser() != null) customer.getUser().setPhoneNumber(phone.trim());
+        if (address != null) customer.setAddress(address.trim());
+        if (status != null) customer.setStatus(status);
+        if (dobStr != null && !dobStr.trim().isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                customer.setDateOfBirth(sdf.parse(dobStr.trim()));
+            } catch (Exception ignored) {}
         }
 
         boolean success = customerDAO.update(customer);

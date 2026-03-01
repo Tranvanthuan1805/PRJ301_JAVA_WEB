@@ -7,9 +7,9 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Da Nang Travel Hub | Đặt Tour Du Lịch & AI Dự Báo</title>
+                <title>eztravel | Đặt Tour Du Lịch Đà Nẵng</title>
                 <link
-                    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+                    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap"
                     rel="stylesheet">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
                 <style>
@@ -27,7 +27,7 @@
                     }
 
                     body {
-                        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+                        font-family: 'Inter', system-ui, sans-serif;
                         background: #F7F8FC;
                         color: #1B1F3B;
                         line-height: 1.65;
@@ -51,232 +51,81 @@
                     }
 
                     /* ═══ HERO ═══ */
-                    .hero {
-                        position: relative;
-                        min-height: 100vh;
-                        display: flex;
-                        align-items: center;
-                        overflow: hidden
-                    }
+                    /* ═══ HERO — Đà Nẵng Premium ═══ */
+                    .hero{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-top:100px}
+                    .hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1670983083647-cb478e649da4?auto=format&fit=crop&w=1920&q=90') center 40%/cover;z-index:0}
+                    .hero-bg::after{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1670983083647-cb478e649da4?auto=format&fit=crop&w=1920&q=90') center 40%/cover;animation:heroFloat 20s ease-in-out infinite alternate;opacity:.5;z-index:0}
+                    @keyframes heroFloat{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.08) translate(-1%,.5%)}}
+                    .hero-overlay{position:absolute;inset:0;background:linear-gradient(175deg,rgba(15,23,42,.25) 0%,rgba(15,23,42,.45) 40%,rgba(15,23,42,.82) 100%);z-index:1}
+                    .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,#F7F8FC);z-index:2}
 
-                    .hero-img {
-                        position: absolute;
-                        inset: 0;
-                        background: url('https://images.unsplash.com/photo-1559592442-7e182c3c03fb?auto=format&fit=crop&w=1920&q=85') center/cover;
-                        animation: kenBurns 30s ease-in-out infinite alternate;
-                        z-index: 0
-                    }
+                    .hero-content{position:relative;z-index:3;max-width:840px;margin:0 auto;padding:0 24px;width:100%;text-align:center}
 
-                    @keyframes kenBurns {
-                        0% {
-                            transform: scale(1.05)
-                        }
+                    /* Badge */
+                    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 20px;background:rgba(255,255,255,.08);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:24px;animation:heroFadeUp .6s ease}
+                    .hero-badge .dot{width:7px;height:7px;background:#10B981;border-radius:50%;animation:dotPulse 2s ease infinite}
+                    @keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.8)}}
 
-                        100% {
-                            transform: scale(1.15) translate(-1%, 1%)
-                        }
-                    }
+                    /* Title */
+                    .hero-content h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:14px;text-shadow:0 3px 12px rgba(0,0,0,.2);letter-spacing:-.02em;animation:heroFadeUp .6s ease .08s both}
+                    .hero-content h1 .hl{background:linear-gradient(135deg,#3B82F6,#60A5FA,#93C5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+                    .hero-content>p.hero-sub{font-size:.98rem;color:rgba(255,255,255,.72);max-width:520px;margin:0 auto 32px;line-height:1.7;animation:heroFadeUp .6s ease .15s both}
 
-                    .hero-dark {
-                        position: absolute;
-                        inset: 0;
-                        background: linear-gradient(180deg, rgba(27, 31, 59, .35) 0%, rgba(27, 31, 59, .55) 40%, rgba(27, 31, 59, .88) 100%);
-                        z-index: 1
-                    }
+                    @keyframes heroFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-                    .hero::after {
-                        content: '';
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        height: 200px;
-                        background: linear-gradient(transparent, #F7F8FC);
-                        z-index: 2
-                    }
+                    /* SEARCH PANEL — Glassmorphism */
+                    .search-panel{position:relative;background:rgba(255,255,255,.88);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:20px;max-width:860px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.18),0 0 0 1px rgba(255,255,255,.35) inset,0 1px 0 rgba(255,255,255,.6) inset;animation:heroFadeUp .6s ease .22s both;overflow:hidden}
+                    .search-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(255,255,255,.9) 50%,transparent 90%);z-index:5}
+                    .search-panel::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:glassShine 6s ease-in-out infinite;z-index:4;pointer-events:none}
+                    @keyframes glassShine{0%,100%{left:-100%}50%{left:150%}}
 
-                    .hero-wrap {
-                        position: relative;
-                        z-index: 3;
-                        max-width: 1280px;
-                        margin: 0 auto;
-                        padding: 130px 30px 180px;
-                        width: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        gap: 60px
-                    }
+                    .search-row{display:flex;align-items:stretch;position:relative;z-index:5}
+                    .search-field{flex:1;padding:18px 22px}
+                    .search-field+.search-field{border-left:1px solid rgba(0,0,0,.06)}
+                    .search-field-label{display:flex;align-items:center;gap:6px;font-size:.7rem;font-weight:800;color:#4B5563;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
+                    .search-field-label i{color:#2563EB;font-size:.68rem}
+                    .search-field input,.search-field select{border:none;outline:none;font-size:.88rem;width:100%;background:transparent;color:#111827;font-family:'Inter',sans-serif;font-weight:500}
+                    .search-field input::placeholder{color:#9CA3AF;font-weight:400}
+                    .search-field select{cursor:pointer;-webkit-appearance:none;appearance:none;color:#6B7280}
+                    .search-actions{display:flex;align-items:center;padding:0 14px}
+                    .search-btn{position:relative;padding:14px 32px;background:linear-gradient(135deg,#2563EB,#3B82F6,#60A5FA);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;transition:all .3s;white-space:nowrap;box-shadow:0 6px 24px rgba(37,99,235,.35);overflow:hidden}
+                    .search-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transition:.6s}
+                    .search-btn:hover::before{left:100%}
+                    .search-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(37,99,235,.45)}
 
-                    .hero-left {
-                        max-width: 620px;
-                        color: #fff
-                    }
+                    /* SEARCH TABS */
+                    .search-tabs{display:flex;align-items:center;gap:0;border-bottom:1px solid rgba(0,0,0,.06);padding:0 12px;position:relative;z-index:5;background:rgba(255,255,255,.3)}
+                    .search-tab{display:flex;align-items:center;gap:7px;padding:14px 20px;font-size:.84rem;font-weight:600;color:#6B7280;border-bottom:2.5px solid transparent;transition:.3s;text-decoration:none;white-space:nowrap}
+                    .search-tab:hover{color:#2563EB;background:rgba(37,99,235,.03)}
+                    .search-tab.active{color:#2563EB;border-bottom-color:#2563EB;font-weight:700;background:rgba(37,99,235,.04)}
+                    .search-tab i{font-size:.8rem}
 
-                    .hero-badge {
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 8px;
-                        padding: 8px 20px;
-                        background: rgba(255, 255, 255, .1);
-                        backdrop-filter: blur(10px);
-                        border: 1px solid rgba(255, 255, 255, .12);
-                        border-radius: 999px;
-                        font-size: .82rem;
-                        font-weight: 600;
-                        color: rgba(255, 255, 255, .9);
-                        margin-bottom: 30px;
-                        animation: fadeUp .8s ease
-                    }
+                    /* QUICK CATEGORIES */
+                    .hero-cats{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:28px;animation:heroFadeUp .6s ease .35s both}
+                    .hero-cat{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 16px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:14px;cursor:pointer;transition:all .3s;text-decoration:none;min-width:80px}
+                    .hero-cat:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.25);transform:translateY(-4px)}
+                    .hero-cat-icon{font-size:1.5rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.15))}
+                    .hero-cat-name{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.88);text-align:center;letter-spacing:.2px;line-height:1.2}
 
-                    .hero-badge .dot {
-                        width: 8px;
-                        height: 8px;
-                        background: #06D6A0;
-                        border-radius: 50%;
-                        animation: pulse 2s ease infinite
-                    }
+                    /* MAP */
+                    .map-section{position:relative;background:#F7F8FC;padding:0}
+                    .map-wrap{position:relative;height:400px;overflow:hidden}
+                    .map-wrap iframe{width:100%;height:100%;border:0;filter:saturate(1.08)}
+                    .map-label{position:absolute;top:14px;left:14px;z-index:10;display:flex;align-items:center;gap:7px;padding:9px 16px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.08);font-size:.8rem;font-weight:700;color:#1E293B}
+                    .map-label i{color:#2563EB}
 
-                    @keyframes pulse {
+                    /* Hide old float cards */
+                    .hero-right,.float-card{display:none}
 
-                        0%,
-                        100% {
-                            opacity: 1;
-                            transform: scale(1)
-                        }
-
-                        50% {
-                            opacity: .5;
-                            transform: scale(1.6)
-                        }
-                    }
-
-                    .hero-left h1 {
-                        font-size: 3.8rem;
-                        font-weight: 800;
-                        line-height: 1.1;
-                        margin-bottom: 24px;
-                        letter-spacing: -1.5px;
-                        animation: fadeUp .8s ease .1s both
-                    }
-
-                    .hero-left h1 .hl {
-                        background: linear-gradient(135deg, #FF6F61, #FF9A8B);
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
-                        background-clip: text
-                    }
-
-                    .hero-left>p {
-                        font-size: 1.12rem;
-                        opacity: .78;
-                        max-width: 500px;
-                        line-height: 1.75;
-                        margin-bottom: 40px;
-                        animation: fadeUp .8s ease .2s both
-                    }
-
-                    @keyframes fadeUp {
-                        from {
-                            opacity: 0;
-                            transform: translateY(30px)
-                        }
-
-                        to {
-                            opacity: 1;
-                            transform: translateY(0)
-                        }
-                    }
-
-                    .search-box {
-                        display: flex;
-                        gap: 6px;
-                        background: rgba(255, 255, 255, .1);
-                        backdrop-filter: blur(20px);
-                        border: 1px solid rgba(255, 255, 255, .15);
-                        border-radius: 999px;
-                        padding: 6px;
-                        max-width: 520px;
-                        box-shadow: 0 10px 40px rgba(0, 0, 0, .15);
-                        animation: fadeUp .8s ease .3s both
-                    }
-
-                    .search-box input {
-                        flex: 1;
-                        border: none;
-                        padding: 14px 22px;
-                        font-size: .95rem;
-                        outline: none;
-                        background: transparent;
-                        color: #fff;
-                        font-family: inherit
-                    }
-
-                    .search-box input::placeholder {
-                        color: rgba(255, 255, 255, .45)
-                    }
-
-                    .search-box .btn-cta {
-                        padding: 14px 28px
-                    }
-
-                    /* Hero floating cards */
-                    .hero-right {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 16px;
-                        min-width: 290px
-                    }
-
-                    .float-card {
-                        background: rgba(255, 255, 255, .1);
-                        backdrop-filter: blur(20px);
-                        border: 1px solid rgba(255, 255, 255, .12);
-                        border-radius: 16px;
-                        padding: 20px;
-                        color: #fff;
-                        display: flex;
-                        align-items: center;
-                        gap: 14px;
-                        animation: floatY 5s ease-in-out infinite
-                    }
-
-                    .float-card:nth-child(2) {
-                        animation-delay: 1.5s
-                    }
-
-                    .float-card:nth-child(3) {
-                        animation-delay: 3s
-                    }
-
-                    @keyframes floatY {
-
-                        0%,
-                        100% {
-                            transform: translateY(0)
-                        }
-
-                        50% {
-                            transform: translateY(-12px)
-                        }
-                    }
-
-                    .float-card .ic {
-                        width: 48px;
-                        height: 48px;
-                        border-radius: 14px;
-                        background: rgba(255, 255, 255, .12);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 1.4rem;
-                        flex-shrink: 0
-                    }
-
-                    .float-card h4 {
-                        font-size: .9rem;
-                        font-weight: 700;
-                        margin-bottom: 2px
+                    @media(max-width:768px){
+                        .hero{min-height:auto;padding:80px 0 40px}
+                        .search-row{flex-direction:column}
+                        .search-field+.search-field{border-left:none;border-top:1px solid #E5E7EB}
+                        .search-actions{padding:8px}
+                        .search-btn{width:100%;justify-content:center}
+                        .hero-cats{gap:8px}
+                        .hero-cat{min-width:68px;padding:10px 12px}
+                        .map-wrap{height:280px}
                     }
 
                     .float-card p {
@@ -1048,90 +897,212 @@
 
                 <!-- ═══ HERO ═══ -->
                 <section class="hero">
-                    <div class="hero-img"></div>
-                    <div class="hero-dark"></div>
-                    <div class="hero-wrap">
-                        <div class="hero-left">
-                            <div class="hero-badge"><span class="dot"></span> Hơn 5,000+ du khách tin tưởng</div>
-                            <h1>Khám Phá Vẻ Đẹp<br><span class="hl">Đà Nẵng</span> Cùng Bạn</h1>
-                            <p>Tours xác minh bởi đối tác uy tín, đặt tour tức thì, nhận dự báo xu hướng bằng AI thông
-                                minh.</p>
-                            <form action="${pageContext.request.contextPath}/tour" method="get" class="search-box">
-                                <input type="text" name="search"
-                                    placeholder="Bạn muốn đi đâu? Bà Nà, Sơn Trà, Hội An...">
-                                <button type="submit" class="btn-cta btn-accent"><i class="fas fa-search"></i> Tìm
-                                    Tour</button>
+                    <div class="hero-bg"></div>
+                    <div class="hero-overlay"></div>
+                <div class="hero-content">
+                        <div class="hero-badge" data-i18n="hero.badge"><span class="dot"></span> Hơn 5,000+ du khách tin tưởng</div>
+                        <h1>Khám Phá. Trải Nghiệm.<br><span class="hl">Đà Nẵng!</span></h1>
+                        <p class="hero-sub" data-i18n="hero.desc">Khám phá những điểm đến tuyệt vời, trải nghiệm độc đáo và lên kế hoạch cho chuyến đi hoàn hảo của bạn!</p>
+
+                        <!-- Service Tabs + Search Panel -->
+                        <div class="search-panel">
+                            <!-- Tab Bar -->
+                            <div class="search-tabs">
+                                <a href="${pageContext.request.contextPath}/tour" class="search-tab active"><i class="fas fa-suitcase-rolling"></i> Tour trọn gói</a>
+                                <a href="#" class="search-tab"><i class="fas fa-hotel"></i> Khách sạn</a>
+                                <a href="#" class="search-tab"><i class="fas fa-plane"></i> Vé máy bay</a>
+                                <a href="${pageContext.request.contextPath}/tour" class="search-tab"><i class="fas fa-layer-group"></i> Combo</a>
+                            </div>
+                            <!-- Search Fields -->
+                            <form action="${pageContext.request.contextPath}/tour" method="get">
+                                <div class="search-row">
+                                    <div class="search-field">
+                                        <div class="search-field-label"><i class="fas fa-map-marker-alt"></i> <span data-i18n="search.where">Bạn muốn đi đâu?</span> <span style="color:#EF4444">*</span></div>
+                                        <input type="text" name="search" placeholder="vd: Bà Nà, Phú Quốc, Đà Nẵng...">
+                                    </div>
+                                    <div class="search-field">
+                                        <div class="search-field-label"><i class="fas fa-calendar-alt"></i> <span data-i18n="search.date">Ngày đi</span></div>
+                                        <input type="text" name="date" placeholder="dd/mm/yyyy" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+                                    </div>
+                                    <div class="search-field">
+                                        <div class="search-field-label"><i class="fas fa-wallet"></i> <span data-i18n="search.budget">Ngân sách</span></div>
+                                        <select name="priceRange">
+                                            <option value="">Chọn mức giá</option>
+                                            <option value="0-500000">Dưới 500K</option>
+                                            <option value="500000-1000000">500K - 1 triệu</option>
+                                            <option value="1000000-3000000">1 - 3 triệu</option>
+                                            <option value="3000000-">Trên 3 triệu</option>
+                                        </select>
+                                    </div>
+                                    <div class="search-actions">
+                                        <button type="submit" class="search-btn"><i class="fas fa-search"></i> <span data-i18n="search.btn">Tìm kiếm</span></button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
-                        <div class="hero-right">
-                            <div class="float-card">
-                                <div class="ic">🏖️</div>
-                                <div>
-                                    <h4>100+ Tours</h4>
-                                    <p>Đã xác minh chất lượng</p>
-                                </div>
-                            </div>
-                            <div class="float-card">
-                                <div class="ic">🤖</div>
-                                <div>
-                                    <h4>AI Forecast</h4>
-                                    <p>Dự báo doanh thu thông minh</p>
-                                </div>
-                            </div>
-                            <div class="float-card">
-                                <div class="ic">⚡</div>
-                                <div>
-                                    <h4>Đặt Tức Thì</h4>
-                                    <p>Thanh toán QR SePay</p>
-                                </div>
-                            </div>
+
+                        <!-- Quick Categories -->
+                        <div class="hero-cats">
+                            <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="hero-cat">
+                                <span class="hero-cat-icon">🏖️</span>
+                                <span class="hero-cat-name">Biển<br>Mỹ Khê</span>
+                            </a>
+                            <a href="${pageContext.request.contextPath}/tour?categoryId=2" class="hero-cat">
+                                <span class="hero-cat-icon">⛰️</span>
+                                <span class="hero-cat-name">Bà Nà<br>Hills</span>
+                            </a>
+                            <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="hero-cat">
+                                <span class="hero-cat-icon">🏮</span>
+                                <span class="hero-cat-name">Phố Cổ<br>Hội An</span>
+                            </a>
+                            <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="hero-cat">
+                                <span class="hero-cat-icon">🐒</span>
+                                <span class="hero-cat-name">Bán Đảo<br>Sơn Trà</span>
+                            </a>
+                            <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="hero-cat">
+                                <span class="hero-cat-icon">⛩️</span>
+                                <span class="hero-cat-name">Ngũ Hành<br>Sơn</span>
+                            </a>
+                            <a href="${pageContext.request.contextPath}/tour?search=cau+rong" class="hero-cat">
+                                <span class="hero-cat-icon">🐉</span>
+                                <span class="hero-cat-name">Cầu Rồng<br>Night</span>
+                            </a>
                         </div>
                     </div>
                 </section>
 
-                <!-- ═══ CATEGORIES ═══ -->
-                <section class="cats">
-                    <div class="cats-grid">
-                        <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="cat rv">
-                            <div class="ci"><i class="fas fa-umbrella-beach"></i></div>
-                            <div class="cn">Biển & Đảo</div>
-                            <div class="cd">Mỹ Khê, Cù Lao Chàm</div>
+                <!-- ═══ GOOGLE MAP ═══ -->
+                <section class="map-section">
+                    <div class="map-wrap">
+                        <div class="map-label"><i class="fas fa-map-marker-alt"></i> Vị Trí Của Tôi</div>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61349.26893498857!2d108.17!3d16.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219c792252a13%3A0xfc14e3a044436f37!2sDa%20Nang%2C%20Vietnam!5e0!3m2!1svi!2s!4v1709000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </section>
+
+                <!-- ═══ ĐIỂM ĐẾN YÊU THÍCH ═══ -->
+                <section style="max-width:1200px;margin:0 auto;padding:64px 20px 48px">
+                    <div style="text-align:center;margin-bottom:40px">
+                        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;color:#1E293B;margin-bottom:8px;letter-spacing:-.02em">ĐIỂM ĐẾN YÊU THÍCH</h2>
+                        <div style="width:48px;height:3px;background:linear-gradient(90deg,#2563EB,#60A5FA);margin:0 auto 16px;border-radius:99px"></div>
+                        <p style="color:#64748B;font-size:.92rem;max-width:500px;margin:0 auto;line-height:1.7">Hãy chọn một điểm đến du lịch nổi tiếng dưới đây để khám phá các chuyến đi độc quyền tại Đà Nẵng</p>
+                    </div>
+
+                    <!-- Masonry Photo Grid -->
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:180px;gap:12px">
+                        <!-- Cầu Rồng - Span 2 rows -->
+                        <a href="${pageContext.request.contextPath}/tour?search=cau+rong" class="rv" style="grid-row:span 2;position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.55) 0%,transparent 60%);transition:background .3s"></div>
+                            <div style="position:absolute;bottom:20px;left:20px;color:#fff">
+                                <div style="font-size:1.1rem;font-weight:800;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,.3)">CẦU RỒNG</div>
+                                <div style="font-size:.72rem;color:rgba(255,255,255,.7);margin-top:2px">Dragon Bridge · Biểu tượng Đà Nẵng</div>
+                            </div>
                         </a>
-                        <a href="${pageContext.request.contextPath}/tour?categoryId=2" class="cat rv">
-                            <div class="ci"><i class="fas fa-mountain"></i></div>
-                            <div class="cn">Núi & Trekking</div>
-                            <div class="cd">Bà Nà, Sơn Trà</div>
+
+                        <!-- Bà Nà Hills -->
+                        <a href="${pageContext.request.contextPath}/tour?search=ba+na" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
+                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">BÀ NÀ HILLS</div>
+                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Làng Pháp trên đỉnh núi</div>
+                            </div>
                         </a>
-                        <a href="${pageContext.request.contextPath}/tour?categoryId=3" class="cat rv">
-                            <div class="ci"><i class="fas fa-utensils"></i></div>
-                            <div class="cn">Ẩm Thực</div>
-                            <div class="cd">Mì Quảng, Bánh Tráng</div>
+
+                        <!-- Cầu Vàng -->
+                        <a href="${pageContext.request.contextPath}/tour?search=cau+vang" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="${pageContext.request.contextPath}/images/destinations/cau-vang.png" alt="Cầu Vàng" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
+                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">CẦU VÀNG</div>
+                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Golden Bridge · Bàn Tay Khổng Lồ</div>
+                            </div>
                         </a>
-                        <a href="${pageContext.request.contextPath}/tour?categoryId=4" class="cat rv">
-                            <div class="ci"><i class="fas fa-landmark"></i></div>
-                            <div class="cn">Văn Hóa</div>
-                            <div class="cd">Hội An, Marble Mountain</div>
+
+                        <!-- Biển Mỹ Khê - Span 2 cols -->
+                        <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="rv" style="grid-column:span 2;position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:16px;left:16px;color:#fff">
+                                <div style="font-size:1rem;font-weight:800;letter-spacing:.5px">BIỂN MỸ KHÊ</div>
+                                <div style="font-size:.7rem;color:rgba(255,255,255,.7);margin-top:2px">Top 6 bãi biển đẹp nhất hành tinh</div>
+                            </div>
+                        </a>
+
+                        <!-- Hội An -->
+                        <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
+                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">HỘI AN</div>
+                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Phố cổ UNESCO · Đèn lồng</div>
+                            </div>
+                        </a>
+
+                        <!-- Sơn Trà -->
+                        <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
+                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">SƠN TRÀ</div>
+                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Bán đảo xanh · Voọc chà vá</div>
+                            </div>
+                        </a>
+
+                        <!-- Ngũ Hành Sơn -->
+                        <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="${pageContext.request.contextPath}/images/destinations/ngu-hanh-son.png" alt="Ngũ Hành Sơn" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
+                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">NGŨ HÀNH SƠN</div>
+                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Marble Mountains · Hang động</div>
+                            </div>
+                        </a>
+
+                        <!-- Chùa Linh Ứng -->
+                        <a href="${pageContext.request.contextPath}/tour?search=linh+ung" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
+                            <img src="${pageContext.request.contextPath}/images/destinations/chua-linh-ung.png" alt="Chùa Linh Ứng" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
+                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
+                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">CHÙA LINH ỨNG</div>
+                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Tượng Phật Bà · Linh thiêng</div>
+                            </div>
                         </a>
                     </div>
+
+                    <!-- Hover effect CSS -->
+                    <style>
+                        [style*="border-radius:16px"]:hover img{transform:scale(1.08)!important}
+                        [style*="border-radius:16px"]:hover div[style*="gradient"]{background:linear-gradient(0deg,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 60%)!important}
+                        @media(max-width:768px){
+                            [style*="grid-template-columns:repeat(4"]{grid-template-columns:repeat(2,1fr)!important;grid-auto-rows:160px!important}
+                            [style*="grid-row:span 2"]{grid-row:span 1!important}
+                            [style*="grid-column:span 2"]{grid-column:span 2!important}
+                        }
+                        @media(max-width:480px){
+                            [style*="grid-template-columns:repeat(4"]{grid-template-columns:1fr!important;grid-auto-rows:200px!important}
+                            [style*="grid-column:span 2"]{grid-column:span 1!important}
+                        }
+                    </style>
                 </section>
 
                 <!-- ═══ STATS ═══ -->
                 <section class="stats">
                     <div class="stats-bar rv">
                         <div class="st">
-                            <div class="num" style="color:#FF6F61">100+</div>
+                            <div class="num" style="color:#2563EB">100+</div>
                             <div class="lab">Tours Xác Minh</div>
                         </div>
                         <div class="st">
-                            <div class="num" style="color:#00B4D8">50+</div>
+                            <div class="num" style="color:#0EA5E9">50+</div>
                             <div class="lab">Đối Tác Uy Tín</div>
                         </div>
                         <div class="st">
-                            <div class="num" style="color:#06D6A0">5K+</div>
+                            <div class="num" style="color:#10B981">5K+</div>
                             <div class="lab">Khách Hài Lòng</div>
                         </div>
                         <div class="st">
-                            <div class="num" style="color:#FFB703">4.9★</div>
+                            <div class="num" style="color:#F59E0B">4.9★</div>
                             <div class="lab">Đánh Giá</div>
                         </div>
                     </div>
@@ -1235,60 +1206,7 @@
                 </section>
 
                 <!-- ═══ FOOTER ═══ -->
-                <footer class="foot">
-                    <div class="foot-inner">
-                        <div class="foot-grid">
-                            <div>
-                                <h3><span style="color:#FF6F61">🏖️</span> DN HUB</h3>
-                                <p style="line-height:1.8;max-width:280px">Nền tảng đặt tour du lịch Đà Nẵng hàng đầu.
-                                    Tours xác minh, AI dự báo doanh thu.</p>
-                                <div class="socials">
-                                    <a href="#" class="soc"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="#" class="soc"><i class="fab fa-instagram"></i></a>
-                                    <a href="#" class="soc"><i class="fab fa-github"></i></a>
-                                </div>
-                            </div>
-                            <div>
-                                <h4>Tours</h4>
-                                <ul>
-                                    <li><a href="${pageContext.request.contextPath}/tour">Tất cả Tours</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/tour?categoryId=1">Tour Biển</a>
-                                    </li>
-                                    <li><a href="${pageContext.request.contextPath}/tour?categoryId=2">Tour Núi</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/tour?categoryId=3">Tour Ẩm Thực</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4>Tài Khoản</h4>
-                                <ul>
-                                    <li><a href="${pageContext.request.contextPath}/profile">Hồ Sơ</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/my-orders">Đơn Hàng</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/pricing">Gói VIP</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/price-comparison">NCC</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/history">Lịch Sử</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4>Liên Hệ</h4>
-                                <p style="margin-bottom:12px"><i class="fas fa-map-marker-alt"
-                                        style="color:#FF6F61;margin-right:8px"></i>ĐH FPT Đà Nẵng</p>
-                                <p style="margin-bottom:12px"><i class="fas fa-phone"
-                                        style="color:#FF6F61;margin-right:8px"></i>+84 123 456 789</p>
-                                <p><i class="fas fa-envelope"
-                                        style="color:#FF6F61;margin-right:8px"></i>contact@dananghub.vn</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="foot-bottom">
-                            <span>&copy; 2026 Da Nang Travel Hub — PRJ301 FPT University</span>
-                            <span>Made with ❤️ in Đà Nẵng</span>
-                        </div>
-                    </div>
-                </footer>
-
-                <!-- AI Bot -->
-                <div class="ai-btn" id="aiTrigger"><i class="fas fa-robot"></i></div>
+                <jsp:include page="/common/_footer.jsp" />
 
                 <script>
                     // Navbar scroll
@@ -1309,7 +1227,7 @@
                         });
                     });
                 </script>
-                <jsp:include page="/views/ai-chatbot/chatbot.jsp" />
+                <script src="${pageContext.request.contextPath}/js/i18n.js"></script>
             </body>
 
             </html>

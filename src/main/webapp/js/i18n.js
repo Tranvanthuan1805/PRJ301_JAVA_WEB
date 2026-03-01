@@ -23,6 +23,7 @@ const I18N = {
         'nav.logout':       { vi:'Đăng xuất', en:'Logout', ko:'로그아웃', ja:'ログアウト', zh:'退出' },
 
         // ═══ TOP BAR ═══
+        'topbar.phone':     { vi:'0335 111 783', en:'0335 111 783', ko:'0335 111 783', ja:'0335 111 783', zh:'0335 111 783' },
         'topbar.hours':     { vi:'Từ 8:00 - 23:00 hàng ngày', en:'Daily 8:00 AM - 11:00 PM', ko:'매일 8:00 - 23:00', ja:'毎日 8:00〜23:00', zh:'每天 8:00 - 23:00' },
 
         // ═══ HERO ═══
@@ -47,6 +48,7 @@ const I18N = {
         'search.budget.2':      { vi:'500k - 1 triệu', en:'$25 - $50', ko:'₩30,000 - ₩60,000', ja:'¥3,000 - ¥6,000', zh:'¥150 - ¥300' },
         'search.budget.3':      { vi:'1 - 3 triệu', en:'$50 - $150', ko:'₩60,000 - ₩180,000', ja:'¥6,000 - ¥18,000', zh:'¥300 - ¥900' },
         'search.budget.4':      { vi:'Trên 3 triệu', en:'Over $150', ko:'₩180,000 이상', ja:'¥18,000以上', zh:'¥900以上' },
+        'search.btn':           { vi:'Tìm kiếm', en:'Search', ko:'검색', ja:'検索', zh:'搜索' },
 
         // ═══ SECTIONS ═══
         'section.cat.badge':    { vi:'DANH MỤC DU LỊCH', en:'TRAVEL CATEGORIES', ko:'여행 카테고리', ja:'旅行カテゴリー', zh:'旅游分类' },

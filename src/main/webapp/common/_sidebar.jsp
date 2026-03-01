@@ -27,6 +27,16 @@
             </a>
         </li>
         <li>
+            <a href="${pageContext.request.contextPath}/admin/tours?action=history" class="${requestScope.activePage == 'history' ? 'active' : ''}">
+                <i class="fas fa-history"></i> <span>Lịch Sử Tour</span>
+            </a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/tours?action=analytics" class="${requestScope.activePage == 'analytics' ? 'active' : ''}">
+                <i class="fas fa-chart-pie"></i> <span>Phân Tích Tour</span>
+            </a>
+        </li>
+        <li>
             <a href="${pageContext.request.contextPath}/admin/orders" class="${requestScope.activePage == 'orders' ? 'active' : ''}">
                 <i class="fas fa-shopping-bag"></i> <span>Đơn Hàng</span>
             </a>

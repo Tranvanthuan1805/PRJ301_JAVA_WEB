@@ -125,7 +125,13 @@
 
             <div class="toolbar">
                 <form class="search-box" action="${pageContext.request.contextPath}/admin/customers" method="get">
-                    <input type="text" name="search" value="${searchQuery}" placeholder="🔍 Tìm theo tên, email, SĐT...">
+                    <input type="text" name="keyword" value="${keyword}" placeholder="🔍 Tìm theo tên, email, SĐT...">
+                    <select name="status" style="padding:10px 14px;border:2px solid #e9ecef;border-radius:10px;font-family:'Inter',sans-serif;font-size:.9rem">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="active" ${filterStatus == 'active' ? 'selected' : ''}>Hoạt động</option>
+                        <option value="inactive" ${filterStatus == 'inactive' ? 'selected' : ''}>Tạm ngưng</option>
+                        <option value="banned" ${filterStatus == 'banned' ? 'selected' : ''}>Bị khóa</option>
+                    </select>
                     <button type="submit"><i class="fas fa-search"></i> Tìm</button>
                 </form>
             </div>
@@ -162,15 +168,21 @@
                                         <span class="badge ${c.role.roleName == 'ADMIN' ? 'badge-admin' : 'badge-active'}">${c.role.roleName}</span>
                                     </td>
                                     <td>
-                                        <span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.active ? 'Active' : 'Inactive'}</span>
+                                        <span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.statusText}</span>
                                     </td>
                                     <td style="color: #b2bec3; font-size: 0.85rem;">
                                         <fmt:formatDate value="${c.createdAt}" pattern="dd/MM/yyyy"/>
                                     </td>
                                     <td>
                                         <div style="display: flex; gap: 6px;">
-                                            <a href="${pageContext.request.contextPath}/admin/customers?action=view&id=${c.userId}" class="btn-sm btn-edit">
+                                            <a href="${pageContext.request.contextPath}/admin/customers?action=view&id=${c.customerId}" class="btn-sm btn-edit" title="Xem">
                                                 <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/admin/customers?action=edit&id=${c.customerId}" class="btn-sm btn-edit" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/admin/customers?action=delete&id=${c.customerId}" class="btn-sm btn-delete" title="Xóa" onclick="return confirm('Bạn có chắc muốn xóa khách hàng này?')">
+                                                <i class="fas fa-trash"></i>
                                             </a>
                                         </div>
                                     </td>
