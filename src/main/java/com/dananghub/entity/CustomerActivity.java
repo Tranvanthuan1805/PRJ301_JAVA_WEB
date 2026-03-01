@@ -22,7 +22,7 @@ public class CustomerActivity implements Serializable {
     @Column(name = "Description", length = 500)
     private String description;
 
-    @Column(name = "Metadata", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "Metadata", columnDefinition = "TEXT")
     private String metadata;
 
     @Column(name = "CreatedAt")

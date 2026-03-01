@@ -7,42 +7,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Sử Đặt Vé | Da Nang Travel Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Lịch Sử Đặt Vé | eztravel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <style>
     .history-page{max-width:1280px;margin:0 auto;padding:100px 30px 80px}
 
     /* Header */
-    .page-hero{background:linear-gradient(135deg,#1B1F3B,#2D3561);border-radius:24px;padding:40px;margin-bottom:35px;position:relative;overflow:hidden;color:#fff}
-    .page-hero::before{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(255,111,97,.12),transparent 60%);top:-200px;right:-100px;border-radius:50%}
-    .page-hero h1{font-size:2rem;font-weight:800;margin-bottom:6px;position:relative;z-index:1}
+    .page-hero{background:#1A2B49;border-radius:24px;padding:40px;margin-bottom:35px;position:relative;overflow:hidden;color:#fff}
+    .page-hero::before{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(37,99,235,.15),transparent 60%);top:-200px;right:-100px;border-radius:50%}
+    .page-hero h1{font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;margin-bottom:6px;position:relative;z-index:1}
     .page-hero p{color:rgba(255,255,255,.6);position:relative;z-index:1}
 
     /* Stats */
     .hist-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:30px}
-    .hist-stat{background:#fff;border-radius:16px;padding:20px 24px;border:1px solid #E8EAF0;box-shadow:0 2px 8px rgba(27,31,59,.04);display:flex;align-items:center;gap:14px}
+    .hist-stat{background:#fff;border-radius:16px;padding:20px 24px;border:1px solid #E2E8F0;box-shadow:0 1px 3px rgba(0,0,0,.04),0 6px 16px rgba(0,0,0,.04);display:flex;align-items:center;gap:14px}
     .hist-stat .icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
     .hist-stat .icon.blue{background:rgba(0,180,216,.1);color:#00B4D8}
     .hist-stat .icon.green{background:rgba(6,214,160,.1);color:#06D6A0}
     .hist-stat .icon.orange{background:rgba(255,183,3,.1);color:#FFB703}
-    .hist-stat .icon.red{background:rgba(255,111,97,.1);color:#FF6F61}
-    .hist-stat .num{font-size:1.5rem;font-weight:800;color:#1B1F3B}
-    .hist-stat .lab{font-size:.78rem;color:#A0A5C3}
+    .hist-stat .icon.red{background:rgba(37,99,235,.1);color:#2563EB}
+    .hist-stat .num{font-size:1.5rem;font-weight:800;color:#1A2B49}
+    .hist-stat .lab{font-size:.78rem;color:#94A3B8}
 
     /* Table */
-    .table-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(27,31,59,.05);border:1px solid #E8EAF0}
+    .table-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04),0 6px 16px rgba(0,0,0,.04);border:1px solid #E2E8F0}
     .table-card table{width:100%;border-collapse:collapse}
-    .table-card thead th{background:#F7F8FC;padding:14px 20px;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:1.2px;color:#A0A5C3;font-weight:700;border-bottom:1px solid #E8EAF0}
+    .table-card thead th{background:#F8FAFC;padding:14px 20px;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:1.2px;color:#94A3B8;font-weight:700;border-bottom:1px solid #E2E8F0}
     .table-card thead th:first-child{padding-left:28px}
     .table-card tbody td{padding:16px 20px;border-bottom:1px solid #F5F6FA;font-size:.9rem;color:#4A4E6F}
-    .table-card tbody td:first-child{padding-left:28px;font-weight:700;color:#1B1F3B}
+    .table-card tbody td:first-child{padding-left:28px;font-weight:700;color:#1A2B49}
     .table-card tbody tr:last-child td{border-bottom:none}
     .table-card tbody tr{transition:.2s}
     .table-card tbody tr:hover{background:#FAFBFF}
-    .tour-name{font-weight:700;color:#1B1F3B}
-    .money{font-weight:800;color:#FF6F61}
+    .tour-name{font-weight:700;color:#1A2B49}
+    .money{font-weight:800;color:#2563EB}
     .badge{padding:5px 14px;border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.3px;display:inline-block}
     .badge-pending{background:#FFF8E1;color:#F59E0B}
     .badge-confirmed{background:#E0F2FE;color:#0284C7}
@@ -52,10 +52,10 @@
     /* Empty */
     .empty-box{text-align:center;padding:80px 30px}
     .empty-box .icon{font-size:4rem;margin-bottom:16px;filter:grayscale(.2)}
-    .empty-box h3{font-size:1.2rem;color:#1B1F3B;margin-bottom:8px}
-    .empty-box p{color:#6B7194}
-    .btn-explore{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:999px;font-weight:700;font-size:.88rem;background:linear-gradient(135deg,#FF6F61,#FF9A8B);color:#fff;margin-top:20px;box-shadow:0 4px 15px rgba(255,111,97,.3);transition:.3s}
-    .btn-explore:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,111,97,.4)}
+    .empty-box h3{font-size:1.2rem;color:#1A2B49;margin-bottom:8px}
+    .empty-box p{color:#64748B}
+    .btn-explore{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:8px;font-weight:700;font-size:.88rem;background:#2563EB;color:#fff;margin-top:20px;box-shadow:0 4px 12px rgba(37,99,235,.25);transition:.3s}
+    .btn-explore:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(37,99,235,.35)}
 
     @media(max-width:768px){
         .table-card{overflow-x:auto}

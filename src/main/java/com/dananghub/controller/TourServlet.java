@@ -4,6 +4,7 @@ import com.dananghub.dao.TourDAO;
 import com.dananghub.dao.CategoryDAO;
 import com.dananghub.entity.Tour;
 import com.dananghub.entity.Category;
+import com.dananghub.entity.User;
 import com.dananghub.service.TourService;
 
 import jakarta.servlet.ServletException;
@@ -37,28 +38,8 @@ public class TourServlet extends HttpServlet {
         try {
             switch (action) {
                 case "view" -> viewTour(request, response);
-                case "add" -> showAddForm(request, response);
-                case "edit" -> editTour(request, response);
-                case "delete" -> deleteTour(request, response);
                 case "search" -> searchTours(request, response);
                 default -> listTours(request, response);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServletException("Error: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String action = request.getParameter("action");
-        try {
-            if ("create".equals(action)) {
-                createTour(request, response);
-            } else if ("update".equals(action)) {
-                updateTour(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,18 +59,23 @@ public class TourServlet extends HttpServlet {
         String search = request.getParameter("search");
         String sortBy = request.getParameter("sortBy");
         String categoryIdStr = request.getParameter("categoryId");
+        String availableOnly = request.getParameter("available");
 
         List<Tour> allTours = tourDAO.findAll();
 
+        // Search filter
         if (search != null && !search.trim().isEmpty()) {
             final String query = search.toLowerCase();
             allTours = allTours.stream()
                 .filter(t -> t.getTourName().toLowerCase().contains(query) ||
-                             (t.getStartLocation() != null && t.getStartLocation().toLowerCase().contains(query)))
+                             (t.getDestination() != null && t.getDestination().toLowerCase().contains(query)) ||
+                             (t.getStartLocation() != null && t.getStartLocation().toLowerCase().contains(query)) ||
+                             (t.getShortDesc() != null && t.getShortDesc().toLowerCase().contains(query)))
                 .collect(Collectors.toList());
             request.setAttribute("searchQuery", search);
         }
 
+        // Category filter
         if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
             try {
                 int catId = Integer.parseInt(categoryIdStr);
@@ -100,22 +86,44 @@ public class TourServlet extends HttpServlet {
             } catch (NumberFormatException e) {}
         }
 
+        // Available filter (còn chỗ trống)
+        if ("true".equals(availableOnly)) {
+            allTours = allTours.stream()
+                .filter(t -> t.getMaxPeople() > 0)
+                .collect(Collectors.toList());
+            request.setAttribute("availableOnly", true);
+        }
+
+        // Sort
         if (sortBy != null && !sortBy.isEmpty()) {
             switch (sortBy) {
-                case "name" -> allTours.sort((t1, t2) -> t1.getTourName().compareTo(t2.getTourName()));
+                case "name_asc" -> allTours.sort((t1, t2) -> t1.getTourName().compareToIgnoreCase(t2.getTourName()));
+                case "name_desc" -> allTours.sort((t1, t2) -> t2.getTourName().compareToIgnoreCase(t1.getTourName()));
                 case "price_asc" -> allTours.sort((t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
                 case "price_desc" -> allTours.sort((t1, t2) -> Double.compare(t2.getPrice(), t1.getPrice()));
+                case "newest" -> allTours.sort((t1, t2) -> {
+                    if (t2.getCreatedAt() == null) return -1;
+                    if (t1.getCreatedAt() == null) return 1;
+                    return t2.getCreatedAt().compareTo(t1.getCreatedAt());
+                });
             }
             request.setAttribute("sortBy", sortBy);
         }
 
         int totalTours = allTours.size();
         int totalPages = (int) Math.ceil((double) totalTours / toursPerPage);
+        page = Math.min(page, Math.max(1, totalPages));
         int startIndex = (page - 1) * toursPerPage;
         int endIndex = Math.min(startIndex + toursPerPage, totalTours);
-        List<Tour> tours = allTours.subList(startIndex, endIndex);
+        List<Tour> tours = startIndex < totalTours ? allTours.subList(startIndex, endIndex) : List.of();
 
         List<Category> categories = categoryDAO.findAll();
+
+        // Check user role
+        HttpSession session = request.getSession(false);
+        User user = session != null ? (User) session.getAttribute("user") : null;
+        request.setAttribute("isLoggedIn", user != null);
+        request.setAttribute("isAdmin", user != null && user.getRole() != null && "ADMIN".equals(user.getRole().getRoleName()));
 
         request.setAttribute("tours", tours);
         request.setAttribute("categories", categories);
@@ -129,93 +137,32 @@ public class TourServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Tour tour = tourDAO.findById(id);
+        if (tour == null) {
+            response.sendRedirect("tour");
+            return;
+        }
         double seasonalPrice = tourService.calculateSeasonalPrice(tour);
 
         request.setAttribute("tour", tour);
         request.setAttribute("seasonalPrice", seasonalPrice);
 
-        String customerIdParam = request.getParameter("customerId");
-        if (customerIdParam != null) {
-            tourService.logTourView(Integer.parseInt(customerIdParam), id);
+        HttpSession session = request.getSession(false);
+        User user = session != null ? (User) session.getAttribute("user") : null;
+        request.setAttribute("isLoggedIn", user != null);
+
+        if (user != null) {
+            try { tourService.logTourView(user.getUserId(), id); } catch (Exception ignored) {}
         }
 
-        request.getRequestDispatcher("/jsp/tour-view.jsp").forward(request, response);
-    }
-
-    private void showAddForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        List<Category> categories = categoryDAO.findAll();
-        request.setAttribute("categories", categories);
-        request.getRequestDispatcher("/tour-form.jsp").forward(request, response);
-    }
-
-    private void editTour(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Tour tour = tourDAO.findById(id);
-        List<Category> categories = categoryDAO.findAll();
-        request.setAttribute("tour", tour);
-        request.setAttribute("categories", categories);
-        request.getRequestDispatcher("/tour-form.jsp").forward(request, response);
-    }
-
-    private void createTour(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        Tour tour = new Tour();
-        tour.setTourName(request.getParameter("tourName"));
-        tour.setDescription(request.getParameter("description"));
-        tour.setPrice(Double.parseDouble(request.getParameter("price")));
-        tour.setDuration(request.getParameter("duration"));
-        tour.setStartLocation(request.getParameter("startLocation"));
-        tour.setImageUrl(request.getParameter("imageUrl"));
-        tour.setActive(true);
-
-        String categoryId = request.getParameter("categoryId");
-        if (categoryId != null && !categoryId.isEmpty()) {
-            Category cat = categoryDAO.findById(Integer.parseInt(categoryId));
-            tour.setCategory(cat);
-        }
-
-        tourDAO.create(tour);
-        response.sendRedirect("tour?action=list&success=created");
-    }
-
-    private void updateTour(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        int id = Integer.parseInt(request.getParameter("tourId"));
-        Tour tour = tourDAO.findById(id);
-        if (tour != null) {
-            tour.setTourName(request.getParameter("tourName"));
-            tour.setDescription(request.getParameter("description"));
-            tour.setPrice(Double.parseDouble(request.getParameter("price")));
-            tour.setDuration(request.getParameter("duration"));
-            tour.setStartLocation(request.getParameter("startLocation"));
-            tour.setImageUrl(request.getParameter("imageUrl"));
-
-            String categoryId = request.getParameter("categoryId");
-            if (categoryId != null && !categoryId.isEmpty()) {
-                Category cat = categoryDAO.findById(Integer.parseInt(categoryId));
-                tour.setCategory(cat);
-            }
-
-            tourDAO.update(tour);
-        }
-        response.sendRedirect("tour?action=view&id=" + id + "&success=updated");
-    }
-
-    private void deleteTour(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        tourDAO.delete(id);
-        response.sendRedirect("tour?action=list&success=deleted");
+        request.getRequestDispatcher("/detail.jsp").forward(request, response);
     }
 
     private void searchTours(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String keyword = request.getParameter("keyword");
-        List<Tour> tours = tourDAO.search(keyword);
-        request.setAttribute("tours", tours);
-        request.setAttribute("searchQuery", keyword);
-        request.getRequestDispatcher("/jsp/tour-list.jsp").forward(request, response);
+        if (keyword != null && !keyword.isEmpty()) {
+            request.setAttribute("search", keyword);
+        }
+        listTours(request, response);
     }
 }

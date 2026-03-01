@@ -5,75 +5,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Ký | Da Nang Travel Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Đăng Ký | eztravel</title>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;min-height:100vh;background:linear-gradient(135deg,#1B1F3B 0%,#2D3561 50%,#3D4580 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;-webkit-font-smoothing:antialiased}
+        body{font-family:'Inter',system-ui,sans-serif;min-height:100vh;background:#F8FAFC;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;-webkit-font-smoothing:antialiased}
 
-        /* Animated orbs */
-        .bg-orbs{position:fixed;inset:0;pointer-events:none;overflow:hidden}
-        .orb{position:absolute;border-radius:50%;filter:blur(80px);animation:orbFloat 20s ease-in-out infinite}
-        .orb-1{width:500px;height:500px;background:rgba(255,111,97,.12);bottom:-10%;right:-10%;animation-delay:0s}
-        .orb-2{width:400px;height:400px;background:rgba(6,214,160,.08);top:-15%;left:-10%;animation-delay:6s}
-        .orb-3{width:300px;height:300px;background:rgba(255,183,3,.06);bottom:30%;left:30%;animation-delay:3s}
-        @keyframes orbFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-40px)}50%{transform:translate(-20px,30px)}75%{transform:translate(40px,20px)}}
+        .bg-pattern{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+        .bg-pattern::before{content:'';position:absolute;width:800px;height:800px;background:radial-gradient(circle,rgba(37,99,235,.04),transparent 60%);top:-200px;left:-200px;border-radius:50%}
+        .bg-pattern::after{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(16,185,129,.03),transparent 60%);bottom:-200px;right:-150px;border-radius:50%}
 
-        .particles{position:fixed;inset:0;pointer-events:none;overflow:hidden}
-        .particle{position:absolute;border-radius:50%;background:rgba(255,255,255,.06);animation:float linear infinite}
-        @keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
+        .auth-container{width:1000px;max-width:95vw;display:flex;border-radius:24px;overflow:hidden;background:white;box-shadow:0 25px 50px -12px rgba(0,0,0,0.15),0 0 0 1px rgba(0,0,0,.03);animation:slideUp .5s ease;position:relative;z-index:10}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-        .auth-container{width:980px;max-width:95vw;display:flex;border-radius:28px;overflow:hidden;background:rgba(255,255,255,.98);box-shadow:0 50px 120px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.1);animation:slideUp .6s ease;position:relative;z-index:10}
-        @keyframes slideUp{from{opacity:0;transform:translateY(30px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-
-        .auth-visual{width:42%;padding:50px;background:linear-gradient(135deg,#2D3561,#1B1F3B);color:white;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
-        .auth-visual::before{content:'';position:absolute;width:250px;height:250px;background:radial-gradient(circle,rgba(255,111,97,.2),transparent 70%);bottom:-40px;right:-40px;border-radius:50%}
-        .auth-visual::after{content:'';position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(6,214,160,.12),transparent 70%);top:-30px;left:-30px;border-radius:50%}
-        .auth-visual .icon{font-size:3.5rem;margin-bottom:25px;position:relative;z-index:1}
-        .auth-visual h1{font-size:2rem;margin-bottom:12px;font-weight:800;line-height:1.2;position:relative;z-index:1}
-        .auth-visual h1 .hl{color:#FF6F61}
-        .auth-visual p{font-size:.95rem;opacity:.8;line-height:1.7;position:relative;z-index:1}
-        .steps{margin-top:30px;display:grid;gap:18px;position:relative;z-index:1}
-        .step{display:flex;align-items:center;gap:14px;font-size:.86rem;color:rgba(255,255,255,.85)}
-        .step .num{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.82rem;border:1px solid rgba(255,255,255,.15)}
+        .auth-visual{width:42%;padding:50px;background:linear-gradient(135deg,#1A2B49 0%,#2A3D5F 100%);color:white;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+        .auth-visual::before{content:'';position:absolute;width:250px;height:250px;background:radial-gradient(circle,rgba(37,99,235,.2),transparent 70%);bottom:-40px;right:-40px;border-radius:50%}
+        .auth-visual::after{content:'';position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(16,185,129,.12),transparent 70%);top:-30px;left:-30px;border-radius:50%}
+        .auth-visual .logo-area{margin-bottom:35px;position:relative;z-index:1}
+        .auth-visual .logo-area h2{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800}
+        .auth-visual .logo-area h2 span{color:#3B82F6}
+        .auth-visual h1{font-family:'Playfair Display',serif;font-size:2.2rem;margin-bottom:12px;font-weight:800;line-height:1.2;position:relative;z-index:1}
+        .auth-visual h1 .hl{color:#3B82F6}
+        .auth-visual>p{font-size:.92rem;opacity:.7;line-height:1.7;position:relative;z-index:1;max-width:300px}
+        .steps{margin-top:35px;display:grid;gap:16px;position:relative;z-index:1}
+        .step{display:flex;align-items:center;gap:12px;font-size:.85rem;color:rgba(255,255,255,.8)}
+        .step .num{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.8rem;color:#3B82F6}
 
         .auth-form{width:58%;padding:45px 50px;display:flex;flex-direction:column;justify-content:center}
-        .auth-form h2{font-size:1.7rem;color:#1B1F3B;margin-bottom:6px;font-weight:800}
-        .auth-form .subtitle{color:#6B7194;margin-bottom:28px;font-size:.9rem}
+        .auth-form h2{font-size:1.6rem;color:#1A2B49;margin-bottom:6px;font-weight:800}
+        .auth-form .subtitle{color:#64748B;margin-bottom:28px;font-size:.9rem}
 
-        .form-group{margin-bottom:18px}
-        .form-group label{display:block;font-size:.8rem;font-weight:700;color:#1B1F3B;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;font-size:.78rem;font-weight:600;color:#1E293B;margin-bottom:6px}
         .form-group .input-wrapper{position:relative}
-        .form-group .input-wrapper i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#A0A5C3;font-size:.85rem}
-        .form-group input{width:100%;padding:13px 14px 13px 44px;border:2px solid #E8EAF0;border-radius:14px;font-size:.9rem;font-family:'Plus Jakarta Sans',sans-serif;transition:.3s;background:#F7F8FC;color:#1B1F3B}
-        .form-group input:focus{outline:none;border-color:#FF6F61;box-shadow:0 0 0 4px rgba(255,111,97,.1);background:white}
+        .form-group .input-wrapper i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:.82rem}
+        .form-group input{width:100%;padding:12px 14px 12px 40px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.88rem;font-family:'Inter',sans-serif;transition:.3s;background:#F8FAFC;color:#1E293B}
+        .form-group input:focus{outline:none;border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.08);background:white}
 
-        .btn-register{width:100%;padding:15px;background:linear-gradient(135deg,#FF6F61,#FF9A8B);color:white;border:none;border-radius:14px;font-size:1rem;font-weight:800;cursor:pointer;transition:.3s;font-family:'Plus Jakarta Sans',sans-serif;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 20px rgba(255,111,97,.2)}
-        .btn-register:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,111,97,.35)}
+        .btn-register{width:100%;padding:14px;background:#2563EB;color:white;border:none;border-radius:10px;font-size:.92rem;font-weight:700;cursor:pointer;transition:.3s;font-family:'Inter',sans-serif;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px}
+        .btn-register:hover{background:#3B82F6;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.25)}
 
-        .error-msg{background:linear-gradient(135deg,#FEF2F2,#FEE2E2);color:#DC2626;padding:12px 16px;border-radius:14px;margin-bottom:16px;font-size:.85rem;display:flex;align-items:center;gap:10px;border:1px solid #FECACA}
-        .success-msg{background:linear-gradient(135deg,#ECFDF5,#D1FAE5);color:#059669;padding:12px 16px;border-radius:14px;margin-bottom:16px;font-size:.85rem;display:flex;align-items:center;gap:10px;border:1px solid #A7F3D0}
+        .error-msg{background:#FEF2F2;color:#DC2626;padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:.82rem;display:flex;align-items:center;gap:10px;border:1px solid #FECACA}
+        .success-msg{background:#ECFDF5;color:#059669;padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:.82rem;display:flex;align-items:center;gap:10px;border:1px solid #A7F3D0}
 
-        .auth-footer{margin-top:25px;text-align:center;font-size:.88rem;color:#6B7194}
-        .auth-footer a{color:#FF6F61;font-weight:700;text-decoration:none;transition:.3s}
-        .auth-footer a:hover{color:#1B1F3B}
+        .auth-footer{margin-top:22px;text-align:center;font-size:.88rem;color:#64748B}
+        .auth-footer a{color:#2563EB;font-weight:600;text-decoration:none;transition:.3s}
+        .auth-footer a:hover{color:#1A2B49}
 
         @media(max-width:768px){
             .auth-visual{display:none}
-            .auth-form{width:100%;padding:40px 25px}
+            .auth-form{width:100%;padding:36px 24px}
         }
     </style>
 </head>
 <body>
-    <div class="bg-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
-    <div class="particles" id="particles"></div>
+    <div class="bg-pattern"></div>
 
     <div class="auth-container">
         <div class="auth-visual">
-            <div class="icon">✈️</div>
-            <h1>Tham Gia<br><span class="hl">Da Nang Hub</span></h1>
-            <p>Tạo tài khoản miễn phí để đặt tour du lịch Đà Nẵng và trải nghiệm dịch vụ tốt nhất.</p>
+            <div class="logo-area">
+                <h2><span>ez</span>travel</h2>
+            </div>
+            <h1>Tham Gia<br><span class="hl">eztravel</span></h1>
+            <p>Tạo tài khoản miễn phí để khám phá và đặt tour du lịch Đà Nẵng.</p>
             <div class="steps">
                 <div class="step"><div class="num">1</div> Tạo tài khoản miễn phí</div>
                 <div class="step"><div class="num">2</div> Khám phá 100+ tour Đà Nẵng</div>
@@ -105,7 +101,7 @@
                     <label for="email">Email</label>
                     <div class="input-wrapper">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" name="email" placeholder="email@example.com">
+                        <input type="email" id="email" name="email" placeholder="you@example.com">
                     </div>
                 </div>
                 <div class="form-group">
@@ -131,20 +127,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        const container = document.getElementById('particles');
-        for (let i = 0; i < 25; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            const size = Math.random() * 5 + 2;
-            p.style.width = size + 'px';
-            p.style.height = size + 'px';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.animationDuration = (Math.random() * 18 + 12) + 's';
-            p.style.animationDelay = (Math.random() * 12) + 's';
-            container.appendChild(p);
-        }
-    </script>
 </body>
 </html>

@@ -7,168 +7,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Da Nang Travel Hub Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Admin Dashboard | eztravel</title>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <style>
-    body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#F7F8FC;color:#1B1F3B;-webkit-font-smoothing:antialiased}
-    .dashboard-wrapper{display:flex;min-height:100vh}
-    .main-content{flex:1;margin-left:260px;padding:30px 35px}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',system-ui,sans-serif;background:#0F172A;color:#E2E8F0;-webkit-font-smoothing:antialiased;min-height:100vh}
 
-    /* Header */
-    .dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px}
-    .dash-header h1{font-size:1.8rem;font-weight:800;color:#1B1F3B;letter-spacing:-.3px}
-    .dash-header p{color:#6B7194;font-size:.9rem;margin-top:4px}
-    .dash-actions{display:flex;gap:12px}
-    .btn-outline{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:12px;font-weight:700;font-size:.85rem;border:2px solid #E8EAF0;cursor:pointer;font-family:inherit;transition:.3s;background:#fff;color:#6B7194}
-    .btn-outline:hover{border-color:#1B1F3B;color:#1B1F3B}
-    .btn-accent{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:12px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;font-family:inherit;transition:.3s;background:linear-gradient(135deg,#FF6F61,#FF9A8B);color:#fff;box-shadow:0 4px 12px rgba(255,111,97,.2)}
-    .btn-accent:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,111,97,.3)}
+    /* Sidebar */
+    .sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:#0B1120;border-right:1px solid rgba(255,255,255,.06);padding:24px 16px;display:flex;flex-direction:column;z-index:100}
+    .sidebar .logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;color:#fff;padding:0 12px 24px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:16px}
+    .sidebar .logo .a{color:#60A5FA}
+    .sidebar .badge-admin{display:inline-block;padding:2px 8px;border-radius:6px;background:rgba(239,68,68,.15);color:#F87171;font-size:.65rem;font-weight:700;font-family:'Inter',sans-serif;margin-left:6px;vertical-align:middle}
+    .sidebar nav{flex:1}
+    .sidebar nav a{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;color:rgba(255,255,255,.5);font-size:.88rem;font-weight:500;transition:.3s;margin-bottom:2px;text-decoration:none}
+    .sidebar nav a:hover{color:#fff;background:rgba(255,255,255,.06)}
+    .sidebar nav a.active{color:#fff;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.2)}
+    .sidebar nav a.active i{color:#60A5FA}
+    .sidebar nav a i{width:20px;text-align:center;font-size:.85rem}
+    .sidebar .nav-label{font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.2);font-weight:700;padding:16px 16px 8px;margin-top:8px}
+    .sidebar .user-box{padding:16px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px}
+    .sidebar .user-box .avatar{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#EF4444,#F87171);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.85rem}
+    .sidebar .user-box .uname{font-size:.85rem;color:#fff;font-weight:600}
+    .sidebar .user-box .urole{font-size:.72rem;color:rgba(255,255,255,.4)}
+
+    /* Main */
+    .main{margin-left:260px;padding:32px 40px;min-height:100vh}
+    .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+    .page-header h1{font-size:1.8rem;font-weight:800;color:#fff}
+    .page-header p{color:rgba(255,255,255,.5);font-size:.9rem;margin-top:4px}
+    .header-actions{display:flex;gap:10px}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:10px;background:#3B82F6;color:#fff;font-weight:700;font-size:.85rem;border:none;cursor:pointer;transition:.3s;font-family:inherit;text-decoration:none}
+    .btn-primary:hover{background:#2563EB;transform:translateY(-1px);box-shadow:0 4px 16px rgba(59,130,246,.3)}
+    .btn-danger{background:linear-gradient(135deg,#EF4444,#F87171)}
+    .btn-outline{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:10px;background:transparent;color:rgba(255,255,255,.7);font-weight:600;font-size:.85rem;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:.3s;font-family:inherit;text-decoration:none}
+    .btn-outline:hover{border-color:rgba(255,255,255,.3);color:#fff}
 
     /* Stats */
-    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:30px}
-    .stat-card{background:#fff;padding:26px;border-radius:18px;box-shadow:0 2px 12px rgba(27,31,59,.04);border:1px solid #E8EAF0;transition:.3s;position:relative;overflow:hidden}
-    .stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 25px rgba(27,31,59,.08)}
-    .stat-card .label{font-size:.82rem;color:#6B7194;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-    .stat-card .label i{font-size:.75rem}
-    .stat-card .value{font-size:2rem;font-weight:800;color:#1B1F3B;letter-spacing:-1px}
-    .stat-card .trend{font-size:.78rem;margin-top:8px;display:flex;align-items:center;gap:4px;font-weight:700}
-    .trend-up{color:#059669}
-    .trend-down{color:#DC2626}
-    .stat-card.highlight{border-left:4px solid #FF6F61}
-    .stat-card .deco{position:absolute;top:-15px;right:-15px;width:80px;height:80px;border-radius:50%;opacity:.06}
-    .deco-blue{background:#00B4D8}
-    .deco-green{background:#06D6A0}
-    .deco-orange{background:#FFB703}
-    .deco-red{background:#FF6F61}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:32px}
+    .stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:.3s}
+    .stat:hover{border-color:rgba(59,130,246,.2);transform:translateY(-2px)}
+    .stat .icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:14px}
+    .stat .label{font-size:.78rem;color:rgba(255,255,255,.4);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .stat .value{font-size:1.8rem;font-weight:800;color:#fff;letter-spacing:-1px}
+    .stat .trend{font-size:.75rem;margin-top:8px;font-weight:600}
+    .trend-up{color:#10B981}
+    .icon-blue{background:rgba(59,130,246,.15);color:#60A5FA}
+    .icon-green{background:rgba(16,185,129,.15);color:#34D399}
+    .icon-orange{background:rgba(245,158,11,.15);color:#FBBF24}
+    .icon-red{background:rgba(239,68,68,.15);color:#F87171}
 
     /* Cards */
-    .card{background:#fff;border-radius:18px;padding:28px;box-shadow:0 2px 12px rgba(27,31,59,.04);border:1px solid #E8EAF0;margin-bottom:25px}
-    .card h3{font-size:1.1rem;font-weight:800;color:#1B1F3B;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-    .card h3 i{color:#FF6F61}
-
-    /* AI Panel */
-    .ai-panel{border-left:4px solid #1B1F3B}
-    .ai-panel .ai-header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
-    .ai-panel .ai-header .ai-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#1B1F3B,#2D3561);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem}
-    .ai-panel .ai-header h3{margin-bottom:0}
-    .ai-chart{background:#F7F8FC;height:280px;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;border:1px solid #E8EAF0}
-    .ai-chart p{color:#A0A5C3;font-style:italic;z-index:2;text-align:center;padding:0 20px}
-    .ai-chart::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:60%;background:linear-gradient(0deg,rgba(27,31,59,.04),transparent)}
-    .ai-metrics{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
-    .ai-metric{padding:18px;background:#F7F8FC;border-radius:12px;border:1px solid #E8EAF0}
-    .ai-metric small{font-size:.75rem;color:#A0A5C3;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
-    .ai-metric .val{font-weight:800;color:#1B1F3B;margin-top:6px;font-size:.95rem}
-    .ai-metric .val.success{color:#059669}
+    .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px;margin-bottom:24px}
+    .card h3{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+    .card h3 i{color:#60A5FA;font-size:.9rem}
+    .grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:24px}
 
     /* Table */
-    .data-table{width:100%;border-collapse:collapse}
-    .data-table thead th{background:#F7F8FC;padding:13px 18px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1.2px;color:#A0A5C3;font-weight:700;border-bottom:1px solid #E8EAF0}
-    .data-table tbody td{padding:14px 18px;border-bottom:1px solid #F5F6FA;font-size:.88rem;color:#4A4E6F}
-    .data-table tbody tr:hover{background:#FAFBFF}
-    .data-table tbody tr:last-child td{border-bottom:none}
-    .status-badge{padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.3px}
-    .badge-green{background:#ECFDF5;color:#059669}
-    .badge-yellow{background:#FFF8E1;color:#D97706}
+    table{width:100%;border-collapse:collapse}
+    thead th{padding:12px 16px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)}
+    tbody td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem;color:rgba(255,255,255,.7)}
+    tbody tr:hover{background:rgba(255,255,255,.02)}
+    .badge{padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:700}
+    .badge-green{background:rgba(16,185,129,.15);color:#34D399}
+    .badge-yellow{background:rgba(245,158,11,.15);color:#FBBF24}
+    .badge-red{background:rgba(239,68,68,.15);color:#F87171}
 
-    @media(max-width:1024px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:768px){.main-content{margin-left:0;padding:16px}.stat-grid{grid-template-columns:1fr}.ai-metrics{grid-template-columns:1fr}}
+    /* AI Panel */
+    .ai-panel{border-left:3px solid #3B82F6}
+    .ai-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+    .ai-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1E293B,#334155);display:flex;align-items:center;justify-content:center;color:#60A5FA;font-size:1.1rem}
+    .ai-chart{background:rgba(255,255,255,.02);height:200px;border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.04)}
+    .ai-chart p{color:rgba(255,255,255,.3);font-size:.85rem;text-align:center;padding:20px}
+    .ai-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+    .ai-metric{padding:16px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.05)}
+    .ai-metric small{font-size:.7rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+    .ai-metric .val{font-weight:800;color:#fff;margin-top:4px;font-size:.9rem}
+    .ai-metric .val.success{color:#34D399}
+
+    @media(max-width:1200px){.stats{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
+    @media(max-width:768px){.main{margin-left:0;padding:16px}.stats{grid-template-columns:1fr}.sidebar{display:none}}
     </style>
 </head>
 <body>
-    <div class="dashboard-wrapper">
-        <jsp:include page="/common/_sidebar.jsp" />
 
-        <main class="main-content">
-            <header class="dash-header">
-                <div>
-                    <h1>Tổng Quan Hệ Thống</h1>
-                    <p>Xin chào, <strong>${sessionScope.user.username}</strong> 👋</p>
-                </div>
-                <div class="dash-actions">
-                    <button class="btn-outline"><i class="fas fa-download"></i> Xuất Báo Cáo</button>
-                    <a href="${pageContext.request.contextPath}/admin/tours?action=create" class="btn-accent"><i class="fas fa-plus"></i> Tạo Tour</a>
-                </div>
-            </header>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="logo"><img src="${pageContext.request.contextPath}/images/logo.png" style="width:36px;height:36px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:8px"><span style="vertical-align:middle"><span class="a">ez</span>travel</span> <span class="badge-admin">ADMIN</span></div>
+    <nav>
+        <a href="${pageContext.request.contextPath}/admin/dashboard" class="active"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
+        <a href="${pageContext.request.contextPath}/admin/customers"><i class="fas fa-users"></i> Khách Hàng</a>
+        <a href="${pageContext.request.contextPath}/admin/orders"><i class="fas fa-shopping-bag"></i> Đơn Hàng</a>
 
-            <!-- Stats -->
-            <section class="stat-grid">
-                <div class="stat-card">
-                    <div class="deco deco-blue"></div>
-                    <div class="label"><i class="fas fa-shopping-bag"></i> Tổng Đơn Hàng</div>
-                    <div class="value">${totalBookings}</div>
-                    <div class="trend trend-up"><i class="fas fa-arrow-up"></i> +12% so với tháng trước</div>
-                </div>
-                <div class="stat-card">
-                    <div class="deco deco-green"></div>
-                    <div class="label"><i class="fas fa-dollar-sign"></i> Doanh Thu</div>
-                    <div class="value"><fmt:formatNumber value="${grossRevenue}" type="number" groupingUsed="true"/>đ</div>
-                    <div class="trend trend-up"><i class="fas fa-arrow-up"></i> +8% so với tháng trước</div>
-                </div>
-                <div class="stat-card">
-                    <div class="deco deco-orange"></div>
-                    <div class="label"><i class="fas fa-map-marked-alt"></i> Tours Đang Hoạt Động</div>
-                    <div class="value">${activeTours}</div>
-                </div>
-                <div class="stat-card highlight">
-                    <div class="deco deco-red"></div>
-                    <div class="label"><i class="fas fa-clock"></i> Đơn Chờ Xử Lý</div>
-                    <div class="value" style="color:#FF6F61">${pendingRequests}</div>
-                </div>
-            </section>
+        <div class="nav-label">Quản Lý</div>
+        <a href="${pageContext.request.contextPath}/tour"><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</a>
+        <a href="${pageContext.request.contextPath}/pricing"><i class="fas fa-crown"></i> Gói Dịch Vụ</a>
 
-            <!-- AI Panel -->
-            <section class="card ai-panel">
+        <div class="nav-label">Hệ Thống</div>
+        <a href="${pageContext.request.contextPath}/home"><i class="fas fa-globe"></i> Xem Website</a>
+    </nav>
+    <div class="user-box">
+        <div class="avatar">${sessionScope.user.username.substring(0,1).toUpperCase()}</div>
+        <div>
+            <div class="uname">${sessionScope.user.username}</div>
+            <div class="urole">Quản Trị Viên</div>
+        </div>
+    </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+    <header class="page-header">
+        <div>
+            <h1>🏠 Tổng Quan Hệ Thống</h1>
+            <p>Xin chào, <strong>${sessionScope.user.username}</strong> 👋 — Hôm nay hệ thống hoạt động bình thường.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-outline"><i class="fas fa-download"></i> Xuất Báo Cáo</button>
+            <a href="${pageContext.request.contextPath}/logout" class="btn-outline"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+        </div>
+    </header>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="stat">
+            <div class="icon icon-blue"><i class="fas fa-users"></i></div>
+            <div class="label">Tổng Người Dùng</div>
+            <div class="value">${totalUsers}</div>
+        </div>
+        <div class="stat">
+            <div class="icon icon-green"><i class="fas fa-map-marked-alt"></i></div>
+            <div class="label">Tours Hoạt Động</div>
+            <div class="value">${activeTours}</div>
+        </div>
+        <div class="stat">
+            <div class="icon icon-orange"><i class="fas fa-shopping-bag"></i></div>
+            <div class="label">Tổng Đơn Hàng</div>
+            <div class="value">${totalBookings}</div>
+        </div>
+        <div class="stat">
+            <div class="icon icon-red"><i class="fas fa-clock"></i></div>
+            <div class="label">Đơn Chờ Xử Lý</div>
+            <div class="value" style="color:#F87171">${pendingRequests}</div>
+        </div>
+    </section>
+
+    <div class="grid-2">
+        <!-- Revenue + AI -->
+        <div>
+            <div class="card">
+                <h3><i class="fas fa-coins"></i> Doanh Thu Tổng</h3>
+                <div style="font-size:2.4rem;font-weight:800;color:#34D399;letter-spacing:-1px;margin-bottom:8px">
+                    <fmt:formatNumber value="${grossRevenue}" type="number" groupingUsed="true"/>đ
+                </div>
+                <div class="trend-up" style="font-size:.85rem"><i class="fas fa-arrow-up"></i> Từ đơn hàng hoàn thành</div>
+            </div>
+
+            <div class="card ai-panel">
                 <div class="ai-header">
                     <div class="ai-icon"><i class="fas fa-brain"></i></div>
-                    <h3>AI Dự Báo Nhu Cầu</h3>
+                    <h3 style="margin-bottom:0">AI Dự Báo Nhu Cầu</h3>
                 </div>
                 <div class="ai-chart">
                     <p><i class="fas fa-chart-area" style="font-size:2rem;display:block;margin-bottom:12px;opacity:.3"></i>AI đang phân tích xu hướng đặt tour cho Lễ hội Pháo hoa Quốc tế Đà Nẵng...</p>
                 </div>
                 <div class="ai-metrics">
-                    <div class="ai-metric">
-                        <small>Độ Tin Cậy</small>
-                        <div class="val success">94.2%</div>
-                    </div>
-                    <div class="ai-metric">
-                        <small>Khuyến Nghị</small>
-                        <div class="val">Tăng 15% công suất "Tour Sông Hàn"</div>
-                    </div>
+                    <div class="ai-metric"><small>Độ Tin Cậy</small><div class="val success">94.2%</div></div>
+                    <div class="ai-metric"><small>Khuyến Nghị</small><div class="val">Tăng 15% công suất Tour Sông Hàn</div></div>
                 </div>
-            </section>
+            </div>
+        </div>
 
-            <!-- Recent Activity -->
-            <section class="card">
-                <h3><i class="fas fa-history"></i> Hoạt Động Gần Đây</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Khách Hàng</th>
-                            <th>Tour</th>
-                            <th>Số Tiền</th>
-                            <th>Trạng Thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Nguyễn Văn A</strong></td>
-                            <td>Bà Nà Hills Trọn Ngày</td>
-                            <td style="font-weight:700;color:#059669">2,400,000đ</td>
-                            <td><span class="status-badge badge-green">Đã xác nhận</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Trần Thị B</strong></td>
-                            <td>Hội An Phố Cổ</td>
-                            <td style="font-weight:700;color:#059669">1,700,000đ</td>
-                            <td><span class="status-badge badge-yellow">Chờ xác nhận</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </main>
+        <!-- Quick Actions -->
+        <div class="card">
+            <h3><i class="fas fa-bolt"></i> Quản Trị Nhanh</h3>
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <a href="${pageContext.request.contextPath}/admin/customers" style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:.3s;text-decoration:none;color:inherit">
+                    <div class="icon-blue" style="width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-users"></i></div>
+                    <div><div style="font-size:.88rem;color:#fff;font-weight:600">Quản Lý Khách Hàng</div><div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:2px">Xem danh sách khách hàng</div></div>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/orders" style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:.3s;text-decoration:none;color:inherit">
+                    <div class="icon-orange" style="width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-shopping-bag"></i></div>
+                    <div><div style="font-size:.88rem;color:#fff;font-weight:600">Quản Lý Đơn Hàng</div><div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:2px">Duyệt và xử lý đơn</div></div>
+                </a>
+                <a href="${pageContext.request.contextPath}/tour" style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:.3s;text-decoration:none;color:inherit">
+                    <div class="icon-green" style="width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-map"></i></div>
+                    <div><div style="font-size:.88rem;color:#fff;font-weight:600">Quản Lý Tours</div><div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:2px">Tạo, sửa, xóa tour</div></div>
+                </a>
+                <a href="${pageContext.request.contextPath}/dbtest" style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:.3s;text-decoration:none;color:inherit">
+                    <div class="icon-red" style="width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-database"></i></div>
+                    <div><div style="font-size:.88rem;color:#fff;font-weight:600">Kiểm Tra Database</div><div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:2px">Test kết nối hệ thống</div></div>
+                </a>
+            </div>
+        </div>
     </div>
-    <jsp:include page="/views/ai-chatbot/chatbot.jsp" />
+</main>
+
 </body>
 </html>

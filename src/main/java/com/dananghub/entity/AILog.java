@@ -19,10 +19,10 @@ public class AILog implements Serializable {
     @Column(name = "ActionType", length = 50)
     private String actionType;
 
-    @Column(name = "InputData", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "InputData", columnDefinition = "TEXT")
     private String inputData;
 
-    @Column(name = "OutputData", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "OutputData", columnDefinition = "TEXT")
     private String outputData;
 
     @Column(name = "ExecutionTimeMs")
