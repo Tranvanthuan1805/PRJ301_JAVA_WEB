@@ -1021,7 +1021,7 @@
 
                         <!-- Asia Park -->
                         <a href="${pageContext.request.contextPath}/tour?search=asia+park" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="https://images.unsplash.com/photo-1571984405176-5958bd9ac31e?auto=format&fit=crop&w=600&q=80" alt="Asia Park" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <img src="${pageContext.request.contextPath}/images/destinations/asia-park.png" alt="Asia Park" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
                             <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
                             <div style="position:absolute;bottom:14px;left:14px;color:#fff">
                                 <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">ASIA PARK</div>
@@ -1081,7 +1081,7 @@
 
                         <!-- Bãi biển Non Nước -->
                         <a href="${pageContext.request.contextPath}/tour?search=non+nuoc" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" alt="Non Nước" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+                            <img src="${pageContext.request.contextPath}/images/destinations/non-nuoc.png" alt="Non Nước" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
                             <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
                             <div style="position:absolute;bottom:14px;left:14px;color:#fff">
                                 <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">BÃI BIỂN NON NƯỚC</div>
