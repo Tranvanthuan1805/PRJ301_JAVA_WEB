@@ -56,41 +56,51 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        if (userDAO.findByUsername(username) != null) {
-            request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
+        try {
+            if (userDAO.findByUsername(username) != null) {
+                request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
 
-        if (!email.isEmpty() && userDAO.findByEmail(email) != null) {
-            request.setAttribute("error", "Email đã được sử dụng!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
+            if (!email.isEmpty() && userDAO.findByEmail(email) != null) {
+                request.setAttribute("error", "Email đã được sử dụng!");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
 
-        Role customerRole = roleDAO.findByName("CUSTOMER");
-        if (customerRole == null) {
-            request.setAttribute("error", "Lỗi hệ thống: Role CUSTOMER không tồn tại!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
+            Role customerRole = roleDAO.findByName("CUSTOMER");
+            if (customerRole == null) {
+                request.setAttribute("error", "Lỗi hệ thống: Không tìm thấy Role CUSTOMER! Hãy chạy seed SQL trước.");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
 
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setEmail(email.isEmpty() ? username + "@dananghub.com" : email);
-        newUser.setPasswordHash(PasswordUtil.hashSHA256(password));
-        newUser.setRole(customerRole);
-        newUser.setActive(true);
-        newUser.setCreatedAt(new Date());
-        newUser.setUpdatedAt(new Date());
+            User newUser = new User();
+            newUser.setUsername(username);
+            newUser.setEmail(email.isEmpty() ? username + "@dananghub.com" : email);
+            newUser.setPasswordHash(PasswordUtil.hashSHA256(password));
+            newUser.setRole(customerRole);
+            newUser.setActive(true);
+            newUser.setCreatedAt(new Date());
+            newUser.setUpdatedAt(new Date());
 
-        boolean success = userDAO.create(newUser);
+            boolean success = userDAO.create(newUser);
 
-        if (success) {
-            request.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Đăng ký thất bại! Vui lòng thử lại.");
+            if (success) {
+                request.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            } else {
+                request.setAttribute("error", "Đăng ký thất bại! Kiểm tra log server.");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Throwable root = e;
+            while (root.getCause() != null) root = root.getCause();
+            String errorMsg = "Lỗi DB: " + root.getClass().getSimpleName() + " - " + root.getMessage();
+            System.err.println(">>> REGISTER ERROR: " + errorMsg);
+            request.setAttribute("error", errorMsg);
             request.getRequestDispatcher("register.jsp").forward(request, response);
         }
     }

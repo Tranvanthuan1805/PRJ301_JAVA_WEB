@@ -33,18 +33,22 @@
         <properties>
             <!-- Supabase PostgreSQL Connection (Session Pooler) -->
             <property name="jakarta.persistence.jdbc.driver"   value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url"      value="jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres"/>
+            <property name="jakarta.persistence.jdbc.url"      value="jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require&amp;prepareThreshold=0"/>
             <property name="jakarta.persistence.jdbc.user"     value="postgres.cbbdijhwewpptvmgujcz"/>
             <property name="jakarta.persistence.jdbc.password" value="dK6W6dygBt2%uTw"/>
 
             <!-- Hibernate Settings -->
             <property name="hibernate.dialect"       value="org.hibernate.dialect.PostgreSQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto"  value="none"/>
+            <property name="hibernate.hbm2ddl.auto"  value="update"/>
             <property name="hibernate.show_sql"       value="true"/>
             <property name="hibernate.format_sql"     value="true"/>
 
-            <!-- Connection Pool -->
-            <property name="hibernate.connection.pool_size" value="10"/>
+            <!-- Connection Pool (C3P0) -->
+            <property name="hibernate.c3p0.min_size" value="2"/>
+            <property name="hibernate.c3p0.max_size" value="10"/>
+            <property name="hibernate.c3p0.timeout" value="300"/>
+            <property name="hibernate.c3p0.max_statements" value="50"/>
+            <property name="hibernate.c3p0.idle_test_period" value="3000"/>
         </properties>
     </persistence-unit>
 

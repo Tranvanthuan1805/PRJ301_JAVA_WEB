@@ -540,6 +540,27 @@
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatForm.dispatchEvent(new Event('submit')); }
     });
 
+    // Expose Global API for Map Integration
+    window.EzAiChat = {
+        sendMessage: function(msg) {
+            chatInput.value = msg;
+            chatForm.dispatchEvent(new Event('submit'));
+            if (chatWindow.style.display !== 'flex') {
+                toggleBtn.click();
+            }
+        },
+        suggestNearby: function(lat, lng) {
+            if (chatWindow.style.display !== 'flex') {
+                toggleBtn.click();
+            }
+            addBotMessage('📍 Tôi đã nhận được vị trí của bạn! Đang tìm kiếm các điểm du lịch gần đây...');
+            const msg = `Tôi đang ở tọa độ ${lat}, ${lng}. Hãy gợi ý cho tôi 3 địa điểm du lịch hoặc quán ăn nổi tiếng gần đây nhất tại Đà Nẵng và lý do nên đến đó.`;
+            setTimeout(() => {
+                this.sendMessage(msg);
+            }, 1000);
+        }
+    };
+
     // Show notification after 3s
     setTimeout(() => {
         if (chatWindow.style.display !== 'flex') {

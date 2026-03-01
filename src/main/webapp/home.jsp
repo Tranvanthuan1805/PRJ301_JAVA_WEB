@@ -107,11 +107,19 @@
                     .hero-cat-name{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.88);text-align:center;letter-spacing:.2px;line-height:1.2}
 
                     /* MAP */
-                    .map-section{position:relative;background:#F7F8FC;padding:0}
-                    .map-wrap{position:relative;height:400px;overflow:hidden}
-                    .map-wrap iframe{width:100%;height:100%;border:0;filter:saturate(1.08)}
-                    .map-label{position:absolute;top:14px;left:14px;z-index:10;display:flex;align-items:center;gap:7px;padding:9px 16px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.08);font-size:.8rem;font-weight:700;color:#1E293B}
-                    .map-label i{color:#2563EB}
+                    /* FLOATING MAP UI (FROM IMAGE) */
+                    .map-float-container{max-width:1100px;margin:-80px auto 60px;position:relative;z-index:100;padding:0 20px}
+                    .map-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 15px 45px rgba(0,0,0,0.12);border:4px solid #fff;height:380px;position:relative}
+                    .map-card iframe{width:100%;height:100%;border:0;filter:saturate(1.1)}
+                    
+                    .btn-floating-loc{position:absolute;top:20px;left:20px;z-index:10;display:flex;align-items:center;gap:10px;padding:12px 20px;background:#fff;color:#1E293B;border:none;border-radius:12px;font-size:0.85rem;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.15);transition:all 0.3s}
+                    .btn-floating-loc i{color:#2563EB;font-size:1rem}
+                    .btn-floating-loc:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(0,0,0,0.2)}
+                    
+                    @media(max-width:768px){
+                        .map-float-container{margin-top:-40px}
+                        .map-card{height:280px;border-radius:16px}
+                    }
 
                     /* Hide old float cards */
                     .hero-right,.float-card{display:none}
@@ -444,6 +452,7 @@
                         line-height: 1.6;
                         display: -webkit-box;
                         -webkit-line-clamp: 2;
+                        line-clamp: 2;
                         -webkit-box-orient: vertical;
                         overflow: hidden;
                         margin-bottom: 20px
@@ -955,13 +964,86 @@
                     </div>
                 </section>
 
-                <!-- ═══ GOOGLE MAP ═══ -->
-                <section class="map-section">
-                    <div class="map-wrap">
-                        <div class="map-label"><i class="fas fa-map-marker-alt"></i> Vị Trí Của Tôi</div>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61349.26893498857!2d108.17!3d16.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219c792252a13%3A0xfc14e3a044436f37!2sDa%20Nang%2C%20Vietnam!5e0!3m2!1svi!2s!4v1709000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <!-- ═══ STATS (ABOVE MAP) ═══ -->
+                <section class="stats">
+                    <div class="stats-bar rv">
+                        <div class="st">
+                            <div class="num" style="color:#2563EB" data-count="100" data-suffix="+">0</div>
+                            <div class="lab">Tours Xác Minh</div>
+                        </div>
+                        <div class="st">
+                            <div class="num" style="color:#0EA5E9" data-count="50" data-suffix="+">0</div>
+                            <div class="lab">Đối Tác Uy Tín</div>
+                        </div>
+                        <div class="st">
+                            <div class="num" style="color:#10B981" data-count="5000" data-suffix="+" data-format="K">0</div>
+                            <div class="lab">Khách Hài Lòng</div>
+                        </div>
+                        <div class="st">
+                            <div class="num" style="color:#F59E0B" data-count="4.9" data-suffix="★" data-decimal="true">0</div>
+                            <div class="lab">Đánh Giá</div>
+                        </div>
                     </div>
                 </section>
+
+                <!-- ═══ GOOGLE MAP (IMAGE LOOK) ═══ -->
+                <div class="map-float-container">
+                    <div class="map-card rv">
+                        <button class="btn-floating-loc" onclick="handleMyLocation()">
+                            <i class="fas fa-map-marker-alt"></i> Vị Trí Của Tôi
+                        </button>
+                        <iframe id="googleMap" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61349.26893498857!2d108.17!3d16.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219c792252a13%3A0xfc14e3a044436f37!2sDa%20Nang%2C%20Vietnam!5e0!3m2!1svi!2s!4v1709000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+                <script>
+                function handleMyLocation() {
+                    const btn = document.querySelector('.btn-floating-loc');
+                    if (!btn) return;
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG TÌM...';
+                    btn.disabled = true;
+
+                    if (!navigator.geolocation) {
+                        alert("Trình duyệt của bạn không hỗ trợ định vị!");
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+                            
+                            // Update Map
+                            const mapUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+                            document.getElementById('googleMap').src = mapUrl;
+
+                            btn.innerHTML = '<i class="fas fa-check"></i> Đã tìm thấy!';
+                            btn.style.background = '#10B981';
+                            
+                            // Trigger AI Chatbot
+                            if (window.EzAiChat && typeof window.EzAiChat.suggestNearby === 'function') {
+                                window.EzAiChat.suggestNearby(lat, lng);
+                            }
+
+                            setTimeout(() => {
+                                btn.innerHTML = originalText;
+                                btn.style.background = '';
+                                btn.disabled = false;
+                            }, 5000);
+                        },
+                        (error) => {
+                            console.error(error);
+                            alert("Không thể lấy vị trí của bạn. Vui lòng bật định vị!");
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        },
+                        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                    );
+                }
+                </script>
 
                 <!-- ═══ ĐIỂM ĐẾN YÊU THÍCH ═══ -->
                 <section style="max-width:1200px;margin:0 auto;padding:64px 20px 48px">
@@ -1090,27 +1172,6 @@
                     </style>
                 </section>
 
-                <!-- ═══ STATS ═══ -->
-                <section class="stats">
-                    <div class="stats-bar rv">
-                        <div class="st">
-                            <div class="num" style="color:#2563EB">100+</div>
-                            <div class="lab">Tours Xác Minh</div>
-                        </div>
-                        <div class="st">
-                            <div class="num" style="color:#0EA5E9">50+</div>
-                            <div class="lab">Đối Tác Uy Tín</div>
-                        </div>
-                        <div class="st">
-                            <div class="num" style="color:#10B981">5K+</div>
-                            <div class="lab">Khách Hài Lòng</div>
-                        </div>
-                        <div class="st">
-                            <div class="num" style="color:#F59E0B">4.9★</div>
-                            <div class="lab">Đánh Giá</div>
-                        </div>
-                    </div>
-                </section>
 
                 <!-- ═══ TRENDING TOURS ═══ -->
                 <div class="sh" style="margin-bottom:48px;">
@@ -1180,7 +1241,7 @@
                                 báo doanh thu.</p>
                             <div class="nl-form">
                                 <input type="email" placeholder="Email của bạn">
-                                <button class="btn-cta btn-accent" style="padding:16px 30px">Đăng Ký <i
+                                <button class="btn-cta btn-accent" style="padding:16px 30px;border-radius:99px;background:#FF6F61;color:#fff;border:none">Đăng Ký <i
                                         class="fas fa-arrow-right"></i></button>
                             </div>
                         </div>
@@ -1230,6 +1291,50 @@
                             this.style.transform = 'scale(1.3)'; setTimeout(() => this.style.transform = '', 200);
                         });
                     });
+
+                    // ═══ COUNT UP ANIMATION ═══
+                    function animateCountUp(el) {
+                        const target = parseFloat(el.dataset.count);
+                        const suffix = el.dataset.suffix || '';
+                        const isDecimal = el.dataset.decimal === 'true';
+                        const isK = el.dataset.format === 'K';
+                        const duration = 2000;
+                        const startTime = performance.now();
+
+                        function update(currentTime) {
+                            const elapsed = currentTime - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            // easeOutExpo
+                            const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                            const current = ease * target;
+
+                            if (isK) {
+                                el.textContent = (current / 1000).toFixed(current >= target ? 0 : 1) + 'K' + suffix;
+                            } else if (isDecimal) {
+                                el.textContent = current.toFixed(1) + suffix;
+                            } else {
+                                el.textContent = Math.floor(current) + suffix;
+                            }
+
+                            if (progress < 1) {
+                                requestAnimationFrame(update);
+                            }
+                        }
+                        requestAnimationFrame(update);
+                    }
+
+                    const statsObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.querySelectorAll('.num[data-count]').forEach(el => {
+                                    animateCountUp(el);
+                                });
+                                statsObserver.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.3 });
+
+                    document.querySelectorAll('.stats-bar').forEach(el => statsObserver.observe(el));
                 </script>
                 <script src="${pageContext.request.contextPath}/js/i18n.js"></script>
                 <script>if(typeof I18N!=='undefined'){I18N.applyTranslations();}</script>
