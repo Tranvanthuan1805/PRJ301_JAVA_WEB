@@ -50,6 +50,7 @@ com\dananghub\entity\Payment_.class
 com\dananghub\dao\OrderDAO.class
 com\dananghub\controller\AdminTourServlet.class
 com\dananghub\entity\AILog_.class
+com\dananghub\entity\OrderStatus$1.class
 com\dananghub\controller\GoogleAuthServlet.class
 com\dananghub\entity\Customer.class
 com\dananghub\controller\ExploreServlet$TourDTO.class

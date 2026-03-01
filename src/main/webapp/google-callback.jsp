@@ -45,7 +45,7 @@
         }
 
         // Send access token to server for verification and session creation
-        fetch('${pageContext.request.contextPath}/google-auth?access_token=' + encodeURIComponent(accessToken))
+        fetch('${pageContext.request.contextPath}/auth/google-callback?access_token=' + encodeURIComponent(accessToken))
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.success) {
