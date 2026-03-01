@@ -23,35 +23,71 @@ public class MonthlyRevenue implements Serializable {
     private int totalBookings;
 
     @Column(name = "GrossVolume")
-    private double grossVolume;
+    private Double grossVolume;
 
     @Column(name = "PlatformFee")
-    private double platformFee;
+    private Double platformFee;
 
     @Column(name = "CreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    public MonthlyRevenue() {}
+    public MonthlyRevenue() {
+    }
 
-    public int getRevenueId() { return revenueId; }
-    public void setRevenueId(int revenueId) { this.revenueId = revenueId; }
+    public int getRevenueId() {
+        return revenueId;
+    }
 
-    public int getReportMonth() { return reportMonth; }
-    public void setReportMonth(int reportMonth) { this.reportMonth = reportMonth; }
+    public void setRevenueId(int revenueId) {
+        this.revenueId = revenueId;
+    }
 
-    public int getReportYear() { return reportYear; }
-    public void setReportYear(int reportYear) { this.reportYear = reportYear; }
+    public int getReportMonth() {
+        return reportMonth;
+    }
 
-    public int getTotalBookings() { return totalBookings; }
-    public void setTotalBookings(int totalBookings) { this.totalBookings = totalBookings; }
+    public void setReportMonth(int reportMonth) {
+        this.reportMonth = reportMonth;
+    }
 
-    public double getGrossVolume() { return grossVolume; }
-    public void setGrossVolume(double grossVolume) { this.grossVolume = grossVolume; }
+    public int getReportYear() {
+        return reportYear;
+    }
 
-    public double getPlatformFee() { return platformFee; }
-    public void setPlatformFee(double platformFee) { this.platformFee = platformFee; }
+    public void setReportYear(int reportYear) {
+        this.reportYear = reportYear;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public int getTotalBookings() {
+        return totalBookings;
+    }
+
+    public void setTotalBookings(int totalBookings) {
+        this.totalBookings = totalBookings;
+    }
+
+    public Double getGrossVolume() {
+        return grossVolume;
+    }
+
+    public void setGrossVolume(Double grossVolume) {
+        this.grossVolume = grossVolume;
+    }
+
+    public Double getPlatformFee() {
+        return platformFee;
+    }
+
+    public void setPlatformFee(Double platformFee) {
+        this.platformFee = platformFee;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 }

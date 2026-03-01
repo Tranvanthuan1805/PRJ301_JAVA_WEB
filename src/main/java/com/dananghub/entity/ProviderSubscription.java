@@ -36,37 +36,83 @@ public class ProviderSubscription implements Serializable {
     private String paymentStatus = "Unpaid";
 
     @Column(name = "Amount")
-    private double amount;
+    private Double amount;
 
     @Column(name = "IsActive")
     private boolean isActive = true;
 
-    public ProviderSubscription() {}
+    public ProviderSubscription() {
+    }
 
-    public int getSubId() { return subId; }
-    public void setSubId(int subId) { this.subId = subId; }
+    public int getSubId() {
+        return subId;
+    }
 
-    public Provider getProvider() { return provider; }
-    public void setProvider(Provider provider) { this.provider = provider; }
+    public void setSubId(int subId) {
+        this.subId = subId;
+    }
 
-    public SubscriptionPlan getPlan() { return plan; }
-    public void setPlan(SubscriptionPlan plan) { this.plan = plan; }
+    public Provider getProvider() {
+        return provider;
+    }
 
-    public Date getStartDate() { return startDate; }
-    public void setStartDate(Date startDate) { this.startDate = startDate; }
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
 
-    public Date getEndDate() { return endDate; }
-    public void setEndDate(Date endDate) { this.endDate = endDate; }
+    public SubscriptionPlan getPlan() {
+        return plan;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setPlan(SubscriptionPlan plan) {
+        this.plan = plan;
+    }
 
-    public String getPaymentStatus() { return paymentStatus; }
-    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public Date getStartDate() {
+        return startDate;
+    }
 
-    public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = amount; }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }

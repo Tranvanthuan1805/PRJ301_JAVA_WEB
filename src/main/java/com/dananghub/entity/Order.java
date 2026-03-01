@@ -19,7 +19,7 @@ public class Order implements Serializable {
     private User customer;
 
     @Column(name = "TotalAmount", nullable = false)
-    private double totalAmount;
+    private Double totalAmount;
 
     @Column(name = "OrderStatus", length = 50)
     private String orderStatus = "Pending";
@@ -61,7 +61,8 @@ public class Order implements Serializable {
     }
 
     public String getStatusBadgeClass() {
-        if (orderStatus == null) return "warning";
+        if (orderStatus == null)
+            return "warning";
         return switch (orderStatus) {
             case "Pending" -> "warning";
             case "Confirmed" -> "info";
@@ -72,7 +73,8 @@ public class Order implements Serializable {
     }
 
     public String getStatusDisplayName() {
-        if (orderStatus == null) return "Chờ xác nhận";
+        if (orderStatus == null)
+            return "Chờ xác nhận";
         return switch (orderStatus) {
             case "Pending" -> "Chờ xác nhận";
             case "Confirmed" -> "Đã xác nhận";
@@ -95,32 +97,77 @@ public class Order implements Serializable {
     }
 
     // Getters and Setters
-    public int getOrderId() { return orderId; }
-    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public int getOrderId() {
+        return orderId;
+    }
 
-    public User getCustomer() { return customer; }
-    public void setCustomer(User customer) { this.customer = customer; }
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
 
-    public double getTotalAmount() { return totalAmount; }
-    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
+    public User getCustomer() {
+        return customer;
+    }
 
-    public String getOrderStatus() { return orderStatus; }
-    public void setOrderStatus(String orderStatus) { this.orderStatus = orderStatus; }
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
 
-    public String getPaymentStatus() { return paymentStatus; }
-    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
 
-    public String getCancelReason() { return cancelReason; }
-    public void setCancelReason(String cancelReason) { this.cancelReason = cancelReason; }
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
-    public Date getOrderDate() { return orderDate; }
-    public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }
+    public String getOrderStatus() {
+        return orderStatus;
+    }
 
-    public Date getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
-    public List<Booking> getBookings() { return bookings; }
-    public void setBookings(List<Booking> bookings) { this.bookings = bookings; }
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
 
     @Override
     public String toString() {

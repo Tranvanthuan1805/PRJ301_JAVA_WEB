@@ -54,7 +54,7 @@ public class PaymentServlet extends HttpServlet {
 
         String bankAcc = "2806281106";
         String bankName = "MB";
-        long amountInt = (long) plan.getPrice();
+        long amountInt = plan.getPrice() != null ? plan.getPrice().longValue() : 0L;
         String qrUrl = String.format("https://qr.sepay.vn/img?acc=%s&bank=%s&amount=%d&des=%s",
                 bankAcc, bankName, amountInt, transCode);
 

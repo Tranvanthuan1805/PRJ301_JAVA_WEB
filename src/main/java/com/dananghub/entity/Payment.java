@@ -24,7 +24,7 @@ public class Payment implements Serializable {
     private String transactionId;
 
     @Column(name = "Amount")
-    private double amount;
+    private Double amount;
 
     @Column(name = "PaymentStatus", length = 50)
     private String paymentStatus;
@@ -33,26 +33,62 @@ public class Payment implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date paidAt;
 
-    public Payment() {}
+    public Payment() {
+    }
 
-    public int getPaymentId() { return paymentId; }
-    public void setPaymentId(int paymentId) { this.paymentId = paymentId; }
+    public int getPaymentId() {
+        return paymentId;
+    }
 
-    public Order getOrder() { return order; }
-    public void setOrder(Order order) { this.order = order; }
+    public void setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
+    }
 
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public Order getOrder() {
+        return order;
+    }
 
-    public String getTransactionId() { return transactionId; }
-    public void setTransactionId(String transactionId) { this.transactionId = transactionId; }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-    public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = amount; }
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
 
-    public String getPaymentStatus() { return paymentStatus; }
-    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 
-    public Date getPaidAt() { return paidAt; }
-    public void setPaidAt(Date paidAt) { this.paidAt = paidAt; }
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public Date getPaidAt() {
+        return paidAt;
+    }
+
+    public void setPaidAt(Date paidAt) {
+        this.paidAt = paidAt;
+    }
 }

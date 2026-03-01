@@ -23,7 +23,7 @@ public class PaymentTransaction implements Serializable {
     private Integer orderId;
 
     @Column(name = "Amount", nullable = false)
-    private double amount;
+    private Double amount;
 
     @Column(name = "TransactionCode", unique = true, nullable = false, length = 100)
     private String transactionCode;
@@ -45,38 +45,94 @@ public class PaymentTransaction implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date paidDate;
 
-    public PaymentTransaction() {}
+    public PaymentTransaction() {
+    }
 
-    public int getTransactionId() { return transactionId; }
-    public void setTransactionId(int transactionId) { this.transactionId = transactionId; }
+    public int getTransactionId() {
+        return transactionId;
+    }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public void setTransactionId(int transactionId) {
+        this.transactionId = transactionId;
+    }
 
-    public Integer getPlanId() { return planId; }
-    public void setPlanId(Integer planId) { this.planId = planId; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public Integer getOrderId() { return orderId; }
-    public void setOrderId(Integer orderId) { this.orderId = orderId; }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-    public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = amount; }
+    public Integer getPlanId() {
+        return planId;
+    }
 
-    public String getTransactionCode() { return transactionCode; }
-    public void setTransactionCode(String transactionCode) { this.transactionCode = transactionCode; }
+    public void setPlanId(Integer planId) {
+        this.planId = planId;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public Integer getOrderId() {
+        return orderId;
+    }
 
-    public String getPaymentGateway() { return paymentGateway; }
-    public void setPaymentGateway(String paymentGateway) { this.paymentGateway = paymentGateway; }
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
 
-    public String getSePayReference() { return sePayReference; }
-    public void setSePayReference(String sePayReference) { this.sePayReference = sePayReference; }
+    public Double getAmount() {
+        return amount;
+    }
 
-    public Date getCreatedDate() { return createdDate; }
-    public void setCreatedDate(Date createdDate) { this.createdDate = createdDate; }
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 
-    public Date getPaidDate() { return paidDate; }
-    public void setPaidDate(Date paidDate) { this.paidDate = paidDate; }
+    public String getTransactionCode() {
+        return transactionCode;
+    }
+
+    public void setTransactionCode(String transactionCode) {
+        this.transactionCode = transactionCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPaymentGateway() {
+        return paymentGateway;
+    }
+
+    public void setPaymentGateway(String paymentGateway) {
+        this.paymentGateway = paymentGateway;
+    }
+
+    public String getSePayReference() {
+        return sePayReference;
+    }
+
+    public void setSePayReference(String sePayReference) {
+        this.sePayReference = sePayReference;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getPaidDate() {
+        return paidDate;
+    }
+
+    public void setPaidDate(Date paidDate) {
+        this.paidDate = paidDate;
+    }
 }

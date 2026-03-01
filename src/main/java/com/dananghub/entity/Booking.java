@@ -29,12 +29,13 @@ public class Booking implements Serializable {
     private int quantity = 1;
 
     @Column(name = "SubTotal", nullable = false)
-    private double subTotal;
+    private Double subTotal;
 
     @Column(name = "BookingStatus", length = 50)
     private String bookingStatus = "Pending";
 
-    public Booking() {}
+    public Booking() {
+    }
 
     // Convenience getters
     public int getOrderId() {
@@ -46,24 +47,59 @@ public class Booking implements Serializable {
     }
 
     // Getters and Setters
-    public int getBookingId() { return bookingId; }
-    public void setBookingId(int bookingId) { this.bookingId = bookingId; }
+    public int getBookingId() {
+        return bookingId;
+    }
 
-    public Order getOrder() { return order; }
-    public void setOrder(Order order) { this.order = order; }
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
+    }
 
-    public Tour getTour() { return tour; }
-    public void setTour(Tour tour) { this.tour = tour; }
+    public Order getOrder() {
+        return order;
+    }
 
-    public Date getBookingDate() { return bookingDate; }
-    public void setBookingDate(Date bookingDate) { this.bookingDate = bookingDate; }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public Tour getTour() {
+        return tour;
+    }
 
-    public double getSubTotal() { return subTotal; }
-    public void setSubTotal(double subTotal) { this.subTotal = subTotal; }
+    public void setTour(Tour tour) {
+        this.tour = tour;
+    }
 
-    public String getBookingStatus() { return bookingStatus; }
-    public void setBookingStatus(String bookingStatus) { this.bookingStatus = bookingStatus; }
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
+    public void setBookingDate(Date bookingDate) {
+        this.bookingDate = bookingDate;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public String getBookingStatus() {
+        return bookingStatus;
+    }
+
+    public void setBookingStatus(String bookingStatus) {
+        this.bookingStatus = bookingStatus;
+    }
 }

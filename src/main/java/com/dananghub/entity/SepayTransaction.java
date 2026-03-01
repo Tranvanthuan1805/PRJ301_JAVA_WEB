@@ -31,10 +31,10 @@ public class SepayTransaction implements Serializable {
     private String transferType;
 
     @Column(name = "TransferAmount")
-    private double transferAmount;
+    private Double transferAmount;
 
     @Column(name = "Accumulated")
-    private double accumulated;
+    private Double accumulated;
 
     @Column(name = "SubAccount", length = 50)
     private String subAccount;
@@ -53,42 +53,107 @@ public class SepayTransaction implements Serializable {
         this.createdAt = new Date();
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getGateway() { return gateway; }
-    public void setGateway(String gateway) { this.gateway = gateway; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getTransactionDate() { return transactionDate; }
-    public void setTransactionDate(String transactionDate) { this.transactionDate = transactionDate; }
+    public String getGateway() {
+        return gateway;
+    }
 
-    public String getAccountNumber() { return accountNumber; }
-    public void setAccountNumber(String accountNumber) { this.accountNumber = accountNumber; }
+    public void setGateway(String gateway) {
+        this.gateway = gateway;
+    }
 
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
+    public String getTransactionDate() {
+        return transactionDate;
+    }
 
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public void setTransactionDate(String transactionDate) {
+        this.transactionDate = transactionDate;
+    }
 
-    public String getTransferType() { return transferType; }
-    public void setTransferType(String transferType) { this.transferType = transferType; }
+    public String getAccountNumber() {
+        return accountNumber;
+    }
 
-    public double getTransferAmount() { return transferAmount; }
-    public void setTransferAmount(double transferAmount) { this.transferAmount = transferAmount; }
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
 
-    public double getAccumulated() { return accumulated; }
-    public void setAccumulated(double accumulated) { this.accumulated = accumulated; }
+    public String getCode() {
+        return code;
+    }
 
-    public String getSubAccount() { return subAccount; }
-    public void setSubAccount(String subAccount) { this.subAccount = subAccount; }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-    public String getReferenceCode() { return referenceCode; }
-    public void setReferenceCode(String referenceCode) { this.referenceCode = referenceCode; }
+    public String getContent() {
+        return content;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
+
+    public Double getTransferAmount() {
+        return transferAmount;
+    }
+
+    public void setTransferAmount(Double transferAmount) {
+        this.transferAmount = transferAmount;
+    }
+
+    public Double getAccumulated() {
+        return accumulated;
+    }
+
+    public void setAccumulated(Double accumulated) {
+        this.accumulated = accumulated;
+    }
+
+    public String getSubAccount() {
+        return subAccount;
+    }
+
+    public void setSubAccount(String subAccount) {
+        this.subAccount = subAccount;
+    }
+
+    public String getReferenceCode() {
+        return referenceCode;
+    }
+
+    public void setReferenceCode(String referenceCode) {
+        this.referenceCode = referenceCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 }

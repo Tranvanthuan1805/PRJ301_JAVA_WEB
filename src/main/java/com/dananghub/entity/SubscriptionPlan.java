@@ -19,7 +19,7 @@ public class SubscriptionPlan implements Serializable {
     private String planCode;
 
     @Column(name = "Price", nullable = false)
-    private double price;
+    private Double price;
 
     @Column(name = "DurationDays")
     private int durationDays = 30;
@@ -33,29 +33,70 @@ public class SubscriptionPlan implements Serializable {
     @Column(name = "IsActive")
     private boolean isActive = true;
 
-    public SubscriptionPlan() {}
+    public SubscriptionPlan() {
+    }
 
-    public int getPlanId() { return planId; }
-    public void setPlanId(int planId) { this.planId = planId; }
+    public int getPlanId() {
+        return planId;
+    }
 
-    public String getPlanName() { return planName; }
-    public void setPlanName(String planName) { this.planName = planName; }
+    public void setPlanId(int planId) {
+        this.planId = planId;
+    }
 
-    public String getPlanCode() { return planCode; }
-    public void setPlanCode(String planCode) { this.planCode = planCode; }
+    public String getPlanName() {
+        return planName;
+    }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public void setPlanName(String planName) {
+        this.planName = planName;
+    }
 
-    public int getDurationDays() { return durationDays; }
-    public void setDurationDays(int durationDays) { this.durationDays = durationDays; }
+    public String getPlanCode() {
+        return planCode;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setPlanCode(String planCode) {
+        this.planCode = planCode;
+    }
 
-    public String getFeatures() { return features; }
-    public void setFeatures(String features) { this.features = features; }
+    public Double getPrice() {
+        return price;
+    }
 
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public int getDurationDays() {
+        return durationDays;
+    }
+
+    public void setDurationDays(int durationDays) {
+        this.durationDays = durationDays;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(String features) {
+        this.features = features;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }

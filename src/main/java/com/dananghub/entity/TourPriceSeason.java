@@ -50,12 +50,13 @@ public class TourPriceSeason implements Serializable {
     private Date endDate;
 
     @Column(name = "PriceMultiplier", nullable = false)
-    private double priceMultiplier; // VD: 1.5 (tang 50%), 0.8 (giam 20%)
+    private Double priceMultiplier; // VD: 1.5 (tang 50%), 0.8 (giam 20%)
 
     @Column(name = "IsActive")
     private boolean isActive = true;
 
-    public TourPriceSeason() {}
+    public TourPriceSeason() {
+    }
 
     // TODO Minh: Tinh gia sau khi ap dung he so mua
     public double calculateSeasonalPrice(double basePrice) {
@@ -69,24 +70,59 @@ public class TourPriceSeason implements Serializable {
     }
 
     // Getters and Setters
-    public int getSeasonId() { return seasonId; }
-    public void setSeasonId(int seasonId) { this.seasonId = seasonId; }
+    public int getSeasonId() {
+        return seasonId;
+    }
 
-    public Tour getTour() { return tour; }
-    public void setTour(Tour tour) { this.tour = tour; }
+    public void setSeasonId(int seasonId) {
+        this.seasonId = seasonId;
+    }
 
-    public String getSeasonName() { return seasonName; }
-    public void setSeasonName(String seasonName) { this.seasonName = seasonName; }
+    public Tour getTour() {
+        return tour;
+    }
 
-    public Date getStartDate() { return startDate; }
-    public void setStartDate(Date startDate) { this.startDate = startDate; }
+    public void setTour(Tour tour) {
+        this.tour = tour;
+    }
 
-    public Date getEndDate() { return endDate; }
-    public void setEndDate(Date endDate) { this.endDate = endDate; }
+    public String getSeasonName() {
+        return seasonName;
+    }
 
-    public double getPriceMultiplier() { return priceMultiplier; }
-    public void setPriceMultiplier(double priceMultiplier) { this.priceMultiplier = priceMultiplier; }
+    public void setSeasonName(String seasonName) {
+        this.seasonName = seasonName;
+    }
 
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Double getPriceMultiplier() {
+        return priceMultiplier;
+    }
+
+    public void setPriceMultiplier(Double priceMultiplier) {
+        this.priceMultiplier = priceMultiplier;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }

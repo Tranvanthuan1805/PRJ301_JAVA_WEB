@@ -12,6 +12,8 @@
         <class>com.dananghub.entity.Role</class>
         <class>com.dananghub.entity.User</class>
         <class>com.dananghub.entity.Provider</class>
+        <class>com.dananghub.entity.ProviderPriceHistory</class>
+        <class>com.dananghub.entity.ProviderRegistration</class>
         <class>com.dananghub.entity.Category</class>
         <class>com.dananghub.entity.Tour</class>
         <class>com.dananghub.entity.TourImage</class>

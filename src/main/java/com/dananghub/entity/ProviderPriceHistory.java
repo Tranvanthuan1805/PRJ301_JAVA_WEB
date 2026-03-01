@@ -10,21 +10,13 @@ package com.dananghub.entity;
  *   - Ho tro doanh nghiep lua chon doi tac toi uu chi phi
  *
  * Lien ket: Providers (1:N) -> ProviderPriceHistory
- *
- * TODO cho Sang:
- *   1. Tao ProviderPriceHistoryDAO.java
- *      - findByProviderId(int providerId)
- *      - findByServiceType(String serviceType)
- *      - comparePrice(String serviceType) -> so sanh gia giua NCC
- *      - getLatestPrice(int providerId, String serviceName)
- *   2. Tao ProviderPriceServlet.java (hoac tich hop vao ProviderServlet hien co)
- *   3. Tao trang JSP so sanh gia: views/provider-management/price-compare.jsp
- *   4. Them bieu do line chart so sanh gia theo thoi gian
  * ====================================================
  */
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 @Entity
@@ -47,10 +39,10 @@ public class ProviderPriceHistory implements Serializable {
     private String serviceName;
 
     @Column(name = "OldPrice")
-    private Double oldPrice;
+    private BigDecimal oldPrice;
 
     @Column(name = "NewPrice", nullable = false)
-    private double newPrice;
+    private BigDecimal newPrice;
 
     @Column(name = "ChangeDate")
     @Temporal(TemporalType.TIMESTAMP)
@@ -59,36 +51,79 @@ public class ProviderPriceHistory implements Serializable {
     @Column(name = "Note", length = 500)
     private String note;
 
-    public ProviderPriceHistory() {}
+    public ProviderPriceHistory() {
+    }
 
-    // TODO Sang: Tinh % thay doi gia
-    public double getPriceChangePercent() {
-        if (oldPrice == null || oldPrice == 0) return 0;
-        return ((newPrice - oldPrice) / oldPrice) * 100;
+    // Tinh % thay doi gia
+    public BigDecimal getPriceChangePercent() {
+        if (oldPrice == null || oldPrice.compareTo(BigDecimal.ZERO) == 0)
+            return BigDecimal.ZERO;
+        BigDecimal change = newPrice.subtract(oldPrice);
+        return change.divide(oldPrice, 2, RoundingMode.HALF_UP).multiply(new BigDecimal("100"));
     }
 
     // Getters and Setters
-    public int getPriceId() { return priceId; }
-    public void setPriceId(int priceId) { this.priceId = priceId; }
+    public int getPriceId() {
+        return priceId;
+    }
 
-    public Provider getProvider() { return provider; }
-    public void setProvider(Provider provider) { this.provider = provider; }
+    public void setPriceId(int priceId) {
+        this.priceId = priceId;
+    }
 
-    public String getServiceType() { return serviceType; }
-    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
+    public Provider getProvider() {
+        return provider;
+    }
 
-    public String getServiceName() { return serviceName; }
-    public void setServiceName(String serviceName) { this.serviceName = serviceName; }
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
 
-    public Double getOldPrice() { return oldPrice; }
-    public void setOldPrice(Double oldPrice) { this.oldPrice = oldPrice; }
+    public String getServiceType() {
+        return serviceType;
+    }
 
-    public double getNewPrice() { return newPrice; }
-    public void setNewPrice(double newPrice) { this.newPrice = newPrice; }
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
 
-    public Date getChangeDate() { return changeDate; }
-    public void setChangeDate(Date changeDate) { this.changeDate = changeDate; }
+    public String getServiceName() {
+        return serviceName;
+    }
 
-    public String getNote() { return note; }
-    public void setNote(String note) { this.note = note; }
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public BigDecimal getOldPrice() {
+        return oldPrice;
+    }
+
+    public void setOldPrice(BigDecimal oldPrice) {
+        this.oldPrice = oldPrice;
+    }
+
+    public BigDecimal getNewPrice() {
+        return newPrice;
+    }
+
+    public void setNewPrice(BigDecimal newPrice) {
+        this.newPrice = newPrice;
+    }
+
+    public Date getChangeDate() {
+        return changeDate;
+    }
+
+    public void setChangeDate(Date changeDate) {
+        this.changeDate = changeDate;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }

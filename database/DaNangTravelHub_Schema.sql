@@ -274,6 +274,24 @@ CREATE TABLE AILogs (
 );
 
 -- =============================================
+-- MODULE 11: PROVIDER PRICE MANAGEMENT
+-- =============================================
+
+CREATE TABLE ProviderPriceHistory (
+    PriceId      INT IDENTITY(1,1) PRIMARY KEY,
+    ProviderId   INT NOT NULL,
+    ServiceType  NVARCHAR(50) NOT NULL,    -- Hotel, Flight, Tour, Transport
+    ServiceName  NVARCHAR(200) NOT NULL,
+    OldPrice     DECIMAL(18,2) NULL,
+    NewPrice     DECIMAL(18,2) NOT NULL,
+    ChangeDate   DATETIME NOT NULL DEFAULT GETDATE(),
+    Note         NVARCHAR(500) NULL,
+    CONSTRAINT FK_ProviderPriceHistory_Provider 
+        FOREIGN KEY (ProviderId) REFERENCES Providers(ProviderId)
+        ON DELETE CASCADE
+);
+
+-- =============================================
 -- MODULE 10: INDEXES
 -- =============================================
 
@@ -287,6 +305,9 @@ CREATE INDEX IDX_Booking_Order    ON Bookings(OrderId);
 CREATE INDEX IDX_Booking_Tour     ON Bookings(TourId);
 CREATE INDEX IDX_Order_Customer   ON Orders(CustomerId);
 CREATE INDEX IDX_Order_Status     ON Orders(OrderStatus);
+CREATE INDEX IDX_ProviderPrice_Provider   ON ProviderPriceHistory(ProviderId);
+CREATE INDEX IDX_ProviderPrice_ServiceType ON ProviderPriceHistory(ServiceType);
+CREATE INDEX IDX_ProviderPrice_ChangeDate  ON ProviderPriceHistory(ChangeDate DESC);
 CREATE INDEX IDX_Payment_Order    ON Payments(OrderId);
 CREATE INDEX IDX_CustAct_Customer ON CustomerActivities(CustomerId);
 CREATE INDEX IDX_IntHist_Customer ON InteractionHistory(CustomerId);

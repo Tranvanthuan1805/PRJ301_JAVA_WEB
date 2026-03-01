@@ -32,7 +32,7 @@ public class Tour implements Serializable {
     private String description;
 
     @Column(name = "Price", nullable = false)
-    private double price;
+    private Double price;
 
     @Column(name = "MaxPeople")
     private int maxPeople = 20;
@@ -69,9 +69,10 @@ public class Tour implements Serializable {
     @OneToMany(mappedBy = "tour", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TourImage> images;
 
-    public Tour() {}
+    public Tour() {
+    }
 
-    public Tour(int tourId, String tourName, double price) {
+    public Tour(int tourId, String tourName, Double price) {
         this.tourId = tourId;
         this.tourName = tourName;
         this.price = price;
@@ -91,59 +92,149 @@ public class Tour implements Serializable {
     }
 
     // Getters and Setters
-    public int getTourId() { return tourId; }
-    public void setTourId(int tourId) { this.tourId = tourId; }
+    public int getTourId() {
+        return tourId;
+    }
 
-    public Provider getProvider() { return provider; }
-    public void setProvider(Provider provider) { this.provider = provider; }
+    public void setTourId(int tourId) {
+        this.tourId = tourId;
+    }
 
-    public Category getCategory() { return category; }
-    public void setCategory(Category category) { this.category = category; }
+    public Provider getProvider() {
+        return provider;
+    }
 
-    public String getTourName() { return tourName; }
-    public void setTourName(String tourName) { this.tourName = tourName; }
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
 
-    public String getShortDesc() { return shortDesc; }
-    public void setShortDesc(String shortDesc) { this.shortDesc = shortDesc; }
+    public Category getCategory() {
+        return category;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public String getTourName() {
+        return tourName;
+    }
 
-    public int getMaxPeople() { return maxPeople; }
-    public void setMaxPeople(int maxPeople) { this.maxPeople = maxPeople; }
+    public void setTourName(String tourName) {
+        this.tourName = tourName;
+    }
 
-    public String getDuration() { return duration; }
-    public void setDuration(String duration) { this.duration = duration; }
+    public String getShortDesc() {
+        return shortDesc;
+    }
 
-    public String getTransport() { return transport; }
-    public void setTransport(String transport) { this.transport = transport; }
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+    }
 
-    public String getStartLocation() { return startLocation; }
-    public void setStartLocation(String startLocation) { this.startLocation = startLocation; }
+    public String getDescription() {
+        return description;
+    }
 
-    public String getDestination() { return destination; }
-    public void setDestination(String destination) { this.destination = destination; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public Double getPrice() {
+        return price;
+    }
 
-    public String getItinerary() { return itinerary; }
-    public void setItinerary(String itinerary) { this.itinerary = itinerary; }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
+    public int getMaxPeople() {
+        return maxPeople;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public void setMaxPeople(int maxPeople) {
+        this.maxPeople = maxPeople;
+    }
 
-    public Date getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
+    public String getDuration() {
+        return duration;
+    }
 
-    public List<TourImage> getImages() { return images; }
-    public void setImages(List<TourImage> images) { this.images = images; }
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getTransport() {
+        return transport;
+    }
+
+    public void setTransport(String transport) {
+        this.transport = transport;
+    }
+
+    public String getStartLocation() {
+        return startLocation;
+    }
+
+    public void setStartLocation(String startLocation) {
+        this.startLocation = startLocation;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getItinerary() {
+        return itinerary;
+    }
+
+    public void setItinerary(String itinerary) {
+        this.itinerary = itinerary;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<TourImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<TourImage> images) {
+        this.images = images;
+    }
 
     @Override
     public String toString() {
