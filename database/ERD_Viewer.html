@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Da Nang Travel Hub - ERD Diagram</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a1a;
+            color: #e0e0e0;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a3e 0%, #0d0d2b 100%);
+            border-bottom: 1px solid rgba(99,102,241,0.3);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            position: relative;
+        }
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header .subtitle { font-size: 12px; color: #64748b; margin-top: 2px; }
+        .controls { display: flex; gap: 8px; align-items: center; }
+        .controls button {
+            background: rgba(99,102,241,0.15);
+            border: 1px solid rgba(99,102,241,0.3);
+            color: #a5b4fc;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .controls button:hover {
+            background: rgba(99,102,241,0.3);
+            border-color: rgba(99,102,241,0.6);
+            color: #fff;
+        }
+        .zoom-info { font-size: 12px; color: #64748b; min-width: 50px; text-align: center; }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(15,15,35,0.8);
+            padding: 8px 24px;
+            border-bottom: 1px solid rgba(99,102,241,0.15);
+        }
+        .tab {
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #94a3b8;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .tab:hover { color: #c084fc; background: rgba(192,132,252,0.1); }
+        .tab.active {
+            background: rgba(99,102,241,0.2);
+            color: #a5b4fc;
+            border-color: rgba(99,102,241,0.4);
+        }
+        .diagram-container {
+            width: 100%;
+            height: calc(100vh - 100px);
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+        }
+        .diagram-container:active { cursor: grabbing; }
+        .diagram-wrapper {
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out;
+            padding: 40px;
+            display: inline-block;
+            min-width: 100%;
+            min-height: 100%;
+        }
+        .diagram-section { display: none; }
+        .diagram-section.active { display: block; }
+        .mermaid svg { max-width: none !important; }
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(15,15,35,0.95);
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            font-size: 12px;
+            max-width: 240px;
+        }
+        .legend h3 { font-size: 13px; font-weight: 600; color: #a5b4fc; margin-bottom: 10px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: #94a3b8; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+        .help-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15,15,35,0.9);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-size: 12px;
+            color: #64748b;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>Da Nang Travel Hub - ERD Diagram</h1>
+            <div class="subtitle">Version 5.0 | 20 Tables | SQL Server</div>
+        </div>
+        <div class="controls">
+            <button onclick="zoomOut()">- Zoom Out</button>
+            <span class="zoom-info" id="zoomLevel">100%</span>
+            <button onclick="zoomIn()">+ Zoom In</button>
+            <button onclick="resetView()">Reset</button>
+            <button onclick="fitToScreen()">Fit</button>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('erd', this)">ERD Full</div>
+        <div class="tab" onclick="switchTab('modules', this)">Module Flow</div>
+        <div class="tab" onclick="switchTab('business', this)">Business Flow</div>
+    </div>
+
+    <div class="diagram-container" id="container">
+        <div class="diagram-wrapper" id="wrapper">
+
+            <!-- TAB 1: ERD -->
+            <div class="diagram-section active" id="erd">
+                <pre class="mermaid">
+erDiagram
+    Roles ||--o{ Users : has
+    Users ||--o| Providers : extends
+    Users ||--o| Customers : extends
+    Users ||--o{ Orders : places
+    Users ||--o{ AILogs : generates
+    Users ||--o{ PaymentTransactions : makes
+    Providers ||--o{ Tours : offers
+    Providers ||--o{ ProviderSubscriptions : subscribes
+    Providers ||--o{ ProviderPriceHistory : tracks
+    SubscriptionPlans ||--o{ ProviderSubscriptions : defines
+    SubscriptionPlans ||--o{ PaymentTransactions : links
+    Categories ||--o{ Tours : categorizes
+    Tours ||--o{ TourImages : contains
+    Tours ||--o{ Bookings : booked_in
+    Tours ||--o{ TourSchedules : scheduled
+    Tours ||--o{ TourPriceSeasons : priced
+    Tours ||--o{ CartItems : added_to
+    Orders ||--o{ Bookings : includes
+    Orders ||--o{ Payments : paid_by
+    Orders ||--o{ PaymentTransactions : processed
+    Customers ||--o{ CustomerActivities : logs
+    Customers ||--o{ InteractionHistory : records
+    Customers ||--o{ Carts : owns
+    Carts ||--o{ CartItems : holds
+
+    Roles {
+        int RoleId PK
+        nvarchar RoleName UK
+    }
+    Users {
+        int UserId PK
+        nvarchar Email UK
+        nvarchar Username UK
+        nvarchar PasswordHash
+        int RoleId FK
+        nvarchar FullName
+        nvarchar PhoneNumber
+        nvarchar Address
+        date DateOfBirth
+        nvarchar AvatarUrl
+        bit IsActive
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    Providers {
+        int ProviderId PK
+        nvarchar BusinessName
+        nvarchar BusinessLicense
+        nvarchar ProviderType
+        decimal Rating
+        bit IsVerified
+        int TotalTours
+        bit IsActive
+    }
+    Customers {
+        int CustomerId PK
+        nvarchar Address
+        date DateOfBirth
+        nvarchar Status
+    }
+    Categories {
+        int CategoryId PK
+        nvarchar CategoryName
+        nvarchar IconUrl
+        nvarchar Description
+    }
+    Tours {
+        int TourId PK
+        int ProviderId FK
+        int CategoryId FK
+        nvarchar TourName
+        nvarchar ShortDesc
+        nvarchar Description
+        decimal Price
+        decimal SeasonalPrice
+        int MaxPeople
+        int CurrentBookings
+        nvarchar Duration
+        nvarchar Transport
+        nvarchar StartLocation
+        nvarchar Destination
+        nvarchar ImageUrl
+        nvarchar Itinerary
+        bit IsActive
+        float PopularityScore
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    TourImages {
+        int ImageId PK
+        int TourId FK
+        nvarchar ImageUrl
+        nvarchar Caption
+        int SortOrder
+    }
+    TourSchedules {
+        int ScheduleId PK
+        int TourId FK
+        date DepartureDate
+        date ReturnDate
+        int AvailableSlots
+        nvarchar Status
+    }
+    TourPriceSeasons {
+        int SeasonId PK
+        int TourId FK
+        nvarchar SeasonName
+        date StartDate
+        date EndDate
+        decimal PriceMultiplier
+        bit IsActive
+    }
+    Carts {
+        int CartId PK
+        int CustomerId FK
+        nvarchar SessionId
+        nvarchar Status
+        datetime CreatedAt
+        datetime UpdatedAt
+        datetime AbandonedAt
+    }
+    CartItems {
+        int CartItemId PK
+        int CartId FK
+        int TourId FK
+        date TravelDate
+        int Quantity
+        decimal UnitPrice
+        decimal SubTotal
+        datetime AddedAt
+    }
+    Orders {
+        int OrderId PK
+        int CustomerId FK
+        decimal TotalAmount
+        nvarchar OrderStatus
+        nvarchar PaymentStatus
+        nvarchar CancelReason
+        decimal RefundAmount
+        datetime OrderDate
+        datetime UpdatedAt
+    }
+    Bookings {
+        int BookingId PK
+        int OrderId FK
+        int TourId FK
+        datetime BookingDate
+        int Quantity
+        decimal SubTotal
+        nvarchar BookingStatus
+    }
+    Payments {
+        int PaymentId PK
+        int OrderId FK
+        nvarchar PaymentMethod
+        nvarchar TransactionId
+        decimal Amount
+        nvarchar PaymentStatus
+        datetime PaidAt
+    }
+    MonthlyRevenue {
+        int RevenueId PK
+        int ReportMonth
+        int ReportYear
+        int TotalBookings
+        decimal GrossVolume
+        decimal PlatformFee
+        decimal NetRevenue
+        int CancelledOrders
+        decimal CancelRate
+        datetime CreatedAt
+    }
+    SubscriptionPlans {
+        int PlanId PK
+        nvarchar PlanName
+        nvarchar PlanCode UK
+        decimal Price
+        int DurationDays
+        nvarchar Description
+        nvarchar Features
+        bit IsActive
+    }
+    ProviderSubscriptions {
+        int SubId PK
+        int ProviderId FK
+        int PlanId FK
+        datetime StartDate
+        datetime EndDate
+        nvarchar Status
+        nvarchar PaymentStatus
+        decimal Amount
+        bit IsActive
+    }
+    PaymentTransactions {
+        int TransactionId PK
+        int UserId FK
+        int PlanId FK
+        int OrderId FK
+        decimal Amount
+        nvarchar TransactionCode UK
+        nvarchar Status
+        nvarchar PaymentGateway
+        nvarchar SePayReference
+        datetime CreatedDate
+        datetime PaidDate
+    }
+    SepayTransactions {
+        int Id PK
+        nvarchar Gateway
+        nvarchar TransactionDate
+        nvarchar AccountNumber
+        nvarchar Code
+        nvarchar Content
+        nvarchar TransferType
+        decimal TransferAmount
+        decimal Accumulated
+        nvarchar SubAccount
+        nvarchar ReferenceCode
+        nvarchar Description
+        datetime CreatedAt
+    }
+    CustomerActivities {
+        int Id PK
+        int CustomerId FK
+        nvarchar ActionType
+        nvarchar Description
+        nvarchar Metadata
+        datetime CreatedAt
+    }
+    InteractionHistory {
+        int Id PK
+        int CustomerId FK
+        nvarchar Action
+        datetime CreatedAt
+    }
+    ProviderPriceHistory {
+        int PriceId PK
+        int ProviderId FK
+        nvarchar ServiceType
+        nvarchar ServiceName
+        decimal OldPrice
+        decimal NewPrice
+        datetime ChangeDate
+        nvarchar Note
+    }
+    AILogs {
+        int LogId PK
+        int UserId FK
+        nvarchar ActionType
+        nvarchar InputData
+        nvarchar OutputData
+        int ExecutionTimeMs
+        datetime CreatedAt
+    }
+                </pre>
+            </div>
+
+            <!-- TAB 2: Module Flow -->
+            <div class="diagram-section" id="modules">
+                <div id="moduleFlowContainer"></div>
+            </div>
+
+            <!-- TAB 3: Business Flow -->
+            <div class="diagram-section" id="business">
+                <div id="businessFlowContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <h3>Chu thich Module</h3>
+        <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div> M1 Nha cung cap - Sang</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div> M2 Khach hang - Minh</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> M3 Tour - Minh</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#eab308"></div> M4 Gio hang - Dai</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> M5 Don hang - Hieu</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> M6 Thanh toan - Hieu</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div> M7 Doanh thu - Thuan</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#14b8a6"></div> M8 AI Chatbot - Thuan</div>
+    </div>
+
+    <div class="help-hint">
+        Keo chuot de di chuyen | Scroll de zoom | Chon tab de xem diagram khac nhau
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                primaryColor: '#312e81',
+                primaryTextColor: '#e0e7ff',
+                primaryBorderColor: '#6366f1',
+                lineColor: '#6366f1',
+                secondaryColor: '#1e1b4b',
+                tertiaryColor: '#0f0f23',
+                fontSize: '14px'
+            }
+        });
+
+        // Render Module Flow and Business Flow after page load
+        window.addEventListener('load', async function() {
+            await renderDiagram('moduleFlowContainer', moduleFlowDef);
+            await renderDiagram('businessFlowContainer', businessFlowDef);
+        });
+
+        async function renderDiagram(containerId, definition) {
+            try {
+                const container = document.getElementById(containerId);
+                const { svg } = await mermaid.render(containerId + '_svg', definition);
+                container.innerHTML = svg;
+            } catch(e) {
+                console.error('Mermaid render error:', e);
+                document.getElementById(containerId).innerHTML =
+                    '<div style="color:#f87171;padding:20px;">Render error: ' + e.message + '</div>';
+            }
+        }
+
+        const moduleFlowDef = `flowchart TB
+    R[Roles] --> U[Users]
+    U --> P[Providers]
+    U --> C[Customers]
+    P --> PPH[ProviderPriceHistory]
+    C --> CA[CustomerActivities]
+    C --> IH[InteractionHistory]
+    CAT[Categories] --> T[Tours]
+    P --> T
+    T --> TI[TourImages]
+    T --> TS[TourSchedules]
+    T --> TPS[TourPriceSeasons]
+    C --> CT[Carts]
+    CT --> CI[CartItems]
+    T --> CI
+    U --> O[Orders]
+    O --> B[Bookings]
+    T --> B
+    SP[SubscriptionPlans] --> PS[ProviderSubscriptions]
+    P --> PS
+    O --> PM[Payments]
+    SP --> PT[PaymentTransactions]
+    O --> PT
+    U --> PT
+    SEP[SepayTransactions] -.-> PT
+    MR[MonthlyRevenue]
+    U --> AL[AILogs]
+
+    subgraph AUTH["AUTH"]
+        R
+        U
+    end
+    subgraph M1["M1 NHA CUNG CAP - Sang"]
+        P
+        PPH
+    end
+    subgraph M2["M2 KHACH HANG - Minh"]
+        C
+        CA
+        IH
+    end
+    subgraph M3["M3 TOUR - Minh"]
+        CAT
+        T
+        TI
+        TS
+        TPS
+    end
+    subgraph M4["M4 GIO HANG - Dai"]
+        CT
+        CI
+    end
+    subgraph M5["M5 DON HANG - Hieu"]
+        O
+        B
+    end
+    subgraph M6["M6 THANH TOAN - Hieu"]
+        SP
+        PS
+        PM
+        PT
+        SEP
+    end
+    subgraph M7["M7 DOANH THU - Thuan"]
+        MR
+    end
+    subgraph M8["M8 AI - Thuan"]
+        AL
+    end
+
+    style AUTH fill:#1e1b4b,stroke:#6366f1,color:#e0e7ff
+    style M1 fill:#1a1a2e,stroke:#f97316,color:#fed7aa
+    style M2 fill:#1a1a2e,stroke:#06b6d4,color:#cffafe
+    style M3 fill:#1a1a2e,stroke:#10b981,color:#d1fae5
+    style M4 fill:#1a1a2e,stroke:#eab308,color:#fef9c3
+    style M5 fill:#1a1a2e,stroke:#ef4444,color:#fecaca
+    style M6 fill:#1a1a2e,stroke:#8b5cf6,color:#ede9fe
+    style M7 fill:#1a1a2e,stroke:#ec4899,color:#fce7f3
+    style M8 fill:#1a1a2e,stroke:#14b8a6,color:#ccfbf1`;
+
+        const businessFlowDef = `sequenceDiagram
+    actor KH as Khach Hang
+    participant WEB as Website
+    participant DB as Database
+    participant SEPAY as SePay
+    participant AI as AI Engine
+    actor NCC as Nha Cung Cap
+
+    rect rgba(99, 102, 241, 0.1)
+        Note over KH,DB: DANG KY + DANG NHAP
+        KH->>WEB: Dang ky tai khoan
+        WEB->>DB: INSERT Users + Customers
+        WEB-->>KH: Thanh cong
+        KH->>WEB: Dang nhap
+        WEB->>DB: SELECT Users check password
+        WEB-->>KH: Session created
+    end
+
+    rect rgba(16, 185, 129, 0.1)
+        Note over KH,DB: TIM KIEM + XEM TOUR
+        KH->>WEB: Tim kiem tour Da Nang
+        WEB->>DB: INSERT CustomerActivities SEARCH
+        WEB->>DB: SELECT Tours + Categories + Providers
+        WEB->>DB: SELECT TourPriceSeasons tinh gia mua
+        WEB-->>KH: Danh sach tour + gia theo mua
+        KH->>WEB: Xem chi tiet tour
+        WEB->>DB: INSERT InteractionHistory VIEW_TOUR
+        WEB->>DB: SELECT Tour + TourImages + TourSchedules
+        WEB-->>KH: Chi tiet + anh + lich khoi hanh
+    end
+
+    rect rgba(234, 179, 8, 0.1)
+        Note over KH,DB: GIO HANG
+        KH->>WEB: Them tour vao gio
+        WEB->>DB: SELECT or INSERT Carts
+        WEB->>DB: INSERT CartItems voi UnitPrice hien tai
+        WEB->>DB: INSERT CustomerActivities ADD_CART
+        WEB-->>KH: Da them vao gio
+        KH->>WEB: Xem gio hang
+        WEB->>DB: SELECT CartItems JOIN Tours cap nhat gia
+        WEB-->>KH: Gio hang realtime
+        Note over DB: ABANDONED CART - Neu 24h khong thao tac thi Status=Abandoned va AI gui reminder
+    end
+
+    rect rgba(239, 68, 68, 0.1)
+        Note over KH,SEPAY: DAT TOUR + THANH TOAN
+        KH->>WEB: Xac nhan dat tour
+        WEB->>DB: Check TourSchedules AvailableSlots
+        WEB->>DB: INSERT Orders Pending
+        WEB->>DB: INSERT Bookings cho tung item
+        WEB->>DB: UPDATE Tours CurrentBookings
+        WEB->>DB: UPDATE TourSchedules AvailableSlots
+        WEB->>DB: UPDATE Carts Converted
+        WEB-->>KH: Trang thanh toan QR
+        WEB->>DB: INSERT PaymentTransactions Pending
+        KH->>SEPAY: Chuyen khoan QR
+        SEPAY-->>WEB: Webhook xac nhan
+        WEB->>DB: INSERT SepayTransactions
+        WEB->>DB: UPDATE PaymentTransactions Paid
+        WEB->>DB: INSERT Payments Success
+        WEB->>DB: UPDATE Orders Confirmed Paid
+        WEB->>DB: UPDATE Bookings Confirmed
+        WEB-->>KH: Email xac nhan thanh cong
+    end
+
+    rect rgba(139, 92, 246, 0.1)
+        Note over KH,DB: QUAN LY DON
+        KH->>WEB: Xem lich su don hang
+        WEB->>DB: SELECT Orders JOIN Bookings JOIN Tours
+        WEB-->>KH: Danh sach don
+        KH->>WEB: Yeu cau huy tour
+        WEB->>DB: UPDATE Orders Cancelled + RefundAmount
+        WEB->>DB: UPDATE Bookings Refunded
+        WEB->>DB: Tra lai AvailableSlots
+        WEB-->>KH: Huy thanh cong + hoan tien
+        Note over DB: Khi tour hoan thanh UPDATE MonthlyRevenue
+    end
+
+    rect rgba(236, 72, 153, 0.1)
+        Note over NCC,AI: GOI DICH VU + AI
+        NCC->>WEB: Dang nhap PROVIDER
+        NCC->>WEB: Nang cap goi PRO
+        WEB->>DB: INSERT PaymentTransactions
+        NCC->>SEPAY: Thanh toan
+        SEPAY-->>WEB: Webhook
+        WEB->>DB: INSERT ProviderSubscriptions Active
+        WEB-->>NCC: Mo khoa AI
+        NCC->>WEB: Dung AI Forecasting
+        WEB->>DB: Check ProviderSubscriptions PRO
+        WEB->>DB: SELECT MonthlyRevenue + Orders
+        WEB->>AI: Gui du lieu Time-series
+        AI-->>WEB: Du bao doanh thu + phan tich mua vu
+        WEB->>DB: INSERT AILogs ForecastEngine
+        WEB-->>NCC: Bao cao AI
+        NCC->>WEB: Dung AI Chatbot
+        WEB->>AI: Gui cau hoi + context
+        AI-->>WEB: Tra loi tu nhien
+        WEB->>DB: INSERT AILogs ChatbotRequest
+        WEB-->>NCC: Hien thi tra loi
+    end`;
+
+        // Pan & Zoom
+        let scale = 1, translateX = 0, translateY = 0, isDragging = false, startX, startY;
+        const container = document.getElementById('container');
+        const wrapper = document.getElementById('wrapper');
+
+        function updateTransform() {
+            wrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+        }
+
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            scale = Math.max(0.2, Math.min(3, scale + (e.deltaY > 0 ? -0.1 : 0.1)));
+            updateTransform();
+        });
+        container.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX - translateX; startY = e.clientY - translateY; });
+        container.addEventListener('mousemove', (e) => { if (!isDragging) return; translateX = e.clientX - startX; translateY = e.clientY - startY; wrapper.style.transition = 'none'; updateTransform(); });
+        container.addEventListener('mouseup', () => { isDragging = false; wrapper.style.transition = 'transform 0.1s ease-out'; });
+        container.addEventListener('mouseleave', () => { isDragging = false; wrapper.style.transition = 'transform 0.1s ease-out'; });
+
+        function zoomIn() { scale = Math.min(3, scale + 0.2); updateTransform(); }
+        function zoomOut() { scale = Math.max(0.2, scale - 0.2); updateTransform(); }
+        function resetView() { scale = 1; translateX = 0; translateY = 0; updateTransform(); }
+        function fitToScreen() { scale = 0.5; translateX = 0; translateY = 0; updateTransform(); }
+
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.diagram-section').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            resetView();
+        }
+    </script>
+</body>
+</html>
