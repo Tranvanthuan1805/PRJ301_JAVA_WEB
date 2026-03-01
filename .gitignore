@@ -4,3 +4,11 @@
 /TravelBooking/build/
 /TravelBooking/dist/
 /TravelBooking/nbproject/private/
+
+# Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
