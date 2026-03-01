@@ -45,7 +45,7 @@ public class Provider implements Serializable {
     @Column(name = "Status", nullable = false, length = 20)
     private String status = "Pending";
 
-    @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "Description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "CreatedAt")

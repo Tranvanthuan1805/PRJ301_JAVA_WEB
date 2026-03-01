@@ -60,6 +60,10 @@ public class OrderDetailDTO {
     public String getFormattedTotalPrice() { return String.format("%,.0f VND", totalPrice); }
     public String getFormattedTourPrice() { return String.format("%,.0f VND", tourPrice); }
 
+    // Aliases for JSP compatibility
+    public double getTotalAmount() { return totalPrice; }
+    public int getQuantity() { return numberOfPeople > 0 ? numberOfPeople : 1; }
+
     // Getters and Setters
     public int getOrderId() { return orderId; }
     public void setOrderId(int orderId) { this.orderId = orderId; }

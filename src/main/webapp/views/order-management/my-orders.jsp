@@ -83,7 +83,13 @@
                             <div class="order-info">
                                 <h3>${o.tourName}</h3>
                                 <span class="amount"><fmt:formatNumber value="${o.totalAmount}" type="number" groupingUsed="true"/>đ</span>
-                                <span class="badge badge-${o.statusBadgeClass}" style="margin-left:10px">${o.statusDisplay}</span>
+                                <c:choose>
+                                    <c:when test="${o.status == 'Pending'}"><span class="badge badge-warning" style="margin-left:10px">Chờ XN</span></c:when>
+                                    <c:when test="${o.status == 'Confirmed'}"><span class="badge badge-info" style="margin-left:10px">Đã XN</span></c:when>
+                                    <c:when test="${o.status == 'Completed'}"><span class="badge badge-success" style="margin-left:10px">Hoàn thành</span></c:when>
+                                    <c:when test="${o.status == 'Cancelled'}"><span class="badge badge-danger" style="margin-left:10px">Đã hủy</span></c:when>
+                                    <c:otherwise><span class="badge badge-warning" style="margin-left:10px">${o.status}</span></c:otherwise>
+                                </c:choose>
                             </div>
                             <div class="order-actions">
                                 <c:if test="${o.status == 'Pending'}">

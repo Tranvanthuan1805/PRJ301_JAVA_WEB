@@ -27,7 +27,7 @@ public class SubscriptionPlan implements Serializable {
     @Column(name = "Description", length = 500)
     private String description;
 
-    @Column(name = "Features", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "Features", columnDefinition = "TEXT")
     private String features;
 
     @Column(name = "IsActive")

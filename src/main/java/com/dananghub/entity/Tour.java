@@ -28,7 +28,7 @@ public class Tour implements Serializable {
     @Column(name = "ShortDesc", length = 500)
     private String shortDesc;
 
-    @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "Description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "Price", nullable = false)
@@ -52,7 +52,7 @@ public class Tour implements Serializable {
     @Column(name = "ImageUrl", length = 500)
     private String imageUrl;
 
-    @Column(name = "Itinerary", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "Itinerary", columnDefinition = "TEXT")
     private String itinerary;
 
     @Column(name = "IsActive")
