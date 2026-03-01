@@ -53,8 +53,8 @@
                     /* ═══ HERO ═══ */
                     /* ═══ HERO — Đà Nẵng Premium ═══ */
                     .hero{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-top:100px}
-                    .hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1670983083647-cb478e649da4?auto=format&fit=crop&w=1920&q=90') center 40%/cover;z-index:0}
-                    .hero-bg::after{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1670983083647-cb478e649da4?auto=format&fit=crop&w=1920&q=90') center 40%/cover;animation:heroFloat 20s ease-in-out infinite alternate;opacity:.5;z-index:0}
+                    .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 40%;z-index:0}
+                    .hero-bg::after{content:'';position:absolute;inset:0;background:inherit;background-size:cover;background-position:center 40%;animation:heroFloat 20s ease-in-out infinite alternate;opacity:.5;z-index:0}
                     @keyframes heroFloat{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.08) translate(-1%,.5%)}}
                     .hero-overlay{position:absolute;inset:0;background:linear-gradient(175deg,rgba(15,23,42,.25) 0%,rgba(15,23,42,.45) 40%,rgba(15,23,42,.82) 100%);z-index:1}
                     .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,#F7F8FC);z-index:2}
@@ -897,7 +897,7 @@
 
                 <!-- ═══ HERO ═══ -->
                 <section class="hero">
-                    <div class="hero-bg"></div>
+                    <div class="hero-bg" style="background-image:url('${pageContext.request.contextPath}/images/hero-bg.png')"></div>
                     <div class="hero-overlay"></div>
                 <div class="hero-content">
                         <div class="hero-badge" data-i18n="hero.badge"><span class="dot"></span> Hơn 5,000+ du khách tin tưởng</div>
