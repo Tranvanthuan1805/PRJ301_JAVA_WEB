@@ -30,6 +30,9 @@
             <a href="${pageContext.request.contextPath}/" class="nav-item ${nav == 'home' ? 'active' : ''}">
                 <i class="fas fa-home"></i> Trang chủ
             </a>
+            <a href="${pageContext.request.contextPath}/explore" class="nav-item ${nav == 'explore' ? 'active' : ''}">
+                <i class="fas fa-map-marked-alt"></i> Khám phá
+            </a>
             <a href="${pageContext.request.contextPath}/tour?action=list" class="nav-item ${nav == 'tour' ? 'active' : ''}">
                 <i class="fas fa-compass"></i> Tours
             </a>

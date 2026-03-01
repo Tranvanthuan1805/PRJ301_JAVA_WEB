@@ -2,10 +2,15 @@ com\dananghub\entity\SepayTransaction.class
 com\dananghub\dao\ProviderDAO.class
 com\dananghub\entity\Provider.class
 com\dananghub\util\ValidationUtil.class
+com\dananghub\entity\TourSchedule.class
 com\dananghub\entity\Cart.class
+com\dananghub\dao\CartDAO.class
 com\dananghub\dao\UserDAO.class
+com\dananghub\entity\TourPriceSeason.class
 com\dananghub\entity\Payment.class
 com\dananghub\dao\ActivityDAO.class
+com\dananghub\entity\ProviderPriceHistory.class
+com\dananghub\dao\ProviderPriceHistoryDAO.class
 com\dananghub\entity\Booking.class
 com\dananghub\entity\CartItem.class
 com\dananghub\controller\OrderServlet.class
@@ -19,6 +24,7 @@ com\dananghub\entity\CustomerActivity.class
 com\dananghub\controller\AIChatServlet.class
 com\dananghub\entity\AILog.class
 com\dananghub\dao\CustomerDAO.class
+com\dananghub\dao\TourScheduleDAO.class
 com\dananghub\controller\TourServlet.class
 com\dananghub\entity\User.class
 com\dananghub\entity\Order.class
@@ -26,7 +32,6 @@ com\dananghub\controller\payment\PaymentServlet.class
 com\dananghub\controller\RegisterServlet.class
 com\dananghub\controller\payment\SePayWebhookServlet.class
 com\dananghub\dao\OrderDAO.class
-com\dananghub\entity\OrderStatus$1.class
 com\dananghub\entity\Customer.class
 com\dananghub\filter\EncodingFilter.class
 com\dananghub\entity\ProviderSubscription.class
@@ -35,6 +40,7 @@ com\dananghub\controller\BookingServlet.class
 com\dananghub\entity\Category.class
 com\dananghub\controller\ProfileServlet.class
 com\dananghub\controller\MyOrderServlet.class
+com\dananghub\dao\TourPriceSeasonDAO.class
 com\dananghub\controller\payment\CheckPaymentStatusServlet.class
 com\dananghub\dto\OrderDetailDTO.class
 com\dananghub\util\PasswordUtil.class

@@ -30,6 +30,7 @@
             </div>
             <nav class="nav-menu">
                 <a href="<%= request.getContextPath() %>/index.jsp" class="nav-item">Trang chủ</a>
+                <a href="<%= request.getContextPath() %>/explore" class="nav-item">Khám phá</a>
                 <% if (isAdmin) { %>
                     <a href="<%= request.getContextPath() %>/admin/tours.jsp" class="nav-item">Tours</a>
                     <a href="<%= request.getContextPath() %>/admin/customers" class="nav-item">Khách hàng</a>
