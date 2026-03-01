@@ -26,6 +26,7 @@ com\dananghub\controller\payment\PaymentServlet.class
 com\dananghub\controller\RegisterServlet.class
 com\dananghub\controller\payment\SePayWebhookServlet.class
 com\dananghub\dao\OrderDAO.class
+com\dananghub\entity\OrderStatus$1.class
 com\dananghub\entity\Customer.class
 com\dananghub\filter\EncodingFilter.class
 com\dananghub\entity\ProviderSubscription.class
