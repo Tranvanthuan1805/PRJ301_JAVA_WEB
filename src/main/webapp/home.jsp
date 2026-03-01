@@ -67,8 +67,7 @@
                     @keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.8)}}
 
                     /* Title */
-                    .hero-content h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:14px;text-shadow:0 3px 12px rgba(0,0,0,.2);letter-spacing:-.02em;animation:heroFadeUp .6s ease .08s both}
-                    .hero-content h1 .hl{background:linear-gradient(135deg,#3B82F6,#60A5FA,#93C5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+                    .hero-content h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,2.2rem);font-weight:900;color:#fff;line-height:1.2;margin-bottom:14px;text-shadow:0 3px 12px rgba(0,0,0,.3);letter-spacing:.03em;animation:heroFadeUp .6s ease .08s both;text-align:center;white-space:nowrap}
                     .hero-content>p.hero-sub{font-size:.98rem;color:rgba(255,255,255,.72);max-width:520px;margin:0 auto 32px;line-height:1.7;animation:heroFadeUp .6s ease .15s both}
 
                     @keyframes heroFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -901,7 +900,7 @@
                     <div class="hero-overlay"></div>
                 <div class="hero-content">
                         <div class="hero-badge" data-i18n="hero.badge"><span class="dot"></span> Hơn 5,000+ du khách tin tưởng</div>
-                        <h1>Khám Phá. Trải Nghiệm.<br><span class="hl">Đà Nẵng!</span></h1>
+                        <h1 data-i18n="hero.title">EZTRAVEL - TRẢI NGHIỆM DU LỊCH DỄ DÀNG</h1>
                         <p class="hero-sub" data-i18n="hero.desc">Khám phá những điểm đến tuyệt vời, trải nghiệm độc đáo và lên kế hoạch cho chuyến đi hoàn hảo của bạn!</p>
 
                         <!-- Service Tabs + Search Panel -->
@@ -941,33 +940,18 @@
                             </form>
                         </div>
 
-                        <!-- Quick Categories -->
-                        <div class="hero-cats">
-                            <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="hero-cat">
-                                <span class="hero-cat-icon">🏖️</span>
-                                <span class="hero-cat-name">Biển<br>Mỹ Khê</span>
-                            </a>
-                            <a href="${pageContext.request.contextPath}/tour?categoryId=2" class="hero-cat">
-                                <span class="hero-cat-icon">⛰️</span>
-                                <span class="hero-cat-name">Bà Nà<br>Hills</span>
-                            </a>
-                            <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="hero-cat">
-                                <span class="hero-cat-icon">🏮</span>
-                                <span class="hero-cat-name">Phố Cổ<br>Hội An</span>
-                            </a>
-                            <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="hero-cat">
-                                <span class="hero-cat-icon">🐒</span>
-                                <span class="hero-cat-name">Bán Đảo<br>Sơn Trà</span>
-                            </a>
-                            <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="hero-cat">
-                                <span class="hero-cat-icon">⛩️</span>
-                                <span class="hero-cat-name">Ngũ Hành<br>Sơn</span>
-                            </a>
-                            <a href="${pageContext.request.contextPath}/tour?search=cau+rong" class="hero-cat">
-                                <span class="hero-cat-icon">🐉</span>
-                                <span class="hero-cat-name">Cầu Rồng<br>Night</span>
-                            </a>
+                        <!-- Scroll Down Arrow -->
+                        <div class="scroll-hint" onclick="document.querySelector('.map-section').scrollIntoView({behavior:'smooth'})">
+                            <span style="font-size:.75rem;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Khám phá ngay</span>
+                            <i class="fas fa-chevron-down" style="font-size:1.2rem;color:rgba(255,255,255,.7)"></i>
                         </div>
+                        <style>
+                            .scroll-hint{display:flex;flex-direction:column;align-items:center;cursor:pointer;margin-top:24px;animation:scrollBounce 2s ease-in-out infinite;transition:opacity .3s}
+                            .scroll-hint:hover{opacity:.9}
+                            .scroll-hint:hover i{transform:translateY(4px)}
+                            .scroll-hint i{transition:transform .3s ease}
+                            @keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+                        </style>
                     </div>
                 </section>
 
@@ -1248,6 +1232,7 @@
                     });
                 </script>
                 <script src="${pageContext.request.contextPath}/js/i18n.js"></script>
+                <script>if(typeof I18N!=='undefined'){I18N.applyTranslations();}</script>
             </body>
 
             </html>

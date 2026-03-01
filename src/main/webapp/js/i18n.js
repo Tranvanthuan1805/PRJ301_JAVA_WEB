@@ -28,8 +28,7 @@ const I18N = {
 
         // ═══ HERO ═══
         'hero.badge':       { vi:'Hơn 5,000+ du khách tin tưởng', en:'Trusted by 5,000+ travelers', ko:'5,000명 이상의 여행자가 신뢰', ja:'5,000人以上の旅行者に信頼', zh:'超过5,000名旅客信赖' },
-        'hero.title1':      { vi:'Khám Phá. Trải Nghiệm.', en:'Discover. Experience.', ko:'발견하다. 경험하다.', ja:'発見。体験。', zh:'发现。体验。' },
-        'hero.title2':      { vi:'Đi Thôi!', en:"Let's Go!", ko:'떠나자!', ja:'行こう！', zh:'出发！' },
+        'hero.title':       { vi:'EZTRAVEL - TRẢI NGHIỆM DU LỊCH DỄ DÀNG', en:'EZTRAVEL - TRAVEL MADE EASY', ko:'EZTRAVEL - 쉬운 여행 경험', ja:'EZTRAVEL - 簡単な旅行体験', zh:'EZTRAVEL - 轻松旅行体验' },
         'hero.desc':        { vi:'Khám phá những điểm đến tuyệt vời, trải nghiệm độc đáo và lên kế hoạch cho chuyến đi hoàn hảo của bạn!', en:'Discover amazing destinations, unique experiences and plan your perfect trip!', ko:'멋진 여행지를 발견하고, 독특한 경험과 완벽한 여행을 계획하세요!', ja:'素晴らしい目的地を発見し、ユニークな体験と完璧な旅を計画しましょう！', zh:'发现精彩目的地，独特体验，规划您的完美旅程！' },
 
         // ═══ SEARCH ═══
