@@ -2,8 +2,6 @@ package com.dananghub.entity;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -39,21 +37,6 @@ public class Provider implements Serializable {
     @Column(name = "IsActive")
     private boolean isActive = true;
 
-    @Column(name = "JoinDate", nullable = false)
-    private LocalDate joinDate;
-
-    @Column(name = "Status", nullable = false, length = 20)
-    private String status = "Pending";
-
-    @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
-    private String description;
-
-    @Column(name = "CreatedAt")
-    private LocalDateTime createdAt;
-
-    @Column(name = "UpdatedAt")
-    private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProviderPriceHistory> priceHistory;
 
@@ -74,27 +57,6 @@ public class Provider implements Serializable {
         this.providerId = providerId;
         this.businessName = businessName;
         this.providerType = providerType;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-        if (updatedAt == null) {
-            updatedAt = LocalDateTime.now();
-        }
-        if (joinDate == null) {
-            joinDate = LocalDate.now();
-        }
-        if (status == null) {
-            status = "Pending";
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
     }
 
     public int getProviderId() {
@@ -167,46 +129,6 @@ public class Provider implements Serializable {
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    public LocalDate getJoinDate() {
-        return joinDate;
-    }
-
-    public void setJoinDate(LocalDate joinDate) {
-        this.joinDate = joinDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public List<ProviderPriceHistory> getPriceHistory() {

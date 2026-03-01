@@ -1,9 +1,7 @@
 package com.dananghub.controller;
 
 import com.dananghub.dao.UserDAO;
-import com.dananghub.dao.RoleDAO;
 import com.dananghub.entity.User;
-import com.dananghub.entity.Role;
 import com.dananghub.util.PasswordUtil;
 
 import jakarta.servlet.ServletException;
