@@ -11,14 +11,15 @@
     <properties>
       <!-- JDBC Connection Settings -->
       <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-      <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=AdminUser;encrypt=true;trustServerCertificate=true;"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=TourManagement;encrypt=true;trustServerCertificate=true;"/>
       <property name="jakarta.persistence.jdbc.user" value="sa"/>
-      <property name="jakarta.persistence.jdbc.password" value="MinhHieu2816@"/>
+      <property name="jakarta.persistence.jdbc.password" value="123456"/>
 
       <!-- Hibernate Settings -->
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+      <property name="hibernate.hbm2ddl.auto" value="none"/>
       
       <!-- Connection Pool -->
       <property name="hibernate.connection.pool_size" value="10"/>

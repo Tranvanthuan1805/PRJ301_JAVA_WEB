@@ -506,38 +506,42 @@
                                     </c:choose>
                                 </div>
                                 
-                                <!-- Action buttons for logged-in users -->
-                                <c:if test="${not empty sessionScope.username}">
-                                    <div class="tour-actions">
-                                        <c:choose>
-                                            <c:when test="${tour.maxPeople > 0}">
-                                                <a href="${pageContext.request.contextPath}/tour-detail?id=${tour.id}" 
-                                                   class="btn-book">
-                                                    🎫 Đặt tour
-                                                </a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span class="btn-book btn-disabled">
-                                                    Hết chỗ
-                                                </span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <a href="${pageContext.request.contextPath}/tour-detail?id=${tour.id}" 
-                                           class="btn-view">
-                                            👁️ Chi tiết
-                                        </a>
-                                    </div>
-                                </c:if>
-                                
-                                <!-- View details link for guests -->
-                                <c:if test="${empty sessionScope.username}">
-                                    <div class="tour-actions">
-                                        <a href="${pageContext.request.contextPath}/tour-detail?id=${tour.id}" 
-                                           class="btn-view" style="flex: 1;">
-                                            👁️ Xem chi tiết
-                                        </a>
-                                    </div>
-                                </c:if>
+                                <!-- Action buttons -->
+                                <div class="tour-actions">
+                                    <c:choose>
+                                        <c:when test="${not empty sessionScope.username}">
+                                            <!-- Logged-in users can book -->
+                                            <c:choose>
+                                                <c:when test="${tour.maxPeople > 0}">
+                                                    <a href="${pageContext.request.contextPath}/tour-detail?id=${tour.tourId}" 
+                                                       class="btn-book">
+                                                        🎫 Đặt tour
+                                                    </a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="btn-book btn-disabled">
+                                                        Hết chỗ
+                                                    </span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <a href="${pageContext.request.contextPath}/tour-detail?id=${tour.tourId}" 
+                                               class="btn-view">
+                                                👁️ Chi tiết
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <!-- Guests redirected to login when clicking book -->
+                                            <a href="${pageContext.request.contextPath}/login.jsp?redirect=explore" 
+                                               class="btn-book">
+                                                🎫 Đặt tour
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/tour-detail?id=${tour.tourId}" 
+                                               class="btn-view">
+                                                👁️ Chi tiết
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
                             </div>
                         </div>
                     </c:forEach>
