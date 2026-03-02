@@ -45,12 +45,31 @@ public class SePayWebhookServlet extends HttpServlet {
 
             SubscriptionDAO dao = new SubscriptionDAO();
             dao.saveSepayTransaction(sepayTrans);
-            boolean success = dao.processPayment(sepayTrans);
+            
+            String content = sepayTrans.getContent() != null ? sepayTrans.getContent().toUpperCase() : "";
+            
+            String resultStatus = "success";
+            String reason = "Payment processed";
 
-            if (success) {
+            if (content.contains("ORD")) {
+                com.dananghub.dao.OrderDAO orderDao = new com.dananghub.dao.OrderDAO();
+                String orderResult = orderDao.processOrderPayment(sepayTrans);
+                if (!"SUCCESS".equals(orderResult)) {
+                    resultStatus = "error";
+                    reason = orderResult;
+                }
+            } else {
+                boolean subSuccess = dao.processPayment(sepayTrans);
+                if (!subSuccess) {
+                    resultStatus = "error";
+                    reason = "Subscription verification failed";
+                }
+            }
+
+            if ("success".equals(resultStatus)) {
                 out.print("{\"success\": true, \"message\": \"Payment processed\"}");
             } else {
-                out.print("{\"success\": false, \"message\": \"Payment verification failed or duplicate\"}");
+                out.print("{\"success\": false, \"message\": \"" + reason.replace("\"", "'") + "\"}");
             }
 
         } catch (Exception e) {

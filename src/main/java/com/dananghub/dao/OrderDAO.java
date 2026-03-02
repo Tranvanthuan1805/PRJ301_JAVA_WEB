@@ -323,4 +323,84 @@ public class OrderDAO {
         }
         return result;
     }
+
+    // ==================== SePay Payment Processing ====================
+
+    public String processOrderPayment(com.dananghub.entity.SepayTransaction sepay) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            String content = sepay.getContent();
+            if (content == null) content = "";
+
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.add(java.util.Calendar.DAY_OF_YEAR, -3);
+            Date cutoff = cal.getTime();
+
+            List<com.dananghub.entity.PaymentTransaction> pendingList = em.createQuery(
+                "SELECT t FROM PaymentTransaction t WHERE t.status = 'Pending' AND t.createdDate > :cutoff",
+                com.dananghub.entity.PaymentTransaction.class)
+                .setParameter("cutoff", cutoff)
+                .getResultList();
+
+            if (pendingList.isEmpty()) {
+                return "FAIL: No pending transactions found at all.";
+            }
+
+            com.dananghub.entity.PaymentTransaction matchedTrans = null;
+            for (com.dananghub.entity.PaymentTransaction t : pendingList) {
+                if (t.getTransactionCode() != null && content.contains(t.getTransactionCode())) {
+                    matchedTrans = t;
+                    break;
+                }
+            }
+
+            if (matchedTrans == null) {
+                return "FAIL: Could not find matching transaction. SePay Content=" + content + " | PendingCount=" + pendingList.size();
+            }
+
+            // Kiem tra so tien
+            if (sepay.getTransferAmount() < matchedTrans.getAmount()) {
+                return "FAIL: Amount not enough. SePay=" + sepay.getTransferAmount() + " vs Required=" + matchedTrans.getAmount();
+            }
+
+            tx.begin();
+
+            // Cap nhat PaymentTransaction
+            matchedTrans.setStatus("Paid");
+            matchedTrans.setPaidDate(new Date());
+            matchedTrans.setSePayReference(sepay.getReferenceCode());
+            matchedTrans.setPaymentGateway(sepay.getGateway());
+            em.merge(matchedTrans);
+
+            // Cap nhat Order
+            Integer tOrderId = matchedTrans.getOrderId();
+            if (tOrderId == null) tOrderId = matchedTrans.getPlanId();
+            Order order = null;
+            if (tOrderId != null) {
+                order = em.find(Order.class, tOrderId);
+            }
+            
+            if (order != null) {
+                order.setPaymentStatus("Paid");
+                order.setOrderStatus("Confirmed");
+                order.setUpdatedAt(new Date());
+                em.merge(order);
+            } else {
+                tx.rollback();
+                return "FAIL: Order not found for OrderId=" + tOrderId;
+            }
+
+            tx.commit();
+            return "SUCCESS";
+
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+            return "ERROR: " + e.getMessage();
+        } finally {
+            em.close();
+        }
+    }
 }

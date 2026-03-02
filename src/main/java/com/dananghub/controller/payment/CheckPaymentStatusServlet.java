@@ -36,10 +36,12 @@ public class CheckPaymentStatusServlet extends HttpServlet {
         if (trans != null) {
             result.put("status", trans.getStatus());
             if ("Paid".equalsIgnoreCase(trans.getStatus())) {
-                HttpSession session = request.getSession();
-                User user = (User) session.getAttribute("user");
-                if (user != null) {
-                    session.setAttribute("user_plan", "Active");
+                if (code.startsWith("PRJ")) {
+                    HttpSession session = request.getSession();
+                    User user = (User) session.getAttribute("user");
+                    if (user != null) {
+                        session.setAttribute("user_plan", "Active");
+                    }
                 }
             }
         } else {

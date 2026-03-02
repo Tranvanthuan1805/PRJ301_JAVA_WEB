@@ -160,7 +160,19 @@ public class MyOrderServlet extends HttpServlet {
         }
 
         // Generate QR payment
-        String transCode = "EZT" + System.currentTimeMillis() + "U" + user.getUserId();
+        String transCode = "ORD" + System.currentTimeMillis() + "U" + user.getUserId() + "O" + orderId;
+
+        com.dananghub.entity.PaymentTransaction trans = new com.dananghub.entity.PaymentTransaction();
+        trans.setUserId(user.getUserId());
+        trans.setOrderId(orderId);
+        trans.setAmount(order.getTotalAmount());
+        trans.setTransactionCode(transCode);
+        trans.setStatus("Pending");
+        trans.setCreatedDate(new java.util.Date());
+
+        com.dananghub.dao.SubscriptionDAO subscriptionDAO = new com.dananghub.dao.SubscriptionDAO();
+        subscriptionDAO.createTransaction(trans);
+
         String bankAcc = "2806281106";
         String bankName = "MB";
         long amountInt = Math.round(order.getTotalAmount());

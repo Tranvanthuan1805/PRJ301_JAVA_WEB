@@ -53,7 +53,6 @@ com\dananghub\dao\OrderDAO.class
 com\dananghub\controller\AdminTourServlet.class
 com\dananghub\controller\PricingServlet.class
 com\dananghub\entity\AILog_.class
-com\dananghub\entity\OrderStatus$1.class
 com\dananghub\controller\GoogleAuthServlet.class
 com\dananghub\entity\Customer.class
 com\dananghub\entity\CustomerActivity_.class
