@@ -11,7 +11,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/pricing")
+@WebServlet("/subscription/pricing")
 public class PricingServlet extends HttpServlet {
 
     private final SubscriptionDAO subscriptionDAO = new SubscriptionDAO();

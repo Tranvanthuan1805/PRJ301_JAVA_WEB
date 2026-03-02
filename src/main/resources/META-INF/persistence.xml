@@ -29,6 +29,8 @@
         <class>com.dananghub.entity.CustomerActivity</class>
         <class>com.dananghub.entity.InteractionHistory</class>
         <class>com.dananghub.entity.AILog</class>
+        <class>com.dananghub.entity.TourSchedule</class>
+        <class>com.dananghub.entity.TourPriceSeason</class>
 
         <properties>
             <!-- Supabase PostgreSQL Connection (Session Pooler) -->
@@ -45,11 +47,11 @@
             <property name="hibernate.globally_quoted_identifiers" value="true"/>
 
             <!-- Connection Pool (C3P0) -->
-            <property name="hibernate.c3p0.min_size" value="2"/>
-            <property name="hibernate.c3p0.max_size" value="10"/>
-            <property name="hibernate.c3p0.timeout" value="300"/>
-            <property name="hibernate.c3p0.max_statements" value="50"/>
-            <property name="hibernate.c3p0.idle_test_period" value="3000"/>
+            <property name="hibernate.c3p0.min_size" value="1"/>
+            <property name="hibernate.c3p0.max_size" value="5"/>
+            <property name="hibernate.c3p0.timeout" value="180"/>
+            <property name="hibernate.c3p0.max_statements" value="30"/>
+            <property name="hibernate.c3p0.idle_test_period" value="60"/>
         </properties>
     </persistence-unit>
 

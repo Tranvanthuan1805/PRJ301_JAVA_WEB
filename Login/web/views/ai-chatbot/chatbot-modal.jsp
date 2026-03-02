@@ -392,6 +392,55 @@
     margin-top: 6px;
 }
 
+/* Booking Form Styles */
+.fcm-form-bubble {
+    width: 100%;
+    background: #fff !important;
+    border: 1px solid #FF416C !important;
+}
+.fcm-booking-form h6 {
+    color: #FF416C;
+    font-weight: 700;
+}
+.fcm-form-group {
+    margin-bottom: 10px;
+}
+.fcm-form-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: #4B5563;
+    margin-bottom: 3px;
+    font-weight: 500;
+}
+.fcm-form-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    outline: none;
+}
+.fcm-form-input:focus {
+    border-color: #FF416C;
+}
+.fcm-submit-btn {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #FF416C, #FF4B2B);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: 0.2s;
+}
+.fcm-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 65, 108, 0.3);
+}
+
 /* Mobile */
 @media (max-width: 480px) {
     .finer-chat-modal {

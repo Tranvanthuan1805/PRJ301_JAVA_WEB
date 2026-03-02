@@ -63,6 +63,8 @@ public class OrderDetailDTO {
     // Aliases for JSP compatibility
     public double getTotalAmount() { return totalPrice; }
     public int getQuantity() { return numberOfPeople > 0 ? numberOfPeople : 1; }
+    public String getCustomerName() { return username; }
+    public String getStatusDisplay() { return getStatusDisplayName(); }
 
     // Getters and Setters
     public int getOrderId() { return orderId; }

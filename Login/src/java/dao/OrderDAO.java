@@ -49,7 +49,7 @@ public class OrderDAO {
     public List<Order> getOrdersByUserId(int userId) {
         EntityManager em = JPAContext.getEntityManager();
         try {
-            String jpql = "SELECT o FROM Order o WHERE o.getUserId() = :uid ORDER BY o.orderDate DESC";
+            String jpql = "SELECT o FROM Order o WHERE o.userId = :uid ORDER BY o.orderDate DESC";
             return em.createQuery(jpql, Order.class)
                      .setParameter("uid", userId)
                      .getResultList();

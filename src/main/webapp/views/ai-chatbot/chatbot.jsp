@@ -1,5 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.dananghub.dao.TourDAO, com.dananghub.entity.Tour, java.util.List" %>
+<%
+    TourDAO chatTourDAO = new TourDAO();
+    List<Tour> chatTours = chatTourDAO.findAll();
+%>
+<script>
+    window.__CHAT_TOURS__ = [
+        <% for (int i = 0; i < chatTours.size(); i++) {
+            Tour t = chatTours.get(i);
+            String name = t.getTourName().replace("\"", "\\\"").replace("\n", "");
+            String dest = t.getDestination() != null ? t.getDestination().replace("\"", "\\\"") : "";
+        %>
+        {"tourId":<%= t.getTourId() %>,"tourName":"<%= name %>","price":<%= t.getPrice() %>,"destination":"<%= dest %>","maxPeople":<%= t.getMaxPeople() %>}<%= (i < chatTours.size() - 1) ? "," : "" %>
+        <% } %>
+    ];
+</script>
 
 <!-- AI Chatbot Widget - Premium -->
 <div id="ai-chatbot-container">
@@ -70,9 +86,18 @@
                 <button id="close-booking" class="bf-close"><i class="fas fa-times"></i></button>
             </div>
             <form id="booking-submit-form">
+                <div id="bf-loading" style="text-align:center;padding:20px;display:none">
+                    <i class="fas fa-spinner fa-spin"></i> Đang tải danh sách tour...
+                </div>
                 <div class="bf-field">
-                    <label>Mã Tour (Tour ID)</label>
-                    <input type="number" id="bf-tour-id" placeholder="VD: 1, 2, 3..." required>
+                    <label>Chọn Tour</label>
+                    <select id="bf-tour-id" class="bf-select" required>
+                        <option value="">-- Chọn tour bạn muốn đặt --</option>
+                    </select>
+                </div>
+                <div id="bf-tour-info" style="display:none;background:#F0F7FF;border-radius:10px;padding:10px;margin-bottom:10px;font-size:.8rem;border:1px solid #DBEAFE">
+                    <strong id="bf-tour-name"></strong><br>
+                    <span style="color:#3B82F6;font-weight:700" id="bf-tour-price"></span>
                 </div>
                 <div class="bf-row">
                     <div class="bf-field">
@@ -218,11 +243,12 @@
 .bf-close{margin-left:auto;background:none;border:none;color:#94A3B8;cursor:pointer;font-size:.9rem}
 .bf-field{margin-bottom:10px}
 .bf-field label{font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
-.bf-field input{width:100%;padding:9px 12px;border:1.5px solid #E8EAF0;border-radius:10px;font-size:.82rem;font-family:inherit;outline:none;color:#1B1F3B;transition:.3s;background:#F7F8FC}
-.bf-field input:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.08);background:#fff}
+.bf-field input,.bf-select{width:100%;padding:9px 12px;border:1.5px solid #E8EAF0;border-radius:10px;font-size:.82rem;font-family:inherit;outline:none;color:#1B1F3B;transition:.3s;background:#F7F8FC;box-sizing:border-box}
+.bf-field input:focus,.bf-select:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.08);background:#fff}
 .bf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .bf-btn{width:100%;padding:11px;border:none;border-radius:12px;background:linear-gradient(135deg,#3B82F6,#60A5FA);color:#fff;font-weight:800;font-size:.85rem;cursor:pointer;transition:.3s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px}
 .bf-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,130,246,.3)}
+.bf-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
 /* Order Status */
 .os-card{background:#F7F8FC;border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid #E8EAF0}
@@ -364,41 +390,92 @@
     const bookingForm = document.getElementById('booking-form');
     const closeBooking = document.getElementById('close-booking');
     const bookingSubmit = document.getElementById('booking-submit-form');
+    const tourSelect = document.getElementById('bf-tour-id');
+    let toursCache = [];
 
     closeBooking.addEventListener('click', () => bookingForm.style.display = 'none');
+
+    // Show tour info when selected
+    tourSelect.addEventListener('change', () => {
+        const tourInfo = document.getElementById('bf-tour-info');
+        const selected = toursCache.find(t => t.tourId == tourSelect.value);
+        if (selected) {
+            document.getElementById('bf-tour-name').textContent = selected.tourName;
+            document.getElementById('bf-tour-price').textContent = new Intl.NumberFormat('vi-VN').format(selected.price) + 'đ/người';
+            tourInfo.style.display = 'block';
+        } else {
+            tourInfo.style.display = 'none';
+        }
+    });
 
     function showBookingForm() {
         bookingForm.style.display = 'block';
         document.getElementById('bf-date').valueAsDate = new Date(Date.now() + 86400000);
+        
+        // Load tours from embedded data (no API needed)
+        const tours = window.__CHAT_TOURS__ || [];
+        toursCache = tours;
+        tourSelect.innerHTML = '<option value="">-- Chọn tour bạn muốn đặt --</option>';
+        tours.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t.tourId;
+            opt.textContent = t.tourName + ' (' + new Intl.NumberFormat('vi-VN').format(t.price) + 'đ)';
+            tourSelect.appendChild(opt);
+        });
+        document.getElementById('bf-loading').style.display = 'none';
     }
 
     bookingSubmit.addEventListener('submit', (e) => {
         e.preventDefault();
-        const tourId = document.getElementById('bf-tour-id').value;
-        const date = document.getElementById('bf-date').value;
+        const tourId = tourSelect.value;
         const guests = document.getElementById('bf-guests').value;
-        const note = document.getElementById('bf-note').value;
+        const selected = toursCache.find(t => t.tourId == tourId);
+        
+        if (!tourId || !selected) {
+            addBotMessage('⚠️ Vui lòng chọn tour từ danh sách.');
+            return;
+        }
 
         bookingForm.style.display = 'none';
+        const tourName = selected.tourName;
+        const totalPrice = new Intl.NumberFormat('vi-VN').format(selected.price * guests);
 
         addBotMessage('✅ <strong>Đang xử lý đặt tour...</strong><br><br>'
-            + '📋 Tour ID: <code>#' + tourId + '</code><br>'
-            + '📅 Ngày: ' + date + '<br>'
+            + '📋 Tour: <strong>' + escapeHtml(tourName) + '</strong><br>'
             + '👥 Số khách: ' + guests + '<br>'
-            + (note ? '📝 Ghi chú: ' + note + '<br>' : '')
-            + '<br>⏳ Đang tạo đơn hàng...');
+            + '💰 Tổng tiền: <strong>' + totalPrice + 'đ</strong><br><br>'
+            + '⏳ Đang tạo đơn hàng...');
 
-        // Simulate booking
-        setTimeout(() => {
-            const orderId = Math.floor(Math.random() * 9000) + 1000;
-            addBotMessage('🎉 <strong>Đặt tour thành công!</strong><br><br>'
-                + '📋 Mã đơn: <code>#' + orderId + '</code><br>'
-                + '💰 Trạng thái: <span style="color:#D97706;font-weight:700">Chờ thanh toán</span><br><br>'
-                + '<a href="' + contextPath + '/my-orders" style="display:inline-flex;align-items:center;gap:4px;padding:8px 16px;background:#3B82F6;color:#fff;border-radius:8px;font-weight:700;font-size:.8rem;text-decoration:none"><i class="fas fa-credit-card"></i> Thanh Toán Ngay</a>'
-                + '&nbsp;&nbsp;'
-                + '<a href="' + contextPath + '/my-orders" style="display:inline-flex;align-items:center;gap:4px;padding:8px 16px;background:#F1F5F9;color:#475569;border-radius:8px;font-weight:700;font-size:.8rem;text-decoration:none"><i class="fas fa-receipt"></i> Xem Đơn Hàng</a>');
-            showBookingSuccess();
-        }, 1500);
+        // Call real booking API
+        const formData = new URLSearchParams();
+        formData.append('action', 'book');
+        formData.append('tourId', tourId);
+        formData.append('numberOfPeople', guests);
+
+        fetch(contextPath + '/booking', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData.toString()
+        })
+        .then(r => {
+            if (r.redirected) {
+                // Booking was successful (servlet redirects)
+                addBotMessage('🎉 <strong>Đặt tour thành công!</strong><br><br>'
+                    + '🏖️ Tour: <strong>' + escapeHtml(tourName) + '</strong><br>'
+                    + '💰 Trạng thái: <span style="color:#D97706;font-weight:700">Chờ thanh toán</span><br><br>'
+                    + '<a href="' + contextPath + '/my-orders" style="display:inline-flex;align-items:center;gap:4px;padding:8px 16px;background:#3B82F6;color:#fff;border-radius:8px;font-weight:700;font-size:.8rem;text-decoration:none"><i class="fas fa-credit-card"></i> Thanh Toán Ngay</a>'
+                    + '&nbsp;&nbsp;'
+                    + '<a href="' + contextPath + '/my-orders" style="display:inline-flex;align-items:center;gap:4px;padding:8px 16px;background:#F1F5F9;color:#475569;border-radius:8px;font-weight:700;font-size:.8rem;text-decoration:none"><i class="fas fa-receipt"></i> Xem Đơn Hàng</a>');
+                showBookingSuccess();
+            } else {
+                return r.text().then(t => {
+                    addBotMessage('⚠️ Không thể đặt tour. Vui lòng thử lại hoặc <a href="' + contextPath + '/login.jsp">đăng nhập</a>.');
+                });
+            }
+        })
+        .catch(err => {
+            addBotMessage('❌ Lỗi kết nối. Vui lòng thử lại.');
+        });
     });
 
     // === ORDER STATUS ===

@@ -50,6 +50,9 @@
 .logout-link{color:#94A3B8;font-size:1rem;transition:.3s}
 .logout-link:hover{color:#EF4444}
 .admin-badge{background:#1E293B;color:#fff;padding:5px 12px;border-radius:99px;font-size:.72rem;font-weight:800;text-decoration:none;letter-spacing:.5px}
+.cart-link{position:relative;color:#475569;font-size:1.1rem;transition:.3s;text-decoration:none}
+.cart-link:hover{color:#2563EB}
+.cart-badge{position:absolute;top:-6px;right:-8px;background:#EF4444;color:#fff;font-size:.6rem;font-weight:800;min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
 
 body{padding-top:100px}
 
@@ -129,6 +132,12 @@ body{padding-top:100px}
                             <i class="fas fa-bolt"></i> Admin
                         </a>
                     </c:if>
+                    <a href="${pageContext.request.contextPath}/cart" class="cart-link" title="Giỏ hàng">
+                        <i class="fas fa-shopping-cart"></i>
+                        <c:if test="${not empty sessionScope.cart}">
+                            <span class="cart-badge">${sessionScope.cart.size()}</span>
+                        </c:if>
+                    </a>
                     <a href="${pageContext.request.contextPath}/profile" class="user-tag">
                         <div class="avatar-circle">
                             ${sessionScope.user.username.substring(0,1).toUpperCase()}

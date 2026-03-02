@@ -39,6 +39,7 @@ public class TourServlet extends HttpServlet {
             switch (action) {
                 case "view" -> viewTour(request, response);
                 case "search" -> searchTours(request, response);
+                case "api-list" -> apiListTours(request, response);
                 default -> listTours(request, response);
             }
         } catch (Exception e) {
@@ -164,5 +165,30 @@ public class TourServlet extends HttpServlet {
             request.setAttribute("search", keyword);
         }
         listTours(request, response);
+    }
+
+    private void apiListTours(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        List<Tour> tours = tourDAO.findAll();
+        // Return simplified JSON: [{tourId, tourName, price, destination}]
+        StringBuilder json = new StringBuilder("[");
+        for (int i = 0; i < tours.size(); i++) {
+            Tour t = tours.get(i);
+            if (i > 0) json.append(",");
+            json.append("{\"tourId\":").append(t.getTourId())
+                .append(",\"tourName\":\"").append(jsonEscape(t.getTourName())).append("\"")
+                .append(",\"price\":").append(t.getPrice())
+                .append(",\"destination\":\"").append(jsonEscape(t.getDestination() != null ? t.getDestination() : "")).append("\"")
+                .append(",\"maxPeople\":").append(t.getMaxPeople())
+                .append("}");
+        }
+        json.append("]");
+        response.getWriter().print(json.toString());
+    }
+
+    private String jsonEscape(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "");
     }
 }

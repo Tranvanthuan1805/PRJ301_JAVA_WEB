@@ -128,6 +128,17 @@
 
             if (data.success) {
                 appendMessage(data.reply, 'bot', data.botTime || getCurrentTime());
+                
+                // Hien thi form neu AI yeu cau
+                if (data.showForm) {
+                    appendBookingForm();
+                }
+
+                if (data.redirect) {
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 1500);
+                }
             } else {
                 appendMessage('⚠️ ' + (data.error || 'Có lỗi xảy ra'), 'bot', getCurrentTime());
             }
@@ -168,6 +179,78 @@
 
         messagesEl.appendChild(div);
         scrollToBottom();
+    }
+
+    function appendBookingForm() {
+        const div = document.createElement('div');
+        div.className = 'fcm-msg bot';
+        
+        fetch(ctx + '/chatbot?action=getTours')
+        .then(r => r.json())
+        .then(tours => {
+            let options = tours.map(t => `<option value="${t.tourId}">${t.tourName} (${t.price}đ)</option>`).join('');
+            
+            div.innerHTML = `
+                <div class="fcm-msg-avatar">💘</div>
+                <div class="fcm-msg-content">
+                    <div class="fcm-msg-bubble fcm-form-bubble">
+                        <form class="fcm-booking-form" id="bookingForm">
+                            <h6 class="mb-2">📋 Thông tin đặt tour</h6>
+                            <div class="fcm-form-group">
+                                <label>Chọn Tour:</label>
+                                <select name="tourId" class="fcm-form-input">${options}</select>
+                            </div>
+                            <div class="fcm-form-group">
+                                <label>Họ tên:</label>
+                                <input type="text" name="fullName" class="fcm-form-input" required placeholder="Nhập họ tên...">
+                            </div>
+                            <div class="fcm-form-group">
+                                <label>Số điện thoại:</label>
+                                <input type="text" name="phone" class="fcm-form-input" required placeholder="Nhập SĐT...">
+                            </div>
+                            <div class="fcm-form-group">
+                                <label>Số người:</label>
+                                <input type="number" name="numPeople" class="fcm-form-input" value="1" min="1" required>
+                            </div>
+                            <button type="submit" class="fcm-submit-btn">Xác nhận đặt đơn</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            const form = div.querySelector('#bookingForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitBookingForm(new FormData(form));
+            });
+            
+            messagesEl.appendChild(div);
+            scrollToBottom();
+        });
+    }
+
+    function submitBookingForm(formData) {
+        isProcessing = true;
+        const typing = showTyping();
+        
+        let body = new URLSearchParams(formData).toString();
+        
+        fetch(ctx + '/chatbot?action=bookTour', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body
+        })
+        .then(r => r.json())
+        .then(data => {
+            typing.remove();
+            if(data.success) {
+                appendMessage(data.reply, 'bot', getCurrentTime());
+                if(data.redirect) window.location.href = data.redirect;
+            } else {
+                appendMessage("❌ Lỗi: " + data.error, 'bot', getCurrentTime());
+            }
+        })
+        .finally(() => { isProcessing = false; });
     }
 
     // === Typing indicator ===

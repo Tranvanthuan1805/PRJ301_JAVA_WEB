@@ -10,7 +10,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/history")
+@WebServlet("/billing-history")
 public class BillingHistoryServlet extends HttpServlet {
 
     private final SubscriptionDAO subscriptionDAO = new SubscriptionDAO();

@@ -32,6 +32,7 @@ public class MyOrderServlet extends HttpServlet {
         try {
             switch (action) {
                 case "view" -> viewOrderDetail(request, response, user);
+                case "pay" -> payOrder(request, response, user);
                 default -> listMyOrders(request, response, user);
             }
         } catch (Exception e) {
@@ -134,6 +135,46 @@ public class MyOrderServlet extends HttpServlet {
         } else {
             response.sendRedirect("my-orders?error=cancel_failed");
         }
+    }
+
+    private void payOrder(HttpServletRequest request, HttpServletResponse response, User user)
+            throws ServletException, IOException {
+
+        String idStr = request.getParameter("id");
+        if (idStr == null || idStr.isEmpty()) {
+            response.sendRedirect("my-orders");
+            return;
+        }
+
+        int orderId = Integer.parseInt(idStr);
+        Order order = orderDAO.findById(orderId);
+
+        if (order == null || order.getCustomerId() != user.getUserId()) {
+            response.sendRedirect("my-orders?error=unauthorized");
+            return;
+        }
+
+        if (!"Pending".equals(order.getOrderStatus())) {
+            response.sendRedirect("my-orders?error=already_processed");
+            return;
+        }
+
+        // Generate QR payment
+        String transCode = "EZT" + System.currentTimeMillis() + "U" + user.getUserId();
+        String bankAcc = "2806281106";
+        String bankName = "MB";
+        long amountInt = Math.round(order.getTotalAmount());
+        String qrUrl = String.format("https://qr.sepay.vn/img?acc=%s&bank=%s&amount=%d&des=%s",
+                bankAcc, bankName, amountInt, transCode);
+
+        request.setAttribute("order", order);
+        request.setAttribute("orderId", orderId);
+        request.setAttribute("transCode", transCode);
+        request.setAttribute("qrUrl", qrUrl);
+        request.setAttribute("amount", amountInt);
+        request.setAttribute("totalFormatted", String.format("%,d", amountInt));
+
+        request.getRequestDispatcher("/views/checkout/payment-checkout.jsp").forward(request, response);
     }
 
     private User getLoggedInUser(HttpServletRequest request) {

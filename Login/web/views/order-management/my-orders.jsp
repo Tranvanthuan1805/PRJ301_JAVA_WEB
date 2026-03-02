@@ -69,7 +69,7 @@
                 <p class="mb-0 opacity-75">Xem lịch sử và trạng thái đơn đặt tour</p>
             </div>
             <div class="text-end">
-                <div class="fw-semibold"><%= u.username %></div>
+                <div class="fw-semibold"><%= u.getUsername() %></div>
                 <a href="<%= ctx %>/user.jsp" class="btn btn-outline-light btn-sm mt-1">
                     <i class="bi bi-arrow-left"></i> Trang chủ
                 </a>

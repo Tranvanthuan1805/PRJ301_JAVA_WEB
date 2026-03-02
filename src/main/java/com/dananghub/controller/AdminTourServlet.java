@@ -7,6 +7,9 @@ import com.dananghub.entity.Category;
 import com.dananghub.entity.User;
 import com.dananghub.entity.Provider;
 
+import com.dananghub.util.JPAUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -147,6 +150,10 @@ public class AdminTourServlet extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalTours", total);
         request.setAttribute("activeTours", allTours.stream().filter(Tour::isActive).count());
+
+        // Load AI Analytics data for Neural Network tab
+        loadAIData(request);
+
         request.getRequestDispatcher("/admin/tours.jsp").forward(request, response);
     }
 
@@ -292,6 +299,94 @@ public class AdminTourServlet extends HttpServlet {
             if (!providers.isEmpty()) {
                 tour.setProvider(providers.get(0));
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadAIData(HttpServletRequest request) {
+        EntityManager em = null;
+        try {
+            em = JPAUtil.getEntityManager();
+
+            // 1. Monthly Tourism Stats
+            Query q1 = em.createNativeQuery(
+                "SELECT \"MonthYear\", \"BookingRevenue\", \"FlightRevenue\", \"GuestCount\", \"SeasonType\" " +
+                "FROM \"MonthlyTourismStats\" ORDER BY \"Id\" ASC"
+            );
+            List<Object[]> stats = q1.getResultList();
+
+            StringBuilder labels = new StringBuilder("[");
+            StringBuilder bRev = new StringBuilder("[");
+            StringBuilder fRev = new StringBuilder("[");
+            StringBuilder guests = new StringBuilder("[");
+            StringBuilder seasons = new StringBuilder("[");
+
+            for (int i = 0; i < stats.size(); i++) {
+                Object[] r = stats.get(i);
+                if (i > 0) { labels.append(","); bRev.append(","); fRev.append(","); guests.append(","); seasons.append(","); }
+                labels.append("\"").append(r[0]).append("\"");
+                bRev.append(r[1]); fRev.append(r[2]); guests.append(r[3]);
+                seasons.append("\"").append(r[4]).append("\"");
+            }
+            labels.append("]"); bRev.append("]"); fRev.append("]"); guests.append("]"); seasons.append("]");
+
+            request.setAttribute("chartLabels", labels.toString());
+            request.setAttribute("chartBookingRev", bRev.toString());
+            request.setAttribute("chartFlightRev", fRev.toString());
+            request.setAttribute("chartGuestCounts", guests.toString());
+            request.setAttribute("chartSeasons", seasons.toString());
+            request.setAttribute("totalDataPoints", stats.size());
+
+            // 2. Top Tours
+            Query q2 = em.createNativeQuery(
+                "SELECT \"TourName\", SUM(\"Revenue\") as tr, SUM(\"BookingCount\") as tb " +
+                "FROM \"TourPerformance\" GROUP BY \"TourName\" ORDER BY tr DESC LIMIT 6"
+            );
+            List<Object[]> tops = q2.getResultList();
+
+            StringBuilder tNames = new StringBuilder("[");
+            StringBuilder tRevs = new StringBuilder("[");
+            StringBuilder tBooks = new StringBuilder("[");
+            for (int i = 0; i < tops.size(); i++) {
+                Object[] r = tops.get(i);
+                if (i > 0) { tNames.append(","); tRevs.append(","); tBooks.append(","); }
+                tNames.append("\"").append(r[0]).append("\"");
+                tRevs.append(((Number) r[1]).doubleValue());
+                tBooks.append(((Number) r[2]).longValue());
+            }
+            tNames.append("]"); tRevs.append("]"); tBooks.append("]");
+            request.setAttribute("topTourNames", tNames.toString());
+            request.setAttribute("topTourRevenues", tRevs.toString());
+            request.setAttribute("topTourBookings", tBooks.toString());
+
+            // 3. Weather
+            Query q3 = em.createNativeQuery(
+                "SELECT EXTRACT(MONTH FROM \"Date\") as m, ROUND(CAST(AVG(\"Temp\") AS numeric),1), ROUND(CAST(AVG(\"Precipitation\") AS numeric),1) " +
+                "FROM \"WeatherData\" GROUP BY m ORDER BY m"
+            );
+            List<Object[]> wData = q3.getResultList();
+            String[] mNames = {"","T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11","T12"};
+            StringBuilder wM = new StringBuilder("[");
+            StringBuilder wT = new StringBuilder("[");
+            StringBuilder wR = new StringBuilder("[");
+            for (int i = 0; i < wData.size(); i++) {
+                Object[] r = wData.get(i);
+                int mi = ((Number) r[0]).intValue();
+                if (i > 0) { wM.append(","); wT.append(","); wR.append(","); }
+                wM.append("\"").append(mNames[mi]).append("\"");
+                wT.append(r[1]); wR.append(r[2]);
+            }
+            wM.append("]"); wT.append("]"); wR.append("]");
+            request.setAttribute("weatherMonths", wM.toString());
+            request.setAttribute("weatherTemps", wT.toString());
+            request.setAttribute("weatherRain", wR.toString());
+
+            request.setAttribute("aiDataLoaded", true);
+        } catch (Exception e) {
+            getServletContext().log("AI data not loaded: " + e.getMessage());
+            request.setAttribute("aiDataLoaded", false);
+        } finally {
+            if (em != null) em.close();
         }
     }
 }

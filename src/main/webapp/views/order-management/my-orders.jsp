@@ -93,6 +93,10 @@
                             </div>
                             <div class="order-actions">
                                 <c:if test="${o.status == 'Pending'}">
+                                    <a href="${pageContext.request.contextPath}/my-orders?action=pay&id=${o.orderId}" 
+                                       class="btn-pay" style="padding:9px 18px;background:linear-gradient(135deg,#059669,#34D399);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.8rem;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.3s;font-family:inherit">
+                                        <i class="fas fa-qrcode"></i> Thanh Toán
+                                    </a>
                                     <form action="${pageContext.request.contextPath}/my-orders" method="post" style="display:inline;"
                                           onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng #${o.orderId}?')">
                                         <input type="hidden" name="action" value="cancel">
