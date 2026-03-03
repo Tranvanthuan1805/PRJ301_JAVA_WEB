@@ -521,32 +521,31 @@
                 body: 'message=' + encodeURIComponent(msg)
             });
 
-            if (!res.ok && res.status === 404) {
-                typingEl.remove();
-                addBotMessage('⚠️ Chatbot API chưa sẵn sàng. Vui lòng thử lại sau.');
-                sendBtn.disabled = false;
-                return;
-            }
-
             let data;
             const text = await res.text();
             try { data = JSON.parse(text); } catch (pe) {
                 typingEl.remove();
-                addBotMessage('⚠️ Server phản hồi không hợp lệ. Vui lòng thử lại.');
+                showFallbackResponse(msg);
                 sendBtn.disabled = false;
                 return;
             }
             typingEl.remove();
 
             if (data.response) {
-                addBotMessage(formatMarkdown(data.response));
-                if (data.action === 'booked') showBookingSuccess();
+                // Check if response contains error indicator
+                const respText = data.response;
+                if (respText.includes('tam thoi khong kha dung') || respText.includes('Loi he thong') || respText.includes('loi 4')) {
+                    showFallbackResponse(msg);
+                } else {
+                    addBotMessage(formatMarkdown(respText));
+                    if (data.action === 'booked') showBookingSuccess();
+                }
             } else if (data.error) {
-                addBotMessage('⚠️ ' + data.error);
+                showFallbackResponse(msg);
             }
         } catch (err) {
             typingEl.remove();
-            addBotMessage('❌ Không thể kết nối server. Vui lòng thử lại.');
+            showFallbackResponse(msg);
         }
 
         sendBtn.disabled = false;
@@ -595,6 +594,58 @@
     function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
     function scrollBottom() { setTimeout(() => chatMessages.scrollTop = chatMessages.scrollHeight, 50); }
 
+    // ═══ SMART FALLBACK when AI API is unavailable ═══
+    function showFallbackResponse(userMsg) {
+        const lowerMsg = userMsg.toLowerCase();
+        let reply = '';
+        
+        // Smart keyword matching for common questions
+        if (lowerMsg.includes('giá') || lowerMsg.includes('bao nhiêu') || lowerMsg.includes('rẻ') || lowerMsg.includes('500')) {
+            reply = '💰 <strong>Thông tin giá tour:</strong><br><br>'
+                + '<div style="background:#F0FDF4;padding:10px;border-radius:10px;border-left:3px solid #10B981;margin-bottom:8px">'
+                + '🏖️ Tour Biển Mỹ Khê: từ <strong>350.000đ</strong><br>'
+                + '⛰️ Tour Bà Nà Hills: từ <strong>750.000đ</strong><br>'
+                + '🏮 Tour Hội An: từ <strong>450.000đ</strong><br>'
+                + '🌿 Tour Sơn Trà: từ <strong>500.000đ</strong><br>'
+                + '🏔️ Tour Ngũ Hành Sơn: từ <strong>250.000đ</strong>'
+                + '</div>'
+                + '👉 <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem chi tiết tất cả tour →</a><br>'
+                + '💡 Gõ <code>đặt tour</code> để đặt ngay!';
+        } else if (lowerMsg.includes('phổ biến') || lowerMsg.includes('hot') || lowerMsg.includes('top') || lowerMsg.includes('nổi')) {
+            reply = '🌟 <strong>Top tour phổ biến nhất:</strong><br><br>'
+                + '1. ⛰️ <strong>Bà Nà Hills - Cầu Vàng</strong> (⭐ 4.9) — Trải nghiệm Làng Pháp, check-in Cầu Vàng<br>'
+                + '2. 🏖️ <strong>Biển Mỹ Khê - Sơn Trà</strong> (⭐ 4.8) — Tắm biển + ngắm voọc chà vá<br>'
+                + '3. 🏮 <strong>Phố cổ Hội An</strong> (⭐ 4.9) — Đèn lồng, ẩm thực, di sản UNESCO<br>'
+                + '4. 🐉 <strong>City Tour Đà Nẵng</strong> (⭐ 4.7) — Cầu Rồng, Chợ Hàn, Asia Park<br><br>'
+                + '👉 <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem tất cả tour →</a>';
+        } else if (lowerMsg.includes('gia đình') || lowerMsg.includes('trẻ em') || lowerMsg.includes('con')) {
+            reply = '👨‍👩‍👧‍👦 <strong>Gợi ý tour cho gia đình:</strong><br><br>'
+                + '1. 🎡 <strong>Asia Park Sun World</strong> — Vui chơi cho cả nhà, vòng quay Sun Wheel<br>'
+                + '2. ⛰️ <strong>Bà Nà Hills</strong> — Fantasy Park, Làng Pháp, trẻ em rất thích<br>'
+                + '3. 🏖️ <strong>Biển Mỹ Khê</strong> — An toàn, bãi cát mịn, nhiều dịch vụ<br><br>'
+                + '💡 Các tour đều có <strong>giá ưu đãi cho trẻ em</strong> dưới 6 tuổi!<br>'
+                + '👉 <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Đặt tour gia đình →</a>';
+        } else if (lowerMsg.includes('tọa độ') || lowerMsg.includes('gần') || lowerMsg.includes('vị trí')) {
+            reply = '📍 <strong>Gợi ý địa điểm tại Đà Nẵng:</strong><br><br>'
+                + '🐉 Cầu Rồng — Biểu tượng Đà Nẵng, phun lửa T7-CN<br>'
+                + '🏖️ Biển Mỹ Khê — Top 6 bãi biển đẹp nhất thế giới<br>'
+                + '⛰️ Bà Nà Hills — Cầu Vàng nổi tiếng thế giới<br>'
+                + '🏮 Hội An — Di sản UNESCO, phố đèn lồng<br><br>'
+                + '💡 Nhấn vào <strong>bản đồ</strong> trên trang chủ để khám phá thêm!';
+        } else {
+            reply = '👋 Xin lỗi, tôi chưa thể trả lời câu hỏi này ngay lúc này.<br><br>'
+                + 'Tôi vẫn có thể giúp bạn:<br>'
+                + '<div style="background:#F8FAFF;padding:12px;border-radius:10px;margin:8px 0">'
+                + '🏖️ <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem tất cả Tours</a><br>'
+                + '🛒 Gõ <code>đặt tour</code> để đặt tour nhanh<br>'
+                + '📋 Gõ <code>đơn hàng</code> để tra cứu đơn<br>'
+                + '📍 Nhấn vào <strong>bản đồ</strong> để xem gợi ý địa điểm'
+                + '</div>';
+        }
+        
+        addBotMessage(reply);
+    }
+
     function showBookingSuccess() {
         const colors = ['#3B82F6', '#06D6A0', '#FFB703', '#00B4D8', '#8B5CF6'];
         for (let i = 0; i < 30; i++) {
@@ -630,11 +681,74 @@
             if (chatWindow.style.display !== 'flex') {
                 toggleBtn.click();
             }
-            addBotMessage('📍 Tôi đã nhận được vị trí của bạn! Đang tìm kiếm các điểm du lịch gần đây...');
-            const msg = `Tôi đang ở tọa độ ${lat}, ${lng}. Hãy gợi ý cho tôi 3 địa điểm du lịch hoặc quán ăn nổi tiếng gần đây nhất tại Đà Nẵng và lý do nên đến đó.`;
-            setTimeout(() => {
-                this.sendMessage(msg);
-            }, 1000);
+            
+            // ═══ OFFLINE SMART SUGGESTIONS (no API needed) ═══
+            const hotspots = [
+                { name: 'Cầu Rồng', lat: 16.0611, lng: 108.2274, desc: 'Biểu tượng Đà Nẵng - phun lửa & nước vào T7, CN lúc 21h', emoji: '🐉', tags: 'Kiến trúc, Check-in' },
+                { name: 'Bà Nà Hills', lat: 15.9975, lng: 107.9940, desc: 'Cầu Vàng nổi tiếng thế giới, Làng Pháp trên đỉnh núi', emoji: '⛰️', tags: 'Thiên nhiên, Giải trí' },
+                { name: 'Biển Mỹ Khê', lat: 16.0322, lng: 108.2504, desc: 'Top 6 bãi biển đẹp nhất hành tinh (Forbes)', emoji: '🏖️', tags: 'Biển, Tắm biển' },
+                { name: 'Bán Đảo Sơn Trà', lat: 16.1003, lng: 108.2778, desc: 'Khu bảo tồn thiên nhiên, Chùa Linh Ứng 67m', emoji: '🌿', tags: 'Tâm linh, Trekking' },
+                { name: 'Ngũ Hành Sơn', lat: 16.0039, lng: 108.2632, desc: 'Marble Mountains - chùa cổ & hang động kỳ bí', emoji: '🏔️', tags: 'Di tích, Leo núi' },
+                { name: 'Phố Cổ Hội An', lat: 15.8800, lng: 108.3280, desc: 'Di sản UNESCO, phố đèn lồng & ẩm thực đặc sắc', emoji: '🏮', tags: 'UNESCO, Ẩm thực' },
+                { name: 'Asia Park', lat: 16.0395, lng: 108.2258, desc: 'Sun World - vòng quay Sun Wheel cao 115m', emoji: '🎡', tags: 'Vui chơi, Gia đình' },
+                { name: 'Chợ Hàn', lat: 16.0719, lng: 108.2271, desc: 'Chợ truyền thống - đặc sản Đà Nẵng, quà lưu niệm', emoji: '🛍️', tags: 'Mua sắm, Ẩm thực' },
+                { name: 'Chợ Cồn', lat: 16.0692, lng: 108.2137, desc: 'Chợ lớn nhất Đà Nẵng, ẩm thực đường phố', emoji: '🍜', tags: 'Ẩm thực, Mua sắm' },
+                { name: 'Cầu Tình Yêu', lat: 16.0603, lng: 108.2270, desc: 'Cầu khóa tình yêu bên sông Hàn, đẹp nhất về đêm', emoji: '💕', tags: 'Lãng mạn, Check-in' }
+            ];
+            
+            // Calculate distances using Haversine
+            function calcDist(lat1, lon1, lat2, lon2) {
+                const R = 6371;
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            }
+            
+            const nearby = hotspots.map(h => ({
+                ...h,
+                dist: calcDist(lat, lng, h.lat, h.lng)
+            })).sort((a, b) => a.dist - b.dist).slice(0, 5);
+            
+            // Build instant response (no API needed)
+            let response = '📍 <strong>Vị trí của bạn:</strong> ' + lat.toFixed(4) + ', ' + lng.toFixed(4) + '<br><br>';
+            response += '🌟 <strong>Top 5 địa điểm gần bạn nhất:</strong><br><br>';
+            
+            nearby.forEach((h, i) => {
+                const distText = h.dist < 1 ? (h.dist * 1000).toFixed(0) + 'm' : h.dist.toFixed(1) + 'km';
+                response += '<div style="background:#F8FAFF;border-radius:10px;padding:10px 12px;margin-bottom:8px;border-left:3px solid #3B82F6">';
+                response += '<strong>' + h.emoji + ' ' + (i+1) + '. ' + h.name + '</strong>';
+                response += ' <span style="color:#3B82F6;font-size:.75rem;font-weight:700">(' + distText + ')</span><br>';
+                response += '<span style="font-size:.8rem;color:#64748B">' + h.desc + '</span><br>';
+                response += '<span style="font-size:.68rem;color:#94A3B8">🏷️ ' + h.tags + '</span>';
+                response += '</div>';
+            });
+            
+            response += '<br>💡 <strong>Mẹo:</strong> Nhấn vào bản đồ để khám phá thêm! Hoặc gõ tên điểm đến để tìm tour.';
+            response += '<br><br><a href="' + contextPath + '/tour" style="display:inline-flex;align-items:center;gap:5px;padding:8px 16px;background:#3B82F6;color:#fff;border-radius:10px;font-weight:700;font-size:.8rem;text-decoration:none"><i class="fas fa-compass"></i> Xem tất cả Tours</a>';
+            
+            addBotMessage(response);
+            
+            // Optionally try AI for more detailed suggestions (non-blocking, truly silent)
+            const aiMsg = 'Tôi đang ở tọa độ ' + lat.toFixed(4) + ', ' + lng.toFixed(4) + '. Hãy gợi ý cho tôi 3 địa điểm du lịch hoặc quán ăn nổi tiếng gần đây nhất tại Đà Nẵng và lý do nên đến đó.';
+            
+            fetch(contextPath + '/ai/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                body: 'message=' + encodeURIComponent(aiMsg)
+            }).then(r => {
+                if (r.ok) return r.text();
+                throw new Error('API error');
+            }).then(text => {
+                try {
+                    const data = JSON.parse(text);
+                    if (data.response && !data.response.includes('tam thoi') && !data.response.includes('loi ') && !data.response.includes('Loi he thong')) {
+                        addBotMessage('🤖 <strong>AI gợi ý thêm:</strong><br><br>' + formatMarkdown(data.response));
+                    }
+                } catch(e) {}
+            }).catch(() => {
+                // Silently fail - offline suggestions already shown
+            });
         }
     };
 
