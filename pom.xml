@@ -5,44 +5,55 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.chat</groupId>
-    <artifactId>RealTimeChat</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>com.dananghub</groupId>
+    <artifactId>DaNangTravelHub</artifactId>
+    <version>4.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>RealTimeChat-1.0-SNAPSHOT</name>
+    <name>DaNangTravelHub</name>
 
     <!-- ================= PROPERTIES ================= -->
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jakartaee>10.0.0</jakartaee>
+        <jakartaee.version>10.0.0</jakartaee.version>
+        <hibernate.version>6.4.4.Final</hibernate.version>
     </properties>
 
     <!-- ================= DEPENDENCIES ================= -->
     <dependencies>
-        <!-- Jakarta EE API (Tomcat 10.1 compatible) -->
+
+        <!-- Jakarta EE 10 API (Tomcat 10.1) -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>${jakartaee}</version>
+            <version>${jakartaee.version}</version>
             <scope>provided</scope>
         </dependency>
-        
+
+        <!-- Hibernate ORM (JPA Implementation) -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <!-- Hibernate JPA Model Generator (Optional but recommended) -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>${hibernate.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SQL Server JDBC Driver -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>12.6.1.jre11</version>
         </dependency>
 
-        <!-- PostgreSQL JDBC Driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.2</version>
-        </dependency>
-
-        <!-- Jakarta Standard Tag Library (JSTL) -->
+        <!-- JSTL -->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -54,16 +65,25 @@
             <version>3.0.1</version>
         </dependency>
 
-        <!-- Gson for JSON processing -->
+        <!-- Gson for JSON -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
+
+        <!-- ANTLR Runtime -->
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.13.0</version>
+        </dependency>
+
     </dependencies>
 
     <!-- ================= BUILD ================= -->
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
 
             <!-- Java 17 Compiler -->
@@ -77,28 +97,14 @@
                 </configuration>
             </plugin>
 
-            <!-- WAR Plugin FIX cho Java 17 -->
+            <!-- WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-
-            <!-- Jetty Plugin for running locally (Jakarta EE 10 support) -->
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.20</version>
-                <configuration>
-                    <webApp>
-                        <contextPath>/</contextPath>
-                    </webApp>
-                    <httpConnector>
-                        <port>8080</port>
-                    </httpConnector>
+                    <warSourceDirectory>src/main/webapp</warSourceDirectory>
                 </configuration>
             </plugin>
 

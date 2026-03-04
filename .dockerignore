@@ -1,0 +1,9 @@
+.git
+.github
+Login/
+target/
+*.iml
+.idea/
+.vscode/
+nb-configuration.xml
+nbproject/
