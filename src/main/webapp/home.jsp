@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
             <!DOCTYPE html>
@@ -50,61 +50,114 @@
                         list-style: none
                     }
 
-                    /* ═══ HERO ═══ */
-                    /* ═══ HERO — Đà Nẵng Premium ═══ */
-                    .hero{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-top:100px}
-                    .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 40%;z-index:0}
-                    .hero-bg::after{content:'';position:absolute;inset:0;background:inherit;background-size:cover;background-position:center 40%;animation:heroFloat 20s ease-in-out infinite alternate;opacity:.5;z-index:0}
-                    @keyframes heroFloat{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.08) translate(-1%,.5%)}}
-                    .hero-overlay{position:absolute;inset:0;background:linear-gradient(175deg,rgba(15,23,42,.25) 0%,rgba(15,23,42,.45) 40%,rgba(15,23,42,.82) 100%);z-index:1}
-                    .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,#F7F8FC);z-index:2}
+                    /* ═══ HERO — PREMIUM TRAVEL 2026 ═══ */
+                    .hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:120px 0 60px}
+                    .hero-bg{position:absolute;inset:0;z-index:0;background:url('${pageContext.request.contextPath}/images/hero-bg.jpg') center/cover no-repeat}
+                    .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0;transition:opacity 1.5s ease}
+                    .hero-video.loaded{opacity:1}
+                    .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,15,30,.35) 0%,rgba(10,15,30,.25) 30%,rgba(10,15,30,.55) 70%,rgba(10,15,30,.85) 100%);z-index:1}
+                    .hero-overlay::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 0%,rgba(10,15,30,.3) 100%)}
+                    .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(transparent,#F7F8FC);z-index:2}
 
-                    .hero-content{position:relative;z-index:3;max-width:840px;margin:0 auto;padding:0 24px;width:100%;text-align:center}
+                    .hero-content{position:relative;z-index:3;max-width:920px;margin:0 auto;padding:0 24px;width:100%;text-align:center}
 
                     /* Badge */
-                    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 20px;background:rgba(255,255,255,.08);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:24px;animation:heroFadeUp .6s ease}
-                    .hero-badge .dot{width:7px;height:7px;background:#10B981;border-radius:50%;animation:dotPulse 2s ease infinite}
-                    @keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.8)}}
+                    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 22px;background:rgba(255,255,255,.06);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.1);border-radius:999px;font-size:.76rem;font-weight:600;color:rgba(255,255,255,.92);margin-bottom:28px;animation:heroFadeUp .7s ease;letter-spacing:.2px}
+                    .hero-badge .dot{width:7px;height:7px;background:#34D399;border-radius:50%;animation:dotPulse 2s ease infinite;box-shadow:0 0 8px rgba(52,211,153,.5)}
+                    @keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
 
                     /* Title */
-                    .hero-content h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,2.2rem);font-weight:900;color:#fff;line-height:1.2;margin-bottom:14px;text-shadow:0 3px 12px rgba(0,0,0,.3);letter-spacing:.03em;animation:heroFadeUp .6s ease .08s both;text-align:center;white-space:nowrap}
-                    .hero-content>p.hero-sub{font-size:.98rem;color:rgba(255,255,255,.72);max-width:520px;margin:0 auto 32px;line-height:1.7;animation:heroFadeUp .6s ease .15s both}
+                    .hero-content h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4.5vw,3.2rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:18px;text-shadow:0 4px 20px rgba(0,0,0,.25);letter-spacing:-.01em;animation:heroFadeUp .7s ease .1s both}
+                    .hero-content h1 .hero-accent{color:#FFD166;position:relative;text-shadow:0 0 20px rgba(255,209,102,.4),0 4px 20px rgba(0,0,0,.3)}
+                    .hero-content h1 .hero-accent::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;background:linear-gradient(90deg,#FFD166,#FF9F1C);border-radius:2px;opacity:.8}
+                    .hero-content>p.hero-sub{font-size:1.02rem;color:rgba(255,255,255,.7);max-width:560px;margin:0 auto 36px;line-height:1.75;animation:heroFadeUp .7s ease .18s both;font-weight:400}
 
-                    @keyframes heroFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+                    @keyframes heroFadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
-                    /* SEARCH PANEL — Glassmorphism */
-                    .search-panel{position:relative;background:rgba(255,255,255,.88);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:20px;max-width:860px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.18),0 0 0 1px rgba(255,255,255,.35) inset,0 1px 0 rgba(255,255,255,.6) inset;animation:heroFadeUp .6s ease .22s both;overflow:hidden}
-                    .search-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(255,255,255,.9) 50%,transparent 90%);z-index:5}
-                    .search-panel::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:glassShine 6s ease-in-out infinite;z-index:4;pointer-events:none}
-                    @keyframes glassShine{0%,100%{left:-100%}50%{left:150%}}
+                    /* SEARCH PANEL — Premium Glass */
+                    .search-panel{position:relative;background:rgba(255,255,255,.92);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border-radius:20px;max-width:880px;margin:0 auto;box-shadow:0 25px 80px rgba(0,0,0,.2),0 0 0 1px rgba(255,255,255,.4) inset;animation:heroFadeUp .7s ease .25s both;overflow:hidden}
+                    .search-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(255,255,255,.95) 50%,transparent 95%);z-index:5}
 
                     .search-row{display:flex;align-items:stretch;position:relative;z-index:5}
-                    .search-field{flex:1;padding:18px 22px}
+                    .search-field{flex:1;padding:20px 22px;position:relative;transition:background .3s}
+                    .search-field:hover{background:rgba(37,99,235,.02)}
                     .search-field+.search-field{border-left:1px solid rgba(0,0,0,.06)}
-                    .search-field-label{display:flex;align-items:center;gap:6px;font-size:.7rem;font-weight:800;color:#4B5563;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
-                    .search-field-label i{color:#2563EB;font-size:.68rem}
-                    .search-field input,.search-field select{border:none;outline:none;font-size:.88rem;width:100%;background:transparent;color:#111827;font-family:'Inter',sans-serif;font-weight:500}
+                    .search-field-label{display:flex;align-items:center;gap:7px;font-size:.68rem;font-weight:800;color:#374151;margin-bottom:8px;letter-spacing:.6px;text-transform:uppercase}
+                    .search-field-label i{width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:.62rem}
+                    .search-field-label i.fa-map-marker-alt{background:rgba(239,68,68,.1);color:#EF4444}
+                    .search-field-label i.fa-calendar-alt{background:rgba(37,99,235,.1);color:#2563EB}
+                    .search-field-label i.fa-wallet{background:rgba(16,185,129,.1);color:#10B981}
+                    .search-field input,.search-field select{border:none;outline:none;font-size:.9rem;width:100%;background:transparent;color:#111827;font-family:'Inter',sans-serif;font-weight:500}
                     .search-field input::placeholder{color:#9CA3AF;font-weight:400}
                     .search-field select{cursor:pointer;-webkit-appearance:none;appearance:none;color:#6B7280}
-                    .search-actions{display:flex;align-items:center;padding:0 14px}
-                    .search-btn{position:relative;padding:14px 32px;background:linear-gradient(135deg,#2563EB,#3B82F6,#60A5FA);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;transition:all .3s;white-space:nowrap;box-shadow:0 6px 24px rgba(37,99,235,.35);overflow:hidden}
-                    .search-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transition:.6s}
+                    .search-actions{display:flex;align-items:center;padding:0 16px}
+                    .search-btn{position:relative;padding:15px 36px;background:linear-gradient(135deg,#2563EB 0%,#3B82F6 50%,#60A5FA 100%);color:#fff;border:none;border-radius:14px;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;transition:all .35s cubic-bezier(.4,0,.2,1);white-space:nowrap;box-shadow:0 8px 28px rgba(37,99,235,.35);overflow:hidden;letter-spacing:.2px}
+                    .search-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:.7s}
                     .search-btn:hover::before{left:100%}
-                    .search-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(37,99,235,.45)}
+                    .search-btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 36px rgba(37,99,235,.45)}
+                    .search-btn:active{transform:translateY(0) scale(.98)}
 
                     /* SEARCH TABS */
-                    .search-tabs{display:flex;align-items:center;gap:0;border-bottom:1px solid rgba(0,0,0,.06);padding:0 12px;position:relative;z-index:5;background:rgba(255,255,255,.3)}
-                    .search-tab{display:flex;align-items:center;gap:7px;padding:14px 20px;font-size:.84rem;font-weight:600;color:#6B7280;border-bottom:2.5px solid transparent;transition:.3s;text-decoration:none;white-space:nowrap}
+                    .search-tabs{display:flex;align-items:center;gap:0;border-bottom:1px solid rgba(0,0,0,.06);padding:0 8px;position:relative;z-index:5;background:rgba(248,250,252,.6)}
+                    .search-tab{display:flex;align-items:center;gap:7px;padding:15px 20px;font-size:.82rem;font-weight:600;color:#6B7280;border-bottom:2.5px solid transparent;transition:all .3s;text-decoration:none;white-space:nowrap;position:relative}
                     .search-tab:hover{color:#2563EB;background:rgba(37,99,235,.03)}
                     .search-tab.active{color:#2563EB;border-bottom-color:#2563EB;font-weight:700;background:rgba(37,99,235,.04)}
-                    .search-tab i{font-size:.8rem}
+                    .search-tab i{font-size:.78rem;width:20px;text-align:center}
 
-                    /* QUICK CATEGORIES */
-                    .hero-cats{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:28px;animation:heroFadeUp .6s ease .35s both}
-                    .hero-cat{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 16px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:14px;cursor:pointer;transition:all .3s;text-decoration:none;min-width:80px}
-                    .hero-cat:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.25);transform:translateY(-4px)}
-                    .hero-cat-icon{font-size:1.5rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.15))}
-                    .hero-cat-name{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.88);text-align:center;letter-spacing:.2px;line-height:1.2}
+                    /* Popular Destinations */
+                    .hero-popular{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;animation:heroFadeUp .7s ease .38s both;flex-wrap:wrap}
+                    .hero-popular-label{font-size:.72rem;color:rgba(255,255,255,.5);font-weight:600;letter-spacing:.3px}
+                    .hero-popular-tag{padding:6px 14px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:999px;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.85);cursor:pointer;transition:all .3s;text-decoration:none}
+                    .hero-popular-tag:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.25);transform:translateY(-2px);color:#fff}
+                    .hero-popular-tag i{margin-right:4px;font-size:.65rem}
+
+                    /* Scroll Indicator */
+                    .scroll-hint{display:flex;flex-direction:column;align-items:center;cursor:pointer;margin-top:32px;animation:heroFadeUp .7s ease .45s both;transition:opacity .3s}
+                    .scroll-hint:hover{opacity:.9}
+                    .scroll-hint:hover .scroll-arrow{transform:translateY(5px)}
+                    .scroll-hint-text{font-size:.68rem;color:rgba(255,255,255,.45);letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+                    .scroll-arrow{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:.75rem;transition:all .3s;animation:scrollFloat 2.5s ease-in-out infinite}
+                    @keyframes scrollFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+                    /* ═══ HERO RESPONSIVE ═══ */
+                    @media(max-width:1024px){
+                        .hero{min-height:85vh;padding:100px 0 50px}
+                        .hero-content{max-width:760px}
+                        .search-panel{max-width:720px}
+                    }
+                    @media(max-width:768px){
+                        .hero{min-height:auto;padding:90px 0 40px}
+                        .hero-content{padding:0 16px}
+                        .hero-content h1{font-size:clamp(1.4rem,5vw,2rem);white-space:normal;line-height:1.25}
+                        .hero-content>p.hero-sub{font-size:.9rem;margin-bottom:24px;max-width:420px}
+                        .hero-badge{font-size:.7rem;padding:6px 16px;margin-bottom:20px}
+                        .search-panel{border-radius:16px;margin:0 4px}
+                        .search-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:0;padding:0 4px}
+                        .search-tabs::-webkit-scrollbar{display:none}
+                        .search-tab{padding:12px 14px;font-size:.76rem;flex-shrink:0}
+                        .search-row{flex-direction:column}
+                        .search-field+.search-field{border-left:none;border-top:1px solid rgba(0,0,0,.05)}
+                        .search-field{padding:14px 18px}
+                        .search-actions{padding:10px 16px 16px}
+                        .search-btn{width:100%;justify-content:center;padding:14px;border-radius:12px}
+                        .hero-popular{gap:6px}
+                        .hero-popular-tag{padding:5px 12px;font-size:.68rem}
+                        .scroll-hint{margin-top:20px}
+                    }
+                    @media(max-width:640px){
+                        .hero{padding:80px 0 30px}
+                        .hero-content h1{font-size:1.35rem}
+                        .hero-content>p.hero-sub{font-size:.84rem;line-height:1.65}
+                        .search-field-label{font-size:.64rem}
+                        .search-field input,.search-field select{font-size:.84rem}
+                    }
+                    @media(max-width:480px){
+                        .hero-content h1{font-size:1.2rem}
+                        .hero-badge{font-size:.65rem;gap:6px;padding:5px 14px}
+                        .hero-popular-label{display:none}
+                        .search-tab{padding:10px 12px;font-size:.72rem;gap:5px}
+                        .search-tab i{font-size:.7rem}
+                    }
 
                     /* MAP */
                     /* FLOATING MAP UI (FROM IMAGE) */
@@ -142,9 +195,9 @@
 
                     /* ═══ CATEGORIES ═══ */
                     .cats {
-                        max-width: 1280px;
+                        max-width: 1440px;
                         margin: -70px auto 0;
-                        padding: 0 30px;
+                        padding: 0 24px;
                         position: relative;
                         z-index: 10
                     }
@@ -236,9 +289,9 @@
 
                     /* ═══ STATS ═══ */
                     .stats {
-                        max-width: 1280px;
-                        margin: 70px auto;
-                        padding: 0 30px
+                        max-width: 1440px;
+                        margin: 50px auto;
+                        padding: 0 24px
                     }
 
                     .stats-bar {
@@ -288,10 +341,10 @@
                         justify-content: space-between;
                         align-items: flex-end;
                         margin-bottom: 48px;
-                        max-width: 1280px;
+                        max-width: 1440px;
                         margin-left: auto;
                         margin-right: auto;
-                        padding: 0 30px
+                        padding: 0 24px
                     }
 
                     .sh h2 {
@@ -323,9 +376,9 @@
 
                     /* ═══ TOUR CARDS ═══ */
                     .tours {
-                        max-width: 1280px;
+                        max-width: 1440px;
                         margin: 0 auto 100px;
-                        padding: 0 30px
+                        padding: 0 24px
                     }
 
                     .tour-grid {
@@ -561,9 +614,9 @@
                     }
 
                     .cta-inner {
-                        max-width: 1280px;
+                        max-width: 1440px;
                         margin: 0 auto;
-                        padding: 0 30px;
+                        padding: 0 24px;
                         display: grid;
                         grid-template-columns: 1fr 1fr;
                         gap: 80px;
@@ -799,16 +852,8 @@
                         transform: translateY(0)
                     }
 
-                    /* ═══ RESPONSIVE ═══ */
+                    /* ═══ RESPONSIVE — General Page ═══ */
                     @media(max-width:1024px) {
-                        .hero-right {
-                            display: none
-                        }
-
-                        .hero-left h1 {
-                            font-size: 3rem
-                        }
-
                         .cats-grid,
                         .tour-grid {
                             grid-template-columns: repeat(2, 1fr)
@@ -831,14 +876,6 @@
                     @media(max-width:768px) {
                         .nav-menu {
                             display: none
-                        }
-
-                        .hero {
-                            min-height: 90vh
-                        }
-
-                        .hero-left h1 {
-                            font-size: 2.2rem
                         }
 
                         .cats-grid {
@@ -875,27 +912,28 @@
                         .foot-grid {
                             grid-template-columns: 1fr
                         }
+
+                        .stats{margin:40px auto;padding:0 16px}
+                        .st{padding:28px 16px}
+                        .st .num{font-size:1.8rem}
+                        .cats{margin:-40px auto 0;padding:0 16px}
+                        .tours{padding:0 16px;margin-bottom:60px}
+                        .cta{padding:60px 0}
+                        .cta-inner{padding:0 20px}
+                        .foot-inner{padding:0 20px}
                     }
 
                     @media(max-width:480px) {
-                        .hero-left h1 {
-                            font-size: 1.8rem
-                        }
-
-                        .search-box {
-                            flex-direction: column;
-                            border-radius: 16px
-                        }
-
-                        .search-box .btn-cta {
-                            border-radius: 12px;
-                            width: 100%;
-                            justify-content: center
-                        }
-
                         .stats-bar {
-                            grid-template-columns: 1fr
+                            grid-template-columns: repeat(2, 1fr)
                         }
+                        .cats-grid{grid-template-columns:1fr 1fr;gap:10px}
+                        .cat .ci{width:48px;height:48px;font-size:1.2rem}
+                        .cat .cn{font-size:.88rem}
+                        .tc .iw{height:200px}
+                        .tc .ct{padding:16px}
+                        .cta h2{font-size:1.6rem}
+                        .nl-form{flex-direction:column}
                     }
                 </style>
             </head>
@@ -903,34 +941,41 @@
             <body>
                 <jsp:include page="/common/_header.jsp" />
 
-                <!-- ═══ HERO ═══ -->
+                <!-- ═══ HERO — PREMIUM 2026 ═══ -->
                 <section class="hero">
-                    <div class="hero-bg" style="background-image:url('${pageContext.request.contextPath}/images/hero-bg.png')"></div>
+                    <div class="hero-bg"></div>
+                    <video class="hero-video" id="heroVideo" autoplay muted loop playsinline
+                        poster="${pageContext.request.contextPath}/images/hero-bg.jpg">
+                        <source src="${pageContext.request.contextPath}/images/hero-video.mp4" type="video/mp4">
+                    </video>
+                    <script>(function(){var v=document.getElementById('heroVideo');if(v){v.addEventListener('canplaythrough',function(){v.classList.add('loaded')});setTimeout(function(){if(v)v.classList.add('loaded')},4000)}})();</script>
                     <div class="hero-overlay"></div>
-                <div class="hero-content">
-                        <div class="hero-badge" data-i18n="hero.badge"><span class="dot"></span> Hơn 5,000+ du khách tin tưởng</div>
-                        <h1 data-i18n="hero.title">EZTRAVEL - TRẢI NGHIỆM DU LỊCH DỄ DÀNG</h1>
-                        <p class="hero-sub" data-i18n="hero.desc">Khám phá những điểm đến tuyệt vời, trải nghiệm độc đáo và lên kế hoạch cho chuyến đi hoàn hảo của bạn!</p>
 
-                        <!-- Service Tabs + Search Panel -->
+                    <div class="hero-content">
+                        <div class="hero-badge" data-i18n="hero.badge">
+                            <span class="dot"></span> ⭐ 5,000+ du khách tin tưởng • Đánh giá 4.9/5
+                        </div>
+
+                        <h1>Khám Phá <span class="hero-accent">Đà Nẵng</span><br>Trải Nghiệm Du Lịch Tuyệt Vời</h1>
+                        <p class="hero-sub" data-i18n="hero.desc">Từ Cầu Vàng Bà Nà Hills đến biển Mỹ Khê — hãy để chúng tôi giúp bạn lên kế hoạch cho chuyến đi hoàn hảo nhất.</p>
+
+                        <!-- Search Panel -->
                         <div class="search-panel">
-                            <!-- Tab Bar -->
                             <div class="search-tabs">
                                 <a href="${pageContext.request.contextPath}/tour" class="search-tab active"><i class="fas fa-suitcase-rolling"></i> Tour trọn gói</a>
                                 <a href="#" class="search-tab"><i class="fas fa-hotel"></i> Khách sạn</a>
                                 <a href="#" class="search-tab"><i class="fas fa-plane"></i> Vé máy bay</a>
                                 <a href="${pageContext.request.contextPath}/tour" class="search-tab"><i class="fas fa-layer-group"></i> Combo</a>
                             </div>
-                            <!-- Search Fields -->
                             <form action="${pageContext.request.contextPath}/tour" method="get">
                                 <div class="search-row">
                                     <div class="search-field">
                                         <div class="search-field-label"><i class="fas fa-map-marker-alt"></i> <span data-i18n="search.where">Bạn muốn đi đâu?</span> <span style="color:#EF4444">*</span></div>
-                                        <input type="text" name="search" placeholder="vd: Bà Nà, Phú Quốc, Đà Nẵng...">
+                                        <input type="text" name="search" placeholder="vd: Bà Nà, Hội An, Sơn Trà...">
                                     </div>
                                     <div class="search-field">
-                                        <div class="search-field-label"><i class="fas fa-calendar-alt"></i> <span data-i18n="search.date">Ngày đi</span></div>
-                                        <input type="text" name="date" placeholder="dd/mm/yyyy" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+                                        <div class="search-field-label"><i class="fas fa-calendar-alt"></i> <span data-i18n="search.date">Ngày khởi hành</span></div>
+                                        <input type="text" name="date" placeholder="Chọn ngày đi" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
                                     </div>
                                     <div class="search-field">
                                         <div class="search-field-label"><i class="fas fa-wallet"></i> <span data-i18n="search.budget">Ngân sách</span></div>
@@ -949,18 +994,21 @@
                             </form>
                         </div>
 
-                        <!-- Scroll Down Arrow -->
-                        <div class="scroll-hint" onclick="document.querySelector('.map-section').scrollIntoView({behavior:'smooth'})">
-                            <span style="font-size:.75rem;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Khám phá ngay</span>
-                            <i class="fas fa-chevron-down" style="font-size:1.2rem;color:rgba(255,255,255,.7)"></i>
+                        <!-- Popular destinations -->
+                        <div class="hero-popular">
+                            <span class="hero-popular-label">Phổ biến:</span>
+                            <a href="${pageContext.request.contextPath}/tour?search=ba+na" class="hero-popular-tag"><i class="fas fa-fire"></i> Bà Nà Hills</a>
+                            <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="hero-popular-tag">🏮 Hội An</a>
+                            <a href="${pageContext.request.contextPath}/tour?search=my+khe" class="hero-popular-tag">🏖️ Mỹ Khê</a>
+                            <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="hero-popular-tag">🌿 Sơn Trà</a>
+                            <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="hero-popular-tag">⛰️ Ngũ Hành Sơn</a>
                         </div>
-                        <style>
-                            .scroll-hint{display:flex;flex-direction:column;align-items:center;cursor:pointer;margin-top:24px;animation:scrollBounce 2s ease-in-out infinite;transition:opacity .3s}
-                            .scroll-hint:hover{opacity:.9}
-                            .scroll-hint:hover i{transform:translateY(4px)}
-                            .scroll-hint i{transition:transform .3s ease}
-                            @keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
-                        </style>
+
+                        <!-- Scroll indicator -->
+                        <div class="scroll-hint" onclick="document.querySelector('.map-section').scrollIntoView({behavior:'smooth'})">
+                            <span class="scroll-hint-text">Khám phá</span>
+                            <div class="scroll-arrow"><i class="fas fa-chevron-down"></i></div>
+                        </div>
                     </div>
                 </section>
 
@@ -986,190 +1034,557 @@
                     </div>
                 </section>
 
-                <!-- ═══ GOOGLE MAP (IMAGE LOOK) ═══ -->
-                <div class="map-float-container">
-                    <div class="map-card rv">
-                        <button class="btn-floating-loc" onclick="handleMyLocation()">
-                            <i class="fas fa-map-marker-alt"></i> Vị Trí Của Tôi
-                        </button>
-                        <iframe id="googleMap" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61349.26893498857!2d108.17!3d16.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219c792252a13%3A0xfc14e3a044436f37!2sDa%20Nang%2C%20Vietnam!5e0!3m2!1svi!2s!4v1709000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <!-- ═══ INTERACTIVE MAP - LEAFLET.JS ═══ -->
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                <style>
+                    /* ═══ MAP PREMIUM STYLES ═══ */
+                    .map-section{position:relative;max-width:1440px;margin:-40px auto 60px;padding:0 24px;z-index:100}
+                    .map-wrapper{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(27,31,59,.15),0 0 0 1px rgba(255,255,255,.8) inset;border:4px solid #fff;position:relative;display:flex;height:520px}
+                    
+                    /* Map Container */
+                    .map-container{flex:1;position:relative;min-width:0}
+                    #leafletMap{width:100%;height:100%;z-index:1}
+                    
+                    /* Map Controls Overlay */
+                    .map-controls{position:absolute;top:16px;left:16px;z-index:1000;display:flex;flex-direction:column;gap:8px}
+                    .map-ctrl-btn{display:flex;align-items:center;gap:10px;padding:12px 20px;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);color:#1E293B;border:none;border-radius:14px;font-size:.82rem;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04);transition:all .3s;font-family:'Inter',sans-serif;letter-spacing:.2px}
+                    .map-ctrl-btn i{font-size:1rem}
+                    .map-ctrl-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.18)}
+                    .map-ctrl-btn.active{background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff}
+                    .map-ctrl-btn.active i{color:#fff}
+                    .map-ctrl-btn:not(.active) i{color:#2563EB}
+                    
+                    .map-style-toggle{position:absolute;top:16px;right:16px;z-index:1000;display:flex;gap:4px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-radius:12px;padding:4px;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+                    .map-style-btn{padding:8px 14px;border:none;border-radius:9px;font-size:.72rem;font-weight:700;cursor:pointer;transition:.3s;font-family:'Inter',sans-serif;background:transparent;color:#64748B}
+                    .map-style-btn.active{background:#2563EB;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.35)}
+                    .map-style-btn:hover:not(.active){background:rgba(37,99,235,.08);color:#2563EB}
+                    
+                    /* Coordinate Badge */
+                    .map-coord-badge{position:absolute;bottom:16px;left:16px;z-index:1000;background:rgba(15,23,42,.85);backdrop-filter:blur(12px);color:#CBD5E1;padding:8px 16px;border-radius:10px;font-size:.72rem;font-weight:600;font-family:'JetBrains Mono','Courier New',monospace;letter-spacing:.5px;display:none;gap:12px;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+                    .map-coord-badge i{color:#60A5FA;font-size:.68rem}
+                    
+                    /* Location Info Sidebar */
+                    .map-sidebar{width:0;overflow:hidden;transition:width .4s cubic-bezier(.4,0,.2,1);background:linear-gradient(180deg,#F8FAFF 0%,#F1F5FF 100%);border-left:1px solid rgba(37,99,235,.08);position:relative}
+                    .map-sidebar.open{width:340px}
+                    .map-sidebar-inner{width:340px;height:100%;overflow-y:auto;padding:0}
+                    .map-sidebar-inner::-webkit-scrollbar{width:3px}
+                    .map-sidebar-inner::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+                    
+                    /* Sidebar Header */
+                    .sidebar-header{background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;padding:20px;position:relative;overflow:hidden}
+                    .sidebar-header::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:rgba(255,255,255,.06);border-radius:50%}
+                    .sidebar-header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;background:rgba(255,255,255,.04);border-radius:50%}
+                    .sidebar-header-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;margin-bottom:12px}
+                    .sidebar-header-top h3{font-size:.92rem;font-weight:800;display:flex;align-items:center;gap:8px}
+                    .sidebar-close{background:rgba(255,255,255,.15);border:none;color:rgba(255,255,255,.8);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:.8rem;transition:.3s;display:flex;align-items:center;justify-content:center}
+                    .sidebar-close:hover{background:rgba(255,255,255,.25);color:#fff}
+                    
+                    .sidebar-location{background:rgba(255,255,255,.1);border-radius:12px;padding:12px;position:relative;z-index:1}
+                    .sidebar-address{font-size:.82rem;color:rgba(255,255,255,.9);line-height:1.6;font-weight:500}
+                    .sidebar-coords{font-size:.68rem;color:rgba(255,255,255,.5);margin-top:6px;font-family:'JetBrains Mono','Courier New',monospace;letter-spacing:.5px}
+                    
+                    /* Nearby Suggestions */
+                    .sidebar-body{padding:16px 20px}
+                    .suggest-title{font-size:.78rem;font-weight:800;color:#475569;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+                    .suggest-title i{color:#F59E0B}
+                    
+                    .suggest-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #E8EDF5;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
+                    .suggest-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 3px 3px 0;transition:background .3s}
+                    .suggest-card:nth-child(1)::before{background:#3B82F6}
+                    .suggest-card:nth-child(2)::before{background:#10B981}
+                    .suggest-card:nth-child(3)::before{background:#F59E0B}
+                    .suggest-card:nth-child(4)::before{background:#8B5CF6}
+                    .suggest-card:nth-child(5)::before{background:#EF4444}
+                    .suggest-card:hover{transform:translateX(4px);box-shadow:0 4px 16px rgba(37,99,235,.1);border-color:#BFDBFE}
+                    
+                    .suggest-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+                    .suggest-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+                    .suggest-card:nth-child(1) .suggest-icon{background:rgba(59,130,246,.1)}
+                    .suggest-card:nth-child(2) .suggest-icon{background:rgba(16,185,129,.1)}
+                    .suggest-card:nth-child(3) .suggest-icon{background:rgba(245,158,11,.1)}
+                    .suggest-card:nth-child(4) .suggest-icon{background:rgba(139,92,246,.1)}
+                    .suggest-card:nth-child(5) .suggest-icon{background:rgba(239,68,68,.1)}
+                    .suggest-name{font-size:.84rem;font-weight:700;color:#1E293B}
+                    .suggest-dist{font-size:.68rem;color:#94A3B8;font-weight:600}
+                    .suggest-desc{font-size:.76rem;color:#64748B;line-height:1.5}
+                    .suggest-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+                    .suggest-tag{padding:3px 8px;border-radius:6px;font-size:.62rem;font-weight:700;background:#F1F5F9;color:#475569;letter-spacing:.3px}
+                    
+                    /* AI Ask Button */
+                    .sidebar-ai-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;border:none;border-radius:14px;font-size:.84rem;font-weight:800;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;margin-top:16px;box-shadow:0 6px 20px rgba(37,99,235,.25)}
+                    .sidebar-ai-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,99,235,.35)}
+                    .sidebar-ai-btn i{font-size:1rem}
+                    
+                    /* Loading State */
+                    .sidebar-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:12px}
+                    .sidebar-loading .loader{width:32px;height:32px;border:3px solid #E8EDF5;border-top-color:#3B82F6;border-radius:50%;animation:spin .8s linear infinite}
+                    @keyframes spin{to{transform:rotate(360deg)}}
+                    .sidebar-loading p{font-size:.82rem;color:#94A3B8;font-weight:600}
+                    
+                    /* Hotspot Markers Custom */
+                    .leaflet-popup-content-wrapper{border-radius:14px!important;box-shadow:0 8px 30px rgba(0,0,0,.15)!important;border:none!important;padding:0!important}
+                    .leaflet-popup-content{margin:0!important;min-width:220px}
+                    .leaflet-popup-tip{box-shadow:none!important}
+                    .popup-content{padding:16px}
+                    .popup-content h4{font-size:.92rem;font-weight:800;color:#1E293B;margin-bottom:4px}
+                    .popup-content p{font-size:.78rem;color:#64748B;line-height:1.5;margin-bottom:10px}
+                    .popup-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border-radius:10px;font-size:.75rem;font-weight:700;text-decoration:none;transition:.3s}
+                    .popup-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.3);color:#fff}
+                    
+                    /* Mobile responsive */
+                    @media(max-width:900px){
+                        .map-wrapper{flex-direction:column;height:auto}
+                        .map-container{height:360px}
+                        #leafletMap{height:360px}
+                        .map-sidebar{width:100%!important;border-left:none;border-top:1px solid rgba(37,99,235,.08)}
+                        .map-sidebar.open{width:100%!important}
+                        .map-sidebar-inner{width:100%}
+                    }
+                    @media(max-width:768px){
+                        .map-section{margin-top:-40px}
+                        .map-wrapper{border-radius:16px}
+                        .map-container{height:300px}
+                        #leafletMap{height:300px}
+                    }
+                </style>
+
+                <div class="map-section">
+                    <div class="map-wrapper rv">
+                        <!-- Map Container -->
+                        <div class="map-container">
+                            <div id="leafletMap"></div>
+                            
+                            <!-- Controls -->
+                            <div class="map-controls">
+                                <button class="map-ctrl-btn" id="btnMyLocation" onclick="handleMyLocation()">
+                                    <i class="fas fa-crosshairs"></i> Vị Trí Của Tôi
+                                </button>
+                            </div>
+                            
+                            <!-- Map Style Toggle -->
+                            <div class="map-style-toggle">
+                                <button class="map-style-btn active" data-style="streets" onclick="changeMapStyle('streets', this)">Bản đồ</button>
+                                <button class="map-style-btn" data-style="satellite" onclick="changeMapStyle('satellite', this)">Vệ tinh</button>
+                                <button class="map-style-btn" data-style="dark" onclick="changeMapStyle('dark', this)">Tối</button>
+                            </div>
+                            
+                            <!-- Coordinate Badge -->
+                            <div class="map-coord-badge" id="coordBadge">
+                                <i class="fas fa-map-pin"></i>
+                                <span id="coordText">—</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Location Info Sidebar -->
+                        <div class="map-sidebar" id="mapSidebar">
+                            <div class="map-sidebar-inner" id="sidebarContent">
+                                <!-- Content injected by JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <script>
-                function handleMyLocation() {
-                    const btn = document.querySelector('.btn-floating-loc');
-                    if (!btn) return;
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG TÌM...';
-                    btn.disabled = true;
-
-                    if (!navigator.geolocation) {
-                        alert("Trình duyệt của bạn không hỗ trợ định vị!");
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                        return;
+                // ═══ LEAFLET MAP INITIALIZATION ═══
+                (function() {
+                    const DA_NANG = [16.054, 108.22];
+                    let map, currentMarker, currentTileLayer;
+                    
+                    // Tile layer configs
+                    const tileLayers = {
+                        streets: {
+                            url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+                            attr: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+                        },
+                        satellite: {
+                            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                            attr: '&copy; Esri, Maxar, Earthstar'
+                        },
+                        dark: {
+                            url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+                            attr: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+                        }
+                    };
+                    
+                    // Custom marker icons
+                    function createIcon(color, emoji) {
+                        return L.divIcon({
+                            className: 'custom-marker',
+                            html: '<div style="width:40px;height:40px;background:' + color + ';border-radius:50% 50% 50% 4px;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.25);border:3px solid #fff"><span style="transform:rotate(45deg);font-size:16px">' + emoji + '</span></div>',
+                            iconSize: [40, 40],
+                            iconAnchor: [20, 40],
+                            popupAnchor: [0, -42]
+                        });
                     }
-
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const lat = position.coords.latitude;
-                            const lng = position.coords.longitude;
+                    
+                    function createUserIcon() {
+                        return L.divIcon({
+                            className: 'custom-marker',
+                            html: '<div style="position:relative"><div style="width:18px;height:18px;background:#3B82F6;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 10px rgba(59,130,246,.5)"></div><div style="position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(59,130,246,.3);animation:pulse2 2s ease infinite"></div></div><style>@keyframes pulse2{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.8);opacity:0}}</style>',
+                            iconSize: [18, 18],
+                            iconAnchor: [9, 9]
+                        });
+                    }
+                    
+                    function createPinIcon() {
+                        return L.divIcon({
+                            className: 'custom-marker',
+                            html: '<div style="position:relative;animation:dropIn .4s cubic-bezier(.175,.885,.32,1.275)"><div style="width:44px;height:44px;background:linear-gradient(135deg,#EF4444,#F97316);border-radius:50% 50% 50% 4px;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(239,68,68,.35);border:3px solid #fff"><span style="transform:rotate(45deg);font-size:18px">📍</span></div><div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:12px;height:4px;background:rgba(0,0,0,.15);border-radius:50%;filter:blur(2px)"></div></div><style>@keyframes dropIn{0%{transform:translateY(-30px);opacity:0}60%{transform:translateY(4px)}100%{transform:translateY(0);opacity:1}}</style>',
+                            iconSize: [44, 44],
+                            iconAnchor: [22, 44],
+                            popupAnchor: [0, -46]
+                        });
+                    }
+                    
+                    // Initialize map
+                    map = L.map('leafletMap', {
+                        center: DA_NANG,
+                        zoom: 13,
+                        zoomControl: false,
+                        attributionControl: false
+                    });
+                    
+                    // Add zoom control to bottom-right
+                    L.control.zoom({ position: 'bottomright' }).addTo(map);
+                    
+                    // Set initial tile layer
+                    currentTileLayer = L.tileLayer(tileLayers.streets.url, {
+                        attribution: tileLayers.streets.attr,
+                        maxZoom: 19
+                    }).addTo(map);
+                    
+                    // ═══ DA NANG TOURIST HOTSPOTS ═══
+                    const hotspots = [
+                        { pos: [16.0611, 108.2274], name: 'Cầu Rồng', desc: 'Biểu tượng Đà Nẵng, phun lửa & nước T7-CN', emoji: '🐉', color: '#EF4444', search: 'cau+rong' },
+                        { pos: [15.9975, 107.9940], name: 'Bà Nà Hills', desc: 'Làng Pháp trên đỉnh núi, Cầu Vàng nổi tiếng', emoji: '⛰️', color: '#8B5CF6', search: 'ba+na' },
+                        { pos: [16.0322, 108.2504], name: 'Biển Mỹ Khê', desc: 'Top 6 bãi biển đẹp nhất hành tinh', emoji: '🏖️', color: '#06B6D4', search: 'my+khe' },
+                        { pos: [16.1003, 108.2778], name: 'Bán Đảo Sơn Trà', desc: 'Khu bảo tồn thiên nhiên, Chùa Linh Ứng', emoji: '🌿', color: '#10B981', search: 'son+tra' },
+                        { pos: [16.0039, 108.2632], name: 'Ngũ Hành Sơn', desc: 'Marble Mountains, chùa & hang động', emoji: '🏔️', color: '#F59E0B', search: 'ngu+hanh+son' },
+                        { pos: [15.8800, 108.3280], name: 'Phố Cổ Hội An', desc: 'Di sản UNESCO, đèn lồng & ẩm thực', emoji: '🏮', color: '#EC4899', search: 'hoi+an' },
+                        { pos: [16.0395, 108.2258], name: 'Asia Park', desc: 'Sun World, vòng quay Sun Wheel', emoji: '🎡', color: '#6366F1', search: 'asia+park' },
+                        { pos: [16.0719, 108.2271], name: 'Chợ Hàn', desc: 'Chợ truyền thống, đặc sản Đà Nẵng', emoji: '🛍️', color: '#14B8A6', search: '' }
+                    ];
+                    
+                    hotspots.forEach(h => {
+                        const marker = L.marker(h.pos, { icon: createIcon(h.color, h.emoji) }).addTo(map);
+                        const popupHtml = '<div class="popup-content">'
+                            + '<h4>' + h.emoji + ' ' + h.name + '</h4>'
+                            + '<p>' + h.desc + '</p>'
+                            + '<a href="${pageContext.request.contextPath}/tour?search=' + h.search + '" class="popup-btn"><i class="fas fa-compass"></i> Xem Tour</a>'
+                            + '</div>';
+                        marker.bindPopup(popupHtml, { closeButton: true, className: 'custom-popup' });
+                    });
+                    
+                    // ═══ CLICK TO PIN LOCATION ═══
+                    map.on('click', function(e) {
+                        const lat = e.latlng.lat;
+                        const lng = e.latlng.lng;
+                        
+                        placePin(lat, lng);
+                        showSidebarLoading();
+                        reverseGeocode(lat, lng);
+                        
+                        // Show coord badge
+                        const badge = document.getElementById('coordBadge');
+                        document.getElementById('coordText').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
+                        badge.style.display = 'flex';
+                    });
+                    
+                    function placePin(lat, lng) {
+                        if (currentMarker) map.removeLayer(currentMarker);
+                        currentMarker = L.marker([lat, lng], { icon: createPinIcon() }).addTo(map);
+                        map.flyTo([lat, lng], Math.max(map.getZoom(), 15), { duration: 0.8 });
+                    }
+                    
+                    function showSidebarLoading() {
+                        const sidebar = document.getElementById('mapSidebar');
+                        sidebar.classList.add('open');
+                        document.getElementById('sidebarContent').innerHTML = 
+                            '<div class="sidebar-loading"><div class="loader"></div><p>Đang tìm kiếm vị trí...</p></div>';
+                    }
+                    
+                    // ═══ REVERSE GEOCODE ═══
+                    function reverseGeocode(lat, lng) {
+                        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1&accept-language=vi')
+                        .then(r => r.json())
+                        .then(data => {
+                            const address = data.display_name || 'Không xác định được địa chỉ';
+                            const addr = data.address || {};
+                            const shortAddr = [addr.road, addr.suburb, addr.city || addr.town || addr.county].filter(Boolean).join(', ') || address.split(',').slice(0,3).join(',');
                             
-                            // Update Map
-                            const mapUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
-                            document.getElementById('googleMap').src = mapUrl;
-
-                            btn.innerHTML = '<i class="fas fa-check"></i> Đã tìm thấy!';
-                            btn.style.background = '#10B981';
+                            renderSidebar(lat, lng, shortAddr, address);
+                        })
+                        .catch(() => {
+                            renderSidebar(lat, lng, 'Tọa độ: ' + lat.toFixed(4) + ', ' + lng.toFixed(4), '');
+                        });
+                    }
+                    
+                    // ═══ RENDER SIDEBAR ═══
+                    function renderSidebar(lat, lng, shortAddr, fullAddr) {
+                        // Find nearest hotspots
+                        const nearby = hotspots.map(h => ({
+                            ...h,
+                            dist: getDistance(lat, lng, h.pos[0], h.pos[1])
+                        })).sort((a, b) => a.dist - b.dist).slice(0, 5);
+                        
+                        let suggestHtml = '';
+                        nearby.forEach((h, i) => {
+                            const distText = h.dist < 1 ? (h.dist * 1000).toFixed(0) + 'm' : h.dist.toFixed(1) + 'km';
+                            const tags = ['Du lịch', 'Đà Nẵng'];
+                            if (h.dist < 3) tags.push('Gần đây');
+                            if (i === 0) tags.push('Gần nhất');
                             
-                            // Trigger AI Chatbot
-                            if (window.EzAiChat && typeof window.EzAiChat.suggestNearby === 'function') {
-                                window.EzAiChat.suggestNearby(lat, lng);
-                            }
-
-                            setTimeout(() => {
-                                btn.innerHTML = originalText;
-                                btn.style.background = '';
-                                btn.disabled = false;
-                            }, 5000);
-                        },
-                        (error) => {
-                            console.error(error);
-                            alert("Không thể lấy vị trí của bạn. Vui lòng bật định vị!");
-                            btn.innerHTML = originalText;
-                            btn.disabled = false;
-                        },
-                        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-                    );
-                }
+                            suggestHtml += '<div class="suggest-card" onclick="window.location.href=\'${pageContext.request.contextPath}/tour?search=' + h.search + '\'">'
+                                + '<div class="suggest-card-header">'
+                                + '<div class="suggest-icon">' + h.emoji + '</div>'
+                                + '<div><div class="suggest-name">' + h.name + '</div>'
+                                + '<div class="suggest-dist"><i class="fas fa-route" style="margin-right:4px;font-size:.6rem;color:#94A3B8"></i>' + distText + '</div></div>'
+                                + '</div>'
+                                + '<div class="suggest-desc">' + h.desc + '</div>'
+                                + '<div class="suggest-tags">' + tags.map(t => '<span class="suggest-tag">' + t + '</span>').join('') + '</div>'
+                                + '</div>';
+                        });
+                        
+                        document.getElementById('sidebarContent').innerHTML = 
+                            '<div class="sidebar-header">'
+                            + '<div class="sidebar-header-top">'
+                            + '<h3><i class="fas fa-map-marker-alt"></i> Vị Trí Đã Chọn</h3>'
+                            + '<button class="sidebar-close" onclick="closeSidebar()"><i class="fas fa-times"></i></button>'
+                            + '</div>'
+                            + '<div class="sidebar-location">'
+                            + '<div class="sidebar-address">' + shortAddr + '</div>'
+                            + '<div class="sidebar-coords"><i class="fas fa-crosshairs" style="margin-right:4px"></i>' + lat.toFixed(5) + ', ' + lng.toFixed(5) + '</div>'
+                            + '</div>'
+                            + '</div>'
+                            + '<div class="sidebar-body">'
+                            + '<div class="suggest-title"><i class="fas fa-star"></i> Gợi ý địa điểm gần đây</div>'
+                            + suggestHtml
+                            + '<button class="sidebar-ai-btn" onclick="askAI(' + lat + ',' + lng + ')">'
+                            + '<i class="fas fa-robot"></i> Hỏi AI gợi ý chi tiết'
+                            + '</button>'
+                            + '</div>';
+                    }
+                    
+                    // ═══ DISTANCE CALCULATION (Haversine) ═══
+                    function getDistance(lat1, lon1, lat2, lon2) {
+                        const R = 6371;
+                        const dLat = (lat2 - lat1) * Math.PI / 180;
+                        const dLon = (lon2 - lon1) * Math.PI / 180;
+                        const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+                        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    }
+                    
+                    // ═══ CLOSE SIDEBAR ═══
+                    window.closeSidebar = function() {
+                        document.getElementById('mapSidebar').classList.remove('open');
+                        document.getElementById('coordBadge').style.display = 'none';
+                        if (currentMarker) { map.removeLayer(currentMarker); currentMarker = null; }
+                    };
+                    
+                    // ═══ ASK AI ═══
+                    window.askAI = function(lat, lng) {
+                        if (window.EzAiChat && typeof window.EzAiChat.suggestNearby === 'function') {
+                            window.EzAiChat.suggestNearby(lat, lng);
+                        }
+                    };
+                    
+                    // ═══ CHANGE MAP STYLE ═══
+                    window.changeMapStyle = function(style, btn) {
+                        document.querySelectorAll('.map-style-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        if (currentTileLayer) map.removeLayer(currentTileLayer);
+                        const config = tileLayers[style];
+                        currentTileLayer = L.tileLayer(config.url, {
+                            attribution: config.attr,
+                            maxZoom: 19
+                        }).addTo(map);
+                    };
+                    
+                    // ═══ MY LOCATION ═══
+                    window.handleMyLocation = function() {
+                        const btn = document.getElementById('btnMyLocation');
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tìm...';
+                        btn.classList.add('active');
+                        
+                        if (!navigator.geolocation) {
+                            alert("Trình duyệt không hỗ trợ định vị!");
+                            btn.innerHTML = '<i class="fas fa-crosshairs"></i> Vị Trí Của Tôi';
+                            btn.classList.remove('active');
+                            return;
+                        }
+                        
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const lat = position.coords.latitude;
+                                const lng = position.coords.longitude;
+                                
+                                // Remove old marker, add user location marker
+                                if (currentMarker) map.removeLayer(currentMarker);
+                                currentMarker = L.marker([lat, lng], { icon: createUserIcon() }).addTo(map);
+                                map.flyTo([lat, lng], 16, { duration: 1.2 });
+                                
+                                // Show coord badge
+                                document.getElementById('coordText').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
+                                document.getElementById('coordBadge').style.display = 'flex';
+                                
+                                // Open sidebar with location info
+                                showSidebarLoading();
+                                reverseGeocode(lat, lng);
+                                
+                                // Trigger AI Chatbot
+                                if (window.EzAiChat && typeof window.EzAiChat.suggestNearby === 'function') {
+                                    window.EzAiChat.suggestNearby(lat, lng);
+                                }
+                                
+                                btn.innerHTML = '<i class="fas fa-check"></i> Đã tìm thấy!';
+                                setTimeout(() => {
+                                    btn.innerHTML = '<i class="fas fa-crosshairs"></i> Vị Trí Của Tôi';
+                                    btn.classList.remove('active');
+                                }, 3000);
+                            },
+                            (error) => {
+                                alert("Không thể lấy vị trí. Vui lòng bật định vị GPS!");
+                                btn.innerHTML = '<i class="fas fa-crosshairs"></i> Vị Trí Của Tôi';
+                                btn.classList.remove('active');
+                            },
+                            { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+                        );
+                    };
+                    
+                    // Invalidate map size after animations
+                    setTimeout(() => map.invalidateSize(), 500);
+                    
+                    // Re-invalidate on sidebar toggle
+                    const sidebarObserver = new MutationObserver(() => {
+                        setTimeout(() => map.invalidateSize(), 400);
+                    });
+                    sidebarObserver.observe(document.getElementById('mapSidebar'), { attributes: true, attributeFilter: ['class'] });
+                })();
                 </script>
 
                 <!-- ═══ ĐIỂM ĐẾN YÊU THÍCH ═══ -->
-                <section style="max-width:1200px;margin:0 auto;padding:64px 20px 48px">
-                    <div style="text-align:center;margin-bottom:40px">
-                        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;color:#1E293B;margin-bottom:8px;letter-spacing:-.02em">ĐIỂM ĐẾN YÊU THÍCH</h2>
-                        <div style="width:48px;height:3px;background:linear-gradient(90deg,#2563EB,#60A5FA);margin:0 auto 16px;border-radius:99px"></div>
-                        <p style="color:#64748B;font-size:.92rem;max-width:500px;margin:0 auto;line-height:1.7">Hãy chọn một điểm đến du lịch nổi tiếng dưới đây để khám phá các chuyến đi độc quyền tại Đà Nẵng</p>
+                <section class="dest-section">
+                    <div class="dest-header">
+                        <span class="dest-label"><i class="fas fa-compass"></i> Khám phá</span>
+                        <h2>Điểm Đến <span class="dest-hl">Yêu Thích</span></h2>
+                        <p>Những địa danh nổi tiếng nhất Đà Nẵng — từ Cầu Vàng đến phố cổ Hội An, mỗi nơi đều mang một câu chuyện riêng.</p>
                     </div>
 
-                    <!-- Masonry Photo Grid -->
-                    <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:180px;gap:12px">
-                        <!-- Cầu Rồng - Span 2 rows -->
-                        <a href="${pageContext.request.contextPath}/tour?search=cau+rong" class="rv" style="grid-row:span 2;position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.55) 0%,transparent 60%);transition:background .3s"></div>
-                            <div style="position:absolute;bottom:20px;left:20px;color:#fff">
-                                <div style="font-size:1.1rem;font-weight:800;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,.3)">CẦU RỒNG</div>
-                                <div style="font-size:.72rem;color:rgba(255,255,255,.7);margin-top:2px">Dragon Bridge · Biểu tượng Đà Nẵng</div>
-                            </div>
+                    <div class="dest-grid">
+                        <a href="${pageContext.request.contextPath}/tour?search=cau+rong" class="dest-card dest-lg rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-fire"></i> Hot</div>
+                            <div class="dest-info"><h3>Cầu Rồng</h3><p>Dragon Bridge · Phun lửa T7, CN</p></div>
                         </a>
-
-                        <!-- Bà Nà Hills -->
-                        <a href="${pageContext.request.contextPath}/tour?search=ba+na" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
-                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">BÀ NÀ HILLS</div>
-                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Làng Pháp trên đỉnh núi</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?search=ba+na" class="dest-card rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-star"></i> 4.9</div>
+                            <div class="dest-info"><h3>Bà Nà Hills</h3><p>Làng Pháp · Fantasy Park</p></div>
                         </a>
-
-                        <!-- Cầu Vàng -->
-                        <a href="${pageContext.request.contextPath}/tour?search=cau+vang" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/cau-vang.png" alt="Cầu Vàng" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
-                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">CẦU VÀNG</div>
-                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Golden Bridge · Bàn Tay Khổng Lồ</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?search=cau+vang" class="dest-card rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/cau-vang.png" alt="Cầu Vàng" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-camera"></i> Check-in</div>
+                            <div class="dest-info"><h3>Cầu Vàng</h3><p>Golden Bridge · Bàn Tay Khổng Lồ</p></div>
                         </a>
-
-                        <!-- Asia Park -->
-                        <a href="${pageContext.request.contextPath}/tour?search=asia+park" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/asia-park.png" alt="Asia Park" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
-                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">ASIA PARK</div>
-                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Sun World · Vòng quay Sun Wheel</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?search=asia+park" class="dest-card rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/asia-park.png" alt="Asia Park" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-child"></i> Gia đình</div>
+                            <div class="dest-info"><h3>Asia Park</h3><p>Sun Wheel 115m · Công viên</p></div>
                         </a>
-
-                        <!-- Biển Mỹ Khê - Span 2 cols -->
-                        <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="rv" style="grid-column:span 2;position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:16px;left:16px;color:#fff">
-                                <div style="font-size:1rem;font-weight:800;letter-spacing:.5px">BIỂN MỸ KHÊ</div>
-                                <div style="font-size:.7rem;color:rgba(255,255,255,.7);margin-top:2px">Top 6 bãi biển đẹp nhất hành tinh</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="dest-card dest-wide rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-trophy"></i> Top 6 TG</div>
+                            <div class="dest-info"><h3>Biển Mỹ Khê</h3><p>Forbes bình chọn · Bãi biển đẹp nhất</p></div>
                         </a>
-
-                        <!-- Hội An -->
-                        <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
-                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">HỘI AN</div>
-                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Phố cổ UNESCO · Đèn lồng</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="dest-card rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-landmark"></i> UNESCO</div>
+                            <div class="dest-info"><h3>Hội An</h3><p>Phố cổ · Đèn lồng huyền ảo</p></div>
                         </a>
-
-                        <!-- Sơn Trà -->
-                        <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
-                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">SƠN TRÀ</div>
-                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Bán đảo xanh · Voọc chà vá</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="dest-card dest-lg rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-leaf"></i> Eco</div>
+                            <div class="dest-info"><h3>Sơn Trà</h3><p>Bán đảo xanh · Voọc chà vá</p></div>
                         </a>
-
-                        <!-- Ngũ Hành Sơn -->
-                        <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/ngu-hanh-son.png" alt="Ngũ Hành Sơn" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
-                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">NGŨ HÀNH SƠN</div>
-                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Marble Mountains · Hang động</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="dest-card rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/ngu-hanh-son.png" alt="Ngũ Hành Sơn" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-mountain"></i> Trekking</div>
+                            <div class="dest-info"><h3>Ngũ Hành Sơn</h3><p>Marble Mountains · Hang động</p></div>
                         </a>
-
-                        <!-- Chùa Linh Ứng -->
-                        <a href="${pageContext.request.contextPath}/tour?search=linh+ung" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/chua-linh-ung.png" alt="Chùa Linh Ứng" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
-                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">CHÙA LINH ỨNG</div>
-                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Tượng Phật Bà · Linh thiêng</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?search=linh+ung" class="dest-card rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/chua-linh-ung.png" alt="Chùa Linh Ứng" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-pray"></i> Tâm linh</div>
+                            <div class="dest-info"><h3>Chùa Linh Ứng</h3><p>Tượng Phật Bà 67m · Panorama</p></div>
                         </a>
-
-                        <!-- Bãi biển Non Nước -->
-                        <a href="${pageContext.request.contextPath}/tour?search=non+nuoc" class="rv" style="position:relative;border-radius:16px;overflow:hidden;display:block;text-decoration:none">
-                            <img src="${pageContext.request.contextPath}/images/destinations/non-nuoc.png" alt="Non Nước" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
-                            <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 60%)"></div>
-                            <div style="position:absolute;bottom:14px;left:14px;color:#fff">
-                                <div style="font-size:.88rem;font-weight:800;letter-spacing:.5px">BÃI BIỂN NON NƯỚC</div>
-                                <div style="font-size:.65rem;color:rgba(255,255,255,.65);margin-top:1px">Bãi tắm đẹp · Làng đá mỹ nghệ</div>
-                            </div>
+                        <a href="${pageContext.request.contextPath}/tour?search=non+nuoc" class="dest-card rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/non-nuoc.png" alt="Non Nước" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-umbrella-beach"></i> Biển</div>
+                            <div class="dest-info"><h3>Non Nước</h3><p>Lướt sóng · Làng đá mỹ nghệ</p></div>
+                        </a>
+                        <a href="${pageContext.request.contextPath}/tour?search=cu+lao+cham" class="dest-card dest-wide rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Cù Lao Chàm" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-water"></i> Di sản</div>
+                            <div class="dest-info"><h3>Cù Lao Chàm</h3><p>Lặn san hô · Khu dự trữ sinh quyển UNESCO</p></div>
+                        </a>
+                        <a href="${pageContext.request.contextPath}/tour?search=cho+han" class="dest-card rv">
+                            <img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Chợ Hàn" loading="lazy">
+                            <div class="dest-ov"></div>
+                            <div class="dest-tag"><i class="fas fa-utensils"></i> Ẩm thực</div>
+                            <div class="dest-info"><h3>Chợ Hàn</h3><p>Đặc sản · Quà lưu niệm Đà Nẵng</p></div>
                         </a>
                     </div>
+                </section>
 
-                    <!-- Hover effect CSS -->
-                    <style>
-                        [style*="border-radius:16px"]:hover img{transform:scale(1.08)!important}
-                        [style*="border-radius:16px"]:hover div[style*="gradient"]{background:linear-gradient(0deg,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 60%)!important}
-                        @media(max-width:768px){
-                            [style*="grid-template-columns:repeat(4"]{grid-template-columns:repeat(2,1fr)!important;grid-auto-rows:160px!important}
-                            [style*="grid-row:span 2"]{grid-row:span 1!important}
-                            [style*="grid-column:span 2"]{grid-column:span 2!important}
-                        }
-                        @media(max-width:480px){
-                            [style*="grid-template-columns:repeat(4"]{grid-template-columns:1fr!important;grid-auto-rows:200px!important}
-                            [style*="grid-column:span 2"]{grid-column:span 1!important}
-                        }
-                    </style>
+                <style>
+                    .dest-section{max-width:1440px;margin:0 auto;padding:80px 24px 60px}
+                    .dest-header{text-align:center;margin-bottom:48px}
+                    .dest-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:#2563EB;background:rgba(37,99,235,.06);padding:6px 16px;border-radius:999px;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
+                    .dest-header h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#1E293B;margin-bottom:12px;letter-spacing:-.02em}
+                    .dest-hl{color:#2563EB}
+                    .dest-header p{color:#64748B;font-size:.95rem;max-width:520px;margin:0 auto;line-height:1.7}
+
+                    .dest-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:210px;gap:14px;grid-auto-flow:dense}
+
+                    .dest-card{position:relative;border-radius:18px;overflow:hidden;display:block;text-decoration:none;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+                    .dest-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.4,0,.2,1),filter .4s}
+                    .dest-ov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.03) 55%);transition:all .4s}
+                    .dest-tag{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;padding:5px 12px;border-radius:8px;font-size:.62rem;font-weight:700;display:flex;align-items:center;gap:4px;transition:all .35s;border:1px solid rgba(255,255,255,.12);opacity:0;transform:translateY(-8px)}
+                    .dest-info{position:absolute;bottom:0;left:0;right:0;padding:16px;color:#fff;transform:translateY(4px);transition:transform .4s cubic-bezier(.4,0,.2,1)}
+                    .dest-info::before{content:'';position:absolute;bottom:0;left:16px;width:0;height:3px;background:linear-gradient(90deg,#FFD166,#FF9F1C);border-radius:2px;transition:width .35s .08s}
+                    .dest-info h3{font-size:.92rem;font-weight:800;letter-spacing:.3px;text-shadow:0 2px 10px rgba(0,0,0,.35);margin:0 0 3px}
+                    .dest-info p{font-size:.66rem;color:rgba(255,255,255,.6);line-height:1.4;margin:0}
+
+                    .dest-card:hover img{transform:scale(1.12);filter:brightness(1.05)}
+                    .dest-card:hover .dest-ov{background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.12) 55%)}
+                    .dest-card:hover .dest-tag{opacity:1;transform:translateY(0)}
+                    .dest-card:hover .dest-info{transform:translateY(0)}
+                    .dest-card:hover .dest-info::before{width:36px}
+                    .dest-card:hover .dest-info p{color:rgba(255,255,255,.85)}
+
+                    .dest-lg{grid-row:span 2}
+                    .dest-wide{grid-column:span 2}
+
+                    .dest-card.rv{opacity:0;transform:translateY(28px) scale(.97);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1)}
+                    .dest-card.rv.vis{opacity:1;transform:translateY(0) scale(1)}
+
+                    @media(max-width:1024px){.dest-grid{grid-template-columns:repeat(3,1fr);grid-auto-rows:190px;gap:12px}}
+                    @media(max-width:768px){.dest-section{padding:60px 16px 40px}.dest-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:170px;gap:10px}.dest-lg{grid-row:span 1}.dest-tag{opacity:1;transform:translateY(0)}.dest-info{transform:translateY(0)}}
+                    @media(max-width:480px){.dest-grid{grid-template-columns:1fr;grid-auto-rows:200px}.dest-wide{grid-column:span 1}.dest-info h3{font-size:.86rem}}
+                </style>
+
                 </section>
 
 
@@ -1232,43 +1647,186 @@
                     </c:choose>
                 </section>
 
-                <!-- ═══ CTA ═══ -->
+                <!-- ═══ CTA — 3D CUBE SHOWCASE ═══ -->
                 <section class="cta">
-                    <div class="cta-inner">
-                        <div class="rv">
-                            <h2>Tham Gia<br><span class="hl">Da Nang Hub</span></h2>
-                            <p>Nhận ưu đãi độc quyền cho Bà Nà Hills, quyền truy cập sớm tour lễ hội và công cụ AI dự
-                                báo doanh thu.</p>
-                            <div class="nl-form">
-                                <input type="email" placeholder="Email của bạn">
-                                <button class="btn-cta btn-accent" style="padding:16px 30px;border-radius:99px;background:#FF6F61;color:#fff;border:none">Đăng Ký <i
-                                        class="fas fa-arrow-right"></i></button>
+                    <div class="cta-inner" style="align-items:center">
+                        <!-- LEFT: 3D Cube -->
+                        <div class="cube-scene rv">
+                            <div class="cube" id="destCube">
+                                <div class="cube-face cube-front">
+                                    <img src="${pageContext.request.contextPath}/images/destinations/cau-vang.png" alt="Cầu Vàng">
+                                </div>
+                                <div class="cube-face cube-right">
+                                    <img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An">
+                                </div>
+                                <div class="cube-face cube-back">
+                                    <img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng">
+                                </div>
+                                <div class="cube-face cube-left">
+                                    <img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà">
+                                </div>
+                                <div class="cube-face cube-top">
+                                    <img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills">
+                                </div>
+                                <div class="cube-face cube-bottom">
+                                    <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê">
+                                </div>
                             </div>
                         </div>
-                        <div class="feats rv">
-                            <div class="feat">
-                                <div class="fi">🛡️</div>
-                                <h4>Đối Tác Uy Tín</h4>
-                                <p>Mọi tour đều được xác minh bởi chuyên gia</p>
+
+                        <!-- RIGHT: Dynamic Info -->
+                        <div class="cube-info rv" id="cubeInfo">
+                            <div class="cube-info-counter" id="cubeCounter">01</div>
+                            <div class="cube-info-loc" id="cubeInfoLoc"><i class="fas fa-map-marker-alt"></i> <span>Bà Nà Hills</span></div>
+                            <h2 class="cube-info-title" id="cubeInfoTitle">Cầu Vàng</h2>
+                            <p class="cube-info-desc" id="cubeInfoDesc">Cây cầu nổi tiếng thế giới nằm trên đỉnh Bà Nà, được nâng đỡ bởi đôi bàn tay khổng lồ. Điểm check-in được yêu thích nhất Đà Nẵng với tầm nhìn 360° ra núi rừng hùng vĩ.</p>
+                            <p class="cube-info-highlight" id="cubeInfoHighlight">⭐ Đánh giá 4.9/5 · Hơn 2 triệu lượt ghé thăm mỗi năm</p>
+                            <div class="cube-info-tags" id="cubeInfoTags">
+                                <span><i class="fas fa-camera"></i> Check-in</span>
+                                <span><i class="fas fa-star"></i> 4.9</span>
+                                <span><i class="fas fa-users"></i> 2M+ lượt</span>
+                                <span><i class="fas fa-ticket-alt"></i> 800K VNĐ</span>
                             </div>
-                            <div class="feat">
-                                <div class="fi">🤖</div>
-                                <h4>AI Dự Báo</h4>
-                                <p>Công nghệ ML dự báo doanh thu chính xác</p>
-                            </div>
-                            <div class="feat">
-                                <div class="fi">⚡</div>
-                                <h4>Đặt Tức Thì</h4>
-                                <p>Xác nhận realtime, không chờ đợi</p>
-                            </div>
-                            <div class="feat">
-                                <div class="fi">💳</div>
-                                <h4>QR SePay</h4>
-                                <p>Thanh toán quét mã siêu nhanh</p>
-                            </div>
+                            <a href="${pageContext.request.contextPath}/tour?search=cau+vang" class="cube-info-btn" id="cubeInfoBtn">Khám phá ngay <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </section>
+
+                <style>
+                    /* ═══ 3D CUBE — SQUARE CORNERS ═══ */
+                    .cube-scene{width:380px;height:380px;perspective:1000px;position:relative}
+                    .cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:cubeAutoSpin 32s linear infinite}
+
+                    @keyframes cubeAutoSpin{
+                        0%{transform:rotateX(-12deg) rotateY(0deg)}
+                        100%{transform:rotateX(-12deg) rotateY(360deg)}
+                    }
+
+                    .cube-face{position:absolute;width:380px;height:380px;border-radius:0;overflow:hidden;border:2px solid rgba(255,255,255,.08);box-shadow:0 0 40px rgba(0,0,0,.4)}
+                    .cube-face img{width:100%;height:100%;object-fit:cover}
+
+                    .cube-front{transform:rotateY(0deg) translateZ(190px)}
+                    .cube-right{transform:rotateY(90deg) translateZ(190px)}
+                    .cube-back{transform:rotateY(180deg) translateZ(190px)}
+                    .cube-left{transform:rotateY(-90deg) translateZ(190px)}
+                    .cube-top{transform:rotateX(90deg) translateZ(190px)}
+                    .cube-bottom{transform:rotateX(-90deg) translateZ(190px)}
+
+                    .cube-scene:hover .cube{animation-play-state:paused}
+
+                    .cube-scene::after{content:'';position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);width:240px;height:50px;background:radial-gradient(ellipse,rgba(96,165,250,.1),transparent 70%);filter:blur(20px)}
+
+                    /* ═══ CUBE INFO PANEL ═══ */
+                    .cube-info{display:flex;flex-direction:column;gap:12px;max-width:420px}
+                    .cube-info-counter{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:rgba(255,255,255,.06);line-height:1;letter-spacing:-2px;transition:all .4s}
+                    .cube-info-loc{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;color:#60A5FA;letter-spacing:.3px}
+                    .cube-info-loc i{font-size:.6rem}
+                    .cube-info-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:#fff;margin:0;line-height:1.15;letter-spacing:-.01em;transition:all .4s}
+                    .cube-info-desc{font-size:.92rem;color:rgba(255,255,255,.55);line-height:1.8;margin:0;transition:all .4s}
+                    .cube-info-highlight{font-size:.8rem;font-weight:600;color:#FF6F61;margin:4px 0 0;font-style:italic;transition:all .4s}
+                    .cube-info-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+                    .cube-info-tags span{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:600;color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.06);transition:all .3s}
+                    .cube-info-tags span i{font-size:.6rem;color:#FF6F61}
+                    .cube-info-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:linear-gradient(135deg,#FF6F61,#FF9F1C);color:#fff;border-radius:12px;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .3s;margin-top:8px;width:fit-content;box-shadow:0 4px 20px rgba(255,111,97,.25)}
+                    .cube-info-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,111,97,.4)}
+
+                    /* Fade transition class */
+                    .cube-info.changing .cube-info-title,
+                    .cube-info.changing .cube-info-desc,
+                    .cube-info.changing .cube-info-highlight,
+                    .cube-info.changing .cube-info-loc,
+                    .cube-info.changing .cube-info-tags{opacity:0;transform:translateY(8px)}
+                    .cube-info-title,.cube-info-desc,.cube-info-highlight,.cube-info-loc,.cube-info-tags{transition:opacity .3s,transform .3s}
+
+                    /* Responsive */
+                    @media(max-width:1024px){
+                        .cube-scene{width:300px;height:300px}
+                        .cube-face{width:300px;height:300px}
+                        .cube-front{transform:rotateY(0deg) translateZ(150px)}
+                        .cube-right{transform:rotateY(90deg) translateZ(150px)}
+                        .cube-back{transform:rotateY(180deg) translateZ(150px)}
+                        .cube-left{transform:rotateY(-90deg) translateZ(150px)}
+                        .cube-top{transform:rotateX(90deg) translateZ(150px)}
+                        .cube-bottom{transform:rotateX(-90deg) translateZ(150px)}
+                    }
+                    @media(max-width:768px){
+                        .cta-inner{grid-template-columns:1fr!important;text-align:center;gap:40px!important}
+                        .cube-scene{width:220px;height:220px;margin:0 auto}
+                        .cube-face{width:220px;height:220px}
+                        .cube-front{transform:rotateY(0deg) translateZ(110px)}
+                        .cube-right{transform:rotateY(90deg) translateZ(110px)}
+                        .cube-back{transform:rotateY(180deg) translateZ(110px)}
+                        .cube-left{transform:rotateY(-90deg) translateZ(110px)}
+                        .cube-top{transform:rotateX(90deg) translateZ(110px)}
+                        .cube-bottom{transform:rotateX(-90deg) translateZ(110px)}
+                        .cube-info{align-items:center;text-align:center;order:-1}
+                        .cube-info-tags{justify-content:center}
+                    }
+                    @media(max-width:480px){
+                        .cube-scene{width:180px;height:180px}
+                        .cube-face{width:180px;height:180px}
+                        .cube-front{transform:rotateY(0deg) translateZ(90px)}
+                        .cube-right{transform:rotateY(90deg) translateZ(90px)}
+                        .cube-back{transform:rotateY(180deg) translateZ(90px)}
+                        .cube-left{transform:rotateY(-90deg) translateZ(90px)}
+                        .cube-top{transform:rotateX(90deg) translateZ(90px)}
+                        .cube-bottom{transform:rotateX(-90deg) translateZ(90px)}
+                    }
+                </style>
+
+                <script>
+                    // Cube face data
+                    const cubeData = [
+                        {num:'01',loc:'Bà Nà Hills',title:'Cầu Vàng',desc:'Cây cầu nổi tiếng thế giới nằm trên đỉnh Bà Nà, được nâng đỡ bởi đôi bàn tay khổng lồ. Điểm check-in được yêu thích nhất Đà Nẵng với tầm nhìn 360° ra núi rừng hùng vĩ.',highlight:'⭐ Đánh giá 4.9/5 · Hơn 2 triệu lượt ghé thăm mỗi năm',tags:['Check-in','4.9 ★','2M+ lượt','~800K VNĐ'],link:'cau+vang'},
+                        {num:'02',loc:'Quảng Nam',title:'Hội An',desc:'Phố cổ di sản UNESCO với đèn lồng lung linh mỗi đêm. Ẩm thực đường phố nổi tiếng thế giới, may áo truyền thống và đi thuyền trên sông Hoài dưới ánh trăng.',highlight:'🏛️ Di sản Văn hóa Thế giới UNESCO từ năm 1999',tags:['UNESCO','Ẩm thực','Đèn lồng','Miễn phí'],link:'hoi+an'},
+                        {num:'03',loc:'Đà Nẵng',title:'Cầu Rồng',desc:'Biểu tượng Đà Nẵng dài 666m, phun lửa và phun nước mỗi tối thứ 7 và chủ nhật lúc 21h. Kiến trúc rồng uốn lượn ấn tượng, là cây cầu biểu tượng nhất Việt Nam.',highlight:'🔥 Phun lửa & nước mỗi T7-CN lúc 21:00',tags:['Phun lửa','T7-CN 21h','666m','Miễn phí'],link:'cau+rong'},
+                        {num:'04',loc:'Bán đảo Sơn Trà',title:'Sơn Trà',desc:'Bán đảo xanh 4.400ha — lá phổi xanh của Đà Nẵng. Nơi sinh sống của voọc chà vá chân nâu quý hiếm, cùng bãi biển hoang sơ và cung đường ven biển tuyệt đẹp nhất miền Trung.',highlight:'🐒 Nơi duy nhất quan sát Voọc chà vá chân nâu',tags:['Thiên nhiên','Voọc','Trekking','Bãi Bụt'],link:'son+tra'},
+                        {num:'05',loc:'Sun World',title:'Bà Nà Hills',desc:'Khu du lịch trên đỉnh núi 1.487m với Làng Pháp cổ kính, Fantasy Park trong nhà lớn nhất Việt Nam, vườn hoa Le Jardin và hệ thống cáp treo đạt kỷ lục Guinness thế giới.',highlight:'🏔️ Cáp treo dài nhất thế giới · Kỷ lục Guinness',tags:['Cáp treo','Làng Pháp','Fantasy Park','~900K VNĐ'],link:'ba+na'},
+                        {num:'06',loc:'Đà Nẵng',title:'Biển Mỹ Khê',desc:'Được Forbes bình chọn Top 6 bãi biển đẹp nhất hành tinh. Cát trắng mịn trải dài 900m, nước biển trong xanh ngọc bích, sóng lý tưởng cho lướt ván và bình minh tuyệt đẹp.',highlight:'🏖️ Forbes Top 6 bãi biển đẹp nhất hành tinh',tags:['Forbes Top 6','Lướt sóng','Bình minh','Miễn phí'],link:'my+khe'}
+                    ];
+
+                    let currentFace = -1;
+                    function updateCubeInfo() {
+                        const cube = document.getElementById('destCube');
+                        const style = getComputedStyle(cube);
+                        const matrix = style.transform;
+                        let angle = 0;
+                        if (matrix && matrix !== 'none') {
+                            const values = matrix.split('(')[1].split(')')[0].split(',').map(Number);
+                            if(values.length >= 6) {
+                                angle = Math.atan2(values[1], values[0]) * (180 / Math.PI);
+                            } else if(values.length >= 16) {
+                                angle = Math.atan2(values[2], values[0]) * (180 / Math.PI);
+                            }
+                        }
+                        // Normalize to 0-360
+                        angle = ((angle % 360) + 360) % 360;
+                        let face;
+                        if (angle >= 315 || angle < 45) face = 0;
+                        else if (angle >= 45 && angle < 135) face = 3;
+                        else if (angle >= 135 && angle < 225) face = 2;
+                        else face = 1;
+
+                        if (face !== currentFace) {
+                            currentFace = face;
+                            const d = cubeData[face];
+                            const info = document.getElementById('cubeInfo');
+                            info.classList.add('changing');
+                            setTimeout(() => {
+                                document.getElementById('cubeCounter').textContent = d.num;
+                                document.getElementById('cubeInfoLoc').innerHTML = '<i class="fas fa-map-marker-alt"></i> <span>' + d.loc + '</span>';
+                                document.getElementById('cubeInfoTitle').textContent = d.title;
+                                document.getElementById('cubeInfoDesc').textContent = d.desc;
+                                document.getElementById('cubeInfoHighlight').textContent = d.highlight;
+                                document.getElementById('cubeInfoTags').innerHTML = d.tags.map(t => '<span><i class="fas fa-check"></i> ' + t + '</span>').join('');
+                                document.getElementById('cubeInfoBtn').href = '${pageContext.request.contextPath}/tour?search=' + d.link;
+                                info.classList.remove('changing');
+                            }, 300);
+                        }
+                        requestAnimationFrame(updateCubeInfo);
+                    }
+                    requestAnimationFrame(updateCubeInfo);
+                </script>
 
                 <!-- ═══ FOOTER ═══ -->
                 <jsp:include page="/common/_footer.jsp" />
@@ -1278,9 +1836,13 @@
                     window.addEventListener('scroll', function () {
                         document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
                     });
-                    // Scroll reveal
+                    // Scroll reveal with stagger for destinations
                     const obs = new IntersectionObserver(e => { e.forEach(el => { if (el.isIntersecting) el.target.classList.add('vis') }) }, { threshold: .08, rootMargin: '0px 0px -40px 0px' });
                     document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+                    // Stagger delay for dest-cards
+                    document.querySelectorAll('.dest-card.rv').forEach((card, i) => {
+                        card.style.transitionDelay = (i * 0.06) + 's';
+                    });
                     // Wishlist
                     document.querySelectorAll('.wl').forEach(b => {
                         b.addEventListener('click', function (e) {
