@@ -26,6 +26,12 @@ public class BillingHistoryServlet extends HttpServlet {
             return;
         }
 
+        // Only providers have billing history
+        if (!"PROVIDER".equalsIgnoreCase(user.getRoleName())) {
+            response.sendRedirect("pricing");
+            return;
+        }
+
         List<ProviderSubscription> history = subscriptionDAO.findByProvider(user.getUserId());
 
         request.setAttribute("history", history);

@@ -3,6 +3,7 @@ package com.dananghub.controller;
 import com.dananghub.dao.OrderDAO;
 import com.dananghub.dao.BookingDAO;
 import com.dananghub.dao.ActivityDAO;
+import com.dananghub.dao.CouponDAO;
 import com.dananghub.entity.*;
 
 import jakarta.servlet.ServletException;
@@ -18,6 +19,7 @@ public class CheckoutServlet extends HttpServlet {
     private final OrderDAO orderDAO = new OrderDAO();
     private final BookingDAO bookingDAO = new BookingDAO();
     private final ActivityDAO activityDAO = new ActivityDAO();
+    private final CouponDAO couponDAO = new CouponDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -82,10 +84,23 @@ public class CheckoutServlet extends HttpServlet {
                 total += item.getTotalPrice();
             }
 
+            // Apply coupon if provided
+            String couponCode = request.getParameter("couponCode");
+            double discountAmount = 0;
+            Coupon appliedCoupon = null;
+            if (couponCode != null && !couponCode.trim().isEmpty()) {
+                appliedCoupon = couponDAO.findByCode(couponCode.trim());
+                if (appliedCoupon != null && appliedCoupon.isValid() && total >= appliedCoupon.getMinOrderAmount()) {
+                    discountAmount = appliedCoupon.calculateDiscount(total);
+                }
+            }
+
             // Create order
             Order order = new Order();
             order.setCustomer(user);
-            order.setTotalAmount(total);
+            order.setTotalAmount(total - discountAmount);
+            order.setCouponCode(appliedCoupon != null && discountAmount > 0 ? appliedCoupon.getCode() : null);
+            order.setDiscountAmount(discountAmount);
             order.setOrderStatus("Pending");
             order.setPaymentStatus("Unpaid");
             order.setOrderDate(new Date());
@@ -114,26 +129,17 @@ public class CheckoutServlet extends HttpServlet {
                 );
                 activityDAO.logInteraction(ih);
 
+                // Increment coupon usage
+                if (appliedCoupon != null && discountAmount > 0) {
+                    couponDAO.incrementUsage(appliedCoupon.getCouponId());
+                }
+
                 // Clear cart
                 session.removeAttribute("cart");
                 session.removeAttribute("cartTotal");
 
-                // Generate transaction code and QR
-                String transCode = "EZT" + System.currentTimeMillis() + "U" + user.getUserId();
-                String bankAcc = "2806281106";
-                String bankName = "MB";
-                long amountInt = Math.round(total);
-                String qrUrl = String.format("https://qr.sepay.vn/img?acc=%s&bank=%s&amount=%d&des=%s",
-                        bankAcc, bankName, amountInt, transCode);
-
-                request.setAttribute("order", savedOrder);
-                request.setAttribute("orderId", orderId);
-                request.setAttribute("transCode", transCode);
-                request.setAttribute("qrUrl", qrUrl);
-                request.setAttribute("amount", amountInt);
-                request.setAttribute("totalFormatted", String.format("%,d", amountInt));
-
-                request.getRequestDispatcher("/views/checkout/payment-checkout.jsp").forward(request, response);
+                // Redirect to My Orders payment flow (creates PaymentTransaction with ORD prefix)
+                response.sendRedirect(request.getContextPath() + "/my-orders?action=pay&id=" + orderId);
             } else {
                 session.setAttribute("error", "Lỗi khi tạo đơn hàng. Vui lòng thử lại.");
                 response.sendRedirect(request.getContextPath() + "/cart");

@@ -252,4 +252,27 @@ public class SubscriptionDAO {
             em.close();
         }
     }
+
+    // ==================== Subscription Expiry ====================
+
+    public int deactivateExpiredSubscriptions() {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            int count = em.createQuery(
+                "UPDATE ProviderSubscription s SET s.isActive = false, s.status = 'Expired' " +
+                "WHERE s.isActive = true AND s.endDate < :now")
+                .setParameter("now", new Date())
+                .executeUpdate();
+            tx.commit();
+            return count;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+            return 0;
+        } finally {
+            em.close();
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.dananghub.dao;
 
 import com.dananghub.dto.OrderDetailDTO;
+import com.dananghub.entity.Booking;
 import com.dananghub.entity.Order;
 import com.dananghub.entity.Tour;
 import com.dananghub.util.JPAUtil;
@@ -129,6 +130,16 @@ public class OrderDAO {
                 order.setOrderStatus(status);
                 order.setUpdatedAt(new Date());
                 em.merge(order);
+
+                // Sync booking statuses with order status
+                List<Booking> bookings = em.createQuery(
+                    "SELECT b FROM Booking b WHERE b.order.orderId = :oid", Booking.class)
+                    .setParameter("oid", orderId).getResultList();
+                for (Booking b : bookings) {
+                    b.setBookingStatus(status);
+                    em.merge(b);
+                }
+
                 tx.commit();
                 return true;
             }
@@ -181,6 +192,16 @@ public class OrderDAO {
                     order.setPaymentStatus("Refunded");
                 }
                 em.merge(order);
+
+                // Sync booking statuses to Cancelled
+                List<Booking> bookings = em.createQuery(
+                    "SELECT b FROM Booking b WHERE b.order.orderId = :oid", Booking.class)
+                    .setParameter("oid", orderId).getResultList();
+                for (Booking b : bookings) {
+                    b.setBookingStatus("Cancelled");
+                    em.merge(b);
+                }
+
                 tx.commit();
                 return true;
             }
@@ -376,17 +397,22 @@ public class OrderDAO {
 
             // Cap nhat Order
             Integer tOrderId = matchedTrans.getOrderId();
-            if (tOrderId == null) tOrderId = matchedTrans.getPlanId();
-            Order order = null;
-            if (tOrderId != null) {
-                order = em.find(Order.class, tOrderId);
-            }
+            Order order = (tOrderId != null) ? em.find(Order.class, tOrderId) : null;
             
             if (order != null) {
                 order.setPaymentStatus("Paid");
                 order.setOrderStatus("Confirmed");
                 order.setUpdatedAt(new Date());
                 em.merge(order);
+
+                // Sync booking statuses to Confirmed
+                List<Booking> bookings = em.createQuery(
+                    "SELECT b FROM Booking b WHERE b.order.orderId = :oid", Booking.class)
+                    .setParameter("oid", tOrderId).getResultList();
+                for (Booking b : bookings) {
+                    b.setBookingStatus("Confirmed");
+                    em.merge(b);
+                }
             } else {
                 tx.rollback();
                 return "FAIL: Order not found for OrderId=" + tOrderId;

@@ -151,6 +151,18 @@ public class OrderServlet extends HttpServlet {
             throws IOException {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         String newStatus = request.getParameter("newStatus");
+
+        // Validate status transition
+        Order order = orderDAO.findById(orderId);
+        if (order != null) {
+            OrderStatus current = OrderStatus.fromCode(order.getOrderStatus());
+            OrderStatus target = OrderStatus.fromCode(newStatus);
+            if (!current.canTransitionTo(target)) {
+                response.sendRedirect("orders?action=view&id=" + orderId + "&error=invalid_transition");
+                return;
+            }
+        }
+
         boolean success = orderDAO.updateStatus(orderId, newStatus);
         if (success) {
             response.sendRedirect("orders?action=view&id=" + orderId + "&msg=status_updated");
@@ -177,6 +189,8 @@ public class OrderServlet extends HttpServlet {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         boolean success = orderDAO.updatePaymentStatus(orderId, "Paid");
         if (success) {
+            // Also confirm the order (matches SePay webhook behavior)
+            orderDAO.updateStatus(orderId, "Confirmed");
             response.sendRedirect("orders?action=view&id=" + orderId + "&msg=payment_confirmed");
         } else {
             response.sendRedirect("orders?action=view&id=" + orderId + "&error=payment_failed");

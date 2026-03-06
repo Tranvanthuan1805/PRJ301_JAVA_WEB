@@ -25,6 +25,7 @@ public class OrderDetailDTO {
     private double tourPrice;
     private String tourDuration;
     private String tourLocation;
+    private int bookingCount;
 
     public OrderDetailDTO() {}
 
@@ -46,6 +47,16 @@ public class OrderDetailDTO {
             this.tourPrice = tour.getPrice();
             this.tourDuration = tour.getDuration();
             this.tourLocation = tour.getStartLocation();
+        }
+
+        // Populate from order bookings
+        if (order.getBookings() != null && !order.getBookings().isEmpty()) {
+            this.bookingCount = order.getBookings().size();
+            this.numberOfPeople = order.getBookings().stream()
+                .mapToInt(b -> b.getQuantity()).sum();
+            if (this.bookingCount > 1 && tour != null) {
+                this.tourName = tour.getTourName() + " (+" + (bookingCount - 1) + " tour khác)";
+            }
         }
     }
 

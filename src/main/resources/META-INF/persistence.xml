@@ -31,6 +31,7 @@
         <class>com.dananghub.entity.AILog</class>
         <class>com.dananghub.entity.TourSchedule</class>
         <class>com.dananghub.entity.TourPriceSeason</class>
+        <class>com.dananghub.entity.Coupon</class>
 
         <properties>
             <!-- Supabase PostgreSQL Connection (Session Pooler) -->

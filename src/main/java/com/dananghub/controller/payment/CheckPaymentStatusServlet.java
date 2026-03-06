@@ -43,6 +43,9 @@ public class CheckPaymentStatusServlet extends HttpServlet {
                         session.setAttribute("user_plan", "Active");
                     }
                 }
+                if (code.startsWith("ORD")) {
+                    result.put("redirectUrl", "my-orders");
+                }
             }
         } else {
             result.put("status", "NOT_FOUND");

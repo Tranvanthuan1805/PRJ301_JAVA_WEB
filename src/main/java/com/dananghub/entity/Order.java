@@ -38,6 +38,12 @@ public class Order implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    @Column(name = "CouponCode", length = 50)
+    private String couponCode;
+
+    @Column(name = "DiscountAmount")
+    private Double discountAmount = 0.0;
+
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Booking> bookings;
 
@@ -169,8 +175,24 @@ public class Order implements Serializable {
         this.bookings = bookings;
     }
 
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+
+    public Double getDiscountAmount() {
+        return discountAmount != null ? discountAmount : 0.0;
+    }
+
+    public void setDiscountAmount(Double discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
     @Override
     public String toString() {
-        return "Order{orderId=" + orderId + ", totalAmount=" + totalAmount + ", status='" + orderStatus + "'}";
+        return "Order{orderId=" + orderId + ", totalAmount=" + totalAmount + ", discount=" + discountAmount + ", status='" + orderStatus + "'}";
     }
 }
