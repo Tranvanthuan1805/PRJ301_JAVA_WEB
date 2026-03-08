@@ -31,7 +31,7 @@ public class Tour implements Serializable {
     @Column(name = "Description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "Price", nullable = false)
+    @Column(name = "Price", nullable = false, columnDefinition = "NUMERIC(12,2)")
     private Double price;
 
     @Column(name = "MaxPeople")
