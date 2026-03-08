@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="vi">
@@ -115,6 +116,20 @@ select.form-input{cursor:pointer}
                 <div class="form-group">
                     <label class="form-label">Số chỗ tối đa</label>
                     <input type="number" name="maxPeople" class="form-input" min="1" value="${editMode ? tour.maxPeople : '20'}" placeholder="20">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ngày bắt đầu <span class="req">*</span></label>
+                    <input type="date" name="startDate" class="form-input" required
+                           value="<fmt:formatDate value='${tour.startDate}' pattern='yyyy-MM-dd'/>">
+                    <small style="color:#94a3b8;font-size:.75rem;margin-top:4px;display:block">Ngày tour bắt đầu hiển thị trên hệ thống</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ngày kết thúc <span class="req">*</span></label>
+                    <input type="date" name="endDate" class="form-input" required
+                           value="<fmt:formatDate value='${tour.endDate}' pattern='yyyy-MM-dd'/>">
+                    <small style="color:#94a3b8;font-size:.75rem;margin-top:4px;display:block">Tour sẽ tự động ẩn sau ngày này</small>
                 </div>
 
                 <div class="form-group">

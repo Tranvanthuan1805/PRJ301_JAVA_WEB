@@ -284,6 +284,17 @@ public class AdminTourServlet extends HttpServlet {
         try { tour.setPrice(Double.parseDouble(request.getParameter("price"))); } catch (Exception e) {}
         try { tour.setMaxPeople(Integer.parseInt(request.getParameter("maxPeople"))); } catch (Exception e) {}
 
+        // Parse startDate and endDate
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String sd = request.getParameter("startDate");
+            if (sd != null && !sd.isEmpty()) tour.setStartDate(sdf.parse(sd));
+        } catch (Exception e) {}
+        try {
+            String ed = request.getParameter("endDate");
+            if (ed != null && !ed.isEmpty()) tour.setEndDate(sdf.parse(ed));
+        } catch (Exception e) {}
+
         String categoryId = request.getParameter("categoryId");
         if (categoryId != null && !categoryId.isEmpty()) {
             Category cat = categoryDAO.findById(Integer.parseInt(categoryId));

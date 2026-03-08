@@ -58,6 +58,14 @@ public class Tour implements Serializable {
     @Column(name = "IsActive")
     private boolean isActive = true;
 
+    @Column(name = "StartDate")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
+
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+
     @Column(name = "CreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -210,6 +218,22 @@ public class Tour implements Serializable {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public Date getCreatedAt() {

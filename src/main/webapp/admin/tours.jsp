@@ -117,7 +117,7 @@ a{text-decoration:none;color:inherit}
                     <input type="text" name="search" placeholder="Tìm tour..." value="${search}" class="bg-transparent text-sm text-slate-300 placeholder-slate-600 outline-none w-32 lg:w-44">
                 </form>
                 <!-- Add Tour Button -->
-                <a href="${ctx}/admin/tours?action=new" class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg transition shadow-lg shadow-blue-600/20">
+                <a href="${ctx}/admin/tours?action=add" class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg transition shadow-lg shadow-blue-600/20">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
                     <span class="hidden sm:inline">Thêm Tour</span>
                 </a>
@@ -133,6 +133,7 @@ a{text-decoration:none;color:inherit}
                         <th class="px-5 py-3.5 text-left text-[.68rem] font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">Danh mục</th>
                         <th class="px-5 py-3.5 text-left text-[.68rem] font-bold text-slate-500 uppercase tracking-wider">Giá</th>
                         <th class="px-5 py-3.5 text-center text-[.68rem] font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Chỗ</th>
+                        <th class="px-5 py-3.5 text-center text-[.68rem] font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">Thời gian</th>
                         <th class="px-5 py-3.5 text-center text-[.68rem] font-bold text-slate-500 uppercase tracking-wider">Trạng thái</th>
                         <th class="px-5 py-3.5 text-right text-[.68rem] font-bold text-slate-500 uppercase tracking-wider">Thao tác</th>
                     </tr>
@@ -165,6 +166,21 @@ a{text-decoration:none;color:inherit}
                             <!-- Capacity -->
                             <td class="px-5 py-4 text-center hidden lg:table-cell">
                                 <span class="text-sm text-slate-400">${tour.maxPeople}</span>
+                            </td>
+                            <!-- Period -->
+                            <td class="px-5 py-4 text-center hidden md:table-cell">
+                                <c:choose>
+                                    <c:when test="${not empty tour.startDate && not empty tour.endDate}">
+                                        <div class="text-[.7rem] text-slate-400">
+                                            <div><fmt:formatDate value="${tour.startDate}" pattern="dd/MM/yyyy"/></div>
+                                            <div class="text-slate-600">→</div>
+                                            <div><fmt:formatDate value="${tour.endDate}" pattern="dd/MM/yyyy"/></div>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="text-[.7rem] text-slate-600">—</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                             <!-- Status -->
                             <td class="px-5 py-4 text-center">
