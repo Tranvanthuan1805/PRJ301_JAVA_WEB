@@ -9,6 +9,7 @@ import com.dananghub.entity.Provider;
 
 import com.dananghub.util.JPAUtil;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -195,15 +196,68 @@ public class AdminTourServlet extends HttpServlet {
     }
 
     private void updateTour(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("tourId"));
-        Tour tour = tourDAO.findById(id);
-        if (tour != null) {
-            populateTour(tour, request);
-            tour.setUpdatedAt(new Date());
-            String isActive = request.getParameter("isActive");
-            tour.setActive("true".equals(isActive) || "on".equals(isActive));
-            tourDAO.update(tour);
+        
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Tour tour = em.find(Tour.class, id);
+            if (tour != null) {
+                // Update basic fields
+                tour.setTourName(request.getParameter("tourName"));
+                tour.setShortDesc(request.getParameter("shortDesc"));
+                tour.setDescription(request.getParameter("description"));
+                tour.setDuration(request.getParameter("duration"));
+                tour.setTransport(request.getParameter("transport"));
+                tour.setStartLocation(request.getParameter("startLocation"));
+                tour.setDestination(request.getParameter("destination"));
+                tour.setImageUrl(request.getParameter("imageUrl"));
+                tour.setItinerary(request.getParameter("itinerary"));
+
+                try { tour.setPrice(Double.parseDouble(request.getParameter("price"))); } catch (Exception ignored) {}
+                try { tour.setMaxPeople(Integer.parseInt(request.getParameter("maxPeople"))); } catch (Exception ignored) {}
+
+                // Parse dates
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    String sd = request.getParameter("startDate");
+                    if (sd != null && !sd.isEmpty()) tour.setStartDate(sdf.parse(sd));
+                } catch (Exception ignored) {}
+                try {
+                    String ed = request.getParameter("endDate");
+                    if (ed != null && !ed.isEmpty()) tour.setEndDate(sdf.parse(ed));
+                } catch (Exception ignored) {}
+
+                // Category - load within same EntityManager
+                String categoryId = request.getParameter("categoryId");
+                if (categoryId != null && !categoryId.isEmpty()) {
+                    Category cat = em.find(Category.class, Integer.parseInt(categoryId));
+                    if (cat != null) tour.setCategory(cat);
+                }
+
+                // Provider - load within same EntityManager
+                String providerIdStr = request.getParameter("providerId");
+                if (providerIdStr != null && !providerIdStr.isEmpty()) {
+                    Provider p = em.find(Provider.class, Integer.parseInt(providerIdStr));
+                    if (p != null) tour.setProvider(p);
+                }
+
+                // Status
+                String isActive = request.getParameter("isActive");
+                tour.setActive("true".equals(isActive) || "on".equals(isActive));
+                tour.setUpdatedAt(new Date());
+
+                em.merge(tour);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi cập nhật: " + e.getMessage());
+        } finally {
+            em.close();
         }
         response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=updated");
     }
