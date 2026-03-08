@@ -9,46 +9,19 @@
     <title>Chỉnh Sửa Khách Hàng | Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
     <style>
-        .dashboard-wrapper { display: flex; min-height: 100vh; }
-        .main-content { flex: 1; margin-left: 260px; padding: 30px; background: #f8f9fa; }
-        .page-title { font-size: 1.6rem; color: #0a2351; margin-bottom: 4px; }
-        .breadcrumb { color: #b2bec3; font-size: .85rem; margin-bottom: 25px; }
-        .breadcrumb a { color: #4facfe; text-decoration: none; }
-
-        .form-card { background: white; border-radius: 14px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,.04); border: 1px solid #f0f0f0; max-width: 700px; }
-        .form-card h3 { font-size: 1.1rem; color: #0a2351; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-        .form-card h3 i { color: #4facfe; }
-
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: .82rem; font-weight: 700; color: #636e72; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-        .form-group input, .form-group select {
-            width: 100%; padding: 10px 16px; border: 2px solid #e9ecef; border-radius: 10px;
-            font-family: 'Inter', sans-serif; font-size: .9rem; transition: .3s;
-        }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: #4facfe; }
-        .form-group input:disabled { background: #f1f2f6; color: #b2bec3; cursor: not-allowed; }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-        .btn-row { display: flex; gap: 12px; margin-top: 24px; }
-        .btn-save { padding: 12px 28px; background: #0a2351; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: .9rem; cursor: pointer; }
-        .btn-save:hover { background: #1a3a7a; }
-        .btn-cancel { padding: 12px 28px; background: #e9ecef; color: #2d3436; border: none; border-radius: 10px; font-weight: 600; font-size: .9rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-
-        @media (max-width: 768px) {
-            .main-content { margin-left: 0; }
-            .form-row { grid-template-columns: 1fr; }
-        }
+    .form-input{width:100%;padding:10px 16px;border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:'Inter',sans-serif;font-size:.9rem;transition:.3s;background:rgba(15,23,42,.8);color:#e2e8f0}
+    .form-input:focus{outline:none;border-color:#3b82f6}
+    .form-input:disabled{background:rgba(255,255,255,.04);color:#64748b;cursor:not-allowed}
     </style>
 </head>
-<body>
-    <div class="dashboard-wrapper">
-        <jsp:include page="/common/_sidebar.jsp" />
-
-        <div class="main-content">
-            <h1 class="page-title"><i class="fas fa-user-edit"></i> Chỉnh Sửa Khách Hàng</h1>
+<body class="bg-[#0a0f1e] text-slate-200 min-h-screen font-['Inter']">
+    <jsp:include page="/common/_admin-sidebar.jsp" />
+    <c:set var="pageTitle" value="Chỉnh Sửa Khách Hàng" scope="request"/>
+    <jsp:include page="/common/_admin-header.jsp" />
+    <main class="lg:ml-[260px] pt-20 pb-10 px-4 lg:px-6">
             <div class="breadcrumb">
                 <a href="${pageContext.request.contextPath}/admin/customers">Quản Lý Khách Hàng</a> → Chỉnh sửa #${customer.customerId}
             </div>
@@ -109,7 +82,6 @@
                     </form>
                 </div>
             </c:if>
-        </div>
-    </div>
+    </main>
 </body>
 </html>

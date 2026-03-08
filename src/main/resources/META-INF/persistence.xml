@@ -28,30 +28,40 @@
         <class>com.dananghub.entity.SepayTransaction</class>
         <class>com.dananghub.entity.CustomerActivity</class>
         <class>com.dananghub.entity.InteractionHistory</class>
+        <class>com.dananghub.entity.ChatLog</class>
         <class>com.dananghub.entity.AILog</class>
         <class>com.dananghub.entity.TourSchedule</class>
         <class>com.dananghub.entity.TourPriceSeason</class>
+        <class>com.dananghub.entity.Coupon</class>
+        <class>com.dananghub.entity.Review</class>
+        <class>com.dananghub.entity.Wishlist</class>
+        <class>com.dananghub.entity.TourFeedback</class>
+        <class>com.dananghub.entity.ChatbotLog</class>
 
         <properties>
-            <!-- Supabase PostgreSQL Connection (Session Pooler) -->
+            <!-- Supabase PostgreSQL Connection (Transaction Pooler - port 6543) -->
             <property name="jakarta.persistence.jdbc.driver"   value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url"      value="jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require&amp;prepareThreshold=0"/>
+            <property name="jakarta.persistence.jdbc.url"      value="jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres?sslmode=require&amp;prepareThreshold=0"/>
             <property name="jakarta.persistence.jdbc.user"     value="postgres.cbbdijhwewpptvmgujcz"/>
             <property name="jakarta.persistence.jdbc.password" value="dK6W6dygBt2%uTw"/>
 
             <!-- Hibernate Settings -->
             <property name="hibernate.dialect"       value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.hbm2ddl.auto"  value="none"/>
-            <property name="hibernate.show_sql"       value="true"/>
-            <property name="hibernate.format_sql"     value="true"/>
+            <property name="hibernate.show_sql"       value="false"/>
+            <property name="hibernate.format_sql"     value="false"/>
             <property name="hibernate.globally_quoted_identifiers" value="true"/>
 
-            <!-- Connection Pool (C3P0) -->
+            <!-- Connection Pool (C3P0) - Minimal for Supabase free tier -->
             <property name="hibernate.c3p0.min_size" value="1"/>
-            <property name="hibernate.c3p0.max_size" value="5"/>
-            <property name="hibernate.c3p0.timeout" value="180"/>
-            <property name="hibernate.c3p0.max_statements" value="30"/>
-            <property name="hibernate.c3p0.idle_test_period" value="60"/>
+            <property name="hibernate.c3p0.max_size" value="2"/>
+            <property name="hibernate.c3p0.timeout" value="60"/>
+            <property name="hibernate.c3p0.max_statements" value="0"/>
+            <property name="hibernate.c3p0.idle_test_period" value="30"/>
+            <property name="hibernate.c3p0.testConnectionOnCheckout" value="true"/>
+            <property name="hibernate.c3p0.preferredTestQuery" value="SELECT 1"/>
+            <property name="hibernate.c3p0.maxIdleTimeExcessConnections" value="30"/>
+            <property name="hibernate.c3p0.unreturnedConnectionTimeout" value="60"/>
         </properties>
     </persistence-unit>
 

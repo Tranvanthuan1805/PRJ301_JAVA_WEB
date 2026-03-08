@@ -17,7 +17,7 @@ const I18N = {
         'nav.explore':      { vi:'Khám Phá', en:'Explore', ko:'탐색', ja:'探索', zh:'探索' },
         'nav.orders':       { vi:'Đơn Hàng', en:'Orders', ko:'주문', ja:'注文', zh:'订单' },
         'nav.history':      { vi:'Lịch Sử', en:'History', ko:'기록', ja:'履歴', zh:'历史' },
-        'nav.vip':          { vi:'Gói VIP', en:'VIP Plans', ko:'VIP 플랜', ja:'VIPプラン', zh:'VIP套餐' },
+        'nav.provider':     { vi:'Nhà Cung Cấp', en:'Providers', ko:'공급업체', ja:'プロバイダー', zh:'供应商' },
         'nav.login':        { vi:'Đăng Nhập', en:'Login', ko:'로그인', ja:'ログイン', zh:'登录' },
         'nav.register':     { vi:'Đăng Ký', en:'Sign Up', ko:'회원가입', ja:'登録', zh:'注册' },
         'nav.logout':       { vi:'Đăng xuất', en:'Logout', ko:'로그아웃', ja:'ログアウト', zh:'退出' },

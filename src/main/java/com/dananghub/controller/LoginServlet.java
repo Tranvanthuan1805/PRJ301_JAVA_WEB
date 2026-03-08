@@ -67,7 +67,7 @@ public class LoginServlet extends HttpServlet {
             String ctx = request.getContextPath();
             String roleName = user.getRoleName();
             if ("ADMIN".equals(roleName)) {
-                response.sendRedirect(ctx + "/admin/dashboard");
+                response.sendRedirect(ctx + "/home");
             } else if ("PROVIDER".equals(roleName)) {
                 response.sendRedirect(ctx + "/provider/dashboard");
             } else {

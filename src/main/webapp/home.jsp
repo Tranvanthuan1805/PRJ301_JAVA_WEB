@@ -1647,186 +1647,140 @@
                     </c:choose>
                 </section>
 
-                <!-- ═══ CTA — 3D CUBE SHOWCASE ═══ -->
+                <!-- ═══ CTA — DESTINATION 3D CUBE ═══ -->
                 <section class="cta">
                     <div class="cta-inner" style="align-items:center">
                         <!-- LEFT: 3D Cube -->
-                        <div class="cube-scene rv">
-                            <div class="cube" id="destCube">
-                                <div class="cube-face cube-front">
-                                    <img src="${pageContext.request.contextPath}/images/destinations/cau-vang.png" alt="Cầu Vàng">
-                                </div>
-                                <div class="cube-face cube-right">
-                                    <img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An">
-                                </div>
-                                <div class="cube-face cube-back">
-                                    <img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng">
-                                </div>
-                                <div class="cube-face cube-left">
-                                    <img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà">
-                                </div>
-                                <div class="cube-face cube-top">
-                                    <img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills">
-                                </div>
-                                <div class="cube-face cube-bottom">
-                                    <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê">
-                                </div>
+                        <div class="sc-cube-scene rv" id="scCubeScene">
+                            <div class="sc-cube" id="scCube">
+                                <div class="sc-cube-face sc-front"><img src="${pageContext.request.contextPath}/images/destinations/cau-vang.png" alt="Cầu Vàng"></div>
+                                <div class="sc-cube-face sc-back"><img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng"></div>
+                                <div class="sc-cube-face sc-right"><img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An"></div>
+                                <div class="sc-cube-face sc-left"><img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà"></div>
+                                <div class="sc-cube-face sc-top"><img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills"></div>
+                                <div class="sc-cube-face sc-bottom"><img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê"></div>
                             </div>
                         </div>
 
                         <!-- RIGHT: Dynamic Info -->
-                        <div class="cube-info rv" id="cubeInfo">
-                            <div class="cube-info-counter" id="cubeCounter">01</div>
-                            <div class="cube-info-loc" id="cubeInfoLoc"><i class="fas fa-map-marker-alt"></i> <span>Bà Nà Hills</span></div>
-                            <h2 class="cube-info-title" id="cubeInfoTitle">Cầu Vàng</h2>
-                            <p class="cube-info-desc" id="cubeInfoDesc">Cây cầu nổi tiếng thế giới nằm trên đỉnh Bà Nà, được nâng đỡ bởi đôi bàn tay khổng lồ. Điểm check-in được yêu thích nhất Đà Nẵng với tầm nhìn 360° ra núi rừng hùng vĩ.</p>
-                            <p class="cube-info-highlight" id="cubeInfoHighlight">⭐ Đánh giá 4.9/5 · Hơn 2 triệu lượt ghé thăm mỗi năm</p>
-                            <div class="cube-info-tags" id="cubeInfoTags">
-                                <span><i class="fas fa-camera"></i> Check-in</span>
-                                <span><i class="fas fa-star"></i> 4.9</span>
-                                <span><i class="fas fa-users"></i> 2M+ lượt</span>
-                                <span><i class="fas fa-ticket-alt"></i> 800K VNĐ</span>
+                        <div class="showcase-info rv" id="showcaseInfo">
+                            <div class="showcase-info-counter" id="sCounter">01</div>
+                            <div class="showcase-info-loc" id="sLoc"><i class="fas fa-map-marker-alt"></i> <span>Bà Nà Hills</span></div>
+                            <h2 class="showcase-info-title" id="sTitle">Cầu Vàng</h2>
+                            <p class="showcase-info-desc" id="sDesc">Cây cầu nổi tiếng thế giới nằm trên đỉnh Bà Nà, được nâng đỡ bởi đôi bàn tay khổng lồ. Điểm check-in được yêu thích nhất Đà Nẵng với tầm nhìn 360° ra núi rừng hùng vĩ.</p>
+                            <p class="showcase-info-highlight" id="sHighlight">⭐ Đánh giá 4.9/5 · Hơn 2 triệu lượt ghé thăm mỗi năm</p>
+                            <div class="showcase-info-tags" id="sTags">
+                                <span><i class="fas fa-check"></i> Check-in</span>
+                                <span><i class="fas fa-check"></i> 4.9 ★</span>
+                                <span><i class="fas fa-check"></i> 2M+ lượt</span>
+                                <span><i class="fas fa-check"></i> ~800K VNĐ</span>
                             </div>
-                            <a href="${pageContext.request.contextPath}/tour?search=cau+vang" class="cube-info-btn" id="cubeInfoBtn">Khám phá ngay <i class="fas fa-arrow-right"></i></a>
+                            <a href="${pageContext.request.contextPath}/tour?search=cau+vang" class="showcase-info-btn" id="sBtn">Khám phá ngay <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </section>
 
                 <style>
-                    /* ═══ 3D CUBE — SQUARE CORNERS ═══ */
-                    .cube-scene{width:380px;height:380px;perspective:1000px;position:relative}
-                    .cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:cubeAutoSpin 32s linear infinite}
-
-                    @keyframes cubeAutoSpin{
+                    /* ═══ 3D CUBE SHOWCASE ═══ */
+                    .cta{overflow:hidden}
+                    .sc-cube-scene{perspective:900px;width:420px;height:360px;flex-shrink:0;cursor:grab;position:relative;display:flex;align-items:center;justify-content:center;overflow:visible}
+                    .sc-cube-scene:active{cursor:grabbing}
+                    .sc-cube{width:280px;height:280px;position:relative;transform-style:preserve-3d;animation:scCubeSpin 24s ease-in-out infinite}
+                    .sc-cube-face{position:absolute;width:280px;height:280px;border-radius:18px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.45);border:2px solid rgba(255,255,255,.08);backface-visibility:visible}
+                    .sc-cube-face img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+                    .sc-cube-face:hover img{transform:scale(1.06)}
+                    .sc-front{transform:rotateY(0deg) translateZ(140px)}
+                    .sc-back{transform:rotateY(180deg) translateZ(140px)}
+                    .sc-right{transform:rotateY(90deg) translateZ(140px)}
+                    .sc-left{transform:rotateY(-90deg) translateZ(140px)}
+                    .sc-top{transform:rotateX(90deg) translateZ(140px)}
+                    .sc-bottom{transform:rotateX(-90deg) translateZ(140px)}
+                    @keyframes scCubeSpin{
                         0%{transform:rotateX(-12deg) rotateY(0deg)}
+                        16%{transform:rotateX(-6deg) rotateY(90deg)}
+                        33%{transform:rotateX(-12deg) rotateY(180deg)}
+                        50%{transform:rotateX(-6deg) rotateY(270deg)}
+                        66%{transform:rotateX(-12deg) rotateY(360deg)}
+                        80%{transform:rotateX(20deg) rotateY(360deg)}
                         100%{transform:rotateX(-12deg) rotateY(360deg)}
                     }
 
-                    .cube-face{position:absolute;width:380px;height:380px;border-radius:0;overflow:hidden;border:2px solid rgba(255,255,255,.08);box-shadow:0 0 40px rgba(0,0,0,.4)}
-                    .cube-face img{width:100%;height:100%;object-fit:cover}
+                    /* ═══ SHOWCASE INFO PANEL ═══ */
+                    .showcase-info{display:flex;flex-direction:column;gap:12px;max-width:420px}
+                    .showcase-info-counter{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:rgba(255,255,255,.06);line-height:1;letter-spacing:-2px;transition:all .4s}
+                    .showcase-info-loc{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;color:#60A5FA;letter-spacing:.3px}
+                    .showcase-info-loc i{font-size:.6rem}
+                    .showcase-info-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:#fff;margin:0;line-height:1.15;letter-spacing:-.01em;transition:all .4s}
+                    .showcase-info-desc{font-size:.92rem;color:rgba(255,255,255,.55);line-height:1.8;margin:0;transition:all .4s}
+                    .showcase-info-highlight{font-size:.8rem;font-weight:600;color:#FF6F61;margin:4px 0 0;font-style:italic;transition:all .4s}
+                    .showcase-info-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+                    .showcase-info-tags span{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:600;color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.06);transition:all .3s}
+                    .showcase-info-tags span i{font-size:.6rem;color:#FF6F61}
+                    .showcase-info-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:linear-gradient(135deg,#FF6F61,#FF9F1C);color:#fff;border-radius:12px;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .3s;margin-top:8px;width:fit-content;box-shadow:0 4px 20px rgba(255,111,97,.25)}
+                    .showcase-info-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,111,97,.4)}
 
-                    .cube-front{transform:rotateY(0deg) translateZ(190px)}
-                    .cube-right{transform:rotateY(90deg) translateZ(190px)}
-                    .cube-back{transform:rotateY(180deg) translateZ(190px)}
-                    .cube-left{transform:rotateY(-90deg) translateZ(190px)}
-                    .cube-top{transform:rotateX(90deg) translateZ(190px)}
-                    .cube-bottom{transform:rotateX(-90deg) translateZ(190px)}
-
-                    .cube-scene:hover .cube{animation-play-state:paused}
-
-                    .cube-scene::after{content:'';position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);width:240px;height:50px;background:radial-gradient(ellipse,rgba(96,165,250,.1),transparent 70%);filter:blur(20px)}
-
-                    /* ═══ CUBE INFO PANEL ═══ */
-                    .cube-info{display:flex;flex-direction:column;gap:12px;max-width:420px}
-                    .cube-info-counter{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:rgba(255,255,255,.06);line-height:1;letter-spacing:-2px;transition:all .4s}
-                    .cube-info-loc{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;color:#60A5FA;letter-spacing:.3px}
-                    .cube-info-loc i{font-size:.6rem}
-                    .cube-info-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:#fff;margin:0;line-height:1.15;letter-spacing:-.01em;transition:all .4s}
-                    .cube-info-desc{font-size:.92rem;color:rgba(255,255,255,.55);line-height:1.8;margin:0;transition:all .4s}
-                    .cube-info-highlight{font-size:.8rem;font-weight:600;color:#FF6F61;margin:4px 0 0;font-style:italic;transition:all .4s}
-                    .cube-info-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-                    .cube-info-tags span{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:600;color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.06);transition:all .3s}
-                    .cube-info-tags span i{font-size:.6rem;color:#FF6F61}
-                    .cube-info-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:linear-gradient(135deg,#FF6F61,#FF9F1C);color:#fff;border-radius:12px;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .3s;margin-top:8px;width:fit-content;box-shadow:0 4px 20px rgba(255,111,97,.25)}
-                    .cube-info-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,111,97,.4)}
-
-                    /* Fade transition class */
-                    .cube-info.changing .cube-info-title,
-                    .cube-info.changing .cube-info-desc,
-                    .cube-info.changing .cube-info-highlight,
-                    .cube-info.changing .cube-info-loc,
-                    .cube-info.changing .cube-info-tags{opacity:0;transform:translateY(8px)}
-                    .cube-info-title,.cube-info-desc,.cube-info-highlight,.cube-info-loc,.cube-info-tags{transition:opacity .3s,transform .3s}
+                    /* Fade transition */
+                    .showcase-info.changing .showcase-info-title,
+                    .showcase-info.changing .showcase-info-desc,
+                    .showcase-info.changing .showcase-info-highlight,
+                    .showcase-info.changing .showcase-info-loc,
+                    .showcase-info.changing .showcase-info-tags{opacity:0;transform:translateY(8px)}
+                    .showcase-info-title,.showcase-info-desc,.showcase-info-highlight,.showcase-info-loc,.showcase-info-tags{transition:opacity .3s,transform .3s}
 
                     /* Responsive */
-                    @media(max-width:1024px){
-                        .cube-scene{width:300px;height:300px}
-                        .cube-face{width:300px;height:300px}
-                        .cube-front{transform:rotateY(0deg) translateZ(150px)}
-                        .cube-right{transform:rotateY(90deg) translateZ(150px)}
-                        .cube-back{transform:rotateY(180deg) translateZ(150px)}
-                        .cube-left{transform:rotateY(-90deg) translateZ(150px)}
-                        .cube-top{transform:rotateX(90deg) translateZ(150px)}
-                        .cube-bottom{transform:rotateX(-90deg) translateZ(150px)}
-                    }
+                    @media(max-width:1024px){.sc-cube-scene{width:340px;height:300px}.sc-cube{width:280px;height:280px}.sc-cube-face{width:280px;height:280px}.sc-front{transform:rotateY(0deg) translateZ(140px)}.sc-back{transform:rotateY(180deg) translateZ(140px)}.sc-right{transform:rotateY(90deg) translateZ(140px)}.sc-left{transform:rotateY(-90deg) translateZ(140px)}.sc-top{transform:rotateX(90deg) translateZ(140px)}.sc-bottom{transform:rotateX(-90deg) translateZ(140px)}}
                     @media(max-width:768px){
                         .cta-inner{grid-template-columns:1fr!important;text-align:center;gap:40px!important}
-                        .cube-scene{width:220px;height:220px;margin:0 auto}
-                        .cube-face{width:220px;height:220px}
-                        .cube-front{transform:rotateY(0deg) translateZ(110px)}
-                        .cube-right{transform:rotateY(90deg) translateZ(110px)}
-                        .cube-back{transform:rotateY(180deg) translateZ(110px)}
-                        .cube-left{transform:rotateY(-90deg) translateZ(110px)}
-                        .cube-top{transform:rotateX(90deg) translateZ(110px)}
-                        .cube-bottom{transform:rotateX(-90deg) translateZ(110px)}
-                        .cube-info{align-items:center;text-align:center;order:-1}
-                        .cube-info-tags{justify-content:center}
+                        .sc-cube-scene{width:280px;height:260px;margin:0 auto}.sc-cube{width:240px;height:240px}.sc-cube-face{width:240px;height:240px}.sc-front{transform:rotateY(0deg) translateZ(120px)}.sc-back{transform:rotateY(180deg) translateZ(120px)}.sc-right{transform:rotateY(90deg) translateZ(120px)}.sc-left{transform:rotateY(-90deg) translateZ(120px)}.sc-top{transform:rotateX(90deg) translateZ(120px)}.sc-bottom{transform:rotateX(-90deg) translateZ(120px)}
+                        .showcase-info{align-items:center;text-align:center;order:-1}
+                        .showcase-info-tags{justify-content:center}
                     }
-                    @media(max-width:480px){
-                        .cube-scene{width:180px;height:180px}
-                        .cube-face{width:180px;height:180px}
-                        .cube-front{transform:rotateY(0deg) translateZ(90px)}
-                        .cube-right{transform:rotateY(90deg) translateZ(90px)}
-                        .cube-back{transform:rotateY(180deg) translateZ(90px)}
-                        .cube-left{transform:rotateY(-90deg) translateZ(90px)}
-                        .cube-top{transform:rotateX(90deg) translateZ(90px)}
-                        .cube-bottom{transform:rotateX(-90deg) translateZ(90px)}
-                    }
+                    @media(max-width:480px){.sc-cube-scene{width:220px;height:220px}.sc-cube{width:190px;height:190px}.sc-cube-face{width:190px;height:190px}.sc-front{transform:rotateY(0deg) translateZ(95px)}.sc-back{transform:rotateY(180deg) translateZ(95px)}.sc-right{transform:rotateY(90deg) translateZ(95px)}.sc-left{transform:rotateY(-90deg) translateZ(95px)}.sc-top{transform:rotateX(90deg) translateZ(95px)}.sc-bottom{transform:rotateX(-90deg) translateZ(95px)}}
                 </style>
 
                 <script>
-                    // Cube face data
-                    const cubeData = [
-                        {num:'01',loc:'Bà Nà Hills',title:'Cầu Vàng',desc:'Cây cầu nổi tiếng thế giới nằm trên đỉnh Bà Nà, được nâng đỡ bởi đôi bàn tay khổng lồ. Điểm check-in được yêu thích nhất Đà Nẵng với tầm nhìn 360° ra núi rừng hùng vĩ.',highlight:'⭐ Đánh giá 4.9/5 · Hơn 2 triệu lượt ghé thăm mỗi năm',tags:['Check-in','4.9 ★','2M+ lượt','~800K VNĐ'],link:'cau+vang'},
-                        {num:'02',loc:'Quảng Nam',title:'Hội An',desc:'Phố cổ di sản UNESCO với đèn lồng lung linh mỗi đêm. Ẩm thực đường phố nổi tiếng thế giới, may áo truyền thống và đi thuyền trên sông Hoài dưới ánh trăng.',highlight:'🏛️ Di sản Văn hóa Thế giới UNESCO từ năm 1999',tags:['UNESCO','Ẩm thực','Đèn lồng','Miễn phí'],link:'hoi+an'},
-                        {num:'03',loc:'Đà Nẵng',title:'Cầu Rồng',desc:'Biểu tượng Đà Nẵng dài 666m, phun lửa và phun nước mỗi tối thứ 7 và chủ nhật lúc 21h. Kiến trúc rồng uốn lượn ấn tượng, là cây cầu biểu tượng nhất Việt Nam.',highlight:'🔥 Phun lửa & nước mỗi T7-CN lúc 21:00',tags:['Phun lửa','T7-CN 21h','666m','Miễn phí'],link:'cau+rong'},
-                        {num:'04',loc:'Bán đảo Sơn Trà',title:'Sơn Trà',desc:'Bán đảo xanh 4.400ha — lá phổi xanh của Đà Nẵng. Nơi sinh sống của voọc chà vá chân nâu quý hiếm, cùng bãi biển hoang sơ và cung đường ven biển tuyệt đẹp nhất miền Trung.',highlight:'🐒 Nơi duy nhất quan sát Voọc chà vá chân nâu',tags:['Thiên nhiên','Voọc','Trekking','Bãi Bụt'],link:'son+tra'},
-                        {num:'05',loc:'Sun World',title:'Bà Nà Hills',desc:'Khu du lịch trên đỉnh núi 1.487m với Làng Pháp cổ kính, Fantasy Park trong nhà lớn nhất Việt Nam, vườn hoa Le Jardin và hệ thống cáp treo đạt kỷ lục Guinness thế giới.',highlight:'🏔️ Cáp treo dài nhất thế giới · Kỷ lục Guinness',tags:['Cáp treo','Làng Pháp','Fantasy Park','~900K VNĐ'],link:'ba+na'},
-                        {num:'06',loc:'Đà Nẵng',title:'Biển Mỹ Khê',desc:'Được Forbes bình chọn Top 6 bãi biển đẹp nhất hành tinh. Cát trắng mịn trải dài 900m, nước biển trong xanh ngọc bích, sóng lý tưởng cho lướt ván và bình minh tuyệt đẹp.',highlight:'🏖️ Forbes Top 6 bãi biển đẹp nhất hành tinh',tags:['Forbes Top 6','Lướt sóng','Bình minh','Miễn phí'],link:'my+khe'}
-                    ];
+                    // 3D Cube Showcase
+                    (function(){
+                        const scData = [
+                            {num:'01',loc:'Bà Nà Hills',title:'Cầu Vàng',desc:'Cây cầu nổi tiếng thế giới nằm trên đỉnh Bà Nà, được nâng đỡ bởi đôi bàn tay khổng lồ. Điểm check-in được yêu thích nhất Đà Nẵng với tầm nhìn 360° ra núi rừng hùng vĩ.',highlight:'⭐ Đánh giá 4.9/5 · Hơn 2 triệu lượt ghé thăm mỗi năm',tags:['Check-in','4.9 ★','2M+ lượt','~800K VNĐ'],link:'cau+vang'},
+                            {num:'02',loc:'Đà Nẵng',title:'Cầu Rồng',desc:'Biểu tượng Đà Nẵng dài 666m, phun lửa và phun nước mỗi tối thứ 7 và chủ nhật lúc 21h. Kiến trúc rồng uốn lượn ấn tượng, là cây cầu biểu tượng nhất Việt Nam.',highlight:'🔥 Phun lửa & nước mỗi T7-CN lúc 21:00',tags:['Phun lửa','T7-CN 21h','666m','Miễn phí'],link:'cau+rong'},
+                            {num:'03',loc:'Quảng Nam',title:'Hội An',desc:'Phố cổ di sản UNESCO với đèn lồng lung linh mỗi đêm. Ẩm thực đường phố nổi tiếng thế giới và trải nghiệm đi thuyền trên sông Hoài.',highlight:'🏛️ Di sản Văn hóa Thế giới UNESCO từ năm 1999',tags:['UNESCO','Ẩm thực','Đèn lồng','Miễn phí'],link:'hoi+an'},
+                            {num:'04',loc:'Bán đảo Sơn Trà',title:'Sơn Trà',desc:'Bán đảo xanh 4.400ha — lá phổi xanh của Đà Nẵng. Nơi sinh sống của voọc chà vá chân nâu quý hiếm.',highlight:'🐒 Nơi duy nhất quan sát Voọc chà vá chân nâu',tags:['Thiên nhiên','Voọc','Trekking','Bãi Bụt'],link:'son+tra'},
+                            {num:'05',loc:'Sun World',title:'Bà Nà Hills',desc:'Khu du lịch trên đỉnh núi 1.487m với Làng Pháp cổ kính, Fantasy Park trong nhà lớn nhất Việt Nam và hệ thống cáp treo đạt kỷ lục Guinness.',highlight:'🏔️ Cáp treo dài nhất thế giới · Kỷ lục Guinness',tags:['Cáp treo','Làng Pháp','Fantasy Park','~900K VNĐ'],link:'ba+na'},
+                            {num:'06',loc:'Đà Nẵng',title:'Biển Mỹ Khê',desc:'Được Forbes bình chọn Top 6 bãi biển đẹp nhất hành tinh. Cát trắng mịn trải dài 900m, nước biển trong xanh ngọc bích.',highlight:'🏖️ Forbes Top 6 bãi biển đẹp nhất hành tinh',tags:['Forbes Top 6','Lướt sóng','Bình minh','Miễn phí'],link:'my+khe'}
+                        ];
+                        let scIdx=0,cube=document.getElementById('scCube'),scene=document.getElementById('scCubeScene');
+                        if(!cube||!scene)return;
 
-                    let currentFace = -1;
-                    function updateCubeInfo() {
-                        const cube = document.getElementById('destCube');
-                        const style = getComputedStyle(cube);
-                        const matrix = style.transform;
-                        let angle = 0;
-                        if (matrix && matrix !== 'none') {
-                            const values = matrix.split('(')[1].split(')')[0].split(',').map(Number);
-                            if(values.length >= 6) {
-                                angle = Math.atan2(values[1], values[0]) * (180 / Math.PI);
-                            } else if(values.length >= 16) {
-                                angle = Math.atan2(values[2], values[0]) * (180 / Math.PI);
-                            }
-                        }
-                        // Normalize to 0-360
-                        angle = ((angle % 360) + 360) % 360;
-                        let face;
-                        if (angle >= 315 || angle < 45) face = 0;
-                        else if (angle >= 45 && angle < 135) face = 3;
-                        else if (angle >= 135 && angle < 225) face = 2;
-                        else face = 1;
-
-                        if (face !== currentFace) {
-                            currentFace = face;
-                            const d = cubeData[face];
-                            const info = document.getElementById('cubeInfo');
+                        // Auto-update info panel synced with cube rotation
+                        let scTimer=setInterval(function(){scIdx=(scIdx+1)%scData.length;updateSC(scIdx)},4000);
+                        function updateSC(idx){
+                            const d=scData[idx],info=document.getElementById('showcaseInfo');
                             info.classList.add('changing');
-                            setTimeout(() => {
-                                document.getElementById('cubeCounter').textContent = d.num;
-                                document.getElementById('cubeInfoLoc').innerHTML = '<i class="fas fa-map-marker-alt"></i> <span>' + d.loc + '</span>';
-                                document.getElementById('cubeInfoTitle').textContent = d.title;
-                                document.getElementById('cubeInfoDesc').textContent = d.desc;
-                                document.getElementById('cubeInfoHighlight').textContent = d.highlight;
-                                document.getElementById('cubeInfoTags').innerHTML = d.tags.map(t => '<span><i class="fas fa-check"></i> ' + t + '</span>').join('');
-                                document.getElementById('cubeInfoBtn').href = '${pageContext.request.contextPath}/tour?search=' + d.link;
+                            setTimeout(function(){
+                                document.getElementById('sCounter').textContent=d.num;
+                                document.getElementById('sLoc').innerHTML='<i class="fas fa-map-marker-alt"></i> <span>'+d.loc+'</span>';
+                                document.getElementById('sTitle').textContent=d.title;
+                                document.getElementById('sDesc').textContent=d.desc;
+                                document.getElementById('sHighlight').textContent=d.highlight;
+                                document.getElementById('sTags').innerHTML=d.tags.map(function(t){return '<span><i class="fas fa-check"></i> '+t+'</span>'}).join('');
+                                document.getElementById('sBtn').href='${pageContext.request.contextPath}/tour?search='+d.link;
                                 info.classList.remove('changing');
-                            }, 300);
+                            },300);
                         }
-                        requestAnimationFrame(updateCubeInfo);
-                    }
-                    requestAnimationFrame(updateCubeInfo);
+
+                        // Drag to rotate
+                        let dragging=false,rx=-12,ry=0,sx,sy;
+                        scene.addEventListener('mousedown',function(e){dragging=true;sx=e.clientX;sy=e.clientY;cube.style.animationPlayState='paused';clearInterval(scTimer);e.preventDefault()});
+                        document.addEventListener('mousemove',function(e){if(!dragging)return;ry+=(e.clientX-sx)*.4;rx-=(e.clientY-sy)*.4;cube.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)';sx=e.clientX;sy=e.clientY});
+                        document.addEventListener('mouseup',function(){if(dragging){dragging=false;cube.style.animationPlayState='running';scTimer=setInterval(function(){scIdx=(scIdx+1)%scData.length;updateSC(scIdx)},4000)}});
+                        // Touch
+                        scene.addEventListener('touchstart',function(e){dragging=true;sx=e.touches[0].clientX;sy=e.touches[0].clientY;cube.style.animationPlayState='paused';clearInterval(scTimer)},{passive:true});
+                        document.addEventListener('touchmove',function(e){if(!dragging)return;ry+=(e.touches[0].clientX-sx)*.4;rx-=(e.touches[0].clientY-sy)*.4;cube.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)';sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+                        document.addEventListener('touchend',function(){if(dragging){dragging=false;cube.style.animationPlayState='running';scTimer=setInterval(function(){scIdx=(scIdx+1)%scData.length;updateSC(scIdx)},4000)}});
+                    })();
                 </script>
+
 
                 <!-- ═══ FOOTER ═══ -->
                 <jsp:include page="/common/_footer.jsp" />
@@ -1843,14 +1797,37 @@
                     document.querySelectorAll('.dest-card.rv').forEach((card, i) => {
                         card.style.transitionDelay = (i * 0.06) + 's';
                     });
-                    // Wishlist
+                    // Wishlist - actual API integration
                     document.querySelectorAll('.wl').forEach(b => {
                         b.addEventListener('click', function (e) {
                             e.preventDefault(); e.stopPropagation();
                             const i = this.querySelector('i');
-                            i.classList.toggle('far'); i.classList.toggle('fas');
-                            this.style.color = i.classList.contains('fas') ? '#FF6F61' : '';
-                            this.style.transform = 'scale(1.3)'; setTimeout(() => this.style.transform = '', 200);
+                            const tourId = this.dataset.tourId || this.closest('.tc')?.querySelector('[data-tour-id]')?.dataset.tourId;
+                            if (!tourId) {
+                                // Fallback visual toggle
+                                i.classList.toggle('far'); i.classList.toggle('fas');
+                                this.style.color = i.classList.contains('fas') ? '#FF6F61' : '';
+                                this.style.transform = 'scale(1.3)'; setTimeout(() => this.style.transform = '', 200);
+                                return;
+                            }
+                            fetch('${pageContext.request.contextPath}/wishlist', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                body: 'action=toggle&tourId=' + tourId
+                            })
+                            .then(r => r.json())
+                            .then(data => {
+                                if (data.success) {
+                                    if (data.added) { i.classList.remove('far'); i.classList.add('fas'); this.style.color = '#FF6F61'; }
+                                    else { i.classList.remove('fas'); i.classList.add('far'); this.style.color = ''; }
+                                    this.style.transform = 'scale(1.3)'; setTimeout(() => this.style.transform = '', 200);
+                                }
+                            })
+                            .catch(() => {
+                                i.classList.toggle('far'); i.classList.toggle('fas');
+                                this.style.color = i.classList.contains('fas') ? '#FF6F61' : '';
+                                this.style.transform = 'scale(1.3)'; setTimeout(() => this.style.transform = '', 200);
+                            });
                         });
                     });
 

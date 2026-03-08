@@ -8,57 +8,31 @@
 <title>${editMode ? 'Sửa Tour' : 'Thêm Tour'} | Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#0F172A;color:#E2E8F0;min-height:100vh}
-a{text-decoration:none;color:inherit}
-.container{max-width:800px;margin:0 auto;padding:0 24px}
-.page{padding:120px 0 60px}
-
-.back-link{display:inline-flex;align-items:center;gap:6px;color:#64748B;font-size:.85rem;font-weight:600;margin-bottom:20px;transition:.3s}
-.back-link:hover{color:#fff}
-.form-title{font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:24px}
-.form-title .hl{color:#60A5FA}
-
-.form-card{background:rgba(30,41,59,.5);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:28px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-full{grid-column:1/-1}
-.form-group{display:flex;flex-direction:column;gap:6px}
-.form-label{font-size:.78rem;font-weight:700;color:#94A3B8;letter-spacing:.5px}
-.form-label .req{color:#F87171}
-.form-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.8);color:#fff;font-size:.88rem;outline:none;transition:.3s;font-family:inherit}
-.form-input:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+body{font-family:'Inter',sans-serif}
+.form-input{width:100%;padding:10px 16px;border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:'Inter',sans-serif;font-size:.88rem;transition:.3s;background:rgba(15,23,42,.8);color:#e2e8f0;outline:none}
+.form-input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
 textarea.form-input{min-height:100px;resize:vertical}
 select.form-input{cursor:pointer}
-
-.form-row{display:flex;gap:12px;margin-top:20px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer;transition:.3s;border:none;font-family:inherit}
-.btn-primary{background:#2563EB;color:#fff}
-.btn-primary:hover{background:#3B82F6}
-.btn-cancel{background:rgba(255,255,255,.06);color:#94A3B8;border:1px solid rgba(255,255,255,.1)}
-.btn-cancel:hover{color:#fff}
-
 .preview-box{margin-top:10px;border-radius:10px;overflow:hidden;max-height:200px;background:rgba(15,23,42,.5);border:1px dashed rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;min-height:100px}
 .preview-box img{max-width:100%;max-height:200px;object-fit:cover}
 .preview-box .placeholder{color:#475569;font-size:.82rem}
-
-.toggle-group{display:flex;align-items:center;gap:10px;margin-top:8px}
 .toggle{position:relative;width:44px;height:24px}
 .toggle input{opacity:0;width:0;height:0}
 .toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#334155;border-radius:24px;transition:.3s}
 .toggle-slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
 .toggle input:checked+.toggle-slider{background:#2563EB}
 .toggle input:checked+.toggle-slider:before{transform:translateX(20px)}
-.toggle-label{font-size:.85rem;font-weight:600}
-
-@media(max-width:768px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
-<body>
-<jsp:include page="/common/_header.jsp"/>
+<body class="bg-[#0a0f1e] text-slate-200 min-h-screen">
+<jsp:include page="/common/_admin-sidebar.jsp"/>
+<c:set var="pageTitle" value="${editMode ? 'Sửa Tour' : 'Thêm Tour'}" scope="request"/>
+<jsp:include page="/common/_admin-header.jsp"/>
 
-<main class="page">
-<div class="container">
+<main class="lg:ml-[260px] pt-20 pb-10 px-4 lg:px-6 max-w-3xl">
 
     <a href="${ctx}/admin/tours" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại danh sách tour</a>
 

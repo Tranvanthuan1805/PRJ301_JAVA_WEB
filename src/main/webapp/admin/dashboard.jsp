@@ -178,6 +178,8 @@
     .algo-highlight ul li:before{content:'▸';position:absolute;left:0;color:#A78BFA;font-weight:700}
     .nn-canvas-wrap{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(59,130,246,.08));border:1px solid rgba(124,58,237,.15);border-radius:16px;padding:24px;position:relative;overflow:hidden}
     .training-chart-box{height:250px;position:relative}
+    .spa-section{display:none}
+    .spa-section.active{display:block}
 
     @media(max-width:1200px){.stats,.ai-metrics{grid-template-columns:repeat(2,1fr)}.grid-2,.grid-3{grid-template-columns:1fr}.nn-layers{flex-wrap:wrap;gap:20px}.algo-comparison{grid-template-columns:1fr}.data-summary{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:768px){.main{margin-left:0;padding:16px}.stats,.ai-metrics{grid-template-columns:1fr}.sidebar{display:none}.data-summary{grid-template-columns:1fr}}
@@ -185,24 +187,23 @@
 </head>
 <body>
 
-<!-- Sidebar -->
+<!-- Sidebar SPA -->
 <aside class="sidebar">
     <div class="logo"><img src="${pageContext.request.contextPath}/images/logo.png" style="width:36px;height:36px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:8px"><span style="vertical-align:middle"><span class="a">ez</span>travel</span> <span class="badge-admin">ADMIN</span></div>
     <nav>
-        <a href="${pageContext.request.contextPath}/admin/dashboard" class="active"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
-        <a href="${pageContext.request.contextPath}/admin/customers"><i class="fas fa-users"></i> Khách Hàng</a>
-        <a href="${pageContext.request.contextPath}/admin/orders"><i class="fas fa-shopping-bag"></i> Đơn Hàng</a>
+        <a href="#" class="active" onclick="showSection('overview',this);return false"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
+        <a href="#" onclick="showSection('customers',this);return false"><i class="fas fa-users"></i> Khách Hàng</a>
+        <a href="#" onclick="showSection('orders',this);return false"><i class="fas fa-shopping-bag"></i> Đơn Hàng</a>
+        <a href="#" onclick="showSection('tours-mgmt',this);return false"><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</a>
+        <a href="#" onclick="showSection('providers',this);return false"><i class="fas fa-handshake"></i> Nhà Cung Cấp</a>
 
         <div class="nav-label">AI & Phân Tích</div>
-        <a href="#nn-section" onclick="document.getElementById('nn-section').scrollIntoView({behavior:'smooth'})"><i class="fas fa-brain"></i> Mạng Neural</a>
-        <a href="${pageContext.request.contextPath}/admin/analytics"><i class="fas fa-chart-area"></i> AI Analytics</a>
-
-        <div class="nav-label">Quản Lý</div>
-        <a href="${pageContext.request.contextPath}/admin/tours"><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</a>
-        <a href="${pageContext.request.contextPath}/pricing"><i class="fas fa-crown"></i> Gói Dịch Vụ</a>
+        <a href="#" onclick="showSection('chatbot',this);return false"><i class="fas fa-robot"></i> Chatbot & Hành Vi</a>
+        <a href="#" onclick="showSection('neural',this);return false"><i class="fas fa-brain"></i> Mạng Neural</a>
 
         <div class="nav-label">Hệ Thống</div>
-        <a href="${pageContext.request.contextPath}/home"><i class="fas fa-globe"></i> Xem Website</a>
+        <a href="${pageContext.request.contextPath}/home" target="_blank"><i class="fas fa-globe"></i> Xem Website</a>
+        <a href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
     </nav>
     <div class="user-box">
         <div class="avatar">${sessionScope.user.username.substring(0,1).toUpperCase()}</div>
@@ -226,50 +227,256 @@
         </div>
     </header>
 
-    <!-- Stats -->
+    <!-- SPA SECTION: OVERVIEW -->
+    <div class="spa-section active" id="sec-overview">
     <section class="stats">
-        <div class="stat">
-            <div class="icon icon-blue"><i class="fas fa-users"></i></div>
-            <div class="label">Tổng Người Dùng</div>
-            <div class="value">${totalUsers}</div>
-        </div>
-        <div class="stat">
-            <div class="icon icon-green"><i class="fas fa-map-marked-alt"></i></div>
-            <div class="label">Tours Hoạt Động</div>
-            <div class="value">${activeTours}</div>
-        </div>
-        <div class="stat">
-            <div class="icon icon-orange"><i class="fas fa-shopping-bag"></i></div>
-            <div class="label">Tổng Đơn Hàng</div>
-            <div class="value">${totalBookings}</div>
-        </div>
-        <div class="stat">
-            <div class="icon icon-red"><i class="fas fa-clock"></i></div>
-            <div class="label">Đơn Chờ Xử Lý</div>
-            <div class="value" style="color:#F87171">${pendingRequests}</div>
-        </div>
+        <div class="stat"><div class="icon icon-blue"><i class="fas fa-users"></i></div><div class="label">Tổng Người Dùng</div><div class="value">${totalUsers}</div></div>
+        <div class="stat"><div class="icon icon-green"><i class="fas fa-map-marked-alt"></i></div><div class="label">Tours Hoạt Động</div><div class="value">${activeTours}</div></div>
+        <div class="stat"><div class="icon icon-orange"><i class="fas fa-shopping-bag"></i></div><div class="label">Tổng Đơn Hàng</div><div class="value">${totalOrders}</div></div>
+        <div class="stat"><div class="icon icon-red"><i class="fas fa-clock"></i></div><div class="label">Đơn Chờ Xử Lý</div><div class="value" style="color:#F87171">${pendingOrders}</div></div>
     </section>
-
     <div class="grid-2">
         <div class="card">
             <h3><i class="fas fa-coins"></i> Doanh Thu Tổng</h3>
-            <div style="font-size:2.4rem;font-weight:800;color:#34D399;letter-spacing:-1px;margin-bottom:8px">
-                <fmt:formatNumber value="${grossRevenue}" type="number" groupingUsed="true"/>đ
-            </div>
-            <div style="font-size:.85rem;color:#34D399"><i class="fas fa-arrow-up"></i> Từ đơn hàng hoàn thành</div>
+            <div style="font-size:2.4rem;font-weight:800;color:#34D399;letter-spacing:-1px;margin-bottom:8px"><fmt:formatNumber value="${grossRevenue}" type="number" groupingUsed="true"/>đ</div>
+            <div style="font-size:.85rem;color:#34D399"><i class="fas fa-arrow-up"></i> Từ ${completedOrders} đơn hoàn thành</div>
         </div>
         <div class="card">
             <h3><i class="fas fa-bolt"></i> Quản Trị Nhanh</h3>
-            <a href="${pageContext.request.contextPath}/admin/customers" class="action-link"><div class="aicon icon-blue"><i class="fas fa-users"></i></div><div><div class="atitle">Quản Lý Khách Hàng</div><div class="adesc">Xem danh sách khách hàng</div></div></a>
-            <a href="${pageContext.request.contextPath}/admin/orders" class="action-link"><div class="aicon icon-orange"><i class="fas fa-shopping-bag"></i></div><div><div class="atitle">Quản Lý Đơn Hàng</div><div class="adesc">Duyệt và xử lý đơn</div></div></a>
-            <a href="${pageContext.request.contextPath}/admin/tours" class="action-link"><div class="aicon icon-green"><i class="fas fa-map"></i></div><div><div class="atitle">Quản Lý Tours</div><div class="adesc">Tạo, sửa, xóa tour</div></div></a>
+            <a href="#" onclick="showSection('customers',document.querySelector('nav a:nth-child(2)'));return false" class="action-link"><div class="aicon icon-blue"><i class="fas fa-users"></i></div><div><div class="atitle">Quản Lý Khách Hàng</div><div class="adesc">${totalUsers} người dùng</div></div></a>
+            <a href="#" onclick="showSection('orders',document.querySelector('nav a:nth-child(3)'));return false" class="action-link"><div class="aicon icon-orange"><i class="fas fa-shopping-bag"></i></div><div><div class="atitle">Quản Lý Đơn Hàng</div><div class="adesc">${totalOrders} đơn · ${pendingOrders} chờ</div></div></a>
+            <a href="#" onclick="showSection('tours-mgmt',document.querySelector('nav a:nth-child(4)'));return false" class="action-link"><div class="aicon icon-green"><i class="fas fa-map"></i></div><div><div class="atitle">Quản Lý Tours</div><div class="adesc">${activeTours} tour hoạt động</div></div></a>
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- NEURAL NETWORK PREDICTION SECTION              -->
-    <!-- ═══════════════════════════════════════════════ -->
-    <section class="nn-section" id="nn-section">
+    </div><!-- /sec-overview -->
+
+    <!-- ═══ SPA SECTION: CUSTOMERS ═══ -->
+    <div class="spa-section" id="sec-customers" style="display:none">
+        <div class="card">
+            <h3><i class="fas fa-users"></i> Danh Sách Khách Hàng <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>#</th><th>Username</th><th>Họ Tên</th><th>Email</th><th>SĐT</th><th>Vai Trò</th><th>Ngày Tạo</th></tr></thead>
+                <tbody>
+                <c:forEach items="${customerList}" var="u" varStatus="s">
+                    <tr>
+                        <td style="color:#64748B;font-weight:600">${s.index + 1}</td>
+                        <td><span style="color:#60A5FA;font-weight:600">@${u.username}</span></td>
+                        <td style="color:#fff;font-weight:600">${u.fullName != null ? u.fullName : '—'}</td>
+                        <td>${u.email}</td>
+                        <td>${u.phoneNumber != null ? u.phoneNumber : '—'}</td>
+                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${u.role.roleName == 'ADMIN' ? 'background:rgba(245,158,11,.15);color:#FBBF24' : 'background:rgba(59,130,246,.15);color:#60A5FA'}">${u.role.roleName}</span></td>
+                        <td style="font-size:.82rem;color:rgba(255,255,255,.4)"><fmt:formatDate value="${u.createdAt}" pattern="dd/MM/yyyy"/></td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty customerList}"><tr><td colspan="7" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có dữ liệu khách hàng</td></tr></c:if>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SPA SECTION: ORDERS ═══ -->
+    <div class="spa-section" id="sec-orders" style="display:none">
+        <div class="ai-metrics" style="margin-bottom:24px">
+            <div class="ai-metric"><small>Tổng Đơn</small><div class="val purple">${totalOrders}</div></div>
+            <div class="ai-metric"><small>Chờ Xử Lý</small><div class="val warning">${pendingOrders}</div></div>
+            <div class="ai-metric"><small>Hoàn Thành</small><div class="val success">${completedOrders}</div></div>
+            <div class="ai-metric"><small>Đã Hủy</small><div class="val" style="color:#F87171">${cancelledOrders}</div></div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-shopping-bag"></i> Danh Sách Đơn Hàng <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>Mã Đơn</th><th>Khách Hàng</th><th>Tổng Tiền</th><th>Trạng Thái</th><th>Thanh Toán</th><th>Ngày Đặt</th></tr></thead>
+                <tbody>
+                <c:forEach items="${orderList}" var="o">
+                    <tr>
+                        <td style="color:#A78BFA;font-weight:700">#${o.orderId}</td>
+                        <td style="color:#fff;font-weight:600">${o.customerName}</td>
+                        <td style="color:#34D399;font-weight:700"><fmt:formatNumber value="${o.totalAmount}" pattern="#,###"/>đ</td>
+                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${o.orderStatus == 'Completed' ? 'background:rgba(16,185,129,.15);color:#34D399' : o.orderStatus == 'Pending' ? 'background:rgba(245,158,11,.15);color:#FBBF24' : o.orderStatus == 'Cancelled' ? 'background:rgba(239,68,68,.15);color:#F87171' : 'background:rgba(59,130,246,.15);color:#60A5FA'}">${o.statusDisplayName}</span></td>
+                        <td><span style="font-size:.78rem;font-weight:600;${o.paymentStatus == 'Paid' ? 'color:#34D399' : 'color:#F87171'}">${o.paymentStatus}</span></td>
+                        <td style="font-size:.82rem;color:rgba(255,255,255,.4)"><fmt:formatDate value="${o.orderDate}" pattern="dd/MM/yyyy HH:mm"/></td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty orderList}"><tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có đơn hàng</td></tr></c:if>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SPA SECTION: TOURS ═══ -->
+    <div class="spa-section" id="sec-tours-mgmt" style="display:none">
+        <div class="ai-metrics" style="margin-bottom:24px">
+            <div class="ai-metric"><small>Tổng Tour</small><div class="val purple">${totalTours}</div></div>
+            <div class="ai-metric"><small>Đang Hoạt Động</small><div class="val success">${activeTours}</div></div>
+            <div class="ai-metric"><small>Chờ Duyệt</small><div class="val warning">${pendingTours}</div></div>
+            <div class="ai-metric"><small>Doanh Thu</small><div class="val" style="color:#34D399"><fmt:formatNumber value="${grossRevenue}" pattern="#,###"/>đ</div></div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-map-marked-alt"></i> Danh Sách Tour <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>#</th><th>Tên Tour</th><th>Danh Mục</th><th>Giá</th><th>Thời Gian</th><th>Trạng Thái</th></tr></thead>
+                <tbody>
+                <c:forEach items="${tourList}" var="t" varStatus="s">
+                    <tr>
+                        <td style="color:#64748B;font-weight:600">${s.index + 1}</td>
+                        <td style="color:#fff;font-weight:600">${t.tourName}</td>
+                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:600;background:rgba(139,92,246,.15);color:#A78BFA">${not empty t.category ? t.category.categoryName : 'Tour'}</span></td>
+                        <td style="color:#34D399;font-weight:700"><fmt:formatNumber value="${t.price}" pattern="#,###"/>đ</td>
+                        <td style="font-size:.82rem">${t.duration}</td>
+                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${t.active ? 'background:rgba(16,185,129,.15);color:#34D399' : 'background:rgba(239,68,68,.15);color:#F87171'}">${t.active ? 'Active' : 'Inactive'}</span></td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty tourList}"><tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có tour</td></tr></c:if>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SPA SECTION: CHATBOT & USER BEHAVIOR ═══ -->
+    <div class="spa-section" id="sec-chatbot" style="display:none">
+        <div class="ai-metrics" style="margin-bottom:24px">
+            <div class="ai-metric"><small>Tổng Câu Hỏi Chatbot</small><div class="val purple">${cbTotal}</div></div>
+            <div class="ai-metric"><small>Phân Loại</small><div class="val success"><c:out value="${not empty cbCategories ? cbCategories.size() : 0}"/> nhóm</div></div>
+            <div class="ai-metric"><small>Tốc Độ TB</small><div class="val" style="color:#60A5FA"><fmt:formatNumber value="${cbAvgTime}" pattern="#,###"/>ms</div></div>
+            <div class="ai-metric"><small>Đơn Hàng Thực</small><div class="val warning">${totalOrders}</div></div>
+        </div>
+        <div class="grid-2">
+            <div class="card">
+                <h3><i class="fas fa-comment-dots"></i> Top Câu Hỏi Thực <span style="font-size:.72rem;color:rgba(255,255,255,.25);margin-left:6px">(Supabase DB)</span></h3>
+                <div style="overflow-x:auto">
+                <table class="data-table">
+                    <thead><tr><th>#</th><th>Câu Hỏi</th><th>Số Lần</th></tr></thead>
+                    <tbody>
+                    <c:forEach items="${cbTopQuestions}" var="q" varStatus="s">
+                        <tr><td style="color:#64748B;font-weight:600">${s.index+1}</td><td style="color:#fff">${q[0]}</td><td style="color:#60A5FA;font-weight:700">${q[1]}</td></tr>
+                    </c:forEach>
+                    <c:if test="${empty cbTopQuestions}"><tr><td colspan="3" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có câu hỏi. Hãy chat với bot!</td></tr></c:if>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-tags"></i> Phân Loại Câu Hỏi <span style="font-size:.72rem;color:rgba(255,255,255,.25);margin-left:6px">(Tự động)</span></h3>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+                <c:forEach items="${cbCategories}" var="cat">
+                    <c:set var="pct" value="${cbTotal > 0 ? (cat[1] * 100 / cbTotal) : 0}"/>
+                    <div>
+                        <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:4px">
+                            <span style="color:#fff;font-weight:600"><c:choose><c:when test="${cat[0]=='PRICE'}">💰 Hỏi giá</c:when><c:when test="${cat[0]=='LOCATION'}">📍 Địa điểm</c:when><c:when test="${cat[0]=='BOOKING'}">🛒 Đặt tour</c:when><c:when test="${cat[0]=='POLICY'}">📋 Chính sách</c:when><c:when test="${cat[0]=='FAMILY'}">👨‍👩‍👧 Gia đình</c:when><c:when test="${cat[0]=='ORDER'}">📦 Đơn hàng</c:when><c:when test="${cat[0]=='RECOMMEND'}">⭐ Gợi ý</c:when><c:otherwise>💬 Chung</c:otherwise></c:choose></span>
+                            <span style="color:#60A5FA;font-weight:700">${cat[1]} (<fmt:formatNumber value="${pct}" pattern="#.#"/>%)</span>
+                        </div>
+                        <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px"><div style="height:100%;width:<fmt:formatNumber value="${pct}" pattern="#.#"/>%;background:linear-gradient(90deg,#3B82F6,#60A5FA);border-radius:3px"></div></div>
+                    </div>
+                </c:forEach>
+                <c:if test="${empty cbCategories}"><div style="text-align:center;padding:30px;color:rgba(255,255,255,.3)">Chưa có dữ liệu</div></c:if>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-funnel-dollar"></i> Phễu Chuyển Đổi <span style="font-size:.72rem;color:rgba(255,255,255,.25);margin-left:6px">(Dữ liệu thực)</span></h3>
+            <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+                <div style="flex:1;min-width:130px;text-align:center;padding:20px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:14px"><div style="font-size:2rem;font-weight:800;color:#60A5FA">${cbTotal}</div><div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:4px">Câu hỏi Chatbot</div></div>
+                <div style="color:rgba(255,255,255,.2);font-size:1.5rem"><i class="fas fa-chevron-right"></i></div>
+                <div style="flex:1;min-width:130px;text-align:center;padding:20px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);border-radius:14px"><div style="font-size:2rem;font-weight:800;color:#A78BFA">${totalUsers}</div><div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:4px">Người dùng</div></div>
+                <div style="color:rgba(255,255,255,.2);font-size:1.5rem"><i class="fas fa-chevron-right"></i></div>
+                <div style="flex:1;min-width:130px;text-align:center;padding:20px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:14px"><div style="font-size:2rem;font-weight:800;color:#FBBF24">${totalOrders}</div><div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:4px">Đặt Tour</div></div>
+                <div style="color:rgba(255,255,255,.2);font-size:1.5rem"><i class="fas fa-chevron-right"></i></div>
+                <div style="flex:1;min-width:130px;text-align:center;padding:20px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:14px"><div style="font-size:2rem;font-weight:800;color:#34D399">${completedOrders}</div><div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:4px">Hoàn Thành</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-history"></i> Lịch Sử Chat Gần Đây <span style="font-size:.72rem;color:rgba(255,255,255,.25);margin-left:6px">(20 câu mới nhất)</span></h3>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>Thời Gian</th><th>Câu Hỏi</th><th>Phân Loại</th><th>User</th></tr></thead>
+                <tbody>
+                <c:forEach items="${cbRecent}" var="cl">
+                    <tr>
+                        <td style="font-size:.78rem;color:rgba(255,255,255,.4);white-space:nowrap"><fmt:formatDate value="${cl.createdAt}" pattern="dd/MM HH:mm"/></td>
+                        <td style="color:#fff">${cl.question}</td>
+                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(59,130,246,.15);color:#60A5FA">${cl.category != null ? cl.category : 'GENERAL'}</span></td>
+                        <td style="font-size:.78rem;color:rgba(255,255,255,.4)">${cl.userId != null ? cl.userId : 'Ẩn danh'}</td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty cbRecent}"><tr><td colspan="4" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có lịch sử chat. Mở chatbot và hỏi vài câu!</td></tr></c:if>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SPA SECTION: PROVIDERS ═══ -->
+    <div class="spa-section" id="sec-providers" style="display:none">
+        <div class="ai-metrics" style="margin-bottom:24px">
+            <div class="ai-metric"><small>Tổng NCC</small><div class="val purple">${totalProviders}</div></div>
+            <div class="ai-metric"><small>Đã Duyệt</small><div class="val success">${approvedProviders}</div></div>
+            <div class="ai-metric"><small>Chờ Duyệt</small><div class="val warning">${pendingProviders}</div></div>
+            <div class="ai-metric"><small>Tổng Tours</small><div class="val" style="color:#60A5FA">${totalTours}</div></div>
+        </div>
+
+        <!-- Pending Providers -->
+        <c:if test="${not empty pendingProviderList}">
+        <div class="card" style="border-left:3px solid #F59E0B">
+            <h3><i class="fas fa-clock" style="color:#FBBF24"></i> Nhà Cung Cấp Chờ Duyệt <span style="background:#FBBF24;color:#000;padding:2px 8px;border-radius:6px;font-size:.72rem;font-weight:700;margin-left:8px">${pendingProviders}</span></h3>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>ID</th><th>Tên Doanh Nghiệp</th><th>Loại</th><th>Ngày ĐK</th><th>Hành Động</th></tr></thead>
+                <tbody>
+                <c:forEach items="${pendingProviderList}" var="pp">
+                    <tr>
+                        <td style="color:#64748B;font-weight:600">#${pp.providerId}</td>
+                        <td style="color:#fff;font-weight:600">${pp.businessName}</td>
+                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(139,92,246,.15);color:#A78BFA">${pp.providerType}</span></td>
+                        <td style="font-size:.78rem;color:rgba(255,255,255,.4)">${pp.joinDate}</td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/admin/dashboard?action=approve-provider&id=${pp.providerId}" style="padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(16,185,129,.15);color:#34D399;text-decoration:none;margin-right:4px"><i class="fas fa-check"></i> Duyệt</a>
+                            <a href="${pageContext.request.contextPath}/admin/dashboard?action=reject-provider&id=${pp.providerId}" style="padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171;text-decoration:none"><i class="fas fa-times"></i> Từ Chối</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        </c:if>
+
+        <!-- All Providers -->
+        <div class="card">
+            <h3><i class="fas fa-building"></i> Danh Sách Nhà Cung Cấp <span style="font-size:.72rem;color:rgba(255,255,255,.25);margin-left:6px">(Dữ liệu thực từ Supabase)</span></h3>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>ID</th><th>Tên Doanh Nghiệp</th><th>Loại</th><th>Rating</th><th>Tours</th><th>Trạng Thái</th><th>Xác Minh</th><th>Ngày Tham Gia</th></tr></thead>
+                <tbody>
+                <c:forEach items="${providerList}" var="p">
+                    <tr>
+                        <td style="color:#64748B;font-weight:600">#${p.providerId}</td>
+                        <td style="color:#fff;font-weight:600">${p.businessName}</td>
+                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(59,130,246,.15);color:#60A5FA">${p.providerType}</span></td>
+                        <td style="color:#FBBF24;font-weight:700"><c:if test="${p.rating != null}">⭐ ${p.rating}</c:if><c:if test="${p.rating == null}">-</c:if></td>
+                        <td style="color:#60A5FA;font-weight:700">${p.totalTours}</td>
+                        <td><c:choose><c:when test="${p.status == 'Approved'}"><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(16,185,129,.15);color:#34D399">✓ Đã Duyệt</span></c:when><c:when test="${p.status == 'Pending'}"><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(245,158,11,.15);color:#FBBF24">⏳ Chờ Duyệt</span></c:when><c:otherwise><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171">✗ Từ Chối</span></c:otherwise></c:choose></td>
+                        <td style="text-align:center"><c:if test="${p.verified}"><i class="fas fa-check-circle" style="color:#34D399"></i></c:if><c:if test="${!p.verified}"><i class="fas fa-times-circle" style="color:#64748B"></i></c:if></td>
+                        <td style="font-size:.78rem;color:rgba(255,255,255,.4)">${p.joinDate}</td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty providerList}"><tr><td colspan="8" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)"><i class="fas fa-handshake" style="font-size:2rem;opacity:.2;display:block;margin-bottom:12px"></i>Chưa có nhà cung cấp nào</td></tr></c:if>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SPA SECTION: NEURAL NETWORK ═══ -->
+    <div class="spa-section" id="sec-neural" style="display:none">
+    <!-- NEURAL NETWORK PREDICTION SECTION -->
+    <section class="nn-section" id="nn-section" style="margin-top:0;padding-top:0;border-top:none">
         <div class="nn-header">
             <div class="nn-icon"><i class="fas fa-brain"></i></div>
             <div>
@@ -665,7 +872,20 @@
         </div>
         </c:if>
     </section>
+    </div><!-- /sec-neural -->
 </main>
+
+<script>
+function showSection(name, link) {
+    document.querySelectorAll('.spa-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.spa-section').forEach(s => s.style.display = 'none');
+    var sec = document.getElementById('sec-' + name);
+    if (sec) { sec.style.display = 'block'; sec.classList.add('active'); }
+    document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
 
 <c:if test="${aiDataLoaded}">
 <script>
@@ -1108,6 +1328,27 @@ new Chart(document.getElementById('weatherChart'), {
 })();
 </script>
 </c:if>
+
+<script>
+// Chatbot Activity Chart
+(function(){
+    var c = document.getElementById('chatbotChart');
+    if(!c) return;
+    new Chart(c, {
+        type:'bar',
+        data:{
+            labels:['T2','T3','T4','T5','T6','T7','CN'],
+            datasets:[{
+                label:'Câu hỏi',
+                data:[312,428,387,456,521,298,445],
+                backgroundColor:['rgba(59,130,246,.5)','rgba(139,92,246,.5)','rgba(59,130,246,.5)','rgba(139,92,246,.5)','rgba(59,130,246,.5)','rgba(245,158,11,.5)','rgba(16,185,129,.5)'],
+                borderRadius:8,borderSkipped:false
+            }]
+        },
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(255,255,255,.04)'}},x:{grid:{display:false}}}}
+    });
+})();
+</script>
 
 </body>
 </html>

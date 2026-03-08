@@ -102,6 +102,29 @@
     .secure-section .sbadge{display:flex;align-items:center;gap:4px;background:#fff;border:1px solid #E8EAF0;padding:4px 10px;border-radius:8px;font-size:.7rem;font-weight:700;color:#6B7194}
     .secure-section .sbadge i{color:#06D6A0;font-size:.65rem}
 
+    .coupon-section{padding:16px 0;border-top:1px solid #F0F1F5;margin-top:8px}
+    .coupon-title{font-size:.82rem;font-weight:700;color:#4A4E6F;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    .coupon-title i{color:#FF6F61}
+    .coupon-form{display:flex;gap:8px}
+    .coupon-input{flex:1;padding:12px 14px;border:2px solid #E8EAF0;border-radius:12px;font-size:.88rem;font-family:inherit;font-weight:600;text-transform:uppercase;letter-spacing:1px;outline:none;transition:.3s;background:#FAFBFF;color:#1B1F3B}
+    .coupon-input:focus{border-color:#FF6F61;background:#fff;box-shadow:0 0 0 3px rgba(255,111,97,.1)}
+    .coupon-input::placeholder{text-transform:none;letter-spacing:0;font-weight:500;color:#A0A5C3}
+    .btn-coupon{padding:12px 20px;border:none;border-radius:12px;font-weight:800;font-size:.82rem;cursor:pointer;font-family:inherit;transition:.3s;white-space:nowrap}
+    .btn-apply{background:linear-gradient(135deg,#FF6F61,#FF9A8B);color:#fff;box-shadow:0 3px 12px rgba(255,111,97,.2)}
+    .btn-apply:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,111,97,.35)}
+    .btn-apply:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .coupon-msg{margin-top:8px;font-size:.78rem;padding:8px 12px;border-radius:10px;display:none;align-items:center;gap:6px;animation:fadeIn .3s ease}
+    .coupon-msg.success{display:flex;background:rgba(6,214,160,.08);color:#059669;border:1px solid rgba(6,214,160,.15)}
+    .coupon-msg.error{display:flex;background:rgba(239,68,68,.06);color:#DC2626;border:1px solid rgba(239,68,68,.1)}
+    .coupon-applied{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(135deg,rgba(6,214,160,.06),rgba(6,214,160,.02));border:1px solid rgba(6,214,160,.15);border-radius:12px;margin-top:8px}
+    .coupon-applied .coupon-tag{display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:700;color:#059669}
+    .coupon-applied .coupon-tag i{font-size:.9rem}
+    .coupon-applied .coupon-tag code{background:rgba(6,214,160,.12);padding:3px 10px;border-radius:6px;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:1px;font-size:.78rem}
+    .btn-remove-coupon{background:none;border:none;color:#A0A5C3;cursor:pointer;font-size:.82rem;padding:4px 8px;border-radius:6px;transition:.2s}
+    .btn-remove-coupon:hover{color:#DC2626;background:rgba(239,68,68,.06)}
+    .discount-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:.86rem;color:#059669;font-weight:700}
+    .discount-row .discount-amount{color:#059669}
+
     @media(max-width:1024px){.cart-layout{grid-template-columns:1fr}.order-summary{position:relative;top:0}}
     @media(max-width:768px){.cart-item{grid-template-columns:1fr}.cart-item .item-image{height:180px}.page-head h1{font-size:1.6rem}.cart-empty{grid-column:span 1}}
     </style>
@@ -203,9 +226,50 @@
                                 </div>
                             </div>
 
+                            <!-- ═══ MÃ GIẢM GIÁ ═══ -->
+                            <div class="coupon-section">
+                                <div class="coupon-title"><i class="fas fa-ticket-alt"></i> Mã Giảm Giá</div>
+                                <div id="coupon-form-area">
+                                    <c:choose>
+                                        <c:when test="${not empty sessionScope.appliedCoupon}">
+                                            <div class="coupon-applied" id="coupon-applied">
+                                                <div class="coupon-tag">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    <code>${sessionScope.appliedCoupon.code}</code>
+                                                    <span>${sessionScope.appliedCoupon.discountLabel}</span>
+                                                </div>
+                                                <button class="btn-remove-coupon" onclick="removeCoupon()" title="Xóa mã">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="coupon-form" id="coupon-form">
+                                                <input type="text" id="coupon-code" class="coupon-input"
+                                                       placeholder="Nhập mã giảm giá..." maxlength="30">
+                                                <button class="btn-coupon btn-apply" id="btn-apply" onclick="applyCoupon()">
+                                                    Áp dụng
+                                                </button>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <div class="coupon-msg" id="coupon-msg"></div>
+                                </div>
+                            </div>
+
+                            <!-- Discount display -->
+                            <div id="discount-row" class="discount-row"
+                                 style="${not empty sessionScope.couponDiscount ? '' : 'display:none'}">
+                                <span><i class="fas fa-tag"></i> Giảm giá</span>
+                                <span class="discount-amount" id="discount-amount">
+                                    -<fmt:formatNumber value="${sessionScope.couponDiscount != null ? sessionScope.couponDiscount : 0}" type="number" groupingUsed="true"/>đ
+                                </span>
+                            </div>
+
                             <div class="sum-total">
                                 <span>Tổng Thanh Toán</span>
-                                <span><fmt:formatNumber value="${subtotal}" type="number" groupingUsed="true"/>đ</span>
+                                <c:set var="finalTotal" value="${subtotal - (sessionScope.couponDiscount != null ? sessionScope.couponDiscount : 0)}"/>
+                                <span id="final-total"><fmt:formatNumber value="${finalTotal}" type="number" groupingUsed="true"/>đ</span>
                             </div>
                         </div>
                         <div class="summary-actions">
@@ -245,5 +309,85 @@
 </div>
 
 <jsp:include page="/common/_footer.jsp" />
+
+<script>
+const CTX = '${pageContext.request.contextPath}';
+
+function applyCoupon() {
+    const code = document.getElementById('coupon-code').value.trim();
+    if (!code) { showMsg('error', 'Vui lòng nhập mã giảm giá'); return; }
+
+    const btn = document.getElementById('btn-apply');
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    fetch(CTX + '/coupon', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'action=apply&code=' + encodeURIComponent(code)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            showMsg('success', data.message);
+            // Show applied coupon tag
+            document.getElementById('coupon-form-area').innerHTML =
+                '<div class="coupon-applied" id="coupon-applied">' +
+                    '<div class="coupon-tag">' +
+                        '<i class="fas fa-check-circle"></i>' +
+                        '<code>' + data.couponCode + '</code>' +
+                        '<span>' + data.discountLabel + '</span>' +
+                    '</div>' +
+                    '<button class="btn-remove-coupon" onclick="removeCoupon()" title="Xóa mã">' +
+                        '<i class="fas fa-times"></i>' +
+                    '</button>' +
+                '</div>' +
+                '<div class="coupon-msg success" id="coupon-msg"><i class="fas fa-check-circle"></i> ' + data.message + '</div>';
+
+            // Update discount row
+            document.getElementById('discount-row').style.display = 'flex';
+            document.getElementById('discount-amount').textContent = '-' + data.discountFormatted + 'đ';
+            document.getElementById('final-total').textContent = data.finalTotalFormatted + 'đ';
+        } else {
+            showMsg('error', data.message);
+            btn.disabled = false;
+            btn.textContent = 'Áp dụng';
+        }
+    })
+    .catch(() => {
+        showMsg('error', 'Lỗi kết nối. Vui lòng thử lại.');
+        btn.disabled = false;
+        btn.textContent = 'Áp dụng';
+    });
+}
+
+function removeCoupon() {
+    fetch(CTX + '/coupon', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'action=remove'
+    })
+    .then(r => r.json())
+    .then(data => {
+        // Reload page to reset totals
+        location.reload();
+    });
+}
+
+function showMsg(type, msg) {
+    const el = document.getElementById('coupon-msg');
+    if (!el) return;
+    el.className = 'coupon-msg ' + type;
+    el.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i> ' + msg;
+    el.style.display = 'flex';
+    if (type === 'error') setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+// Enter key to apply
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('coupon-code');
+    if (input) input.addEventListener('keypress', e => { if (e.key === 'Enter') applyCoupon(); });
+});
+</script>
 </body>
 </html>

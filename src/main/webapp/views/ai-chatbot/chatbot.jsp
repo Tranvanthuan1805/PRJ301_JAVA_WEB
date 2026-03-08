@@ -493,24 +493,17 @@
         chatInput.value = '';
         sendBtn.disabled = true;
 
-        // Check for booking intent
-        if (msg.toLowerCase().includes('đặt tour') || msg.toLowerCase().includes('book tour') || msg.toLowerCase().includes('dat tour')) {
-            setTimeout(() => {
-                addBotMessage('🛒 Bạn muốn đặt tour! Tôi đã mở form đặt tour nhanh cho bạn. Hãy điền thông tin bên dưới 👇');
-                showBookingForm();
-                sendBtn.disabled = false;
-            }, 500);
-            return;
-        }
+        // Log question to DB for analytics
+        fetch(contextPath + '/chatlog', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'question=' + encodeURIComponent(msg)
+        }).catch(function(){});
 
-        // Check for order status intent
-        if (msg.toLowerCase().includes('đơn hàng') || msg.toLowerCase().includes('tra cứu') || msg.toLowerCase().includes('trạng thái')) {
-            setTimeout(() => {
-                addBotMessage('📋 Bạn muốn kiểm tra đơn hàng? <a href="' + contextPath + '/my-orders" style="font-weight:700">Xem tất cả đơn hàng tại đây</a>');
-                sendBtn.disabled = false;
-            }, 500);
-            return;
-        }
+        // Track special intents (but still send ALL to AI)
+        const lowerMsg = msg.toLowerCase();
+        const isBookingIntent = lowerMsg.includes('đặt tour') || lowerMsg.includes('book tour') || lowerMsg.includes('dat tour');
+        const isOrderIntent = lowerMsg.includes('đơn hàng') || lowerMsg.includes('tra cứu') || lowerMsg.includes('trạng thái đơn');
 
         const typingEl = showTyping();
 
@@ -542,6 +535,16 @@
                 }
             } else if (data.error) {
                 showFallbackResponse(msg);
+            }
+
+            // Show extra UI for special intents (after AI response)
+            if (isBookingIntent) {
+                setTimeout(() => { showBookingForm(); }, 300);
+            }
+            if (isOrderIntent) {
+                setTimeout(() => {
+                    addBotMessage('📋 <a href="' + contextPath + '/my-orders" style="font-weight:700;color:#3B82F6">👉 Xem tất cả đơn hàng tại đây</a>');
+                }, 300);
             }
         } catch (err) {
             typingEl.remove();
@@ -599,48 +602,69 @@
         const lowerMsg = userMsg.toLowerCase();
         let reply = '';
         
-        // Smart keyword matching for common questions
-        if (lowerMsg.includes('giá') || lowerMsg.includes('bao nhiêu') || lowerMsg.includes('rẻ') || lowerMsg.includes('500')) {
-            reply = '💰 <strong>Thông tin giá tour:</strong><br><br>'
-                + '<div style="background:#F0FDF4;padding:10px;border-radius:10px;border-left:3px solid #10B981;margin-bottom:8px">'
-                + '🏖️ Tour Biển Mỹ Khê: từ <strong>350.000đ</strong><br>'
-                + '⛰️ Tour Bà Nà Hills: từ <strong>750.000đ</strong><br>'
-                + '🏮 Tour Hội An: từ <strong>450.000đ</strong><br>'
-                + '🌿 Tour Sơn Trà: từ <strong>500.000đ</strong><br>'
-                + '🏔️ Tour Ngũ Hành Sơn: từ <strong>250.000đ</strong>'
-                + '</div>'
-                + '👉 <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem chi tiết tất cả tour →</a><br>'
-                + '💡 Gõ <code>đặt tour</code> để đặt ngay!';
+        if (lowerMsg.includes('xin chào') || lowerMsg.includes('hello') || lowerMsg.match(/^hi\b/) || lowerMsg.includes('chào')) {
+            reply = '👋 Xin chào bạn! Tôi là <strong>EzTravel AI</strong>.<br><br>'
+                + '🏖️ Tư vấn tour & địa điểm<br>💰 So sánh giá tour<br>'
+                + '🍜 Gợi ý ẩm thực & khách sạn<br>🌤️ Thông tin thời tiết<br><br>'
+                + 'Hãy hỏi tôi bất cứ điều gì! 😊';
+        } else if (lowerMsg.includes('cảm ơn') || lowerMsg.includes('thank') || lowerMsg.includes('tks')) {
+            reply = '😊 Không có chi! Rất vui được giúp bạn!<br>Nếu cần gì thêm, cứ hỏi nhé! 💬';
+        } else if (lowerMsg.includes('giá') || lowerMsg.includes('bao nhiêu') || lowerMsg.includes('rẻ') || lowerMsg.includes('500')) {
+            reply = '💰 <strong>Giá tour tham khảo:</strong><br>'
+                + '🏖️ Mỹ Khê: từ <strong>350k</strong> · ⛰️ Bà Nà: từ <strong>750k</strong><br>'
+                + '🏮 Hội An: từ <strong>450k</strong> · 🌿 Sơn Trà: từ <strong>500k</strong><br><br>'
+                + '👉 <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem chi tiết →</a>';
         } else if (lowerMsg.includes('phổ biến') || lowerMsg.includes('hot') || lowerMsg.includes('top') || lowerMsg.includes('nổi')) {
-            reply = '🌟 <strong>Top tour phổ biến nhất:</strong><br><br>'
-                + '1. ⛰️ <strong>Bà Nà Hills - Cầu Vàng</strong> (⭐ 4.9) — Trải nghiệm Làng Pháp, check-in Cầu Vàng<br>'
-                + '2. 🏖️ <strong>Biển Mỹ Khê - Sơn Trà</strong> (⭐ 4.8) — Tắm biển + ngắm voọc chà vá<br>'
-                + '3. 🏮 <strong>Phố cổ Hội An</strong> (⭐ 4.9) — Đèn lồng, ẩm thực, di sản UNESCO<br>'
-                + '4. 🐉 <strong>City Tour Đà Nẵng</strong> (⭐ 4.7) — Cầu Rồng, Chợ Hàn, Asia Park<br><br>'
-                + '👉 <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem tất cả tour →</a>';
-        } else if (lowerMsg.includes('gia đình') || lowerMsg.includes('trẻ em') || lowerMsg.includes('con')) {
-            reply = '👨‍👩‍👧‍👦 <strong>Gợi ý tour cho gia đình:</strong><br><br>'
-                + '1. 🎡 <strong>Asia Park Sun World</strong> — Vui chơi cho cả nhà, vòng quay Sun Wheel<br>'
-                + '2. ⛰️ <strong>Bà Nà Hills</strong> — Fantasy Park, Làng Pháp, trẻ em rất thích<br>'
-                + '3. 🏖️ <strong>Biển Mỹ Khê</strong> — An toàn, bãi cát mịn, nhiều dịch vụ<br><br>'
-                + '💡 Các tour đều có <strong>giá ưu đãi cho trẻ em</strong> dưới 6 tuổi!<br>'
-                + '👉 <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Đặt tour gia đình →</a>';
-        } else if (lowerMsg.includes('tọa độ') || lowerMsg.includes('gần') || lowerMsg.includes('vị trí')) {
-            reply = '📍 <strong>Gợi ý địa điểm tại Đà Nẵng:</strong><br><br>'
-                + '🐉 Cầu Rồng — Biểu tượng Đà Nẵng, phun lửa T7-CN<br>'
-                + '🏖️ Biển Mỹ Khê — Top 6 bãi biển đẹp nhất thế giới<br>'
-                + '⛰️ Bà Nà Hills — Cầu Vàng nổi tiếng thế giới<br>'
-                + '🏮 Hội An — Di sản UNESCO, phố đèn lồng<br><br>'
-                + '💡 Nhấn vào <strong>bản đồ</strong> trên trang chủ để khám phá thêm!';
+            reply = '🌟 <strong>Top tour:</strong><br>'
+                + '1. ⛰️ Bà Nà Hills ⭐4.9<br>2. 🏖️ Mỹ Khê ⭐4.8<br>'
+                + '3. 🏮 Hội An ⭐4.9<br>4. 🐉 City Tour ⭐4.7<br><br>'
+                + '👉 <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem tất cả →</a>';
+        } else if (lowerMsg.includes('thời tiết') || lowerMsg.includes('mùa') || lowerMsg.includes('tháng') || lowerMsg.includes('khi nào')) {
+            reply = '🌤️ <strong>Thời tiết Đà Nẵng:</strong><br><br>'
+                + '☀️ <strong>Mùa khô (3-8):</strong> Nắng đẹp, 25-35°C, lý tưởng tắm biển<br>'
+                + '🌧️ <strong>Mùa mưa (9-2):</strong> Mưa nhiều, 20-28°C<br>'
+                + '✅ <strong>Tháng đẹp nhất:</strong> 3, 4, 5, 6<br><br>'
+                + '💡 Đặt tour mùa khô để có trải nghiệm tốt nhất!';
+        } else if (lowerMsg.includes('ăn') || lowerMsg.includes('món') || lowerMsg.includes('ẩm thực') || lowerMsg.includes('quán') || lowerMsg.includes('nhà hàng')) {
+            reply = '🍜 <strong>Ẩm thực Đà Nẵng nổi tiếng:</strong><br><br>'
+                + '• <strong>Mì Quảng</strong> — Món đặc trưng số 1<br>'
+                + '• <strong>Bún chả cá</strong> — Hương vị biển<br>'
+                + '• <strong>Bánh tráng cuốn thịt heo</strong><br>'
+                + '• <strong>Bánh xèo</strong> — Giòn rụm<br>'
+                + '• <strong>Hải sản tươi</strong> — Bãi biển Mỹ Khê<br><br>'
+                + '📍 Chợ Hàn & Chợ Cồn là thiên đường ẩm thực!';
+        } else if (lowerMsg.includes('khách sạn') || lowerMsg.includes('ở đâu') || lowerMsg.includes('lưu trú') || lowerMsg.includes('homestay')) {
+            reply = '🏨 <strong>Gợi ý lưu trú:</strong><br><br>'
+                + '⭐ <strong>5 sao:</strong> InterContinental, Hyatt (~3-5tr/đêm)<br>'
+                + '⭐ <strong>4 sao:</strong> Novotel, Grand Tourane (~1-2tr/đêm)<br>'
+                + '🏡 <strong>Homestay:</strong> 200-500k/đêm<br><br>'
+                + '💡 Khu <strong>Mỹ Khê</strong> và <strong>Sơn Trà</strong> lý tưởng nhất!';
+        } else if (lowerMsg.includes('di chuyển') || lowerMsg.includes('xe') || lowerMsg.includes('máy bay') || lowerMsg.includes('sân bay') || lowerMsg.includes('taxi')) {
+            reply = '🚗 <strong>Di chuyển tại Đà Nẵng:</strong><br><br>'
+                + '✈️ Sân bay quốc tế — cách trung tâm 3km<br>'
+                + '🛵 Thuê xe máy: 100-150k/ngày<br>'
+                + '🚕 Grab/taxi: tiện lợi, giá hợp lý<br>'
+                + '🚌 Bus du lịch: 5k-10k/lượt<br><br>'
+                + '💡 Nên thuê xe máy để tự do khám phá!';
+        } else if (lowerMsg.includes('gia đình') || lowerMsg.includes('trẻ em') || lowerMsg.includes('con nhỏ')) {
+            reply = '👨‍👩‍👧‍👦 <strong>Tour gia đình:</strong><br>'
+                + '🎡 Asia Park · ⛰️ Bà Nà Hills · 🏖️ Mỹ Khê<br><br>'
+                + '💡 Ưu đãi trẻ em dưới 6 tuổi!';
+        } else if (lowerMsg.includes('đặt tour') || lowerMsg.includes('book')) {
+            reply = '🛒 Tôi đã mở form đặt tour cho bạn 👇';
+        } else if (lowerMsg.includes('đơn hàng') || lowerMsg.includes('tra cứu')) {
+            reply = '📋 <a href="' + contextPath + '/my-orders" style="font-weight:700;color:#3B82F6">Xem đơn hàng tại đây →</a>';
+        } else if (lowerMsg.includes('tọa độ') || lowerMsg.includes('gần') || lowerMsg.includes('vị trí') || lowerMsg.includes('bản đồ')) {
+            reply = '📍 <strong>Địa điểm nổi bật:</strong><br>'
+                + '🐉 Cầu Rồng · 🏖️ Mỹ Khê · ⛰️ Bà Nà · 🏮 Hội An<br><br>'
+                + '💡 Xem <strong>bản đồ</strong> trên trang chủ!';
         } else {
-            reply = '👋 Xin lỗi, tôi chưa thể trả lời câu hỏi này ngay lúc này.<br><br>'
-                + 'Tôi vẫn có thể giúp bạn:<br>'
+            reply = '🤖 Xin lỗi, hệ thống AI đang bận. Thử lại sau vài giây nhé!<br><br>'
                 + '<div style="background:#F8FAFF;padding:12px;border-radius:10px;margin:8px 0">'
-                + '🏖️ <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem tất cả Tours</a><br>'
-                + '🛒 Gõ <code>đặt tour</code> để đặt tour nhanh<br>'
-                + '📋 Gõ <code>đơn hàng</code> để tra cứu đơn<br>'
-                + '📍 Nhấn vào <strong>bản đồ</strong> để xem gợi ý địa điểm'
-                + '</div>';
+                + '💬 Thử hỏi: <em>thời tiết, ẩm thực, khách sạn, di chuyển...</em><br>'
+                + '🏖️ <a href="' + contextPath + '/tour" style="color:#3B82F6;font-weight:700">Xem Tours</a> · '
+                + '🛒 Gõ <code>đặt tour</code></div>'
+                + '⏳ AI sẽ sớm khôi phục!';
         }
         
         addBotMessage(reply);
