@@ -104,13 +104,31 @@ public class BookingServlet extends HttpServlet {
 
             double subtotal = tour.getPrice() * numberOfPeople;
 
-            // Apply coupon if present
+            // Apply coupon if present (legacy system)
             double discount = 0;
             Coupon coupon = (Coupon) session.getAttribute("appliedCoupon");
             if (coupon != null && coupon.isValid(subtotal)) {
                 discount = coupon.calculateDiscount(subtotal);
                 couponDAO.incrementUsage(coupon.getCouponId());
             }
+
+            // Apply promo code from booking form
+            String promoCode = request.getParameter("promoCode");
+            if (promoCode != null && !promoCode.trim().isEmpty() && discount == 0) {
+                String code = promoCode.trim().toUpperCase();
+                int promoPercent = 0;
+                switch (code) {
+                    case "EZTRAVEL10": promoPercent = 10; break;
+                    case "DANANG20": promoPercent = 20; break;
+                    case "NEWYEAR15": promoPercent = 15; break;
+                    case "VIP30": promoPercent = 30; break;
+                    case "WELCOME5": promoPercent = 5; break;
+                }
+                if (promoPercent > 0) {
+                    discount = Math.round(subtotal * promoPercent / 100.0);
+                }
+            }
+
             double total = subtotal - discount;
 
             // Create order
