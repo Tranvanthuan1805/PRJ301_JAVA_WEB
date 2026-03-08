@@ -471,6 +471,103 @@
             </table>
             </div>
         </div>
+
+        <!-- ═══ SO SÁNH NHÀ CUNG CẤP ═══ -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+
+            <!-- Xếp hạng chất lượng -->
+            <div class="card">
+                <h3><i class="fas fa-trophy" style="color:#FBBF24"></i> Xếp Hạng Chất Lượng</h3>
+                <c:forEach items="${providerRanking}" var="pr" varStatus="idx">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+                    <div style="min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;
+                        <c:choose>
+                            <c:when test="${idx.index == 0}">background:linear-gradient(135deg,#FFD700,#FFA500);color:#000</c:when>
+                            <c:when test="${idx.index == 1}">background:linear-gradient(135deg,#C0C0C0,#A0A0A0);color:#000</c:when>
+                            <c:when test="${idx.index == 2}">background:linear-gradient(135deg,#CD7F32,#A0522D);color:#fff</c:when>
+                            <c:otherwise>background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)</c:otherwise>
+                        </c:choose>
+                    ">${idx.index + 1}</div>
+                    <div style="flex:1">
+                        <div style="color:#fff;font-weight:600;font-size:.85rem">${pr.businessName}</div>
+                        <div style="font-size:.72rem;color:rgba(255,255,255,.35)">${pr.providerType} · ${pr.totalTours} tours</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="color:#FBBF24;font-weight:700;font-size:.9rem">⭐ ${pr.rating}</div>
+                        <div style="background:rgba(251,191,36,.15);border-radius:4px;height:4px;width:60px;margin-top:4px">
+                            <div style="background:#FBBF24;border-radius:4px;height:100%;width:${pr.rating * 20}%"></div>
+                        </div>
+                    </div>
+                </div>
+                </c:forEach>
+                <c:if test="${empty providerRanking}">
+                    <div style="text-align:center;padding:30px;color:rgba(255,255,255,.25)"><i class="fas fa-trophy" style="font-size:1.5rem;opacity:.2;display:block;margin-bottom:8px"></i>Chưa có dữ liệu xếp hạng</div>
+                </c:if>
+            </div>
+
+            <!-- So sánh giá trung bình -->
+            <div class="card">
+                <h3><i class="fas fa-balance-scale" style="color:#60A5FA"></i> So Sánh Giá Trung Bình</h3>
+                <c:forEach items="${providerAvgPrices}" var="ap" varStatus="idx">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+                    <div style="min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;
+                        <c:choose>
+                            <c:when test="${idx.index == 0}">background:rgba(16,185,129,.2);color:#34D399</c:when>
+                            <c:when test="${idx.index == 1}">background:rgba(59,130,246,.15);color:#60A5FA</c:when>
+                            <c:otherwise>background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)</c:otherwise>
+                        </c:choose>
+                    ">${idx.index + 1}</div>
+                    <div style="flex:1">
+                        <div style="color:#fff;font-weight:600;font-size:.85rem">${ap[0]}</div>
+                        <div style="font-size:.72rem;color:rgba(255,255,255,.35)">${ap[2]} dịch vụ</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="color:#34D399;font-weight:700;font-size:.85rem">
+                            <fmt:formatNumber value="${ap[1]}" pattern="#,##0"/>đ
+                        </div>
+                        <div style="font-size:.68rem;color:rgba(255,255,255,.25)">TB/dịch vụ</div>
+                    </div>
+                </div>
+                </c:forEach>
+                <c:if test="${empty providerAvgPrices}">
+                    <div style="text-align:center;padding:30px;color:rgba(255,255,255,.25)"><i class="fas fa-balance-scale" style="font-size:1.5rem;opacity:.2;display:block;margin-bottom:8px"></i>Chưa có dữ liệu giá</div>
+                </c:if>
+            </div>
+        </div>
+
+        <!-- Lịch sử thay đổi giá -->
+        <div class="card" style="margin-top:20px">
+            <h3><i class="fas fa-chart-line" style="color:#A78BFA"></i> Lịch Sử Thay Đổi Giá <span style="font-size:.72rem;color:rgba(255,255,255,.25);margin-left:6px">(50 gần nhất)</span></h3>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>Nhà Cung Cấp</th><th>Dịch Vụ</th><th>Loại</th><th>Giá Cũ</th><th>Giá Mới</th><th>Thay Đổi</th><th>Ngày</th></tr></thead>
+                <tbody>
+                <c:forEach items="${priceHistory}" var="ph">
+                    <tr>
+                        <td style="color:#fff;font-weight:600">${ph.provider.businessName}</td>
+                        <td style="color:rgba(255,255,255,.7)">${ph.serviceName}</td>
+                        <td><span style="padding:2px 8px;border-radius:5px;font-size:.7rem;font-weight:700;background:rgba(139,92,246,.15);color:#A78BFA">${ph.serviceType}</span></td>
+                        <td style="color:rgba(255,255,255,.4);font-size:.82rem"><c:if test="${ph.oldPrice != null}"><fmt:formatNumber value="${ph.oldPrice}" pattern="#,##0"/>đ</c:if><c:if test="${ph.oldPrice == null}">-</c:if></td>
+                        <td style="color:#fff;font-weight:700;font-size:.82rem"><fmt:formatNumber value="${ph.newPrice}" pattern="#,##0"/>đ</td>
+                        <td>
+                            <c:if test="${ph.oldPrice != null && ph.oldPrice > 0}">
+                                <c:set var="pctChange" value="${ph.priceChangePercent}"/>
+                                <c:choose>
+                                    <c:when test="${pctChange > 0}"><span style="color:#F87171;font-weight:700;font-size:.8rem">▲ +${pctChange}%</span></c:when>
+                                    <c:when test="${pctChange < 0}"><span style="color:#34D399;font-weight:700;font-size:.8rem">▼ ${pctChange}%</span></c:when>
+                                    <c:otherwise><span style="color:rgba(255,255,255,.3);font-size:.8rem">0%</span></c:otherwise>
+                                </c:choose>
+                            </c:if>
+                            <c:if test="${ph.oldPrice == null}"><span style="color:#60A5FA;font-size:.75rem">Mới</span></c:if>
+                        </td>
+                        <td style="font-size:.75rem;color:rgba(255,255,255,.3)"><fmt:formatDate value="${ph.changeDate}" pattern="dd/MM/yyyy"/></td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty priceHistory}"><tr><td colspan="7" style="text-align:center;padding:40px;color:rgba(255,255,255,.25)"><i class="fas fa-chart-line" style="font-size:1.5rem;opacity:.2;display:block;margin-bottom:8px"></i>Chưa có lịch sử thay đổi giá</td></tr></c:if>
+                </tbody>
+            </table>
+            </div>
+        </div>
     </div>
 
     <!-- ═══ SPA SECTION: NEURAL NETWORK ═══ -->

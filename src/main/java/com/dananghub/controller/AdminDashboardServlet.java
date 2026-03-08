@@ -143,6 +143,18 @@ public class AdminDashboardServlet extends HttpServlet {
                 request.setAttribute("providerList", providerList);
             } catch (Exception ignored) {}
 
+            // Provider comparison data
+            try {
+                List<?> priceHistory = em.createQuery("SELECT ph FROM ProviderPriceHistory ph ORDER BY ph.changeDate DESC").setMaxResults(50).getResultList();
+                request.setAttribute("priceHistory", priceHistory);
+                // Provider ranking: avg price by provider
+                List<?> providerAvgPrices = em.createQuery("SELECT ph.provider.businessName, AVG(ph.newPrice), COUNT(ph) FROM ProviderPriceHistory ph GROUP BY ph.provider.businessName ORDER BY AVG(ph.newPrice) ASC").getResultList();
+                request.setAttribute("providerAvgPrices", providerAvgPrices);
+                // Provider ranking: by rating
+                List<?> providerRanking = em.createQuery("SELECT p FROM Provider p WHERE p.rating IS NOT NULL ORDER BY p.rating DESC").getResultList();
+                request.setAttribute("providerRanking", providerRanking);
+            } catch (Exception ignored) {}
+
             // ═══ CHATBOT ANALYTICS (real data) ═══
             try {
                 com.dananghub.dao.ChatbotLogDAO chatbotDAO = new com.dananghub.dao.ChatbotLogDAO();
