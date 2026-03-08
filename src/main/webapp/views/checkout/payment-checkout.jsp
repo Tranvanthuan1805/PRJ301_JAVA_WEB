@@ -246,7 +246,7 @@ function copyCode() {
     });
 }
 
-// SePay payment check simulation
+// SePay payment check via backend
 let paymentConfirmed = false;
 function checkPayment() {
     if (paymentConfirmed) return;
@@ -255,49 +255,28 @@ function checkPayment() {
     btn.innerHTML = '<i class="fas fa-spinner spinner"></i> Đang kiểm tra...';
     btn.disabled = true;
 
-    // Simulate SePay API check (in production, this would call your backend)
-    setTimeout(() => {
-        // Check via SePay API
-        const transCode = '${transCode}';
-        const amount = ${amount};
+    const transCode = '${transCode}';
 
-        fetch('https://my.sepay.vn/userapi/transactions/list?transaction_date_min=' +
-              new Date().toISOString().split('T')[0] +
-              '&account_number=2806281106', {
-            headers: {
-                'Authorization': 'Bearer SEPAY_API_KEY',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(r => r.json())
-        .then(data => {
-            // Check if transaction with matching content exists
-            let found = false;
-            if (data && data.transactions) {
-                for (let tx of data.transactions) {
-                    if (tx.transaction_content &&
-                        tx.transaction_content.includes(transCode) &&
-                        tx.amount_in >= amount) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (found) {
-                confirmPaid();
-            } else {
-                btn.innerHTML = '<i class="fas fa-sync-alt"></i> Kiểm Tra Lại';
-                btn.disabled = false;
-                document.getElementById('statusDesc').textContent = 'Chưa phát hiện giao dịch. Thử kiểm tra lại sau 30s.';
-            }
-        })
-        .catch(() => {
-            // SePay API not available, show manual confirmation option
+    fetch('${pageContext.request.contextPath}/check-payment?code=' + encodeURIComponent(transCode))
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'Paid') {
+            confirmPaid();
+        } else if (data.status === 'NOT_FOUND') {
             btn.innerHTML = '<i class="fas fa-sync-alt"></i> Kiểm Tra Lại';
             btn.disabled = false;
-            document.getElementById('statusDesc').textContent = 'Hệ thống đang kiểm tra. Vui lòng đợi hoặc liên hệ admin.';
-        });
-    }, 2000);
+            document.getElementById('statusDesc').textContent = 'Giao dịch chưa được ghi nhận. Vui lòng thử lại.';
+        } else {
+            btn.innerHTML = '<i class="fas fa-sync-alt"></i> Kiểm Tra Lại';
+            btn.disabled = false;
+            document.getElementById('statusDesc').textContent = 'Đang chờ thanh toán. Hệ thống tự kiểm tra mỗi 10 giây...';
+        }
+    })
+    .catch(() => {
+        btn.innerHTML = '<i class="fas fa-sync-alt"></i> Kiểm Tra Lại';
+        btn.disabled = false;
+        document.getElementById('statusDesc').textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+    });
 }
 
 function confirmPaid() {
@@ -308,7 +287,7 @@ function confirmPaid() {
     document.getElementById('checkStatus').querySelector('.icon').innerHTML = '<i class="fas fa-check-circle"></i>';
     document.getElementById('statusTitle').textContent = '✅ Đã thanh toán thành công!';
     document.getElementById('statusTitle').style.color = '#059669';
-    document.getElementById('statusDesc').textContent = 'Đơn hàng sẽ được xác nhận trong vòng 24h';
+    document.getElementById('statusDesc').textContent = 'Đơn hàng đã được xác nhận tự động';
 
     document.getElementById('btnCheck').innerHTML = '<i class="fas fa-check"></i> Đã Thanh Toán';
     document.getElementById('btnCheck').style.background = '#ECFDF5';
@@ -325,22 +304,29 @@ function confirmPaid() {
     payStep.querySelector('p').textContent = 'Thanh toán thành công qua QR SePay';
 
     const confStep = document.getElementById('confirmStep');
-    confStep.querySelector('.dot').className = 'dot active';
-    confStep.querySelector('.dot').innerHTML = '<i class="fas fa-spinner spinner"></i>';
-    confStep.querySelector('h4').style.color = '#F59E0B';
-    confStep.querySelector('h4').textContent = '⏳ Đang xác nhận';
-    confStep.querySelector('p').textContent = 'Admin sẽ xác nhận đơn hàng trong vòng 24h';
+    confStep.querySelector('.dot').className = 'dot done';
+    confStep.querySelector('.dot').innerHTML = '<i class="fas fa-check"></i>';
+    confStep.querySelector('h4').style.color = '#059669';
+    confStep.querySelector('h4').textContent = '✅ Đã xác nhận';
+    confStep.querySelector('p').textContent = 'Đơn hàng đã được xác nhận thành công';
+
+    const compStep = document.getElementById('completeStep');
+    compStep.querySelector('.dot').className = 'dot done';
+    compStep.querySelector('.dot').innerHTML = '<i class="fas fa-check"></i>';
+    compStep.querySelector('h4').style.color = '#059669';
+    compStep.querySelector('h4').textContent = '✅ Hoàn tất';
+    compStep.querySelector('p').textContent = 'Bạn đã sẵn sàng cho chuyến đi!';
 
     clearInterval(timer);
     document.getElementById('timerText').style.display = 'none';
 }
 
-// Auto-check every 30 seconds
+// Auto-check every 10 seconds
 setInterval(() => {
     if (!paymentConfirmed) {
         checkPayment();
     }
-}, 30000);
+}, 10000);
 </script>
 </body>
 </html>
