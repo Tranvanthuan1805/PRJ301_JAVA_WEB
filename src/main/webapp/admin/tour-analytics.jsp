@@ -10,68 +10,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#0F172A;color:#E2E8F0;min-height:100vh}
-a{text-decoration:none;color:inherit}
-.container{max-width:1360px;margin:0 auto;padding:0 24px}
-.page{padding:110px 0 60px}
-
-.admin-tabs{display:flex;gap:4px;margin-bottom:24px;background:rgba(30,41,59,.5);border-radius:10px;padding:4px;border:1px solid rgba(255,255,255,.06)}
-.admin-tab{padding:9px 20px;border-radius:8px;font-weight:600;font-size:.83rem;color:#64748B;cursor:pointer;transition:.3s}
-.admin-tab:hover{color:#fff}
-.admin-tab.active{background:#2563EB;color:#fff}
-
-.pg-title{font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:24px}
-
-/* Stats */
-.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:28px}
-.stat-card{background:rgba(30,41,59,.5);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px;display:flex;align-items:center;gap:14px}
-.stat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
-.stat-icon.blue{background:rgba(59,130,246,.15);color:#60A5FA}
-.stat-icon.green{background:rgba(16,185,129,.15);color:#10B981}
-.stat-icon.amber{background:rgba(245,158,11,.15);color:#F59E0B}
-.stat-icon.purple{background:rgba(139,92,246,.15);color:#A78BFA}
-.stat-icon.red{background:rgba(239,68,68,.15);color:#F87171}
-.stat-value{font-size:1.5rem;font-weight:800;color:#fff}
-.stat-label{font-size:.72rem;color:#64748B;font-weight:600;letter-spacing:.5px}
-
-/* Charts */
-.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
-.chart-card{background:rgba(30,41,59,.5);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px}
-.chart-title{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.chart-title i{color:#60A5FA}
-.chart-wrap{position:relative;height:280px}
-
-/* Table */
-.section-title{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.section-title i{color:#F59E0B}
-.table-wrap{background:rgba(30,41,59,.4);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;margin-bottom:28px}
-table{width:100%;border-collapse:collapse}
-thead{background:rgba(15,23,42,.6)}
-th{padding:12px 16px;text-align:left;font-size:.72rem;font-weight:700;color:#64748B;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.06)}
-td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem}
-tr:hover{background:rgba(255,255,255,.02)}
-.rank{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem}
-.rank-1{background:rgba(245,158,11,.2);color:#F59E0B}
-.rank-2{background:rgba(148,163,184,.15);color:#94A3B8}
-.rank-3{background:rgba(180,83,9,.2);color:#D97706}
-.rank-other{background:rgba(30,41,59,.5);color:#64748B}
-
-.fill-bar{height:8px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden;width:120px}
-.fill-bar-inner{height:100%;border-radius:4px;transition:.5s}
-.fill-high{background:linear-gradient(90deg,#10B981,#34D399)}
-.fill-mid{background:linear-gradient(90deg,#F59E0B,#FBBF24)}
-.fill-low{background:linear-gradient(90deg,#EF4444,#F87171)}
-
-@media(max-width:768px){.charts-grid{grid-template-columns:1fr}}
-</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
+<style>body{font-family:'Inter',sans-serif}</style>
 </head>
-<body>
-<jsp:include page="/common/_header.jsp"/>
+<body class="bg-[#0a0f1e] text-slate-200 min-h-screen">
+<jsp:include page="/common/_admin-sidebar.jsp"/>
+<c:set var="pageTitle" value="Phân Tích Tour" scope="request"/>
+<jsp:include page="/common/_admin-header.jsp"/>
 
-<main class="page">
-<div class="container">
+<main class="lg:ml-[260px] pt-20 pb-10 px-4 lg:px-6">
 
     <div class="admin-tabs">
         <a href="${ctx}/admin/tours" class="admin-tab">📋 Quản Lý Tour</a>

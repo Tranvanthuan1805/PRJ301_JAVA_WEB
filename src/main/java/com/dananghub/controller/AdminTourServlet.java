@@ -151,6 +151,9 @@ public class AdminTourServlet extends HttpServlet {
         request.setAttribute("totalTours", total);
         request.setAttribute("activeTours", allTours.stream().filter(Tour::isActive).count());
 
+        // Load Dashboard KPI data (inline)
+        loadDashboardData(request);
+
         // Load AI Analytics data for Neural Network tab
         loadAIData(request);
 
@@ -299,6 +302,45 @@ public class AdminTourServlet extends HttpServlet {
             if (!providers.isEmpty()) {
                 tour.setProvider(providers.get(0));
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadDashboardData(HttpServletRequest request) {
+        EntityManager em = null;
+        try {
+            em = JPAUtil.getEntityManager();
+
+            // User count
+            Long totalUsers = (Long) em.createQuery("SELECT COUNT(u) FROM User u").getSingleResult();
+            request.setAttribute("totalUsers", totalUsers);
+
+            // Order counts
+            Long totalOrders = (Long) em.createQuery("SELECT COUNT(o) FROM Order o").getSingleResult();
+            Long pendingOrders = (Long) em.createQuery("SELECT COUNT(o) FROM Order o WHERE o.orderStatus = 'Pending'").getSingleResult();
+            Long confirmedOrders = (Long) em.createQuery("SELECT COUNT(o) FROM Order o WHERE o.orderStatus = 'Confirmed'").getSingleResult();
+            Long completedOrders = (Long) em.createQuery("SELECT COUNT(o) FROM Order o WHERE o.orderStatus = 'Completed'").getSingleResult();
+            Long cancelledOrders = (Long) em.createQuery("SELECT COUNT(o) FROM Order o WHERE o.orderStatus = 'Cancelled'").getSingleResult();
+            request.setAttribute("totalBookings", totalOrders);
+            request.setAttribute("pendingRequests", pendingOrders);
+            request.setAttribute("confirmedOrders", confirmedOrders);
+            request.setAttribute("completedOrders", completedOrders);
+            request.setAttribute("cancelledOrders", cancelledOrders);
+
+            // Revenue
+            Double totalRevenue = 0.0;
+            try {
+                Object rev = em.createQuery("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.orderStatus = 'Completed'").getSingleResult();
+                totalRevenue = ((Number) rev).doubleValue();
+            } catch (Exception ignored) {}
+            request.setAttribute("grossRevenue", totalRevenue);
+
+            request.setAttribute("dashboardLoaded", true);
+        } catch (Exception e) {
+            getServletContext().log("Dashboard data not loaded: " + e.getMessage());
+            request.setAttribute("dashboardLoaded", false);
+        } finally {
+            if (em != null) em.close();
         }
     }
 

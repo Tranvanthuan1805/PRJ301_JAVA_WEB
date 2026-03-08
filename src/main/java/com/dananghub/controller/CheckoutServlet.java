@@ -3,6 +3,7 @@ package com.dananghub.controller;
 import com.dananghub.dao.OrderDAO;
 import com.dananghub.dao.BookingDAO;
 import com.dananghub.dao.ActivityDAO;
+import com.dananghub.dao.CouponDAO;
 import com.dananghub.entity.*;
 
 import jakarta.servlet.ServletException;
@@ -18,6 +19,7 @@ public class CheckoutServlet extends HttpServlet {
     private final OrderDAO orderDAO = new OrderDAO();
     private final BookingDAO bookingDAO = new BookingDAO();
     private final ActivityDAO activityDAO = new ActivityDAO();
+    private final CouponDAO couponDAO = new CouponDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,11 +42,23 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         // Calculate total
-        double total = 0;
+        double subtotal = 0;
         for (CartItem item : cart) {
-            total += item.getTotalPrice();
+            subtotal += item.getTotalPrice();
         }
+
+        // Apply coupon discount
+        double discount = 0;
+        Coupon coupon = (Coupon) session.getAttribute("appliedCoupon");
+        if (coupon != null && coupon.isValid(subtotal)) {
+            discount = coupon.calculateDiscount(subtotal);
+        }
+        double total = subtotal - discount;
+
         request.setAttribute("cartTotal", total);
+        request.setAttribute("subtotal", subtotal);
+        request.setAttribute("couponDiscount", discount);
+        request.setAttribute("appliedCoupon", coupon);
         request.setAttribute("user", user);
 
         request.getRequestDispatcher("/views/checkout/checkout.jsp").forward(request, response);
@@ -77,10 +91,19 @@ public class CheckoutServlet extends HttpServlet {
             String notes = request.getParameter("notes");
 
             // Calculate total
-            double total = 0;
+            double subtotal = 0;
             for (CartItem item : cart) {
-                total += item.getTotalPrice();
+                subtotal += item.getTotalPrice();
             }
+
+            // Apply coupon if present
+            double discount = 0;
+            Coupon coupon = (Coupon) session.getAttribute("appliedCoupon");
+            if (coupon != null && coupon.isValid(subtotal)) {
+                discount = coupon.calculateDiscount(subtotal);
+                couponDAO.incrementUsage(coupon.getCouponId());
+            }
+            double total = subtotal - discount;
 
             // Create order
             Order order = new Order();
@@ -114,9 +137,11 @@ public class CheckoutServlet extends HttpServlet {
                 );
                 activityDAO.logInteraction(ih);
 
-                // Clear cart
+                // Clear cart & coupon
                 session.removeAttribute("cart");
                 session.removeAttribute("cartTotal");
+                session.removeAttribute("appliedCoupon");
+                session.removeAttribute("couponDiscount");
 
                 // Generate transaction code and QR
                 String transCode = "EZT" + System.currentTimeMillis() + "U" + user.getUserId();

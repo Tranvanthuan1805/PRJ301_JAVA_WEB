@@ -121,14 +121,14 @@ body{padding-top:100px}
             <li><a href="${pageContext.request.contextPath}/tour" data-i18n="nav.explore">Khám Phá</a></li>
             <li><a href="${pageContext.request.contextPath}/my-orders" data-i18n="nav.orders">Đơn Hàng</a></li>
             <li><a href="${pageContext.request.contextPath}/history" data-i18n="nav.history">Lịch Sử</a></li>
-            <li><a href="${pageContext.request.contextPath}/pricing" data-i18n="nav.vip">Gói VIP</a></li>
+            <li><a href="${pageContext.request.contextPath}/provider">Nhà Cung Cấp</a></li>
         </ul>
 
         <div class="hdr-actions">
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <c:if test="${sessionScope.user.role.roleName == 'ADMIN'}">
-                        <a href="${pageContext.request.contextPath}/admin/tours" class="admin-badge">
+                        <a href="${pageContext.request.contextPath}/admin/dashboard" class="admin-badge">
                             <i class="fas fa-bolt"></i> Admin
                         </a>
                     </c:if>

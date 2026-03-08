@@ -4,142 +4,236 @@ import com.dananghub.dao.RoleDAO;
 import com.dananghub.dao.UserDAO;
 import com.dananghub.entity.Role;
 import com.dananghub.entity.User;
-import com.dananghub.util.JPAUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
+/**
+ * Google OAuth 2.0 Login — Xử lý redirect + callback
+ *
+ * Flow:
+ *   1. GET /google-auth          → Redirect tới Google consent screen
+ *   2. GET /google-auth?code=... → Google callback, đổi code → token → userinfo → login/register
+ *
+ * Cần config:
+ *   - GOOGLE_CLIENT_ID     (từ Google Cloud Console)
+ *   - GOOGLE_CLIENT_SECRET (từ Google Cloud Console)
+ *   - Redirect URI: http://localhost:9090/DaNangTravelHub/google-auth
+ */
 @WebServlet("/google-auth")
 public class GoogleAuthServlet extends HttpServlet {
 
-    private static final String SUPABASE_URL = "https://cbbdijhwewpptvmgujcz.supabase.co";
-    private static final String SUPABASE_ANON_KEY = getAnonKey();
+    // ═══ CẤU HÌNH GOOGLE OAUTH ═══
+    // Set environment variables: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+    private static final String CLIENT_ID     = System.getenv("GOOGLE_CLIENT_ID") != null ? System.getenv("GOOGLE_CLIENT_ID") : "YOUR_CLIENT_ID";
+    private static final String CLIENT_SECRET = System.getenv("GOOGLE_CLIENT_SECRET") != null ? System.getenv("GOOGLE_CLIENT_SECRET") : "YOUR_CLIENT_SECRET";
 
-    private static String getAnonKey() {
-        // Will be set in init or from config
-        return "";
+    // Google OAuth endpoints
+    private static final String AUTH_URL     = "https://accounts.google.com/o/oauth2/v2/auth";
+    private static final String TOKEN_URL    = "https://oauth2.googleapis.com/token";
+    private static final String USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
+
+    private String getRedirectUri(HttpServletRequest request) {
+        // Tự tạo redirect URI từ request để linh hoạt (localhost / production)
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int port = request.getServerPort();
+        String ctx = request.getContextPath();
+
+        StringBuilder uri = new StringBuilder();
+        uri.append(scheme).append("://").append(serverName);
+        if (("http".equals(scheme) && port != 80) || ("https".equals(scheme) && port != 443)) {
+            uri.append(":").append(port);
+        }
+        uri.append(ctx).append("/google-auth");
+        return uri.toString();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        JsonObject result = new JsonObject();
+        String code = request.getParameter("code");
+        String error = request.getParameter("error");
 
-        String accessToken = request.getParameter("access_token");
-        if (accessToken == null || accessToken.isEmpty()) {
-            result.addProperty("success", false);
-            result.addProperty("error", "Token không hợp lệ");
-            out.print(result);
+        // ═══ STEP 1: Nếu chưa có code → Redirect tới Google ═══
+        if (code == null && error == null) {
+            String redirectUri = getRedirectUri(request);
+            String state = generateState(request);
+
+            String googleAuthUrl = AUTH_URL
+                    + "?client_id=" + URLEncoder.encode(CLIENT_ID, "UTF-8")
+                    + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8")
+                    + "&response_type=code"
+                    + "&scope=" + URLEncoder.encode("openid email profile", "UTF-8")
+                    + "&state=" + URLEncoder.encode(state, "UTF-8")
+                    + "&access_type=offline"
+                    + "&prompt=select_account";
+
+            response.sendRedirect(googleAuthUrl);
             return;
         }
 
+        // ═══ Nếu user cancel / error ═══
+        if (error != null) {
+            request.setAttribute("error", "Đăng nhập Google bị hủy: " + error);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
+        // ═══ STEP 2: Google callback với code → Exchange token ═══
         try {
-            // Call Supabase to get user info using the access token
-            URL url = new URL(SUPABASE_URL + "/auth/v1/user");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-            conn.setRequestProperty("apikey", getSupabaseAnonKey());
+            String redirectUri = getRedirectUri(request);
 
-            int status = conn.getResponseCode();
-            if (status != 200) {
-                result.addProperty("success", false);
-                result.addProperty("error", "Xác thực thất bại (HTTP " + status + ")");
-                out.print(result);
+            // 2a. Exchange authorization code for tokens
+            JsonObject tokens = exchangeCodeForTokens(code, redirectUri);
+            if (tokens == null || !tokens.has("access_token")) {
+                request.setAttribute("error", "Không thể lấy token từ Google");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
 
-            // Read response
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) sb.append(line);
-            br.close();
+            String accessToken = tokens.get("access_token").getAsString();
 
-            JsonObject userInfo = JsonParser.parseString(sb.toString()).getAsJsonObject();
-            String email = userInfo.has("email") ? userInfo.get("email").getAsString() : null;
-
-            String fullName = "";
-            if (userInfo.has("user_metadata")) {
-                JsonObject meta = userInfo.getAsJsonObject("user_metadata");
-                if (meta.has("full_name")) fullName = meta.get("full_name").getAsString();
-                else if (meta.has("name")) fullName = meta.get("name").getAsString();
-            }
-
-            if (email == null || email.isEmpty()) {
-                result.addProperty("success", false);
-                result.addProperty("error", "Không lấy được email từ Google");
-                out.print(result);
+            // 2b. Get user info from Google
+            JsonObject userInfo = getUserInfo(accessToken);
+            if (userInfo == null || !userInfo.has("email")) {
+                request.setAttribute("error", "Không lấy được thông tin từ Google");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
 
-            // Find or create user in our database
+            String email = userInfo.get("email").getAsString();
+            String name = userInfo.has("name") ? userInfo.get("name").getAsString() : "";
+            String picture = userInfo.has("picture") ? userInfo.get("picture").getAsString() : "";
+
+            System.out.println(">>> GOOGLE LOGIN: email=" + email + ", name=" + name);
+
+            // 2c. Find or create user in database
             UserDAO userDAO = new UserDAO();
             User user = userDAO.findByEmail(email);
 
             if (user == null) {
-                // Create new user with CUSTOMER role
+                // Tạo user mới với role CUSTOMER
                 RoleDAO roleDAO = new RoleDAO();
                 Role customerRole = roleDAO.findByName("CUSTOMER");
 
                 user = new User();
                 user.setEmail(email);
                 user.setUsername(email.split("@")[0]);
-                user.setPasswordHash("GOOGLE_OAUTH"); // no password needed
-                user.setFullName(fullName.isEmpty() ? email.split("@")[0] : fullName);
+                user.setPasswordHash("GOOGLE_OAUTH"); // Không cần password
+                user.setFullName(name.isEmpty() ? email.split("@")[0] : name);
                 user.setRole(customerRole);
                 user.setActive(true);
 
                 boolean created = userDAO.create(user);
                 if (!created) {
-                    result.addProperty("success", false);
-                    result.addProperty("error", "Không thể tạo tài khoản");
-                    out.print(result);
+                    request.setAttribute("error", "Không thể tạo tài khoản. Vui lòng thử lại.");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
                     return;
                 }
                 // Refresh to get ID
                 user = userDAO.findByEmail(email);
+                System.out.println(">>> GOOGLE: Created new user: " + user.getUsername());
+            } else {
+                System.out.println(">>> GOOGLE: Existing user login: " + user.getUsername());
             }
 
-            // Create session
+            // 2d. Create session
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRoleName());
+            session.setAttribute("googlePicture", picture);
 
-            // Determine redirect based on role
+            // 2e. Redirect based on role
             String ctx = request.getContextPath();
-            String redirect;
             String roleName = user.getRoleName();
             if ("ADMIN".equals(roleName)) {
-                redirect = ctx + "/admin/dashboard";
+                response.sendRedirect(ctx + "/home");
             } else if ("PROVIDER".equals(roleName)) {
-                redirect = ctx + "/provider/dashboard";
+                response.sendRedirect(ctx + "/provider/dashboard");
             } else {
-                redirect = ctx + "/home";
+                response.sendRedirect(ctx + "/home");
             }
-
-            result.addProperty("success", true);
-            result.addProperty("redirect", redirect);
 
         } catch (Exception e) {
             e.printStackTrace();
-            result.addProperty("success", false);
-            result.addProperty("error", "Lỗi hệ thống: " + e.getMessage());
+            request.setAttribute("error", "Lỗi đăng nhập Google: " + e.getMessage());
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
-
-        out.print(result);
     }
 
-    private String getSupabaseAnonKey() {
-        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiYmRpamh3ZXdwcHR2bWd1amN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMDQwNjMsImV4cCI6MjA4Nzg4MDA2M30.SuAZmCu_jtQGGWQAA3AVUV4k1HE4EmTHEkpEOwJAS_8";
+    /**
+     * Exchange authorization code for access token
+     */
+    private JsonObject exchangeCodeForTokens(String code, String redirectUri) throws IOException {
+        String params = "code=" + URLEncoder.encode(code, "UTF-8")
+                + "&client_id=" + URLEncoder.encode(CLIENT_ID, "UTF-8")
+                + "&client_secret=" + URLEncoder.encode(CLIENT_SECRET, "UTF-8")
+                + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8")
+                + "&grant_type=authorization_code";
+
+        URL url = new URL(TOKEN_URL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setDoOutput(true);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            os.write(params.getBytes("UTF-8"));
+        }
+
+        int status = conn.getResponseCode();
+        InputStream is = (status == 200) ? conn.getInputStream() : conn.getErrorStream();
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) sb.append(line);
+        br.close();
+
+        System.out.println(">>> GOOGLE TOKEN RESPONSE (" + status + "): " + sb.toString());
+
+        if (status != 200) return null;
+        return JsonParser.parseString(sb.toString()).getAsJsonObject();
+    }
+
+    /**
+     * Get user profile from Google using access token
+     */
+    private JsonObject getUserInfo(String accessToken) throws IOException {
+        URL url = new URL(USERINFO_URL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+
+        int status = conn.getResponseCode();
+        if (status != 200) return null;
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) sb.append(line);
+        br.close();
+
+        System.out.println(">>> GOOGLE USERINFO: " + sb.toString());
+        return JsonParser.parseString(sb.toString()).getAsJsonObject();
+    }
+
+    /**
+     * Generate CSRF state token  
+     */
+    private String generateState(HttpServletRequest request) {
+        String state = Long.toHexString(System.currentTimeMillis());
+        request.getSession(true).setAttribute("oauth_state", state);
+        return state;
     }
 }

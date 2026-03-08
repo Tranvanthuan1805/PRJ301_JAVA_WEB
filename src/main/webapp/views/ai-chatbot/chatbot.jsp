@@ -493,6 +493,13 @@
         chatInput.value = '';
         sendBtn.disabled = true;
 
+        // Log question to DB for analytics
+        fetch(contextPath + '/chatlog', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'question=' + encodeURIComponent(msg)
+        }).catch(function(){});
+
         // Check for booking intent
         if (msg.toLowerCase().includes('đặt tour') || msg.toLowerCase().includes('book tour') || msg.toLowerCase().includes('dat tour')) {
             setTimeout(() => {

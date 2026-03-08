@@ -9,53 +9,19 @@
 <title>Lịch Sử Tour | Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#0F172A;color:#E2E8F0;min-height:100vh}
-a{text-decoration:none;color:inherit}
-.container{max-width:1360px;margin:0 auto;padding:0 24px}
-.page{padding:110px 0 60px}
-
-.admin-tabs{display:flex;gap:4px;margin-bottom:24px;background:rgba(30,41,59,.5);border-radius:10px;padding:4px;border:1px solid rgba(255,255,255,.06)}
-.admin-tab{padding:9px 20px;border-radius:8px;font-weight:600;font-size:.83rem;color:#64748B;cursor:pointer;transition:.3s}
-.admin-tab:hover{color:#fff}
-.admin-tab.active{background:#2563EB;color:#fff}
-
-.pg-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
-.pg-title{font-size:1.5rem;font-weight:800;color:#fff}
-
-.toolbar{display:flex;gap:10px;margin-bottom:20px}
-.tb-search{flex:1;min-width:200px;position:relative}
-.tb-search input{width:100%;padding:9px 14px 9px 38px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.8);color:#fff;font-size:.85rem;outline:none}
-.tb-search input:focus{border-color:#3B82F6}
-.tb-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748B;font-size:.8rem}
-
-.table-wrap{background:rgba(30,41,59,.4);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
-table{width:100%;border-collapse:collapse}
-thead{background:rgba(15,23,42,.6)}
-th{padding:12px 16px;text-align:left;font-size:.72rem;font-weight:700;color:#64748B;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.06)}
-td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem}
-tr:hover{background:rgba(255,255,255,.02)}
-.tour-thumb{width:56px;height:40px;border-radius:6px;object-fit:cover}
-.status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171}
-.btn-restore{padding:6px 14px;border-radius:6px;background:rgba(16,185,129,.15);color:#10B981;font-size:.78rem;font-weight:700;border:none;cursor:pointer;transition:.3s}
-.btn-restore:hover{background:rgba(16,185,129,.3)}
-
-.pagination{display:flex;justify-content:center;gap:6px;margin-top:20px}
-.pg-btn{width:34px;height:34px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#94A3B8;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.82rem;cursor:pointer;transition:.3s}
-.pg-btn:hover{border-color:#3B82F6;color:#fff}
-.pg-btn.active{background:#2563EB;border-color:#2563EB;color:#fff}
-.pg-btn.disabled{opacity:.3;pointer-events:none}
-
-.empty-msg{text-align:center;padding:60px 20px;color:#475569}
-.empty-msg i{font-size:2.5rem;margin-bottom:12px;display:block}
+body{font-family:'Inter',sans-serif}
+.row-hover{transition:all .15s}.row-hover:hover{background:rgba(255,255,255,.03)!important}
 </style>
 </head>
-<body>
-<jsp:include page="/common/_header.jsp"/>
+<body class="bg-[#0a0f1e] text-slate-200 min-h-screen">
+<jsp:include page="/common/_admin-sidebar.jsp"/>
+<c:set var="pageTitle" value="Lịch Sử Tour" scope="request"/>
+<jsp:include page="/common/_admin-header.jsp"/>
 
-<main class="page">
-<div class="container">
+<main class="lg:ml-[260px] pt-20 pb-10 px-4 lg:px-6">
 
     <div class="admin-tabs">
         <a href="${ctx}/admin/tours" class="admin-tab">📋 Quản Lý Tour</a>

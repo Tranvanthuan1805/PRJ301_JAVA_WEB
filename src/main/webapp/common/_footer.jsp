@@ -8,6 +8,7 @@
 .ft-main{max-width:1200px;margin:0 auto;padding:56px 24px 0}
 .ft-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.3fr;gap:40px;margin-bottom:48px}
 
+
 /* Brand Column */
 .ft-brand h3{font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .ft-brand h3 img{height:32px;width:auto;border-radius:4px}
@@ -122,14 +123,16 @@
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/profile"><i class="fas fa-chevron-right"></i> Hồ Sơ Cá Nhân</a></li>
                     <li><a href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-chevron-right"></i> Đơn Hàng</a></li>
+                    <li><a href="${pageContext.request.contextPath}/wishlist"><i class="fas fa-chevron-right"></i> <i class="fas fa-heart" style="color:#FF6F61;font-size:.6rem"></i> Yêu Thích</a></li>
+                    <li><a href="${pageContext.request.contextPath}/feedback"><i class="fas fa-chevron-right"></i> Feedback Tour</a></li>
                     <li><a href="${pageContext.request.contextPath}/history"><i class="fas fa-chevron-right"></i> Lịch Sử</a></li>
-                    <li><a href="${pageContext.request.contextPath}/pricing"><i class="fas fa-chevron-right"></i> Gói VIP</a></li>
+                    <li><a href="${pageContext.request.contextPath}/provider"><i class="fas fa-chevron-right"></i> Nhà Cung Cấp</a></li>
                 </ul>
 
-                <h4 style="margin-top:24px"><i class="fas fa-info-circle" style="color:#3B82F6;margin-right:6px;font-size:.78rem"></i> Thông Tin</h4>
+                <h4 style="margin-top:24px"><i class="fas fa-info-circle" style="color:#3B82F6;margin-right:6px;font-size:.78rem"></i> Khám Phá</h4>
                 <ul>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Chính sách riêng tư</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Điều khoản sử dụng</a></li>
+                    <li><a href="${pageContext.request.contextPath}/tour-compare"><i class="fas fa-chevron-right"></i> So Sánh Tour</a></li>
+                    <li><a href="${pageContext.request.contextPath}/tour-3d"><i class="fas fa-chevron-right"></i> Tour 3D Gallery</a></li>
                     <li><a href="#"><i class="fas fa-chevron-right"></i> Trợ giúp</a></li>
                 </ul>
             </div>
@@ -158,70 +161,63 @@
     <!-- Certifications & Payment -->
     <div class="ft-certs">
         <div class="ft-certs-inner">
-            <div class="ft-certs-grid">
-                <!-- Chứng nhận -->
-                <div>
-                    <div class="ft-cert-title">CHỨNG NHẬN</div>
-                    <div class="ft-cert-badges">
-                        <div class="ft-cert-badge govt">
-                            <i class="fas fa-shield-alt"></i>
-                            <div>
-                                <div style="font-size:.65rem;color:#64748B">BỘ CÔNG THƯƠNG</div>
-                                <div style="font-size:.72rem;font-weight:800;color:#10B981">ĐÃ THÔNG BÁO</div>
-                            </div>
-                        </div>
-                        <div class="ft-cert-badge dmca">
-                            <i class="fas fa-lock"></i>
-                            <div>
-                                <div style="font-size:.72rem;font-weight:800;color:#F87171">DMCA</div>
-                                <div style="font-size:.6rem;color:#64748B">PROTECTED</div>
-                            </div>
-                        </div>
-                        <div class="ft-cert-badge" style="border-color:rgba(59,130,246,.2)">
-                            <i class="fas fa-check-double" style="color:#3B82F6"></i>
-                            <div>
-                                <div style="font-size:.65rem;color:#64748B">SSL</div>
-                                <div style="font-size:.72rem;font-weight:800;color:#3B82F6">SECURED</div>
-                            </div>
-                        </div>
+            <!-- Row 1: Chứng nhận + Thương hiệu ngang -->
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:24px">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="ft-cert-title" style="margin:0;white-space:nowrap">CHỨNG NHẬN</span>
+                    <a href="http://online.gov.vn/" target="_blank" rel="noopener" class="ft-cert-img-badge" style="background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.2)">
+                        <img src="${pageContext.request.contextPath}/images/logos/bo-cong-thuong.png" alt="Đã thông báo Bộ Công Thương" class="ft-cert-img">
+                    </a>
+                    <a href="https://www.dmca.com/" target="_blank" rel="noopener" class="ft-cert-img-badge" style="background:rgba(248,113,113,.04);border-color:rgba(248,113,113,.15)">
+                        <img src="${pageContext.request.contextPath}/images/logos/dmca-protected.png" alt="DMCA Protected" class="ft-cert-img">
+                    </a>
+                    <div class="ft-cert-img-badge" style="background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.15)">
+                        <img src="${pageContext.request.contextPath}/images/logos/ssl-secured.png" alt="SSL Secured" class="ft-cert-img">
                     </div>
                 </div>
-
-                <!-- eztravel Verified -->
-                <div>
-                    <div class="ft-cert-title">THƯƠNG HIỆU</div>
-                    <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;background:rgba(37,99,235,.06);border:1px solid rgba(37,99,235,.15);border-radius:12px">
-                        <div style="width:44px;height:44px;background:linear-gradient(135deg,#2563EB,#60A5FA);border-radius:12px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0">
-                            <span style="color:#fff;font-size:1.1rem;font-weight:900">ez</span>
-                            <div style="position:absolute;bottom:-3px;right:-3px;width:16px;height:16px;background:#10B981;border-radius:50%;border:2px solid #0F172A;display:flex;align-items:center;justify-content:center">
-                                <i class="fas fa-check" style="color:#fff;font-size:.45rem"></i>
-                            </div>
+                <!-- Thương hiệu -->
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 20px;background:rgba(37,99,235,.06);border:1px solid rgba(37,99,235,.15);border-radius:12px">
+                    <div style="width:40px;height:40px;background:linear-gradient(135deg,#2563EB,#60A5FA);border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0">
+                        <span style="color:#fff;font-size:1rem;font-weight:900">ez</span>
+                        <div style="position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;background:#10B981;border-radius:50%;border:2px solid #0F172A;display:flex;align-items:center;justify-content:center">
+                            <i class="fas fa-check" style="color:#fff;font-size:.4rem"></i>
                         </div>
-                        <div>
-                            <div style="font-size:.85rem;font-weight:800;color:#fff">eztravel <i class="fas fa-check-circle" style="color:#3B82F6;font-size:.7rem"></i></div>
-                            <div style="font-size:.68rem;color:#64748B">Official Verified Partner · Đà Nẵng</div>
-                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size:.82rem;font-weight:800;color:#fff">eztravel <i class="fas fa-check-circle" style="color:#3B82F6;font-size:.65rem"></i></div>
+                        <div style="font-size:.65rem;color:#64748B">Official Verified Partner · Đà Nẵng</div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Payment Methods -->
-                <div>
-                    <div class="ft-cert-title">CHẤP NHẬN THANH TOÁN</div>
-                    <div class="ft-payment-logos">
-                        <div class="ft-pay-logo visa"><i class="fab fa-cc-visa" style="font-size:1.2rem"></i> VISA</div>
-                        <div class="ft-pay-logo mc"><i class="fab fa-cc-mastercard" style="font-size:1.2rem"></i></div>
-                        <div class="ft-pay-logo" style="color:#1A1F71"><i class="fab fa-cc-visa" style="font-size:.9rem"></i> Verified</div>
-                        <div class="ft-pay-logo jcb"><i class="fab fa-cc-jcb" style="font-size:1.2rem"></i></div>
-                        <div class="ft-pay-logo spay">ShopeePay</div>
-                        <div class="ft-pay-logo vnpay" style="font-weight:900">VNPAY</div>
-                        <div class="ft-pay-logo" style="color:#0066FF;background:rgba(0,102,255,.08)">MSB</div>
-                        <div class="ft-pay-logo" style="color:#FF6B00;background:rgba(255,107,0,.08)">123pay</div>
-                        <div class="ft-pay-logo momo"><i class="fas fa-wallet" style="font-size:.8rem"></i> MoMo</div>
-                    </div>
+            <!-- Row 2: Thanh toán full width -->
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <span class="ft-cert-title" style="margin:0;white-space:nowrap">CHẤP NHẬN THANH TOÁN</span>
+                <div class="ft-payment-logos ft-pay-real" style="flex:1">
+                    <div class="ft-pay-img-card"><img src="${pageContext.request.contextPath}/images/logos/visa.png" alt="VISA"></div>
+                    <div class="ft-pay-img-card"><img src="${pageContext.request.contextPath}/images/logos/mastercard.png" alt="MasterCard"></div>
+                    <div class="ft-pay-img-card"><img src="${pageContext.request.contextPath}/images/logos/jcb.png" alt="JCB"></div>
+                    <div class="ft-pay-img-card"><img src="${pageContext.request.contextPath}/images/logos/vnpay.png" alt="VNPAY"></div>
+                    <div class="ft-pay-img-card"><img src="${pageContext.request.contextPath}/images/logos/shopeepay.png" alt="ShopeePay"></div>
+                    <div class="ft-pay-img-card"><img src="${pageContext.request.contextPath}/images/logos/msb.png" alt="MSB"></div>
+                    <div class="ft-pay-img-card"><img src="${pageContext.request.contextPath}/images/logos/123pay.png" alt="123pay"></div>
+                    <div class="ft-pay-img-card"><img src="${pageContext.request.contextPath}/images/logos/momo.png" alt="MoMo"></div>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+    .ft-cert-img-badge{display:flex;align-items:center;justify-content:center;padding:8px 14px;border:1px solid;border-radius:10px;text-decoration:none;transition:all .3s}
+    .ft-cert-img-badge:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+    .ft-cert-img{height:40px;max-width:140px;object-fit:contain;border-radius:4px}
+    .ft-pay-real{gap:8px!important}
+    .ft-pay-img-card{background:#fff;border-radius:8px;padding:5px 8px;display:flex;align-items:center;justify-content:center;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+    .ft-pay-img-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+    .ft-pay-img-card img{height:26px;max-width:64px;object-fit:contain}
+    </style>
+
+
 
     <!-- Bottom Bar -->
     <div class="ft-bottom">
@@ -231,4 +227,6 @@
         </div>
     </div>
 </footer>
+
+
 <jsp:include page="/views/ai-chatbot/chatbot.jsp" />
