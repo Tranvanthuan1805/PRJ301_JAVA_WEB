@@ -180,14 +180,14 @@ public class SubscriptionDAO {
         }
     }
 
-    // ==================== CORE: SePay -> PaymentTransaction -> Activate Subscription ====================
+    // ==================== CORE: SePay -> PaymentTransaction -> Process ====================
 
     public boolean processPayment(SepayTransaction sepay) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
 
         try {
-            // 1. Tim PaymentTransaction dang Pending khop voi noi dung chuyen khoan
+            // 1. Find pending PaymentTransaction matching transfer content
             String content = sepay.getContent();
             if (content == null) content = "";
 
@@ -211,35 +211,53 @@ public class SubscriptionDAO {
 
             if (matchedTrans == null) return false;
 
-            // 2. Kiem tra so tien
+            // 2. Check amount
             if (sepay.getTransferAmount() < matchedTrans.getAmount()) return false;
 
             tx.begin();
 
-            // 3. Cap nhat PaymentTransaction -> Paid
+            // 3. Update PaymentTransaction -> Paid
             matchedTrans.setStatus("Paid");
             matchedTrans.setPaidDate(new Date());
             matchedTrans.setSePayReference(sepay.getReferenceCode());
             matchedTrans.setPaymentGateway(sepay.getGateway());
             em.merge(matchedTrans);
 
-            // 4. Tao/Kich hoat ProviderSubscription
-            SubscriptionPlan plan = em.find(SubscriptionPlan.class, matchedTrans.getPlanId());
+            String transCode = matchedTrans.getTransactionCode();
 
-            cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_YEAR, plan.getDurationDays());
+            // 4. Handle based on prefix
+            if (transCode.startsWith("ORD")) {
+                // ORDER payment - update Order status
+                if (matchedTrans.getOrderId() != null) {
+                    com.dananghub.entity.Order order = em.find(com.dananghub.entity.Order.class, matchedTrans.getOrderId());
+                    if (order != null) {
+                        order.setPaymentStatus("Paid");
+                        order.setOrderStatus("Confirmed");
+                        order.setUpdatedAt(new Date());
+                        em.merge(order);
+                    }
+                }
+            } else if (transCode.startsWith("PRJ")) {
+                // SUBSCRIPTION payment - activate plan
+                if (matchedTrans.getPlanId() != null) {
+                    SubscriptionPlan plan = em.find(SubscriptionPlan.class, matchedTrans.getPlanId());
+                    if (plan != null) {
+                        cal = Calendar.getInstance();
+                        cal.add(Calendar.DAY_OF_YEAR, plan.getDurationDays());
 
-            ProviderSubscription sub = new ProviderSubscription();
-            sub.setProvider(em.find(com.dananghub.entity.Provider.class, matchedTrans.getUserId()));
-            sub.setPlan(plan);
-            sub.setStartDate(new Date());
-            sub.setEndDate(cal.getTime());
-            sub.setStatus("Active");
-            sub.setPaymentStatus("Paid");
-            sub.setAmount(matchedTrans.getAmount());
-            sub.setActive(true);
-
-            em.persist(sub);
+                        ProviderSubscription sub = new ProviderSubscription();
+                        sub.setProvider(em.find(com.dananghub.entity.Provider.class, matchedTrans.getUserId()));
+                        sub.setPlan(plan);
+                        sub.setStartDate(new Date());
+                        sub.setEndDate(cal.getTime());
+                        sub.setStatus("Active");
+                        sub.setPaymentStatus("Paid");
+                        sub.setAmount(matchedTrans.getAmount());
+                        sub.setActive(true);
+                        em.persist(sub);
+                    }
+                }
+            }
 
             tx.commit();
             return true;

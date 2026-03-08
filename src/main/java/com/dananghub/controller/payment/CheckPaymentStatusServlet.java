@@ -32,13 +32,24 @@ public class CheckPaymentStatusServlet extends HttpServlet {
         SubscriptionDAO dao = new SubscriptionDAO();
         PaymentTransaction trans = dao.findTransactionByCode(code);
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         if (trans != null) {
             result.put("status", trans.getStatus());
+            result.put("transactionCode", trans.getTransactionCode());
+
+            // Determine payment type
+            if (trans.getTransactionCode().startsWith("ORD")) {
+                result.put("type", "order");
+                result.put("orderId", trans.getOrderId());
+            } else if (trans.getTransactionCode().startsWith("PRJ")) {
+                result.put("type", "subscription");
+                result.put("planId", trans.getPlanId());
+            }
+
             if ("Paid".equalsIgnoreCase(trans.getStatus())) {
                 HttpSession session = request.getSession();
                 User user = (User) session.getAttribute("user");
-                if (user != null) {
+                if (user != null && trans.getTransactionCode().startsWith("PRJ")) {
                     session.setAttribute("user_plan", "Active");
                 }
             }

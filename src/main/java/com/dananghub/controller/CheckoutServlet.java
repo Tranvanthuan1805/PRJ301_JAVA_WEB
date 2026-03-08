@@ -5,6 +5,7 @@ import com.dananghub.dao.BookingDAO;
 import com.dananghub.dao.ActivityDAO;
 import com.dananghub.dao.CouponDAO;
 import com.dananghub.entity.*;
+import com.dananghub.dao.SubscriptionDAO;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -144,10 +145,21 @@ public class CheckoutServlet extends HttpServlet {
                 session.removeAttribute("couponDiscount");
 
                 // Generate transaction code and QR
-                String transCode = "EZT" + System.currentTimeMillis() + "U" + user.getUserId();
+                String transCode = "ORD" + System.currentTimeMillis() + "U" + user.getUserId();
                 String bankAcc = "2806281106";
                 String bankName = "MB";
                 long amountInt = Math.round(total);
+
+                // Save PaymentTransaction to DB for SePay matching
+                PaymentTransaction payTrans = new PaymentTransaction();
+                payTrans.setUserId(user.getUserId());
+                payTrans.setOrderId(orderId);
+                payTrans.setAmount((double) amountInt);
+                payTrans.setTransactionCode(transCode);
+                payTrans.setStatus("Pending");
+                payTrans.setCreatedDate(new java.util.Date());
+                new SubscriptionDAO().createTransaction(payTrans);
+
                 String qrUrl = String.format("https://qr.sepay.vn/img?acc=%s&bank=%s&amount=%d&des=%s",
                         bankAcc, bankName, amountInt, transCode);
 
