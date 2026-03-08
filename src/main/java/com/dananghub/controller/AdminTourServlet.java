@@ -187,7 +187,7 @@ public class AdminTourServlet extends HttpServlet {
 
         boolean ok = tourDAO.create(tour);
         if (ok) {
-            response.sendRedirect(request.getContextPath() + "/admin/tours?success=created");
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=created");
         } else {
             request.setAttribute("error", "Không thể tạo tour. Kiểm tra lại dữ liệu.");
             showForm(request, response, null);
@@ -205,7 +205,7 @@ public class AdminTourServlet extends HttpServlet {
             tour.setActive("true".equals(isActive) || "on".equals(isActive));
             tourDAO.update(tour);
         }
-        response.sendRedirect(request.getContextPath() + "/admin/tours?success=updated");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=updated");
     }
 
     private void deleteTour(HttpServletRequest request, HttpServletResponse response)
@@ -217,7 +217,7 @@ public class AdminTourServlet extends HttpServlet {
             tour.setUpdatedAt(new Date());
             tourDAO.update(tour);
         }
-        response.sendRedirect(request.getContextPath() + "/admin/tours?success=deleted");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted");
     }
 
     private void showHistory(HttpServletRequest request, HttpServletResponse response)
