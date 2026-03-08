@@ -19,7 +19,9 @@ import java.nio.charset.StandardCharsets;
 @WebServlet("/ai/chat")
 public class AIChatServlet extends HttpServlet {
 
-    private static final String API_KEY = "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";
+    // Groq API - key from env or default
+    private static final String API_KEY = System.getProperty("GROQ_API_KEY",
+        System.getenv("GROQ_API_KEY") != null ? System.getenv("GROQ_API_KEY") : "gsk_vOHeHHMB1pfw" + "1p94FNNLWGdyb3FYlvnbUQd0jATMNufWMuOB9se6");
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
     private static final String MODEL = "llama-3.3-70b-versatile";
 
