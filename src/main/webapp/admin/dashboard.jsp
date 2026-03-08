@@ -317,10 +317,15 @@
             <div class="ai-metric"><small>Doanh Thu</small><div class="val" style="color:#34D399"><fmt:formatNumber value="${grossRevenue}" pattern="#,###"/>đ</div></div>
         </div>
         <div class="card">
-            <h3><i class="fas fa-map-marked-alt"></i> Danh Sách Tour <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+                <h3 style="margin:0"><i class="fas fa-map-marked-alt"></i> Danh Sách Tour <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
+                <a href="${pageContext.request.contextPath}/admin/tours?action=add" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;text-decoration:none;transition:.3s;box-shadow:0 4px 15px rgba(59,130,246,.3)">
+                    <i class="fas fa-plus-circle"></i> Thêm Tour Mới
+                </a>
+            </div>
             <div style="overflow-x:auto">
             <table class="data-table">
-                <thead><tr><th>#</th><th>Tên Tour</th><th>Danh Mục</th><th>Giá</th><th>Thời Gian</th><th>Trạng Thái</th></tr></thead>
+                <thead><tr><th>#</th><th>Tên Tour</th><th>Danh Mục</th><th>Giá</th><th>Thời Gian Tour</th><th>Ngày Bắt Đầu</th><th>Ngày Kết Thúc</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
                 <tbody>
                 <c:forEach items="${tourList}" var="t" varStatus="s">
                     <tr>
@@ -329,10 +334,28 @@
                         <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:600;background:rgba(139,92,246,.15);color:#A78BFA">${not empty t.category ? t.category.categoryName : 'Tour'}</span></td>
                         <td style="color:#34D399;font-weight:700"><fmt:formatNumber value="${t.price}" pattern="#,###"/>đ</td>
                         <td style="font-size:.82rem">${t.duration}</td>
+                        <td style="font-size:.82rem;color:rgba(255,255,255,.6)">
+                            <c:choose>
+                                <c:when test="${not empty t.startDate}"><fmt:formatDate value="${t.startDate}" pattern="dd/MM/yyyy"/></c:when>
+                                <c:otherwise>—</c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td style="font-size:.82rem;color:rgba(255,255,255,.6)">
+                            <c:choose>
+                                <c:when test="${not empty t.endDate}"><fmt:formatDate value="${t.endDate}" pattern="dd/MM/yyyy"/></c:when>
+                                <c:otherwise>—</c:otherwise>
+                            </c:choose>
+                        </td>
                         <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${t.active ? 'background:rgba(16,185,129,.15);color:#34D399' : 'background:rgba(239,68,68,.15);color:#F87171'}">${t.active ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <div style="display:flex;gap:6px">
+                                <a href="${pageContext.request.contextPath}/admin/tours?action=edit&id=${t.tourId}" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(59,130,246,.15);color:#60A5FA;text-decoration:none;transition:.3s" title="Sửa"><i class="fas fa-edit"></i></a>
+                                <a href="${pageContext.request.contextPath}/admin/tours?action=delete&id=${t.tourId}" onclick="return confirm('Bạn có chắc muốn xóa tour này?')" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171;text-decoration:none;transition:.3s" title="Xóa"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </td>
                     </tr>
                 </c:forEach>
-                <c:if test="${empty tourList}"><tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có tour</td></tr></c:if>
+                <c:if test="${empty tourList}"><tr><td colspan="9" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có tour</td></tr></c:if>
                 </tbody>
             </table>
             </div>
