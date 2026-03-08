@@ -13,7 +13,7 @@
     <style>
     body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#F7F8FC;color:#1B1F3B;-webkit-font-smoothing:antialiased}
 
-    .booking-page{max-width:1100px;margin:0 auto;padding:100px 30px 80px}
+    .booking-page{max-width:1400px;margin:0 auto;padding:100px 24px 60px}
 
     /* Breadcrumb */
     .breadcrumb{display:flex;gap:8px;align-items:center;font-size:.85rem;color:#A0A5C3;margin-bottom:24px}
@@ -22,7 +22,7 @@
     .breadcrumb .sep{opacity:.3}
 
     /* Layout */
-    .booking-layout{display:grid;grid-template-columns:1fr 420px;gap:30px;align-items:start}
+    .booking-layout{display:grid;grid-template-columns:1fr 480px;gap:24px;align-items:start}
 
     /* Tour Card */
     .tour-preview{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 35px rgba(27,31,59,.06);border:1px solid #E8EAF0}
@@ -87,7 +87,24 @@
     .bank-info .bank-row{display:flex;justify-content:space-between;padding:4px 0;color:#6B7194}
     .bank-info .bank-row .bval{font-weight:700;color:#1B1F3B}
 
-    @media(max-width:900px){.booking-layout{grid-template-columns:1fr}.booking-form-card{position:relative;top:0}}
+    /* Promo Code */
+    .promo-field{display:flex;gap:8px;align-items:stretch}
+    .promo-field input{flex:1;padding:12px 14px;border:2px solid #E8EAF0;border-radius:12px;font-size:.88rem;font-family:inherit;font-weight:700;outline:none;transition:.3s;background:#FAFBFF;color:#1B1F3B;text-transform:uppercase;letter-spacing:1px}
+    .promo-field input:focus{border-color:#8B5CF6;box-shadow:0 0 0 3px rgba(139,92,246,.08)}
+    .promo-field button{padding:12px 20px;border:none;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#A78BFA);color:#fff;font-weight:800;font-size:.82rem;cursor:pointer;transition:.3s;font-family:inherit;white-space:nowrap}
+    .promo-field button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(139,92,246,.3)}
+    .promo-result{margin-top:8px;font-size:.8rem;font-weight:700;padding:8px 12px;border-radius:10px;display:none}
+    .promo-result.success{display:block;background:#F0FDF4;color:#059669;border:1px solid #BBF7D0}
+    .promo-result.error{display:block;background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}
+    .discount-row{color:#059669!important}
+    .discount-row .value{color:#059669!important}
+
+    /* Tour highlights */
+    .tour-highlights{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+    .highlight-item{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#F0FDF4;border-radius:12px;font-size:.78rem;font-weight:700;color:#059669;border:1px solid #BBF7D0}
+    .highlight-item i{font-size:.85rem}
+
+    @media(max-width:960px){.booking-layout{grid-template-columns:1fr}.booking-form-card{position:relative;top:0}.tour-highlights{grid-template-columns:1fr}}
     @media(max-width:600px){.tour-preview .img-wrap{height:200px}}
     </style>
 </head>
@@ -140,6 +157,13 @@
                     <div class="feat"><i class="fas fa-check"></i> Xe đưa đón</div>
                     <div class="feat"><i class="fas fa-check"></i> Nước uống</div>
                 </div>
+
+                <div class="tour-highlights">
+                    <div class="highlight-item"><i class="fas fa-shield-alt"></i> Hoàn tiền 100% nếu hủy trước 48h</div>
+                    <div class="highlight-item"><i class="fas fa-headset"></i> Hỗ trợ 24/7 hotline</div>
+                    <div class="highlight-item"><i class="fas fa-medal"></i> Cam kết giá tốt nhất</div>
+                    <div class="highlight-item"><i class="fas fa-qrcode"></i> Thanh toán QR tiện lợi</div>
+                </div>
             </div>
         </div>
 
@@ -184,6 +208,16 @@
                                    placeholder="Nhập số điện thoại" required>
                         </div>
 
+                        <!-- Promo Code -->
+                        <div class="field">
+                            <label><i class="fas fa-ticket-alt" style="color:#8B5CF6"></i> Mã Giảm Giá</label>
+                            <div class="promo-field">
+                                <input type="text" id="promoCode" name="promoCode" placeholder="Nhập mã VD: EZTRAVEL10" maxlength="20">
+                                <button type="button" onclick="applyPromo()"><i class="fas fa-check-circle"></i> Áp dụng</button>
+                            </div>
+                            <div id="promoResult" class="promo-result"></div>
+                        </div>
+
                         <!-- Price Summary -->
                         <div class="price-summary">
                             <div class="price-row">
@@ -193,6 +227,10 @@
                             <div class="price-row">
                                 <span class="label">Số người</span>
                                 <span class="value" id="qtyDisplay">1</span>
+                            </div>
+                            <div class="price-row discount-row" id="discountRow" style="display:none">
+                                <span class="label"><i class="fas fa-tag"></i> Giảm giá</span>
+                                <span class="value" id="discountDisplay">-0đ</span>
                             </div>
                             <div class="price-row total">
                                 <span class="label">Tổng Thanh Toán</span>
@@ -236,6 +274,16 @@
 
 <script>
 const PRICE = ${tour.price};
+let discountPercent = 0;
+
+// Promo codes
+const PROMO_CODES = {
+    'EZTRAVEL10': { percent: 10, label: 'Giảm 10%' },
+    'DANANG20': { percent: 20, label: 'Giảm 20%' },
+    'NEWYEAR15': { percent: 15, label: 'Giảm 15%' },
+    'VIP30': { percent: 30, label: 'VIP - Giảm 30%' },
+    'WELCOME5': { percent: 5, label: 'Chào mừng - Giảm 5%' }
+};
 
 function changeQty(delta) {
     const input = document.getElementById('qty');
@@ -249,8 +297,39 @@ function changeQty(delta) {
 function updateTotal() {
     const qty = parseInt(document.getElementById('qty').value);
     document.getElementById('qtyDisplay').textContent = qty;
-    const total = PRICE * qty;
+    const subtotal = PRICE * qty;
+    const discount = Math.round(subtotal * discountPercent / 100);
+    const total = subtotal - discount;
+
+    if (discountPercent > 0) {
+        document.getElementById('discountRow').style.display = 'flex';
+        document.getElementById('discountDisplay').textContent = '-' + discount.toLocaleString('vi-VN') + 'đ (' + discountPercent + '%)';
+    } else {
+        document.getElementById('discountRow').style.display = 'none';
+    }
     document.getElementById('totalDisplay').textContent = total.toLocaleString('vi-VN') + 'đ';
+}
+
+function applyPromo() {
+    const code = document.getElementById('promoCode').value.trim().toUpperCase();
+    const result = document.getElementById('promoResult');
+    if (!code) {
+        result.className = 'promo-result error';
+        result.textContent = '❌ Vui lòng nhập mã giảm giá';
+        return;
+    }
+    const promo = PROMO_CODES[code];
+    if (promo) {
+        discountPercent = promo.percent;
+        result.className = 'promo-result success';
+        result.innerHTML = '✅ Áp dụng thành công: <strong>' + promo.label + '</strong>';
+        updateTotal();
+    } else {
+        discountPercent = 0;
+        result.className = 'promo-result error';
+        result.textContent = '❌ Mã giảm giá không hợp lệ hoặc đã hết hạn';
+        updateTotal();
+    }
 }
 
 // Set min date to tomorrow
