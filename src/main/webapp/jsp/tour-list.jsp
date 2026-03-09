@@ -99,6 +99,12 @@ a{text-decoration:none;color:inherit}
 .toast{position:fixed;top:100px;right:20px;padding:14px 24px;background:#10B981;color:#fff;border-radius:10px;font-weight:600;font-size:.88rem;z-index:9999;animation:slideIn .4s ease}
 @keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
 
+/* Floating Cart Button */
+.floating-cart{position:fixed;bottom:28px;right:28px;z-index:9998;display:flex;align-items:center;gap:10px;padding:14px 24px;background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;border-radius:999px;text-decoration:none;font-weight:800;font-size:.92rem;box-shadow:0 8px 30px rgba(37,99,235,.4);transition:.3s;animation:bounceIn .5s ease}
+.floating-cart:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(37,99,235,.5)}
+.floating-cart .fc-badge{background:#EF4444;color:#fff;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;box-shadow:0 2px 6px rgba(239,68,68,.4)}
+@keyframes bounceIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+
 @media(max-width:768px){
     .toolbar{flex-direction:column}
     .toolbar-search{width:100%}
@@ -207,8 +213,8 @@ a{text-decoration:none;color:inherit}
                                 </div>
                                 <c:choose>
                                     <c:when test="${isLoggedIn}">
-                                        <a href="${ctx}/booking?tourId=${tour.tourId}" class="tour-btn tour-btn-book" onclick="event.stopPropagation()">
-                                            <i class="fas fa-shopping-cart"></i> Đặt Tour
+                                        <a href="${ctx}/cart?action=add&id=${tour.tourId}" class="tour-btn tour-btn-book" onclick="event.stopPropagation()">
+                                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ
                                         </a>
                                     </c:when>
                                     <c:otherwise>
@@ -259,16 +265,31 @@ a{text-decoration:none;color:inherit}
 
 <jsp:include page="/common/_footer.jsp"/>
 
+<!-- Floating Cart Button -->
+<c:if test="${not empty sessionScope.cart}">
+    <a href="${ctx}/cart" class="floating-cart">
+        <i class="fas fa-shopping-cart"></i> Giỏ hàng
+        <span class="fc-badge">${sessionScope.cart.size()}</span>
+    </a>
+</c:if>
+
 <!-- Success Toast -->
-<c:if test="${param.success != null}">
+<c:if test="${not empty sessionScope.success}">
     <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i> ${sessionScope.success}
+    </div>
+    <script>setTimeout(function(){document.getElementById('toast').style.display='none';},3000);</script>
+    <% session.removeAttribute("success"); %>
+</c:if>
+<c:if test="${param.success != null}">
+    <div class="toast" id="toast2">
         <i class="fas fa-check-circle"></i> 
         <c:choose>
             <c:when test="${param.success == 'booked'}">Đặt tour thành công!</c:when>
             <c:otherwise>Thao tác thành công!</c:otherwise>
         </c:choose>
     </div>
-    <script>setTimeout(function(){document.getElementById('toast').style.display='none';},3000);</script>
+    <script>setTimeout(function(){document.getElementById('toast2').style.display='none';},3000);</script>
 </c:if>
 
 <style>@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}</style>

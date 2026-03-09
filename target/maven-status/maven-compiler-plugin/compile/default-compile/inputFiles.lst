@@ -37,6 +37,7 @@ E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\controller\TourCompareServlet.jav
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\entity\ChatbotLog.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\controller\RegisterServlet.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\entity\Payment.java
+E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\controller\AdminCrudServlet.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\controller\ExploreServlet.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\dto\OrderDetailDTO.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\entity\TourSchedule.java

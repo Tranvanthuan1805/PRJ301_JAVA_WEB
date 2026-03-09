@@ -32,8 +32,14 @@ public class GoogleAuthServlet extends HttpServlet {
 
     // ═══ CẤU HÌNH GOOGLE OAUTH ═══
     // Set environment variables: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
-    private static final String CLIENT_ID     = System.getenv("GOOGLE_CLIENT_ID") != null ? System.getenv("GOOGLE_CLIENT_ID") : "YOUR_CLIENT_ID";
-    private static final String CLIENT_SECRET = System.getenv("GOOGLE_CLIENT_SECRET") != null ? System.getenv("GOOGLE_CLIENT_SECRET") : "YOUR_CLIENT_SECRET";
+    private static final String CLIENT_ID;
+    private static final String CLIENT_SECRET;
+    static {
+        java.util.Properties p = new java.util.Properties();
+        try { p.load(GoogleAuthServlet.class.getResourceAsStream("/google-oauth.properties")); } catch (Exception ignored) {}
+        CLIENT_ID     = p.getProperty("client_id",     System.getenv("GOOGLE_CLIENT_ID") != null ? System.getenv("GOOGLE_CLIENT_ID") : "");
+        CLIENT_SECRET = p.getProperty("client_secret",  System.getenv("GOOGLE_CLIENT_SECRET") != null ? System.getenv("GOOGLE_CLIENT_SECRET") : "");
+    }
 
     // Google OAuth endpoints
     private static final String AUTH_URL     = "https://accounts.google.com/o/oauth2/v2/auth";

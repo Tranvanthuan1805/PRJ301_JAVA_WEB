@@ -37,6 +37,7 @@ com\dananghub\controller\AdminTourServlet.class
 com\dananghub\controller\PricingServlet.class
 com\dananghub\filter\EncodingFilter.class
 com\dananghub\entity\ProviderSubscription.class
+com\dananghub\controller\AdminCrudServlet.class
 com\dananghub\dao\BookingDAO.class
 com\dananghub\controller\ProviderServlet.class
 com\dananghub\controller\TourCompareServlet.class

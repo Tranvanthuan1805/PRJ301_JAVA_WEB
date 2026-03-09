@@ -137,6 +137,12 @@ public class AdminDashboardServlet extends HttpServlet {
             List<?> tourList = tourDAO.findAllIncludeInactive();
             request.setAttribute("tourList", tourList);
 
+            // Categories for SPA section
+            try {
+                List<?> categoryList = em.createQuery("SELECT c FROM Category c ORDER BY c.categoryName").getResultList();
+                request.setAttribute("categoryList", categoryList);
+            } catch (Exception ignored) {}
+
             // All providers for SPA section
             try {
                 List<?> providerList = em.createQuery("SELECT p FROM Provider p ORDER BY p.joinDate DESC").getResultList();

@@ -253,11 +253,21 @@
 
     <!-- ═══ SPA SECTION: CUSTOMERS ═══ -->
     <div class="spa-section" id="sec-customers" style="display:none">
+        <div class="ai-metrics" style="margin-bottom:24px">
+            <div class="ai-metric"><small>Tổng Người Dùng</small><div class="val purple">${totalUsers}</div></div>
+            <div class="ai-metric"><small>Admin</small><div class="val warning">1</div></div>
+            <div class="ai-metric"><small>Khách Hàng</small><div class="val success">${totalUsers - 1}</div></div>
+        </div>
         <div class="card">
-            <h3><i class="fas fa-users"></i> Danh Sách Khách Hàng <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+                <h3 style="margin:0"><i class="fas fa-users"></i> Danh Sách Khách Hàng <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
+                <a href="${pageContext.request.contextPath}/admin/crud/customer-edit" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;text-decoration:none;transition:.3s;box-shadow:0 4px 15px rgba(59,130,246,.3)">
+                    <i class="fas fa-user-plus"></i> Thêm Khách Hàng
+                </a>
+            </div>
             <div style="overflow-x:auto">
             <table class="data-table">
-                <thead><tr><th>#</th><th>Username</th><th>Họ Tên</th><th>Email</th><th>SĐT</th><th>Vai Trò</th><th>Ngày Tạo</th></tr></thead>
+                <thead><tr><th>#</th><th>Username</th><th>Họ Tên</th><th>Email</th><th>SĐT</th><th>Vai Trò</th><th>Ngày Tạo</th><th>Thao Tác</th></tr></thead>
                 <tbody>
                 <c:forEach items="${customerList}" var="u" varStatus="s">
                     <tr>
@@ -266,11 +276,49 @@
                         <td style="color:#fff;font-weight:600">${u.fullName != null ? u.fullName : '—'}</td>
                         <td>${u.email}</td>
                         <td>${u.phoneNumber != null ? u.phoneNumber : '—'}</td>
-                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${u.role.roleName == 'ADMIN' ? 'background:rgba(245,158,11,.15);color:#FBBF24' : 'background:rgba(59,130,246,.15);color:#60A5FA'}">${u.role.roleName}</span></td>
+                        <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${u.role.roleName == 'ADMIN' ? 'background:rgba(245,158,11,.15);color:#FBBF24' : u.role.roleName == 'PROVIDER' ? 'background:rgba(139,92,246,.15);color:#A78BFA' : 'background:rgba(59,130,246,.15);color:#60A5FA'}">${u.role.roleName}</span></td>
                         <td style="font-size:.82rem;color:rgba(255,255,255,.4)"><fmt:formatDate value="${u.createdAt}" pattern="dd/MM/yyyy"/></td>
+                        <td>
+                            <div style="display:flex;gap:6px">
+                                <a href="${pageContext.request.contextPath}/admin/crud/customer-edit?id=${u.userId}" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(59,130,246,.15);color:#60A5FA;text-decoration:none" title="Sửa"><i class="fas fa-edit"></i></a>
+                                <a href="${pageContext.request.contextPath}/admin/crud/customer-delete?id=${u.userId}" onclick="return confirm('Vô hiệu hóa người dùng @${u.username}?')" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171;text-decoration:none" title="Vô hiệu hóa"><i class="fas fa-ban"></i></a>
+                            </div>
+                        </td>
                     </tr>
                 </c:forEach>
-                <c:if test="${empty customerList}"><tr><td colspan="7" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có dữ liệu khách hàng</td></tr></c:if>
+                <c:if test="${empty customerList}"><tr><td colspan="8" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có dữ liệu khách hàng</td></tr></c:if>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- ── Danh Mục (Categories) ── -->
+        <div class="card" style="margin-top:24px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+                <h3 style="margin:0"><i class="fas fa-folder-tree"></i> Quản Lý Danh Mục <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Categories)</span></h3>
+                <a href="${pageContext.request.contextPath}/admin/crud/category-edit" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;text-decoration:none;transition:.3s;box-shadow:0 4px 15px rgba(139,92,246,.3)">
+                    <i class="fas fa-folder-plus"></i> Thêm Danh Mục
+                </a>
+            </div>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>#</th><th>Tên Danh Mục</th><th>Mô Tả</th><th>Icon</th><th>Thao Tác</th></tr></thead>
+                <tbody>
+                <c:forEach items="${categoryList}" var="c" varStatus="s">
+                    <tr>
+                        <td style="color:#64748B;font-weight:600">${s.index + 1}</td>
+                        <td style="color:#fff;font-weight:600">${c.categoryName}</td>
+                        <td style="font-size:.82rem;color:rgba(255,255,255,.5)">${not empty c.description ? c.description : '—'}</td>
+                        <td><c:if test="${not empty c.iconUrl}"><img src="${c.iconUrl}" style="width:28px;height:28px;border-radius:6px;object-fit:cover"></c:if><c:if test="${empty c.iconUrl}"><span style="color:rgba(255,255,255,.2)">—</span></c:if></td>
+                        <td>
+                            <div style="display:flex;gap:6px">
+                                <a href="${pageContext.request.contextPath}/admin/crud/category-edit?id=${c.categoryId}" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(59,130,246,.15);color:#60A5FA;text-decoration:none" title="Sửa"><i class="fas fa-edit"></i></a>
+                                <a href="${pageContext.request.contextPath}/admin/crud/category-delete?id=${c.categoryId}" onclick="return confirm('Xóa danh mục ${c.categoryName}?')" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171;text-decoration:none" title="Xóa"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty categoryList}"><tr><td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có danh mục</td></tr></c:if>
                 </tbody>
             </table>
             </div>
