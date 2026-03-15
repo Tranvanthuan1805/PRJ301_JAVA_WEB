@@ -47,25 +47,34 @@ public class GoogleAuthServlet extends HttpServlet {
     private static final String USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
 
     private String getRedirectUri(HttpServletRequest request) {
-        // Tự tạo redirect URI từ request để linh hoạt (localhost / production)
-        String scheme = request.getScheme();
         String serverName = request.getServerName();
-        int port = request.getServerPort();
         String ctx = request.getContextPath();
 
-        // Khi chạy localhost qua HTTPS (self-signed), Google Console chỉ đăng ký HTTP:9090
-        // => Luôn dùng HTTP redirect URI trên localhost để tránh redirect_uri_mismatch
+        // Localhost: always use HTTP:9090
         if ("localhost".equals(serverName) || "127.0.0.1".equals(serverName)) {
             return "http://localhost:9090" + ctx + "/google-auth";
         }
 
-        StringBuilder uri = new StringBuilder();
-        uri.append(scheme).append("://").append(serverName);
-        if (("http".equals(scheme) && port != 80) || ("https".equals(scheme) && port != 443)) {
-            uri.append(":").append(port);
+        // Production / Render / Railway: detect real scheme from proxy headers
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        if (scheme == null || scheme.isEmpty()) {
+            scheme = request.getScheme();
         }
-        uri.append(ctx).append("/google-auth");
-        return uri.toString();
+
+        // Detect real host (Render sets X-Forwarded-Host)
+        String host = request.getHeader("X-Forwarded-Host");
+        if (host == null || host.isEmpty()) {
+            host = request.getHeader("Host");
+        }
+        if (host == null || host.isEmpty()) {
+            host = serverName;
+            int port = request.getServerPort();
+            if (("http".equals(scheme) && port != 80) || ("https".equals(scheme) && port != 443)) {
+                host += ":" + port;
+            }
+        }
+
+        return scheme + "://" + host + ctx + "/google-auth";
     }
 
     @Override
