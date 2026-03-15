@@ -527,7 +527,14 @@
                             <button class="tab-btn" onclick="switchTab(event, 'schedule')">Lịch Trình</button>
                             <button class="tab-btn" onclick="switchTab(event, 'policy')">Chính Sách</button>
                             <button class="tab-btn" onclick="switchTab(event, 'reviews')">Đánh Giá</button>
+                            <a href="${pageContext.request.contextPath}/tour-3d?id=${tour.tourId}" class="tab-btn tab-btn-3d" style="background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;text-decoration:none;box-shadow:0 4px 12px rgba(124,58,237,.2);display:flex;align-items:center;gap:6px;animation:pulse3d 2s infinite">
+                                <i class="fas fa-cube" style="animation:spin3d 3s linear infinite"></i> Xem 3D
+                            </a>
                         </div>
+                        <style>
+                        @keyframes pulse3d{0%,100%{box-shadow:0 4px 12px rgba(124,58,237,.2)}50%{box-shadow:0 4px 24px rgba(124,58,237,.5)}}
+                        @keyframes spin3d{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+                        </style>
 
                         <div class="tab-panel active" id="desc">
                             <c:choose>
@@ -646,6 +653,9 @@
                                         </button>
                                     </c:otherwise>
                                 </c:choose>
+                                <a href="${pageContext.request.contextPath}/tour-3d?id=${tour.tourId}" class="btn-book-lg" style="background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;box-shadow:0 6px 20px rgba(124,58,237,.25);position:relative;overflow:hidden">
+                                    <i class="fas fa-cube" style="animation:spin3d 3s linear infinite"></i> XEM TOUR 3D 360°
+                                </a>
                                 <a href="#" class="btn-book-lg btn-book-outline">
                                     <i class="fas fa-phone-alt"></i> Liên Hệ Tư Vấn
                                 </a>

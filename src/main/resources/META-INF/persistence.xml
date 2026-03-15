@@ -41,9 +41,12 @@
         <properties>
             <!-- Supabase PostgreSQL Connection (Transaction Pooler - port 6543) -->
             <property name="jakarta.persistence.jdbc.driver"   value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url"      value="jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres?sslmode=require&amp;prepareThreshold=0"/>
+            <property name="jakarta.persistence.jdbc.url"      value="jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres?sslmode=require&amp;prepareThreshold=0&amp;connectTimeout=5&amp;socketTimeout=10"/>
             <property name="jakarta.persistence.jdbc.user"     value="postgres.cbbdijhwewpptvmgujcz"/>
             <property name="jakarta.persistence.jdbc.password" value="dK6W6dygBt2%uTw"/>
+
+            <!-- Fast-fail connection settings -->
+            <property name="jakarta.persistence.query.timeout" value="5000"/>
 
             <!-- Hibernate Settings -->
             <property name="hibernate.dialect"       value="org.hibernate.dialect.PostgreSQLDialect"/>
@@ -52,11 +55,16 @@
             <property name="hibernate.format_sql"     value="false"/>
             <property name="hibernate.globally_quoted_identifiers" value="true"/>
 
-            <!-- Connection Pool (C3P0) - Minimal for Supabase free tier -->
-            <property name="hibernate.c3p0.min_size" value="1"/>
-            <property name="hibernate.c3p0.max_size" value="2"/>
+            <!-- PERF: Batch fetching to fix N+1 queries (e.g. Tour -> Category) -->
+            <property name="hibernate.default_batch_fetch_size" value="16"/>
+            <property name="hibernate.order_inserts" value="true"/>
+            <property name="hibernate.order_updates" value="true"/>
+
+            <!-- Connection Pool (C3P0) - Increased for better concurrency -->
+            <property name="hibernate.c3p0.min_size" value="2"/>
+            <property name="hibernate.c3p0.max_size" value="5"/>
             <property name="hibernate.c3p0.timeout" value="60"/>
-            <property name="hibernate.c3p0.max_statements" value="0"/>
+            <property name="hibernate.c3p0.max_statements" value="50"/>
             <property name="hibernate.c3p0.idle_test_period" value="30"/>
             <property name="hibernate.c3p0.testConnectionOnCheckout" value="true"/>
             <property name="hibernate.c3p0.preferredTestQuery" value="SELECT 1"/>

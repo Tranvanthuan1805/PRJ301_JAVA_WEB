@@ -297,24 +297,21 @@
                     .stats-bar {
                         display: grid;
                         grid-template-columns: repeat(4, 1fr);
-                        background: #1B1F3B;
+                        background: transparent;
                         border-radius: 24px;
                         position: relative;
                         overflow: hidden
                     }
 
                     .stats-bar::before {
-                        content: '';
-                        position: absolute;
-                        inset: 0;
-                        background: radial-gradient(circle at 20% 50%, rgba(255, 111, 97, .12), transparent 50%), radial-gradient(circle at 80% 50%, rgba(0, 180, 216, .12), transparent 50%)
+                        display: none
                     }
 
                     .st {
                         padding: 42px 28px;
                         text-align: center;
                         position: relative;
-                        border-right: 1px solid rgba(255, 255, 255, .06)
+                        border-right: 1px solid rgba(0, 0, 0, .08)
                     }
 
                     .st:last-child {
@@ -324,13 +321,13 @@
                     .st .num {
                         font-size: 2.4rem;
                         font-weight: 800;
-                        color: #fff;
+                        color: #F97316;
                         letter-spacing: -1px
                     }
 
                     .st .lab {
                         font-size: .88rem;
-                        color: rgba(255, 255, 255, .5);
+                        color: #64748B;
                         margin-top: 6px;
                         font-weight: 500
                     }
@@ -1016,19 +1013,19 @@
                 <section class="stats">
                     <div class="stats-bar rv">
                         <div class="st">
-                            <div class="num" style="color:#2563EB" data-count="100" data-suffix="+">0</div>
+                            <div class="num" data-count="100" data-suffix="+">0</div>
                             <div class="lab">Tours Xác Minh</div>
                         </div>
                         <div class="st">
-                            <div class="num" style="color:#0EA5E9" data-count="50" data-suffix="+">0</div>
+                            <div class="num" data-count="50" data-suffix="+">0</div>
                             <div class="lab">Đối Tác Uy Tín</div>
                         </div>
                         <div class="st">
-                            <div class="num" style="color:#10B981" data-count="5000" data-suffix="+" data-format="K">0</div>
+                            <div class="num" data-count="5000" data-suffix="+" data-format="K">0</div>
                             <div class="lab">Khách Hài Lòng</div>
                         </div>
                         <div class="st">
-                            <div class="num" style="color:#F59E0B" data-count="4.9" data-suffix="★" data-decimal="true">0</div>
+                            <div class="num" data-count="4.9" data-suffix="★" data-decimal="true">0</div>
                             <div class="lab">Đánh Giá</div>
                         </div>
                     </div>
@@ -1464,125 +1461,386 @@
                 })();
                 </script>
 
-                <!-- ═══ ĐIỂM ĐẾN YÊU THÍCH ═══ -->
-                <section class="dest-section">
-                    <div class="dest-header">
-                        <span class="dest-label"><i class="fas fa-compass"></i> Khám phá</span>
-                        <h2>Điểm Đến <span class="dest-hl">Yêu Thích</span></h2>
-                        <p>Những địa danh nổi tiếng nhất Đà Nẵng — từ Cầu Vàng đến phố cổ Hội An, mỗi nơi đều mang một câu chuyện riêng.</p>
+                <!-- ═══ TÍNH NĂNG NỔI BẬT — CUTE MARQUEE ═══ -->
+                <section class="ft-marquee-section">
+                    <div class="ft-marquee-header">
+                        <span class="ft-marquee-badge"><i class="fas fa-sparkles"></i> Tại sao chọn chúng tôi?</span>
+                        <h2>Tính Năng <span style="color:#FF6F61">Nổi Bật</span></h2>
+                        <p>Trải nghiệm đặt tour thông minh, tiện lợi với những tính năng được thiết kế dành riêng cho bạn.</p>
                     </div>
+                    <div class="ft-marquee-track-wrapper">
+                        <div class="ft-marquee-track">
+                            <!-- Card 1 -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#8B5CF6,#A78BFA)">
+                                <div class="ft-fcard-emoji">🤖</div>
+                                <h4>AI Chatbot</h4>
+                                <p>Trợ lý AI thông minh hỗ trợ bạn 24/7, gợi ý tour phù hợp với sở thích cá nhân.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <!-- Card 2 -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#10B981,#34D399)">
+                                <div class="ft-fcard-emoji">📱</div>
+                                <h4>Đặt Tour Online</h4>
+                                <p>Đặt tour nhanh chóng chỉ vài bước, thanh toán an toàn với nhiều phương thức.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <!-- Card 3 -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#EF4444,#F87171)">
+                                <div class="ft-fcard-emoji">🗺️</div>
+                                <h4>Bản Đồ Thông Minh</h4>
+                                <p>Khám phá Đà Nẵng qua bản đồ tương tác, ghim vị trí và nhận gợi ý địa điểm gần.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <!-- Card 4 -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#F59E0B,#FBBF24)">
+                                <div class="ft-fcard-emoji">⚡</div>
+                                <h4>So Sánh Tour</h4>
+                                <p>So sánh giá, đánh giá và dịch vụ giữa các tour để chọn lựa tốt nhất cho bạn.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <!-- Card 5 -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#3B82F6,#60A5FA)">
+                                <div class="ft-fcard-emoji">🎨</div>
+                                <h4>Tour 3D Gallery</h4>
+                                <p>Xem trước điểm đến với bộ sưu tập 3D sống động trước khi quyết định đặt tour.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <!-- Card 6 -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#EC4899,#F472B6)">
+                                <div class="ft-fcard-emoji">💳</div>
+                                <h4>Thanh Toán Đa Dạng</h4>
+                                <p>Hỗ trợ VNPAY, MoMo, ShopeePay, thẻ quốc tế và chuyển khoản ngân hàng.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <!-- Card 7 -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#06B6D4,#22D3EE)">
+                                <div class="ft-fcard-emoji">🌐</div>
+                                <h4>Đa Ngôn Ngữ</h4>
+                                <p>Hỗ trợ 5 ngôn ngữ: Tiếng Việt, English, 한국어, 日本語, 中文.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <!-- Card 8 -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#F97316,#FB923C)">
+                                <div class="ft-fcard-emoji">📊</div>
+                                <h4>Dự Đoán AI</h4>
+                                <p>Mạng nơ-ron nhân tạo phân tích xu hướng du lịch, giúp bạn đặt tour đúng thời điểm.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
 
-                    <div class="dest-grid">
-                        <a href="${pageContext.request.contextPath}/tour?search=cau+rong" class="dest-card dest-lg rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-fire"></i> Hot</div>
-                            <div class="dest-info"><h3>Cầu Rồng</h3><p>Dragon Bridge · Phun lửa T7, CN</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=ba+na" class="dest-card rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-star"></i> 4.9</div>
-                            <div class="dest-info"><h3>Bà Nà Hills</h3><p>Làng Pháp · Fantasy Park</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=cau+vang" class="dest-card rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/cau-vang.png" alt="Cầu Vàng" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-camera"></i> Check-in</div>
-                            <div class="dest-info"><h3>Cầu Vàng</h3><p>Golden Bridge · Bàn Tay Khổng Lồ</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=asia+park" class="dest-card rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/asia-park.png" alt="Asia Park" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-child"></i> Gia đình</div>
-                            <div class="dest-info"><h3>Asia Park</h3><p>Sun Wheel 115m · Công viên</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="dest-card dest-wide rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-trophy"></i> Top 6 TG</div>
-                            <div class="dest-info"><h3>Biển Mỹ Khê</h3><p>Forbes bình chọn · Bãi biển đẹp nhất</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="dest-card rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-landmark"></i> UNESCO</div>
-                            <div class="dest-info"><h3>Hội An</h3><p>Phố cổ · Đèn lồng huyền ảo</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="dest-card dest-lg rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-leaf"></i> Eco</div>
-                            <div class="dest-info"><h3>Sơn Trà</h3><p>Bán đảo xanh · Voọc chà vá</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="dest-card rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/ngu-hanh-son.png" alt="Ngũ Hành Sơn" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-mountain"></i> Trekking</div>
-                            <div class="dest-info"><h3>Ngũ Hành Sơn</h3><p>Marble Mountains · Hang động</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=linh+ung" class="dest-card rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/chua-linh-ung.png" alt="Chùa Linh Ứng" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-pray"></i> Tâm linh</div>
-                            <div class="dest-info"><h3>Chùa Linh Ứng</h3><p>Tượng Phật Bà 67m · Panorama</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=non+nuoc" class="dest-card rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/non-nuoc.png" alt="Non Nước" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-umbrella-beach"></i> Biển</div>
-                            <div class="dest-info"><h3>Non Nước</h3><p>Lướt sóng · Làng đá mỹ nghệ</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=cu+lao+cham" class="dest-card dest-wide rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Cù Lao Chàm" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-water"></i> Di sản</div>
-                            <div class="dest-info"><h3>Cù Lao Chàm</h3><p>Lặn san hô · Khu dự trữ sinh quyển UNESCO</p></div>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/tour?search=cho+han" class="dest-card rv">
-                            <img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Chợ Hàn" loading="lazy">
-                            <div class="dest-ov"></div>
-                            <div class="dest-tag"><i class="fas fa-utensils"></i> Ẩm thực</div>
-                            <div class="dest-info"><h3>Chợ Hàn</h3><p>Đặc sản · Quà lưu niệm Đà Nẵng</p></div>
-                        </a>
+                            <!-- DUPLICATE for seamless loop -->
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#8B5CF6,#A78BFA)">
+                                <div class="ft-fcard-emoji">🤖</div>
+                                <h4>AI Chatbot</h4>
+                                <p>Trợ lý AI thông minh hỗ trợ bạn 24/7, gợi ý tour phù hợp với sở thích cá nhân.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#10B981,#34D399)">
+                                <div class="ft-fcard-emoji">📱</div>
+                                <h4>Đặt Tour Online</h4>
+                                <p>Đặt tour nhanh chóng chỉ vài bước, thanh toán an toàn với nhiều phương thức.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#EF4444,#F87171)">
+                                <div class="ft-fcard-emoji">🗺️</div>
+                                <h4>Bản Đồ Thông Minh</h4>
+                                <p>Khám phá Đà Nẵng qua bản đồ tương tác, ghim vị trí và nhận gợi ý địa điểm gần.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#F59E0B,#FBBF24)">
+                                <div class="ft-fcard-emoji">⚡</div>
+                                <h4>So Sánh Tour</h4>
+                                <p>So sánh giá, đánh giá và dịch vụ giữa các tour để chọn lựa tốt nhất cho bạn.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#3B82F6,#60A5FA)">
+                                <div class="ft-fcard-emoji">🎨</div>
+                                <h4>Tour 3D Gallery</h4>
+                                <p>Xem trước điểm đến với bộ sưu tập 3D sống động trước khi quyết định đặt tour.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#EC4899,#F472B6)">
+                                <div class="ft-fcard-emoji">💳</div>
+                                <h4>Thanh Toán Đa Dạng</h4>
+                                <p>Hỗ trợ VNPAY, MoMo, ShopeePay, thẻ quốc tế và chuyển khoản ngân hàng.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#06B6D4,#22D3EE)">
+                                <div class="ft-fcard-emoji">🌐</div>
+                                <h4>Đa Ngôn Ngữ</h4>
+                                <p>Hỗ trợ 5 ngôn ngữ: Tiếng Việt, English, 한국어, 日本語, 中文.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#F97316,#FB923C)">
+                                <div class="ft-fcard-emoji">📊</div>
+                                <h4>Dự Đoán AI</h4>
+                                <p>Mạng nơ-ron nhân tạo phân tích xu hướng du lịch, giúp bạn đặt tour đúng thời điểm.</p>
+                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
                 <style>
-                    .dest-section{max-width:1440px;margin:0 auto;padding:80px 24px 60px}
-                    .dest-header{text-align:center;margin-bottom:48px}
-                    .dest-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:#2563EB;background:rgba(37,99,235,.06);padding:6px 16px;border-radius:999px;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-                    .dest-header h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#1E293B;margin-bottom:12px;letter-spacing:-.02em}
+                    /* ═══ CUTE FEATURE MARQUEE ═══ */
+                    .ft-marquee-section{padding:60px 0 50px;overflow:hidden;position:relative}
+                    .ft-marquee-section::before{content:'';position:absolute;top:0;left:0;right:0;height:100%;background:linear-gradient(180deg,rgba(248,250,252,.6) 0%,rgba(255,255,255,0) 30%,rgba(255,255,255,0) 70%,rgba(248,250,252,.6) 100%);pointer-events:none;z-index:1}
+
+                    .ft-marquee-header{text-align:center;max-width:600px;margin:0 auto 36px;padding:0 24px}
+                    .ft-marquee-badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:#FF6F61;background:rgba(255,111,97,.06);padding:6px 16px;border-radius:999px;margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase}
+                    .ft-marquee-header h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;color:#1E293B;margin-bottom:10px;letter-spacing:-.02em}
+                    .ft-marquee-header p{color:#64748B;font-size:.9rem;line-height:1.7}
+
+                    .ft-marquee-track-wrapper{position:relative;width:100%}
+                    .ft-marquee-track-wrapper::before,.ft-marquee-track-wrapper::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+                    .ft-marquee-track-wrapper::before{left:0;background:linear-gradient(90deg,#fff,transparent)}
+                    .ft-marquee-track-wrapper::after{right:0;background:linear-gradient(270deg,#fff,transparent)}
+
+                    .ft-marquee-track{display:flex;gap:20px;animation:ftMarqueeScroll 40s linear infinite;width:fit-content;padding:10px 0}
+                    .ft-marquee-track:hover{animation-play-state:paused}
+
+                    @keyframes ftMarqueeScroll{
+                        0%{transform:translateX(0)}
+                        100%{transform:translateX(-50%)}
+                    }
+
+                    .ft-fcard{flex-shrink:0;width:220px;background:var(--bg);border-radius:22px;padding:28px 22px 22px;color:#fff;position:relative;cursor:default;transition:all .35s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 28px rgba(0,0,0,.12)}
+                    .ft-fcard:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 16px 40px rgba(0,0,0,.18)}
+
+                    .ft-fcard-emoji{font-size:2.2rem;margin-bottom:14px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.15));line-height:1}
+                    .ft-fcard h4{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:800;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+                    .ft-fcard p{font-size:.76rem;line-height:1.6;color:rgba(255,255,255,.8);margin-bottom:16px}
+                    .ft-fcard-icon{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;transition:all .3s;backdrop-filter:blur(4px)}
+                    .ft-fcard:hover .ft-fcard-icon{background:rgba(255,255,255,.35);transform:translateY(-2px)}
+
+                    @media(max-width:768px){
+                        .ft-fcard{width:190px;padding:22px 18px 18px;border-radius:18px}
+                        .ft-fcard-emoji{font-size:1.8rem;margin-bottom:10px}
+                        .ft-fcard h4{font-size:.95rem}
+                        .ft-fcard p{font-size:.72rem}
+                        .ft-marquee-section{padding:40px 0 30px}
+                    }
+                </style>
+
+                <!-- ═══ ĐIỂM ĐẾN YÊU THÍCH — STICKY STACKING ═══ -->
+                <section class="dest-section" id="destSection">
+                    <div class="dest-header">
+                        <span class="dest-label"><i class="fas fa-compass"></i> Khám phá</span>
+                        <h2>Điểm Đến <span class="dest-hl">Yêu Thích</span></h2>
+                        <p>Những địa danh nổi tiếng nhất Đà Nẵng — cuộn để khám phá từng điểm đến tuyệt vời.</p>
+                    </div>
+
+                    <div class="ds-wrap">
+                        <!-- 1: Bà Nà Hills -->
+                        <div class="ds-card" style="--ci:0;--ac:#8B5CF6">
+                            <a href="${pageContext.request.contextPath}/tour?search=ba+na" class="ds-inner">
+                                <div class="ds-img"><img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills" loading="lazy"></div>
+                                <div class="ds-body">
+                                    <div class="ds-top">
+                                        <span class="ds-num">01</span>
+                                        <span class="ds-badge" style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);color:#fff"><i class="fas fa-crown"></i> #1 Đà Nẵng</span>
+                                        <span class="ds-rating"><i class="fas fa-star"></i> 4.9</span>
+                                    </div>
+                                    <h3>Bà Nà Hills</h3>
+                                    <p class="ds-loc"><i class="fas fa-map-marker-alt"></i> Hòa Vang, Đà Nẵng · <span class="ds-dist">25km từ trung tâm</span></p>
+                                    <p class="ds-desc">Cầu Vàng nổi tiếng thế giới, Làng Pháp trên đỉnh núi 1,487m. Fantasy Park, vườn hoa Le Jardin D'Amour.</p>
+                                    <div class="ds-chips">
+                                        <span style="--cc:#8B5CF6"><i class="fas fa-camera"></i> Check-in</span>
+                                        <span style="--cc:#EC4899"><i class="fas fa-heart"></i> Cáp treo</span>
+                                        <span style="--cc:#F59E0B"><i class="fas fa-clock"></i> 1 ngày</span>
+                                    </div>
+                                    <span class="ds-cta" style="background:linear-gradient(135deg,#8B5CF6,#A78BFA)">Khám phá <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- 2: Cầu Rồng -->
+                        <div class="ds-card" style="--ci:1;--ac:#EF4444">
+                            <a href="${pageContext.request.contextPath}/tour?search=cau+rong" class="ds-inner">
+                                <div class="ds-img"><img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng" loading="lazy"></div>
+                                <div class="ds-body">
+                                    <div class="ds-top">
+                                        <span class="ds-num">02</span>
+                                        <span class="ds-badge" style="background:linear-gradient(135deg,#EF4444,#F87171);color:#fff"><i class="fas fa-fire"></i> Hot nhất</span>
+                                        <span class="ds-rating"><i class="fas fa-star"></i> 5.0</span>
+                                    </div>
+                                    <h3>Cầu Rồng</h3>
+                                    <p class="ds-loc"><i class="fas fa-map-marker-alt"></i> Trung tâm TP · <span class="ds-dist">Sông Hàn</span></p>
+                                    <p class="ds-desc">Biểu tượng Đà Nẵng, phun lửa & nước T7-CN 21h. Cây cầu rồng 666m lung linh sắc màu về đêm.</p>
+                                    <div class="ds-chips">
+                                        <span style="--cc:#EF4444"><i class="fas fa-fire-alt"></i> Phun lửa</span>
+                                        <span style="--cc:#3B82F6"><i class="fas fa-moon"></i> Đêm</span>
+                                        <span style="--cc:#10B981"><i class="fas fa-wallet"></i> Miễn phí</span>
+                                    </div>
+                                    <span class="ds-cta" style="background:linear-gradient(135deg,#EF4444,#F87171)">Khám phá <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- 3: Hội An -->
+                        <div class="ds-card" style="--ci:2;--ac:#F59E0B">
+                            <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="ds-inner">
+                                <div class="ds-img"><img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An" loading="lazy"></div>
+                                <div class="ds-body">
+                                    <div class="ds-top">
+                                        <span class="ds-num">03</span>
+                                        <span class="ds-badge" style="background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F"><i class="fas fa-landmark"></i> UNESCO</span>
+                                        <span class="ds-rating"><i class="fas fa-star"></i> 4.8</span>
+                                    </div>
+                                    <h3>Phố Cổ Hội An</h3>
+                                    <p class="ds-loc"><i class="fas fa-map-marker-alt"></i> Hội An, Quảng Nam · <span class="ds-dist">30km</span></p>
+                                    <p class="ds-desc">Di sản UNESCO, phố đèn lồng lung linh, ẩm thực Cao Lầu - Mì Quảng, kiến trúc cổ trăm năm.</p>
+                                    <div class="ds-chips">
+                                        <span style="--cc:#F59E0B"><i class="far fa-lightbulb"></i> Đèn lồng</span>
+                                        <span style="--cc:#EC4899"><i class="fas fa-utensils"></i> Ẩm thực</span>
+                                        <span style="--cc:#10B981"><i class="fas fa-ticket-alt"></i> ~150K</span>
+                                    </div>
+                                    <span class="ds-cta" style="background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F">Khám phá <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- 4: Biển Mỹ Khê -->
+                        <div class="ds-card" style="--ci:3;--ac:#06B6D4">
+                            <a href="${pageContext.request.contextPath}/tour?categoryId=1" class="ds-inner">
+                                <div class="ds-img"><img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê" loading="lazy"></div>
+                                <div class="ds-body">
+                                    <div class="ds-top">
+                                        <span class="ds-num">04</span>
+                                        <span class="ds-badge" style="background:linear-gradient(135deg,#06B6D4,#22D3EE);color:#fff"><i class="fas fa-trophy"></i> Top 6 TG</span>
+                                        <span class="ds-rating"><i class="fas fa-star"></i> 4.7</span>
+                                    </div>
+                                    <h3>Biển Mỹ Khê</h3>
+                                    <p class="ds-loc"><i class="fas fa-map-marker-alt"></i> Ngũ Hành Sơn · <span class="ds-dist">Forbes Top 6</span></p>
+                                    <p class="ds-desc">Bãi biển đẹp nhất hành tinh (Forbes). Cát trắng mịn, nước biển trong xanh, lý tưởng lướt sóng.</p>
+                                    <div class="ds-chips">
+                                        <span style="--cc:#06B6D4"><i class="fas fa-swimmer"></i> Tắm biển</span>
+                                        <span style="--cc:#F59E0B"><i class="fas fa-sun"></i> Bình minh</span>
+                                        <span style="--cc:#10B981"><i class="fas fa-wallet"></i> Miễn phí</span>
+                                    </div>
+                                    <span class="ds-cta" style="background:linear-gradient(135deg,#06B6D4,#22D3EE)">Khám phá <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- 5: Sơn Trà -->
+                        <div class="ds-card" style="--ci:4;--ac:#10B981">
+                            <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="ds-inner">
+                                <div class="ds-img"><img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà" loading="lazy"></div>
+                                <div class="ds-body">
+                                    <div class="ds-top">
+                                        <span class="ds-num">05</span>
+                                        <span class="ds-badge" style="background:linear-gradient(135deg,#10B981,#34D399);color:#fff"><i class="fas fa-leaf"></i> Sinh thái</span>
+                                        <span class="ds-rating"><i class="fas fa-star"></i> 4.8</span>
+                                    </div>
+                                    <h3>Bán Đảo Sơn Trà</h3>
+                                    <p class="ds-loc"><i class="fas fa-map-marker-alt"></i> Sơn Trà · <span class="ds-dist">10km từ trung tâm</span></p>
+                                    <p class="ds-desc">Khu bảo tồn Voọc chà vá chân nâu. Chùa Linh Ứng, tượng Phật Bà 67m nhìn ra biển Đông.</p>
+                                    <div class="ds-chips">
+                                        <span style="--cc:#10B981"><i class="fas fa-hiking"></i> Trekking</span>
+                                        <span style="--cc:#8B5CF6"><i class="fas fa-pray"></i> Tâm linh</span>
+                                        <span style="--cc:#06B6D4"><i class="fas fa-paw"></i> Voọc</span>
+                                    </div>
+                                    <span class="ds-cta" style="background:linear-gradient(135deg,#10B981,#34D399)">Khám phá <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- 6: Ngũ Hành Sơn -->
+                        <div class="ds-card" style="--ci:5;--ac:#F97316">
+                            <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="ds-inner">
+                                <div class="ds-img"><img src="${pageContext.request.contextPath}/images/destinations/ngu-hanh-son.png" alt="Ngũ Hành Sơn" loading="lazy"></div>
+                                <div class="ds-body">
+                                    <div class="ds-top">
+                                        <span class="ds-num">06</span>
+                                        <span class="ds-badge" style="background:linear-gradient(135deg,#F97316,#FB923C);color:#fff"><i class="fas fa-mountain"></i> Di tích</span>
+                                        <span class="ds-rating"><i class="fas fa-star"></i> 4.6</span>
+                                    </div>
+                                    <h3>Ngũ Hành Sơn</h3>
+                                    <p class="ds-loc"><i class="fas fa-map-marker-alt"></i> Ngũ Hành Sơn · <span class="ds-dist">8km</span></p>
+                                    <p class="ds-desc">Marble Mountains — 5 ngọn núi đá hoa cương, chùa cổ, hang động kỳ bí, panorama toàn TP.</p>
+                                    <div class="ds-chips">
+                                        <span style="--cc:#F97316"><i class="fas fa-monument"></i> Chùa cổ</span>
+                                        <span style="--cc:#3B82F6"><i class="fas fa-gem"></i> Đá quý</span>
+                                        <span style="--cc:#8B5CF6"><i class="fas fa-cloud-sun"></i> Panorama</span>
+                                    </div>
+                                    <span class="ds-cta" style="background:linear-gradient(135deg,#F97316,#FB923C)">Khám phá <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <style>
+                    /* ═══ STICKY STACKING DESTINATIONS ═══ */
+                    .dest-section{max-width:1440px;margin:0 auto;padding:60px 24px 0}
+                    .dest-header{text-align:center;margin-bottom:36px}
+                    .dest-label{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:#2563EB;background:rgba(37,99,235,.06);padding:6px 16px;border-radius:999px;margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase}
+                    .dest-header h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#1E293B;margin-bottom:10px;letter-spacing:-.02em}
                     .dest-hl{color:#2563EB}
-                    .dest-header p{color:#64748B;font-size:.95rem;max-width:520px;margin:0 auto;line-height:1.7}
+                    .dest-header p{color:#64748B;font-size:.92rem;max-width:460px;margin:0 auto;line-height:1.7}
 
-                    .dest-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:210px;gap:14px;grid-auto-flow:dense}
+                    /* Stacking container */
+                    .ds-wrap{position:relative}
+                    .ds-card{position:sticky;top:calc(100px + var(--ci) * 20px);margin-bottom:16px;z-index:calc(var(--ci) + 1);transition:transform .4s cubic-bezier(.4,0,.2,1),box-shadow .4s}
+                    .ds-card:last-child{margin-bottom:0}
 
-                    .dest-card{position:relative;border-radius:18px;overflow:hidden;display:block;text-decoration:none;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-                    .dest-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.4,0,.2,1),filter .4s}
-                    .dest-ov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.03) 55%);transition:all .4s}
-                    .dest-tag{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;padding:5px 12px;border-radius:8px;font-size:.62rem;font-weight:700;display:flex;align-items:center;gap:4px;transition:all .35s;border:1px solid rgba(255,255,255,.12);opacity:0;transform:translateY(-8px)}
-                    .dest-info{position:absolute;bottom:0;left:0;right:0;padding:16px;color:#fff;transform:translateY(4px);transition:transform .4s cubic-bezier(.4,0,.2,1)}
-                    .dest-info::before{content:'';position:absolute;bottom:0;left:16px;width:0;height:3px;background:linear-gradient(90deg,#FFD166,#FF9F1C);border-radius:2px;transition:width .35s .08s}
-                    .dest-info h3{font-size:.92rem;font-weight:800;letter-spacing:.3px;text-shadow:0 2px 10px rgba(0,0,0,.35);margin:0 0 3px}
-                    .dest-info p{font-size:.66rem;color:rgba(255,255,255,.6);line-height:1.4;margin:0}
+                    /* Card inner layout */
+                    .ds-inner{display:grid;grid-template-columns:380px 1fr;height:280px;border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 4px 24px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.04);text-decoration:none;color:inherit;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative}
+                    .ds-inner::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--ac),color-mix(in srgb,var(--ac) 60%,white));border-radius:20px 0 0 20px;z-index:2}
+                    .ds-inner:hover{box-shadow:0 16px 48px rgba(0,0,0,.12);transform:translateY(-4px)}
 
-                    .dest-card:hover img{transform:scale(1.12);filter:brightness(1.05)}
-                    .dest-card:hover .dest-ov{background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.12) 55%)}
-                    .dest-card:hover .dest-tag{opacity:1;transform:translateY(0)}
-                    .dest-card:hover .dest-info{transform:translateY(0)}
-                    .dest-card:hover .dest-info::before{width:36px}
-                    .dest-card:hover .dest-info p{color:rgba(255,255,255,.85)}
+                    /* Image side */
+                    .ds-img{position:relative;overflow:hidden}
+                    .ds-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+                    .ds-inner:hover .ds-img img{transform:scale(1.08)}
 
-                    .dest-lg{grid-row:span 2}
-                    .dest-wide{grid-column:span 2}
+                    /* Content side */
+                    .ds-body{padding:24px 28px;display:flex;flex-direction:column;justify-content:center;position:relative;background:linear-gradient(135deg,#fff 60%,color-mix(in srgb,var(--ac) 4%,white) 100%)}
 
-                    .dest-card.rv{opacity:0;transform:translateY(28px) scale(.97);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1)}
-                    .dest-card.rv.vis{opacity:1;transform:translateY(0) scale(1)}
+                    .ds-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+                    .ds-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--ac);opacity:.2;line-height:1}
+                    .ds-badge{padding:4px 12px;border-radius:999px;font-size:.65rem;font-weight:800;display:flex;align-items:center;gap:4px;letter-spacing:.3px}
+                    .ds-rating{display:flex;align-items:center;gap:2px;font-size:.7rem;font-weight:700;color:#F59E0B;margin-left:auto}
+                    .ds-rating i{font-size:.62rem}
 
-                    @media(max-width:1024px){.dest-grid{grid-template-columns:repeat(3,1fr);grid-auto-rows:190px;gap:12px}}
-                    @media(max-width:768px){.dest-section{padding:60px 16px 40px}.dest-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:170px;gap:10px}.dest-lg{grid-row:span 1}.dest-tag{opacity:1;transform:translateY(0)}.dest-info{transform:translateY(0)}}
-                    @media(max-width:480px){.dest-grid{grid-template-columns:1fr;grid-auto-rows:200px}.dest-wide{grid-column:span 1}.dest-info h3{font-size:.86rem}}
+                    .ds-body h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:#0F172A;margin-bottom:4px;line-height:1.2}
+
+                    .ds-loc{display:flex;align-items:center;gap:5px;font-size:.76rem;color:#94A3B8;margin-bottom:8px;font-weight:500}
+                    .ds-loc i{color:var(--ac);font-size:.68rem}
+                    .ds-dist{color:var(--ac);font-weight:700}
+
+                    .ds-desc{color:#64748B;font-size:.84rem;line-height:1.65;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+                    .ds-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+                    .ds-chips span{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;font-size:.68rem;font-weight:700;background:color-mix(in srgb,var(--cc) 8%,white);color:var(--cc);border:1px solid color-mix(in srgb,var(--cc) 15%,white);transition:.25s}
+                    .ds-chips span i{font-size:.6rem}
+                    .ds-inner:hover .ds-chips span{background:color-mix(in srgb,var(--cc) 12%,white);border-color:color-mix(in srgb,var(--cc) 25%,white)}
+
+                    .ds-cta{display:inline-flex;align-items:center;gap:6px;padding:9px 22px;color:#fff;border-radius:10px;font-weight:700;font-size:.78rem;transition:all .3s;box-shadow:0 3px 12px rgba(0,0,0,.15);width:fit-content}
+                    .ds-inner:hover .ds-cta{box-shadow:0 6px 20px rgba(0,0,0,.2);transform:translateX(3px)}
+                    .ds-cta i{font-size:.7rem;transition:transform .3s}
+                    .ds-inner:hover .ds-cta i{transform:translateX(4px)}
+
+                    /* ═══ Responsive ═══ */
+                    @media(max-width:1024px){
+                        .ds-inner{grid-template-columns:320px 1fr;height:260px}
+                        .ds-body{padding:20px 24px}
+                    }
+                    @media(max-width:768px){
+                        .dest-section{padding:40px 16px 0}
+                        .ds-card{top:calc(80px + var(--ci) * 14px);margin-bottom:12px}
+                        .ds-inner{grid-template-columns:1fr;height:auto}
+                        .ds-img{height:200px}
+                        .ds-body{padding:18px 20px}
+                        .ds-body h3{font-size:1.2rem}
+                        .ds-desc{font-size:.8rem}
+                        .ds-chips span{padding:3px 8px;font-size:.62rem}
+                    }
+                    @media(max-width:480px){
+                        .ds-card{top:calc(70px + var(--ci) * 10px)}
+                        .ds-img{height:160px}
+                        .ds-chips{gap:4px}
+                    }
                 </style>
 
                 </section>

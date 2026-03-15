@@ -19,6 +19,22 @@ public class TourDAO {
         }
     }
 
+    /**
+     * Performance: Only fetch top N tours to avoid loading entire table.
+     */
+    public List<Tour> findTop(int limit) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return em.createQuery(
+                "SELECT t FROM Tour t LEFT JOIN FETCH t.category WHERE t.isActive = true ORDER BY t.createdAt DESC",
+                Tour.class)
+                .setMaxResults(limit)
+                .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     public List<Tour> findAllIncludeInactive() {
         EntityManager em = JPAUtil.getEntityManager();
         try {

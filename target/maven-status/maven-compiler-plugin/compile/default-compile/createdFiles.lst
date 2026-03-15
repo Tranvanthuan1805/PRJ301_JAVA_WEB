@@ -44,6 +44,7 @@ com\dananghub\controller\TourCompareServlet.class
 com\dananghub\controller\ProfileServlet.class
 com\dananghub\dao\TourPriceSeasonDAO.class
 com\dananghub\dto\OrderDetailDTO.class
+com\dananghub\filter\CacheControlFilter.class
 com\dananghub\util\PasswordUtil.class
 com\dananghub\controller\ChatLogServlet.class
 com\dananghub\entity\ChatbotLog.class
@@ -64,6 +65,7 @@ com\dananghub\controller\InitTablesServlet.class
 com\dananghub\controller\ExploreServlet.class
 com\dananghub\entity\User_.class
 com\dananghub\entity\Provider.class
+com\dananghub\filter\GzipFilter.class
 com\dananghub\util\ValidationUtil.class
 com\dananghub\entity\Wishlist_.class
 com\dananghub\controller\AdminAnalyticsServlet.class
@@ -80,8 +82,10 @@ com\dananghub\controller\Tour3DServlet.class
 com\dananghub\entity\Role.class
 com\dananghub\entity\SubscriptionPlan.class
 com\dananghub\dao\FeedbackDAO.class
+com\dananghub\filter\GzipResponseWrapper.class
 com\dananghub\entity\Customer_.class
 com\dananghub\entity\AILog.class
+com\dananghub\filter\GzipResponseWrapper$1.class
 com\dananghub\dao\CustomerDAO.class
 com\dananghub\dao\TourScheduleDAO.class
 com\dananghub\controller\TourServlet.class

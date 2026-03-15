@@ -53,6 +53,12 @@ public class GoogleAuthServlet extends HttpServlet {
         int port = request.getServerPort();
         String ctx = request.getContextPath();
 
+        // Khi chạy localhost qua HTTPS (self-signed), Google Console chỉ đăng ký HTTP:9090
+        // => Luôn dùng HTTP redirect URI trên localhost để tránh redirect_uri_mismatch
+        if ("localhost".equals(serverName) || "127.0.0.1".equals(serverName)) {
+            return "http://localhost:9090" + ctx + "/google-auth";
+        }
+
         StringBuilder uri = new StringBuilder();
         uri.append(scheme).append("://").append(serverName);
         if (("http".equals(scheme) && port != 80) || ("https".equals(scheme) && port != 443)) {

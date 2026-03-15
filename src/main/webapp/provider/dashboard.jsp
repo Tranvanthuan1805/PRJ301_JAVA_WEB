@@ -97,6 +97,7 @@
     <nav>
         <a href="${pageContext.request.contextPath}/provider/dashboard" class="active"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
         <a href="${pageContext.request.contextPath}/tour"><i class="fas fa-map-marked-alt"></i> Tours Của Tôi</a>
+        <a href="${pageContext.request.contextPath}/tour-3d"><i class="fas fa-cube"></i> Tour 3D Gallery</a>
         <a href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-shopping-bag"></i> Đơn Đặt</a>
         <a href="${pageContext.request.contextPath}/pricing"><i class="fas fa-crown"></i> Gói Dịch Vụ</a>
         <a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user-cog"></i> Hồ Sơ</a>

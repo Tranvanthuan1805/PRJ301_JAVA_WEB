@@ -1,19 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="com.dananghub.dao.TourDAO, com.dananghub.entity.Tour, java.util.List" %>
-<%
-    TourDAO chatTourDAO = new TourDAO();
-    List<Tour> chatTours = chatTourDAO.findAll();
-%>
+<%-- Reuse tours from request scope (set by servlet) to avoid duplicate DB query --%>
 <script>
     window.__CHAT_TOURS__ = [
-        <% for (int i = 0; i < chatTours.size(); i++) {
-            Tour t = chatTours.get(i);
-            String name = t.getTourName().replace("\"", "\\\"").replace("\n", "");
-            String dest = t.getDestination() != null ? t.getDestination().replace("\"", "\\\"") : "";
-        %>
-        {"tourId":<%= t.getTourId() %>,"tourName":"<%= name %>","price":<%= t.getPrice() %>,"destination":"<%= dest %>","maxPeople":<%= t.getMaxPeople() %>}<%= (i < chatTours.size() - 1) ? "," : "" %>
-        <% } %>
+        <c:forEach items="${listTours}" var="t" varStatus="s">
+        {"tourId":${t.tourId},"tourName":"<c:out value='${t.tourName}' escapeXml='true'/>","price":${t.price},"destination":"<c:out value='${t.destination}' escapeXml='true'/>","maxPeople":${t.maxPeople}}<c:if test="${!s.last}">,</c:if>
+        </c:forEach>
     ];
 </script>
 
@@ -340,40 +332,59 @@
         imageInput.value = '';
     });
 
-    // === VOICE INPUT ===
+    // === VOICE INPUT (works on both HTTP and HTTPS) ===
     let recognition = null;
     let isRecording = false;
 
+    // Always try to initialize SpeechRecognition regardless of protocol
+    // The browser itself will decide if it's allowed
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SR();
-        recognition.lang = 'vi-VN';
-        recognition.interimResults = false;
-        recognition.continuous = false;
+        try {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SR();
+            recognition.lang = 'vi-VN';
+            recognition.interimResults = false;
+            recognition.continuous = false;
 
-        recognition.onresult = (event) => {
-            const text = event.results[0][0].transcript;
-            chatInput.value = text;
-            chatInput.focus();
-        };
+            recognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                chatInput.value = text;
+                chatInput.focus();
+            };
 
-        recognition.onend = () => {
-            isRecording = false;
-            voiceBtn.classList.remove('recording');
-            voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-        };
+            recognition.onend = () => {
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            };
 
-        recognition.onerror = () => {
-            isRecording = false;
-            voiceBtn.classList.remove('recording');
-            voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-            addBotMessage('⚠️ Không nhận được giọng nói. Vui lòng thử lại.');
-        };
+            recognition.onerror = (event) => {
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                if (event.error === 'not-allowed') {
+                    addBotMessage('🔒 Trình duyệt chặn microphone trên HTTP.<br><br>'
+                        + '<strong>Cách khắc phục:</strong><br>'
+                        + '• <strong>Chrome:</strong> Nhập <code>chrome://flags/#unsafely-treat-insecure-origin-as-secure</code> → thêm URL của bạn<br>'
+                        + '• <strong>Edge:</strong> Vào Settings → Site permissions → Microphone<br>'
+                        + '• Hoặc deploy trên <strong>HTTPS</strong><br><br>'
+                        + '💡 Bạn vẫn có thể gõ tin nhắn bình thường! 😊');
+                } else if (event.error === 'network') {
+                    addBotMessage('⚠️ Lỗi mạng khi nhận dạng giọng nói. Kiểm tra kết nối internet.');
+                } else {
+                    addBotMessage('⚠️ Không nhận được giọng nói. Vui lòng thử lại.');
+                }
+            };
+        } catch (e) {
+            recognition = null;
+        }
     }
 
     voiceBtn.addEventListener('click', () => {
         if (!recognition) {
-            addBotMessage('⚠️ Trình duyệt không hỗ trợ giọng nói. Vui lòng dùng Chrome.');
+            addBotMessage('⚠️ Trình duyệt không hỗ trợ giọng nói.<br><br>'
+                + '💡 Dùng <strong>Chrome</strong> hoặc <strong>Edge</strong> phiên bản mới nhất.<br>'
+                + '💡 Bạn vẫn có thể gõ tin nhắn bình thường! 😊');
             return;
         }
         if (isRecording) {
@@ -382,7 +393,14 @@
             isRecording = true;
             voiceBtn.classList.add('recording');
             voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
-            recognition.start();
+            try {
+                recognition.start();
+            } catch (e) {
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                addBotMessage('⚠️ Không thể bật mic. Thử tải lại trang hoặc dùng Chrome.');
+            }
         }
     });
 
@@ -455,22 +473,32 @@
         fetch(contextPath + '/booking', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formData.toString()
+            body: formData.toString(),
+            redirect: 'follow'
         })
         .then(r => {
-            if (r.redirected) {
-                // Booking was successful (servlet redirects)
+            const finalUrl = r.url || '';
+            const isLoginRedirect = finalUrl.includes('login.jsp') || finalUrl.includes('/login');
+            const isTourRedirect = finalUrl.includes('/tour');
+            
+            if (r.ok && !isLoginRedirect && !isTourRedirect) {
+                // Success: servlet forwarded to payment-checkout.jsp (HTTP 200)
                 addBotMessage('🎉 <strong>Đặt tour thành công!</strong><br><br>'
                     + '🏖️ Tour: <strong>' + escapeHtml(tourName) + '</strong><br>'
-                    + '💰 Trạng thái: <span style="color:#D97706;font-weight:700">Chờ thanh toán</span><br><br>'
+                    + '👥 Số khách: ' + guests + '<br>'
+                    + '💰 Tổng tiền: <strong>' + totalPrice + 'đ</strong><br>'
+                    + '📋 Trạng thái: <span style="color:#D97706;font-weight:700">Chờ thanh toán</span><br><br>'
                     + '<a href="' + contextPath + '/my-orders" style="display:inline-flex;align-items:center;gap:4px;padding:8px 16px;background:#3B82F6;color:#fff;border-radius:8px;font-weight:700;font-size:.8rem;text-decoration:none"><i class="fas fa-credit-card"></i> Thanh Toán Ngay</a>'
                     + '&nbsp;&nbsp;'
                     + '<a href="' + contextPath + '/my-orders" style="display:inline-flex;align-items:center;gap:4px;padding:8px 16px;background:#F1F5F9;color:#475569;border-radius:8px;font-weight:700;font-size:.8rem;text-decoration:none"><i class="fas fa-receipt"></i> Xem Đơn Hàng</a>');
                 showBookingSuccess();
+            } else if (isLoginRedirect) {
+                // User not logged in - servlet redirected to login
+                addBotMessage('⚠️ Bạn cần <a href="' + contextPath + '/login.jsp" style="color:#3B82F6;font-weight:700">đăng nhập</a> trước khi đặt tour.<br><br>'
+                    + '<a href="' + contextPath + '/login.jsp" style="display:inline-flex;align-items:center;gap:4px;padding:8px 16px;background:#3B82F6;color:#fff;border-radius:8px;font-weight:700;font-size:.8rem;text-decoration:none"><i class="fas fa-sign-in-alt"></i> Đăng Nhập Ngay</a>');
             } else {
-                return r.text().then(t => {
-                    addBotMessage('⚠️ Không thể đặt tour. Vui lòng thử lại hoặc <a href="' + contextPath + '/login.jsp">đăng nhập</a>.');
-                });
+                // Other error (tour not found, invalid data, etc.)
+                addBotMessage('⚠️ Không thể đặt tour. Vui lòng thử lại hoặc <a href="' + contextPath + '/login.jsp">đăng nhập</a>.');
             }
         })
         .catch(err => {
