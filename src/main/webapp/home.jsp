@@ -956,50 +956,12 @@
                         <h1>Khám Phá <span class="hero-accent">Đà Nẵng</span><br>Trải Nghiệm Du Lịch Tuyệt Vời</h1>
                         <p class="hero-sub" data-i18n="hero.desc">Từ Cầu Vàng Bà Nà Hills đến biển Mỹ Khê — hãy để chúng tôi giúp bạn lên kế hoạch cho chuyến đi hoàn hảo nhất.</p>
 
-                        <!-- Search Panel -->
-                        <div class="search-panel">
-                            <div class="search-tabs">
-                                <a href="${pageContext.request.contextPath}/tour" class="search-tab active"><i class="fas fa-suitcase-rolling"></i> Tour trọn gói</a>
-                                <a href="#" class="search-tab"><i class="fas fa-hotel"></i> Khách sạn</a>
-                                <a href="#" class="search-tab"><i class="fas fa-plane"></i> Vé máy bay</a>
-                                <a href="${pageContext.request.contextPath}/tour" class="search-tab"><i class="fas fa-layer-group"></i> Combo</a>
-                            </div>
-                            <form action="${pageContext.request.contextPath}/tour" method="get">
-                                <div class="search-row">
-                                    <div class="search-field">
-                                        <div class="search-field-label"><i class="fas fa-map-marker-alt"></i> <span data-i18n="search.where">Bạn muốn đi đâu?</span> <span style="color:#EF4444">*</span></div>
-                                        <input type="text" name="search" placeholder="vd: Bà Nà, Hội An, Sơn Trà...">
-                                    </div>
-                                    <div class="search-field">
-                                        <div class="search-field-label"><i class="fas fa-calendar-alt"></i> <span data-i18n="search.date">Ngày khởi hành</span></div>
-                                        <input type="text" name="date" placeholder="Chọn ngày đi" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
-                                    </div>
-                                    <div class="search-field">
-                                        <div class="search-field-label"><i class="fas fa-wallet"></i> <span data-i18n="search.budget">Ngân sách</span></div>
-                                        <select name="priceRange">
-                                            <option value="">Chọn mức giá</option>
-                                            <option value="0-500000">Dưới 500K</option>
-                                            <option value="500000-1000000">500K - 1 triệu</option>
-                                            <option value="1000000-3000000">1 - 3 triệu</option>
-                                            <option value="3000000-">Trên 3 triệu</option>
-                                        </select>
-                                    </div>
-                                    <div class="search-actions">
-                                        <button type="submit" class="search-btn"><i class="fas fa-search"></i> <span data-i18n="search.btn">Tìm kiếm</span></button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Popular destinations -->
-                        <div class="hero-popular">
-                            <span class="hero-popular-label">Phổ biến:</span>
-                            <a href="${pageContext.request.contextPath}/tour?search=ba+na" class="hero-popular-tag"><i class="fas fa-fire"></i> Bà Nà Hills</a>
-                            <a href="${pageContext.request.contextPath}/tour?search=hoi+an" class="hero-popular-tag">🏮 Hội An</a>
-                            <a href="${pageContext.request.contextPath}/tour?search=my+khe" class="hero-popular-tag">🏖️ Mỹ Khê</a>
-                            <a href="${pageContext.request.contextPath}/tour?search=son+tra" class="hero-popular-tag">🌿 Sơn Trà</a>
-                            <a href="${pageContext.request.contextPath}/tour?search=ngu+hanh+son" class="hero-popular-tag">⛰️ Ngũ Hành Sơn</a>
-                        </div>
+                        <!-- Search Button -->
+                        <a href="${pageContext.request.contextPath}/tour" class="hero-search-btn" style="display:inline-flex;align-items:center;gap:12px;padding:18px 52px;background:linear-gradient(135deg,#2563EB 0%,#3B82F6 50%,#60A5FA 100%);color:#fff;border:none;border-radius:999px;font-weight:700;font-size:1.05rem;cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;transition:all .35s cubic-bezier(.4,0,.2,1);box-shadow:0 10px 36px rgba(37,99,235,.4),0 0 0 4px rgba(37,99,235,.1);animation:heroFadeUp .7s ease .25s both;letter-spacing:.3px;position:relative;overflow:hidden">
+                            <i class="fas fa-search" style="font-size:1rem"></i>
+                            <span data-i18n="search.btn">Tìm Kiếm Tour</span>
+                            <i class="fas fa-arrow-right" style="font-size:.85rem;opacity:.7"></i>
+                        </a>
 
                         <!-- Scroll indicator -->
                         <div class="scroll-hint" onclick="document.querySelector('.map-section').scrollIntoView({behavior:'smooth'})">
@@ -1463,163 +1425,108 @@
 
                 <!-- ═══ TÍNH NĂNG NỔI BẬT — CUTE MARQUEE ═══ -->
                 <section class="ft-marquee-section">
-                    <div class="ft-marquee-header">
-                        <span class="ft-marquee-badge"><i class="fas fa-sparkles"></i> Tại sao chọn chúng tôi?</span>
-                        <h2>Tính Năng <span style="color:#FF6F61">Nổi Bật</span></h2>
-                        <p>Trải nghiệm đặt tour thông minh, tiện lợi với những tính năng được thiết kế dành riêng cho bạn.</p>
-                    </div>
-                    <div class="ft-marquee-track-wrapper">
-                        <div class="ft-marquee-track">
-                            <!-- Card 1 -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#8B5CF6,#A78BFA)">
-                                <div class="ft-fcard-emoji">🤖</div>
-                                <h4>AI Chatbot</h4>
-                                <p>Trợ lý AI thông minh hỗ trợ bạn 24/7, gợi ý tour phù hợp với sở thích cá nhân.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <!-- Card 2 -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#10B981,#34D399)">
-                                <div class="ft-fcard-emoji">📱</div>
-                                <h4>Đặt Tour Online</h4>
-                                <p>Đặt tour nhanh chóng chỉ vài bước, thanh toán an toàn với nhiều phương thức.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <!-- Card 3 -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#EF4444,#F87171)">
-                                <div class="ft-fcard-emoji">🗺️</div>
-                                <h4>Bản Đồ Thông Minh</h4>
-                                <p>Khám phá Đà Nẵng qua bản đồ tương tác, ghim vị trí và nhận gợi ý địa điểm gần.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <!-- Card 4 -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#F59E0B,#FBBF24)">
-                                <div class="ft-fcard-emoji">⚡</div>
-                                <h4>So Sánh Tour</h4>
-                                <p>So sánh giá, đánh giá và dịch vụ giữa các tour để chọn lựa tốt nhất cho bạn.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <!-- Card 5 -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#3B82F6,#60A5FA)">
-                                <div class="ft-fcard-emoji">🎨</div>
-                                <h4>Tour 3D Gallery</h4>
-                                <p>Xem trước điểm đến với bộ sưu tập 3D sống động trước khi quyết định đặt tour.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <!-- Card 6 -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#EC4899,#F472B6)">
-                                <div class="ft-fcard-emoji">💳</div>
-                                <h4>Thanh Toán Đa Dạng</h4>
-                                <p>Hỗ trợ VNPAY, MoMo, ShopeePay, thẻ quốc tế và chuyển khoản ngân hàng.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <!-- Card 7 -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#06B6D4,#22D3EE)">
-                                <div class="ft-fcard-emoji">🌐</div>
-                                <h4>Đa Ngôn Ngữ</h4>
-                                <p>Hỗ trợ 5 ngôn ngữ: Tiếng Việt, English, 한국어, 日本語, 中文.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <!-- Card 8 -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#F97316,#FB923C)">
-                                <div class="ft-fcard-emoji">📊</div>
-                                <h4>Dự Đoán AI</h4>
-                                <p>Mạng nơ-ron nhân tạo phân tích xu hướng du lịch, giúp bạn đặt tour đúng thời điểm.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
+                <!-- ═══ SỨ MỆNH & TẦM NHÌN ═══ -->
+                <section class="mission-section">
+                    <style>
+                        .mission-section{background:#F1F5F9;padding:90px 0 100px;overflow:hidden;position:relative}
+                        .mission-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:center}
 
-                            <!-- DUPLICATE for seamless loop -->
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#8B5CF6,#A78BFA)">
-                                <div class="ft-fcard-emoji">🤖</div>
-                                <h4>AI Chatbot</h4>
-                                <p>Trợ lý AI thông minh hỗ trợ bạn 24/7, gợi ý tour phù hợp với sở thích cá nhân.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                        /* Left content */
+                        .mission-left{display:flex;flex-direction:column;gap:20px;position:relative;z-index:2}
+                        .mission-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:900;color:#1E293B;line-height:1.15;margin:0;letter-spacing:-.02em}
+                        .mission-title span{color:#2563EB}
+                        .mission-desc{font-size:.9rem;color:#64748B;line-height:1.85;margin:0}
+                        .mission-desc strong{color:#1E293B;font-weight:800}
+                        .mission-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+                        .mission-card{background:#fff;border-radius:16px;padding:28px 24px;box-shadow:0 1px 8px rgba(0,0,0,.04);transition:all .35s cubic-bezier(.4,0,.2,1);border:1px solid rgba(0,0,0,.04)}
+                        .mission-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.08)}
+                        .mission-card h4{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:#1E293B;margin:0 0 10px;font-style:italic}
+                        .mission-card p{font-size:.8rem;color:#64748B;line-height:1.7;margin:0}
+
+                        /* ═══ DEVICES — TILTED TABLET + PHONE ═══ */
+                        .mission-right{position:relative;min-height:460px;display:flex;align-items:center;justify-content:center}
+                        .m-devices{position:relative;width:100%;height:460px}
+
+                        /* Tablet (iPad style) — main device, slightly tilted left */
+                        .m-tablet{position:absolute;left:0;top:10px;width:420px;height:310px;transform:perspective(2000px) rotateY(12deg) rotateX(3deg) rotateZ(-1deg);transition:transform .5s cubic-bezier(.4,0,.2,1);z-index:2}
+                        .m-tablet:hover{transform:perspective(2000px) rotateY(6deg) rotateX(1deg) rotateZ(0deg) scale(1.02)}
+                        .m-tablet-frame{width:100%;height:100%;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.06);position:relative;border:8px solid #e8e8ed}
+                        .m-tablet-cam{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#d1d5db;z-index:5}
+                        .m-tablet-screen{width:100%;height:100%;overflow:hidden;position:relative;background:#f5f5f5}
+                        .m-tablet-screen iframe{width:200%;height:200%;border:0;transform:scale(.5);transform-origin:0 0;pointer-events:none}
+
+                        /* Phone (iPhone style) — overlapping right, tilted opposite */
+                        .m-phone{position:absolute;right:10px;bottom:0;width:160px;height:320px;transform:perspective(2000px) rotateY(-10deg) rotateX(2deg) rotateZ(2deg);transition:transform .5s cubic-bezier(.4,0,.2,1);z-index:3}
+                        .m-phone:hover{transform:perspective(2000px) rotateY(-5deg) rotateX(1deg) rotateZ(1deg) scale(1.03)}
+                        .m-phone-frame{width:100%;height:100%;background:#1a1a2e;border-radius:28px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.25),0 0 0 2px #333;position:relative;border:4px solid #2a2a3e}
+                        .m-phone-island{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:60px;height:18px;background:#1a1a2e;border-radius:12px;z-index:5}
+                        .m-phone-island::after{content:'';position:absolute;top:5px;right:8px;width:6px;height:6px;border-radius:50%;background:#222;border:1px solid #333}
+                        .m-phone-screen{width:100%;height:100%;overflow:hidden;position:relative;background:#f5f5f5;border-radius:24px}
+                        .m-phone-screen iframe{width:333%;height:333%;border:0;transform:scale(.3);transform-origin:0 0;pointer-events:none}
+                        .m-phone-bar{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:36%;height:4px;border-radius:4px;background:rgba(255,255,255,.2);z-index:5}
+
+                        /* Soft shadow under devices */
+                        .m-devices::after{content:'';position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);width:75%;height:40px;background:radial-gradient(ellipse,rgba(0,0,0,.08) 0%,transparent 70%);filter:blur(6px);z-index:0}
+
+                        @media(max-width:1024px){
+                            .m-tablet{width:360px;height:265px}
+                            .m-phone{width:140px;height:280px;right:0}
+                            .m-devices{height:400px}
+                        }
+                        @media(max-width:768px){
+                            .mission-inner{grid-template-columns:1fr;gap:40px;text-align:center}
+                            .mission-right{min-height:340px}
+                            .m-devices{height:340px;display:flex;align-items:center;justify-content:center}
+                            .m-tablet{position:relative;left:auto;top:auto;width:320px;height:235px;transform:perspective(2000px) rotateY(8deg) rotateX(2deg)}
+                            .m-phone{width:120px;height:240px;right:-30px;bottom:auto;top:40px}
+                            .mission-cards{text-align:left}
+                        }
+                        @media(max-width:480px){
+                            .mission-cards{grid-template-columns:1fr}
+                            .m-tablet{width:260px;height:192px}
+                            .m-phone{width:100px;height:200px;right:-20px}
+                        }
+                    </style>
+                    <div class="mission-inner">
+                        <div class="mission-left">
+                            <h2 class="mission-title">Sứ Mệnh & <span>Tầm Nhìn</span></h2>
+                            <p class="mission-desc">Với sứ mệnh mang đến trải nghiệm du lịch <strong>Đà Nẵng</strong> trọn vẹn nhất, eztravel kết hợp công nghệ AI hiện đại và đội ngũ chuyên gia địa phương để tạo nên hệ sinh thái du lịch thông minh — từ tìm kiếm, đặt tour đến thanh toán chỉ trong vài bước.</p>
+                            <div class="mission-cards">
+                                <div class="mission-card">
+                                    <h4>Hiệu quả</h4>
+                                    <p>Đặt tour nhanh chóng, thanh toán an toàn với VNPAY & SePay. AI gợi ý tour phù hợp sở thích của bạn.</p>
+                                </div>
+                                <div class="mission-card">
+                                    <h4>Bản chất</h4>
+                                    <p>Trải nghiệm du lịch chân thực, kết nối văn hóa bản địa Đà Nẵng qua những chuyến đi đáng nhớ.</p>
+                                </div>
                             </div>
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#10B981,#34D399)">
-                                <div class="ft-fcard-emoji">📱</div>
-                                <h4>Đặt Tour Online</h4>
-                                <p>Đặt tour nhanh chóng chỉ vài bước, thanh toán an toàn với nhiều phương thức.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#EF4444,#F87171)">
-                                <div class="ft-fcard-emoji">🗺️</div>
-                                <h4>Bản Đồ Thông Minh</h4>
-                                <p>Khám phá Đà Nẵng qua bản đồ tương tác, ghim vị trí và nhận gợi ý địa điểm gần.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#F59E0B,#FBBF24)">
-                                <div class="ft-fcard-emoji">⚡</div>
-                                <h4>So Sánh Tour</h4>
-                                <p>So sánh giá, đánh giá và dịch vụ giữa các tour để chọn lựa tốt nhất cho bạn.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#3B82F6,#60A5FA)">
-                                <div class="ft-fcard-emoji">🎨</div>
-                                <h4>Tour 3D Gallery</h4>
-                                <p>Xem trước điểm đến với bộ sưu tập 3D sống động trước khi quyết định đặt tour.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#EC4899,#F472B6)">
-                                <div class="ft-fcard-emoji">💳</div>
-                                <h4>Thanh Toán Đa Dạng</h4>
-                                <p>Hỗ trợ VNPAY, MoMo, ShopeePay, thẻ quốc tế và chuyển khoản ngân hàng.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#06B6D4,#22D3EE)">
-                                <div class="ft-fcard-emoji">🌐</div>
-                                <h4>Đa Ngôn Ngữ</h4>
-                                <p>Hỗ trợ 5 ngôn ngữ: Tiếng Việt, English, 한국어, 日本語, 中文.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <div class="ft-fcard" style="--bg:linear-gradient(135deg,#F97316,#FB923C)">
-                                <div class="ft-fcard-emoji">📊</div>
-                                <h4>Dự Đoán AI</h4>
-                                <p>Mạng nơ-ron nhân tạo phân tích xu hướng du lịch, giúp bạn đặt tour đúng thời điểm.</p>
-                                <div class="ft-fcard-icon"><i class="fas fa-chevron-up"></i></div>
+                        </div>
+                        <div class="mission-right">
+                            <div class="m-devices">
+                                <!-- Tablet Mockup — tilted left -->
+                                <div class="m-tablet">
+                                    <div class="m-tablet-frame">
+                                        <div class="m-tablet-cam"></div>
+                                        <div class="m-tablet-screen">
+                                            <iframe src="/DaNangTravelHub/" loading="lazy" title="eztravel desktop"></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Phone Mockup — tilted right, overlapping -->
+                                <div class="m-phone">
+                                    <div class="m-phone-frame">
+                                        <div class="m-phone-island"></div>
+                                        <div class="m-phone-screen">
+                                            <iframe src="/DaNangTravelHub/" loading="lazy" title="eztravel mobile"></iframe>
+                                        </div>
+                                        <div class="m-phone-bar"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
-
-                <style>
-                    /* ═══ CUTE FEATURE MARQUEE ═══ */
-                    .ft-marquee-section{padding:60px 0 50px;overflow:hidden;position:relative}
-                    .ft-marquee-section::before{content:'';position:absolute;top:0;left:0;right:0;height:100%;background:linear-gradient(180deg,rgba(248,250,252,.6) 0%,rgba(255,255,255,0) 30%,rgba(255,255,255,0) 70%,rgba(248,250,252,.6) 100%);pointer-events:none;z-index:1}
-
-                    .ft-marquee-header{text-align:center;max-width:600px;margin:0 auto 36px;padding:0 24px}
-                    .ft-marquee-badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:#FF6F61;background:rgba(255,111,97,.06);padding:6px 16px;border-radius:999px;margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase}
-                    .ft-marquee-header h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;color:#1E293B;margin-bottom:10px;letter-spacing:-.02em}
-                    .ft-marquee-header p{color:#64748B;font-size:.9rem;line-height:1.7}
-
-                    .ft-marquee-track-wrapper{position:relative;width:100%}
-                    .ft-marquee-track-wrapper::before,.ft-marquee-track-wrapper::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
-                    .ft-marquee-track-wrapper::before{left:0;background:linear-gradient(90deg,#fff,transparent)}
-                    .ft-marquee-track-wrapper::after{right:0;background:linear-gradient(270deg,#fff,transparent)}
-
-                    .ft-marquee-track{display:flex;gap:20px;animation:ftMarqueeScroll 40s linear infinite;width:fit-content;padding:10px 0}
-                    .ft-marquee-track:hover{animation-play-state:paused}
-
-                    @keyframes ftMarqueeScroll{
-                        0%{transform:translateX(0)}
-                        100%{transform:translateX(-50%)}
-                    }
-
-                    .ft-fcard{flex-shrink:0;width:220px;background:var(--bg);border-radius:22px;padding:28px 22px 22px;color:#fff;position:relative;cursor:default;transition:all .35s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 28px rgba(0,0,0,.12)}
-                    .ft-fcard:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 16px 40px rgba(0,0,0,.18)}
-
-                    .ft-fcard-emoji{font-size:2.2rem;margin-bottom:14px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.15));line-height:1}
-                    .ft-fcard h4{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:800;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
-                    .ft-fcard p{font-size:.76rem;line-height:1.6;color:rgba(255,255,255,.8);margin-bottom:16px}
-                    .ft-fcard-icon{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;transition:all .3s;backdrop-filter:blur(4px)}
-                    .ft-fcard:hover .ft-fcard-icon{background:rgba(255,255,255,.35);transform:translateY(-2px)}
-
-                    @media(max-width:768px){
-                        .ft-fcard{width:190px;padding:22px 18px 18px;border-radius:18px}
-                        .ft-fcard-emoji{font-size:1.8rem;margin-bottom:10px}
-                        .ft-fcard h4{font-size:.95rem}
-                        .ft-fcard p{font-size:.72rem}
-                        .ft-marquee-section{padding:40px 0 30px}
-                    }
-                </style>
 
                 <!-- ═══ ĐIỂM ĐẾN YÊU THÍCH — STICKY STACKING ═══ -->
                 <section class="dest-section" id="destSection">
@@ -1905,142 +1812,140 @@
                     </c:choose>
                 </section>
 
-                <!-- ═══ CTA — DESTINATION 3D CUBE ═══ -->
-                <section class="cta">
-                    <div class="cta-inner" style="align-items:center">
-                        <!-- LEFT: 3D Cube -->
-                        <div class="sc-cube-scene rv" id="scCubeScene">
-                            <div class="sc-cube" id="scCube">
-                                <div class="sc-cube-face sc-front"><img src="${pageContext.request.contextPath}/images/destinations/cau-vang.png" alt="Cầu Vàng"></div>
-                                <div class="sc-cube-face sc-back"><img src="${pageContext.request.contextPath}/images/destinations/cau-rong.png" alt="Cầu Rồng"></div>
-                                <div class="sc-cube-face sc-right"><img src="${pageContext.request.contextPath}/images/destinations/hoi-an.png" alt="Hội An"></div>
-                                <div class="sc-cube-face sc-left"><img src="${pageContext.request.contextPath}/images/destinations/son-tra.png" alt="Sơn Trà"></div>
-                                <div class="sc-cube-face sc-top"><img src="${pageContext.request.contextPath}/images/destinations/ba-na-hills.png" alt="Bà Nà Hills"></div>
-                                <div class="sc-cube-face sc-bottom"><img src="${pageContext.request.contextPath}/images/destinations/bien-my-khe.png" alt="Biển Mỹ Khê"></div>
+                <!-- ═══ CONTACT / CONSULTATION FORM ═══ -->
+                <section class="consult-section">
+                    <style>
+                        .consult-section{background:linear-gradient(135deg,#F0F4FF 0%,#E8EFFF 50%,#F5F3FF 100%);padding:90px 0;position:relative;overflow:hidden}
+                        .consult-section::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.08) 0%,transparent 70%);border-radius:50%}
+                        .consult-section::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(139,92,246,.06) 0%,transparent 70%);border-radius:50%}
+                        .consult-wrap{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
+                        .consult-left h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:900;color:#0F172A;line-height:1.15;margin:0 0 16px}
+                        .consult-left h2 span{background:linear-gradient(135deg,#2563EB,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+                        .consult-left>p{font-size:.95rem;color:#475569;line-height:1.8;margin:0 0 32px}
+                        .consult-perks{display:flex;flex-direction:column;gap:14px}
+                        .consult-perk{display:flex;align-items:flex-start;gap:12px}
+                        .consult-perk-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem}
+                        .consult-perk-icon.blue{background:rgba(59,130,246,.1);color:#2563EB}
+                        .consult-perk-icon.green{background:rgba(16,185,129,.1);color:#059669}
+                        .consult-perk-icon.purple{background:rgba(139,92,246,.1);color:#7C3AED}
+                        .consult-perk h4{font-size:.88rem;font-weight:700;color:#1E293B;margin:0 0 2px}
+                        .consult-perk p{font-size:.78rem;color:#64748B;margin:0;line-height:1.5}
+                        .consult-card{background:#fff;border-radius:20px;padding:36px;box-shadow:0 8px 40px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.03);position:relative;overflow:hidden}
+                        .consult-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#2563EB,#7C3AED,#EC4899)}
+                        .consult-card h3{font-size:1.2rem;font-weight:800;color:#0F172A;margin:0 0 6px}
+                        .consult-card>p{font-size:.82rem;color:#94A3B8;margin:0 0 24px}
+                        .c-form{display:flex;flex-direction:column;gap:16px}
+                        .c-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+                        .c-field{display:flex;flex-direction:column;gap:5px}
+                        .c-field label{font-size:.75rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.3px}
+                        .c-field input,.c-field select,.c-field textarea{padding:12px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.88rem;color:#1E293B;font-family:'Inter',sans-serif;background:#F8FAFC;transition:all .25s;outline:none;width:100%;box-sizing:border-box}
+                        .c-field input:focus,.c-field select:focus,.c-field textarea:focus{border-color:#2563EB;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+                        .c-field input::placeholder,.c-field textarea::placeholder{color:#94A3B8;font-size:.84rem}
+                        .c-field textarea{resize:vertical;min-height:90px}
+                        .c-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;background-color:#F8FAFC}
+                        .c-submit{padding:14px 32px;background:linear-gradient(135deg,#2563EB,#4F46E5);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(37,99,235,.3)}
+                        .c-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.4)}
+                        .c-submit:active{transform:translateY(0)}
+                        .c-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+                        .c-submit i{transition:transform .3s}
+                        .c-submit:hover i{transform:translateX(3px)}
+                        .c-success{display:none;padding:16px 20px;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1px solid #A7F3D0;border-radius:12px;color:#065F46;font-weight:600;font-size:.88rem;text-align:center;align-items:center;gap:8px;justify-content:center}
+                        .c-success.show{display:flex}
+                        .c-success i{color:#059669;font-size:1.1rem}
+                        @media(max-width:768px){
+                            .consult-wrap{grid-template-columns:1fr;gap:40px}
+                            .c-row{grid-template-columns:1fr}
+                            .consult-card{padding:28px 20px}
+                        }
+                    </style>
+                    <div class="consult-wrap">
+                        <div class="consult-left">
+                            <h2>Bạn cần <span>tư vấn tour</span>?</h2>
+                            <p>Đội ngũ chuyên gia du lịch Đà Nẵng với hơn 10 năm kinh nghiệm sẵn sàng tư vấn miễn phí, giúp bạn tìm ra chuyến đi hoàn hảo nhất.</p>
+                            <div class="consult-perks">
+                                <div class="consult-perk">
+                                    <div class="consult-perk-icon blue"><i class="fas fa-headset"></i></div>
+                                    <div><h4>Tư vấn miễn phí 24/7</h4><p>Hotline: (0335) 111 783 — Luôn sẵn sàng hỗ trợ</p></div>
+                                </div>
+                                <div class="consult-perk">
+                                    <div class="consult-perk-icon green"><i class="fas fa-shield-alt"></i></div>
+                                    <div><h4>Cam kết giá tốt nhất</h4><p>Hoàn tiền 100% nếu tìm thấy giá rẻ hơn</p></div>
+                                </div>
+                                <div class="consult-perk">
+                                    <div class="consult-perk-icon purple"><i class="fas fa-bolt"></i></div>
+                                    <div><h4>Phản hồi trong 30 phút</h4><p>Đội ngũ sẽ liên hệ bạn ngay sau khi nhận form</p></div>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- RIGHT: Dynamic Info -->
-                        <div class="showcase-info rv" id="showcaseInfo">
-                            <div class="showcase-info-counter" id="sCounter">01</div>
-                            <div class="showcase-info-loc" id="sLoc"><i class="fas fa-map-marker-alt"></i> <span>Bà Nà Hills</span></div>
-                            <h2 class="showcase-info-title" id="sTitle">Cầu Vàng</h2>
-                            <p class="showcase-info-desc" id="sDesc">Cây cầu nổi tiếng thế giới nằm trên đỉnh Bà Nà, được nâng đỡ bởi đôi bàn tay khổng lồ. Điểm check-in được yêu thích nhất Đà Nẵng với tầm nhìn 360° ra núi rừng hùng vĩ.</p>
-                            <p class="showcase-info-highlight" id="sHighlight">⭐ Đánh giá 4.9/5 · Hơn 2 triệu lượt ghé thăm mỗi năm</p>
-                            <div class="showcase-info-tags" id="sTags">
-                                <span><i class="fas fa-check"></i> Check-in</span>
-                                <span><i class="fas fa-check"></i> 4.9 ★</span>
-                                <span><i class="fas fa-check"></i> 2M+ lượt</span>
-                                <span><i class="fas fa-check"></i> ~800K VNĐ</span>
-                            </div>
-                            <a href="${pageContext.request.contextPath}/tour?search=cau+vang" class="showcase-info-btn" id="sBtn">Khám phá ngay <i class="fas fa-arrow-right"></i></a>
+                        <div class="consult-card">
+                            <h3>Gửi yêu cầu tư vấn</h3>
+                            <p>Điền thông tin bên dưới, chúng tôi sẽ liên hệ bạn sớm nhất</p>
+                            <form class="c-form" id="consultForm">
+                                <div class="c-row">
+                                    <div class="c-field">
+                                        <label>Họ và tên *</label>
+                                        <input type="text" name="fullName" placeholder="Nguyễn Văn A" required>
+                                    </div>
+                                    <div class="c-field">
+                                        <label>Số điện thoại</label>
+                                        <input type="tel" name="phone" placeholder="0335 111 783">
+                                    </div>
+                                </div>
+                                <div class="c-row">
+                                    <div class="c-field">
+                                        <label>Email *</label>
+                                        <input type="email" name="email" placeholder="email@example.com" required>
+                                    </div>
+                                    <div class="c-field">
+                                        <label>Loại tour</label>
+                                        <select name="tourType">
+                                            <option value="beach">🏖️ Tour Biển & Đảo</option>
+                                            <option value="mountain">🏔️ Tour Núi & Trekking</option>
+                                            <option value="culture">🏛️ Tour Văn Hóa & Lịch Sử</option>
+                                            <option value="food">🍜 Tour Ẩm Thực</option>
+                                            <option value="combo">🎁 Combo Trọn Gói</option>
+                                            <option value="custom">✨ Yêu cầu riêng</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="c-field">
+                                    <label>Mô tả yêu cầu</label>
+                                    <textarea name="message" placeholder="Số người, ngày đi, ngân sách dự kiến..."></textarea>
+                                </div>
+                                <button type="submit" class="c-submit" id="consultBtn">
+                                    <span>Gửi yêu cầu</span> <i class="fas fa-paper-plane"></i>
+                                </button>
+                                <div class="c-success" id="consultSuccess">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Cảm ơn bạn! Chúng tôi sẽ liên hệ trong 30 phút.</span>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </section>
-
-                <style>
-                    /* ═══ 3D CUBE SHOWCASE ═══ */
-                    .cta{overflow:hidden}
-                    .sc-cube-scene{perspective:900px;width:420px;height:360px;flex-shrink:0;cursor:grab;position:relative;display:flex;align-items:center;justify-content:center;overflow:visible}
-                    .sc-cube-scene:active{cursor:grabbing}
-                    .sc-cube{width:280px;height:280px;position:relative;transform-style:preserve-3d;animation:scCubeSpin 24s ease-in-out infinite}
-                    .sc-cube-face{position:absolute;width:280px;height:280px;border-radius:18px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.45);border:2px solid rgba(255,255,255,.08);backface-visibility:visible}
-                    .sc-cube-face img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
-                    .sc-cube-face:hover img{transform:scale(1.06)}
-                    .sc-front{transform:rotateY(0deg) translateZ(140px)}
-                    .sc-back{transform:rotateY(180deg) translateZ(140px)}
-                    .sc-right{transform:rotateY(90deg) translateZ(140px)}
-                    .sc-left{transform:rotateY(-90deg) translateZ(140px)}
-                    .sc-top{transform:rotateX(90deg) translateZ(140px)}
-                    .sc-bottom{transform:rotateX(-90deg) translateZ(140px)}
-                    @keyframes scCubeSpin{
-                        0%{transform:rotateX(-12deg) rotateY(0deg)}
-                        16%{transform:rotateX(-6deg) rotateY(90deg)}
-                        33%{transform:rotateX(-12deg) rotateY(180deg)}
-                        50%{transform:rotateX(-6deg) rotateY(270deg)}
-                        66%{transform:rotateX(-12deg) rotateY(360deg)}
-                        80%{transform:rotateX(20deg) rotateY(360deg)}
-                        100%{transform:rotateX(-12deg) rotateY(360deg)}
-                    }
-
-                    /* ═══ SHOWCASE INFO PANEL ═══ */
-                    .showcase-info{display:flex;flex-direction:column;gap:12px;max-width:420px}
-                    .showcase-info-counter{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:rgba(255,255,255,.06);line-height:1;letter-spacing:-2px;transition:all .4s}
-                    .showcase-info-loc{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;color:#60A5FA;letter-spacing:.3px}
-                    .showcase-info-loc i{font-size:.6rem}
-                    .showcase-info-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:#fff;margin:0;line-height:1.15;letter-spacing:-.01em;transition:all .4s}
-                    .showcase-info-desc{font-size:.92rem;color:rgba(255,255,255,.55);line-height:1.8;margin:0;transition:all .4s}
-                    .showcase-info-highlight{font-size:.8rem;font-weight:600;color:#FF6F61;margin:4px 0 0;font-style:italic;transition:all .4s}
-                    .showcase-info-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-                    .showcase-info-tags span{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:600;color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.06);transition:all .3s}
-                    .showcase-info-tags span i{font-size:.6rem;color:#FF6F61}
-                    .showcase-info-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:linear-gradient(135deg,#FF6F61,#FF9F1C);color:#fff;border-radius:12px;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .3s;margin-top:8px;width:fit-content;box-shadow:0 4px 20px rgba(255,111,97,.25)}
-                    .showcase-info-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,111,97,.4)}
-
-                    /* Fade transition */
-                    .showcase-info.changing .showcase-info-title,
-                    .showcase-info.changing .showcase-info-desc,
-                    .showcase-info.changing .showcase-info-highlight,
-                    .showcase-info.changing .showcase-info-loc,
-                    .showcase-info.changing .showcase-info-tags{opacity:0;transform:translateY(8px)}
-                    .showcase-info-title,.showcase-info-desc,.showcase-info-highlight,.showcase-info-loc,.showcase-info-tags{transition:opacity .3s,transform .3s}
-
-                    /* Responsive */
-                    @media(max-width:1024px){.sc-cube-scene{width:340px;height:300px}.sc-cube{width:280px;height:280px}.sc-cube-face{width:280px;height:280px}.sc-front{transform:rotateY(0deg) translateZ(140px)}.sc-back{transform:rotateY(180deg) translateZ(140px)}.sc-right{transform:rotateY(90deg) translateZ(140px)}.sc-left{transform:rotateY(-90deg) translateZ(140px)}.sc-top{transform:rotateX(90deg) translateZ(140px)}.sc-bottom{transform:rotateX(-90deg) translateZ(140px)}}
-                    @media(max-width:768px){
-                        .cta-inner{grid-template-columns:1fr!important;text-align:center;gap:40px!important}
-                        .sc-cube-scene{width:280px;height:260px;margin:0 auto}.sc-cube{width:240px;height:240px}.sc-cube-face{width:240px;height:240px}.sc-front{transform:rotateY(0deg) translateZ(120px)}.sc-back{transform:rotateY(180deg) translateZ(120px)}.sc-right{transform:rotateY(90deg) translateZ(120px)}.sc-left{transform:rotateY(-90deg) translateZ(120px)}.sc-top{transform:rotateX(90deg) translateZ(120px)}.sc-bottom{transform:rotateX(-90deg) translateZ(120px)}
-                        .showcase-info{align-items:center;text-align:center;order:-1}
-                        .showcase-info-tags{justify-content:center}
-                    }
-                    @media(max-width:480px){.sc-cube-scene{width:220px;height:220px}.sc-cube{width:190px;height:190px}.sc-cube-face{width:190px;height:190px}.sc-front{transform:rotateY(0deg) translateZ(95px)}.sc-back{transform:rotateY(180deg) translateZ(95px)}.sc-right{transform:rotateY(90deg) translateZ(95px)}.sc-left{transform:rotateY(-90deg) translateZ(95px)}.sc-top{transform:rotateX(90deg) translateZ(95px)}.sc-bottom{transform:rotateX(-90deg) translateZ(95px)}}
-                </style>
-
                 <script>
-                    // 3D Cube Showcase
-                    (function(){
-                        const scData = [
-                            {num:'01',loc:'Bà Nà Hills',title:'Cầu Vàng',desc:'Cây cầu nổi tiếng thế giới nằm trên đỉnh Bà Nà, được nâng đỡ bởi đôi bàn tay khổng lồ. Điểm check-in được yêu thích nhất Đà Nẵng với tầm nhìn 360° ra núi rừng hùng vĩ.',highlight:'⭐ Đánh giá 4.9/5 · Hơn 2 triệu lượt ghé thăm mỗi năm',tags:['Check-in','4.9 ★','2M+ lượt','~800K VNĐ'],link:'cau+vang'},
-                            {num:'02',loc:'Đà Nẵng',title:'Cầu Rồng',desc:'Biểu tượng Đà Nẵng dài 666m, phun lửa và phun nước mỗi tối thứ 7 và chủ nhật lúc 21h. Kiến trúc rồng uốn lượn ấn tượng, là cây cầu biểu tượng nhất Việt Nam.',highlight:'🔥 Phun lửa & nước mỗi T7-CN lúc 21:00',tags:['Phun lửa','T7-CN 21h','666m','Miễn phí'],link:'cau+rong'},
-                            {num:'03',loc:'Quảng Nam',title:'Hội An',desc:'Phố cổ di sản UNESCO với đèn lồng lung linh mỗi đêm. Ẩm thực đường phố nổi tiếng thế giới và trải nghiệm đi thuyền trên sông Hoài.',highlight:'🏛️ Di sản Văn hóa Thế giới UNESCO từ năm 1999',tags:['UNESCO','Ẩm thực','Đèn lồng','Miễn phí'],link:'hoi+an'},
-                            {num:'04',loc:'Bán đảo Sơn Trà',title:'Sơn Trà',desc:'Bán đảo xanh 4.400ha — lá phổi xanh của Đà Nẵng. Nơi sinh sống của voọc chà vá chân nâu quý hiếm.',highlight:'🐒 Nơi duy nhất quan sát Voọc chà vá chân nâu',tags:['Thiên nhiên','Voọc','Trekking','Bãi Bụt'],link:'son+tra'},
-                            {num:'05',loc:'Sun World',title:'Bà Nà Hills',desc:'Khu du lịch trên đỉnh núi 1.487m với Làng Pháp cổ kính, Fantasy Park trong nhà lớn nhất Việt Nam và hệ thống cáp treo đạt kỷ lục Guinness.',highlight:'🏔️ Cáp treo dài nhất thế giới · Kỷ lục Guinness',tags:['Cáp treo','Làng Pháp','Fantasy Park','~900K VNĐ'],link:'ba+na'},
-                            {num:'06',loc:'Đà Nẵng',title:'Biển Mỹ Khê',desc:'Được Forbes bình chọn Top 6 bãi biển đẹp nhất hành tinh. Cát trắng mịn trải dài 900m, nước biển trong xanh ngọc bích.',highlight:'🏖️ Forbes Top 6 bãi biển đẹp nhất hành tinh',tags:['Forbes Top 6','Lướt sóng','Bình minh','Miễn phí'],link:'my+khe'}
-                        ];
-                        let scIdx=0,cube=document.getElementById('scCube'),scene=document.getElementById('scCubeScene');
-                        if(!cube||!scene)return;
-
-                        // Auto-update info panel synced with cube rotation
-                        let scTimer=setInterval(function(){scIdx=(scIdx+1)%scData.length;updateSC(scIdx)},4000);
-                        function updateSC(idx){
-                            const d=scData[idx],info=document.getElementById('showcaseInfo');
-                            info.classList.add('changing');
-                            setTimeout(function(){
-                                document.getElementById('sCounter').textContent=d.num;
-                                document.getElementById('sLoc').innerHTML='<i class="fas fa-map-marker-alt"></i> <span>'+d.loc+'</span>';
-                                document.getElementById('sTitle').textContent=d.title;
-                                document.getElementById('sDesc').textContent=d.desc;
-                                document.getElementById('sHighlight').textContent=d.highlight;
-                                document.getElementById('sTags').innerHTML=d.tags.map(function(t){return '<span><i class="fas fa-check"></i> '+t+'</span>'}).join('');
-                                document.getElementById('sBtn').href='${pageContext.request.contextPath}/tour?search='+d.link;
-                                info.classList.remove('changing');
-                            },300);
-                        }
-
-                        // Drag to rotate
-                        let dragging=false,rx=-12,ry=0,sx,sy;
-                        scene.addEventListener('mousedown',function(e){dragging=true;sx=e.clientX;sy=e.clientY;cube.style.animationPlayState='paused';clearInterval(scTimer);e.preventDefault()});
-                        document.addEventListener('mousemove',function(e){if(!dragging)return;ry+=(e.clientX-sx)*.4;rx-=(e.clientY-sy)*.4;cube.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)';sx=e.clientX;sy=e.clientY});
-                        document.addEventListener('mouseup',function(){if(dragging){dragging=false;cube.style.animationPlayState='running';scTimer=setInterval(function(){scIdx=(scIdx+1)%scData.length;updateSC(scIdx)},4000)}});
-                        // Touch
-                        scene.addEventListener('touchstart',function(e){dragging=true;sx=e.touches[0].clientX;sy=e.touches[0].clientY;cube.style.animationPlayState='paused';clearInterval(scTimer)},{passive:true});
-                        document.addEventListener('touchmove',function(e){if(!dragging)return;ry+=(e.touches[0].clientX-sx)*.4;rx-=(e.touches[0].clientY-sy)*.4;cube.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)';sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
-                        document.addEventListener('touchend',function(){if(dragging){dragging=false;cube.style.animationPlayState='running';scTimer=setInterval(function(){scIdx=(scIdx+1)%scData.length;updateSC(scIdx)},4000)}});
-                    })();
+                document.getElementById('consultForm').addEventListener('submit',function(e){
+                    e.preventDefault();
+                    var btn=document.getElementById('consultBtn');
+                    btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+                    var fd=new FormData(this);
+                    fetch('${pageContext.request.contextPath}/consultation',{method:'POST',body:new URLSearchParams(fd)})
+                    .then(function(r){return r.json()})
+                    .then(function(d){
+                        if(d.success){
+                            document.getElementById('consultSuccess').classList.add('show');
+                            document.getElementById('consultForm').reset();
+                            setTimeout(function(){document.getElementById('consultSuccess').classList.remove('show')},6000);
+                        }else{alert(d.message||'Có lỗi xảy ra');}
+                        btn.disabled=false;btn.innerHTML='<span>Gửi yêu cầu</span> <i class="fas fa-paper-plane"></i>';
+                    })
+                    .catch(function(){alert('Lỗi kết nối');btn.disabled=false;btn.innerHTML='<span>Gửi yêu cầu</span> <i class="fas fa-paper-plane"></i>';});
+                });
                 </script>
 
 
-                <!-- ═══ FOOTER ═══ -->
+
+
                 <jsp:include page="/common/_footer.jsp" />
 
                 <script>

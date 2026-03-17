@@ -52,7 +52,7 @@
     </style>
 </head>
 <body>
-    <jsp:include page="/common/_navbar.jsp" />
+    <jsp:include page="/common/_header.jsp" />
 
     <section class="wishlist-page">
         <div class="container">

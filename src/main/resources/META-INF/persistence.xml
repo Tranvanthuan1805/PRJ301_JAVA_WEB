@@ -37,6 +37,7 @@
         <class>com.dananghub.entity.Wishlist</class>
         <class>com.dananghub.entity.TourFeedback</class>
         <class>com.dananghub.entity.ChatbotLog</class>
+        <class>com.dananghub.entity.Consultation</class>
 
         <properties>
             <!-- Supabase PostgreSQL Connection (Transaction Pooler - port 6543) -->

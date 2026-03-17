@@ -25,6 +25,26 @@ const I18N = {
         // ═══ TOP BAR ═══
         'topbar.phone':     { vi:'0335 111 783', en:'0335 111 783', ko:'0335 111 783', ja:'0335 111 783', zh:'0335 111 783' },
         'topbar.hours':     { vi:'Từ 8:00 - 23:00 hàng ngày', en:'Daily 8:00 AM - 11:00 PM', ko:'매일 8:00 - 23:00', ja:'毎日 8:00〜23:00', zh:'每天 8:00 - 23:00' },
+        'search.placeholder': { vi:'Tìm kiếm tour...', en:'Search tours...', ko:'투어 검색...', ja:'ツアー検索...', zh:'搜索旅游...' },
+
+        // ═══ INFO SLIDER ═══
+        'info.addr.label':    { vi:'Đại học FPT Đà Nẵng', en:'FPT University Da Nang' },
+        'info.addr.value':    { vi:'Khu đô thị FPT City, Ngũ Hành Sơn', en:'FPT City, Ngu Hanh Son District' },
+        'info.hours.label':   { vi:'8:00AM - 10:00PM', en:'8:00AM - 10:00PM' },
+        'info.hours.value':   { vi:'Thứ Hai đến Chủ Nhật', en:'Monday to Sunday' },
+        'info.email.label':   { vi:'Online 24/7', en:'Online 24/7' },
+        'info.phone.label':   { vi:'Hotline: 0335 111 783', en:'Hotline: 0335 111 783' },
+        'info.phone.value':   { vi:'Miễn phí cuộc gọi tư vấn', en:'Free consultation call' },
+        'info.web.label':     { vi:'www.eztravel.site', en:'www.eztravel.site' },
+        'info.web.value':     { vi:'Website chính thức', en:'Official website' },
+        'info.promo.label':   { vi:'Giảm 20% Tour Hè 2026', en:'20% Off Summer Tours 2026' },
+        'info.promo.value':   { vi:'Áp dụng đến 30/06/2026', en:'Valid until 30/06/2026' },
+        'info.refund.label':  { vi:'Cam kết hoàn tiền 100%', en:'100% Money Back Guarantee' },
+        'info.refund.value':  { vi:'Nếu không hài lòng dịch vụ', en:'If not satisfied with service' },
+        'info.cust.label':    { vi:'10,000+ Khách hàng', en:'10,000+ Customers' },
+        'info.cust.value':    { vi:'Đánh giá 4.9/5 sao', en:'Rated 4.9/5 stars' },
+        'info.tours.label':   { vi:'500+ Tour Đà Nẵng', en:'500+ Da Nang Tours' },
+        'info.tours.value':   { vi:'Bà Nà, Hội An, Sơn Trà...', en:'Ba Na, Hoi An, Son Tra...' },
 
         // ═══ HERO ═══
         'hero.badge':       { vi:'Hơn 5,000+ du khách tin tưởng', en:'Trusted by 5,000+ travelers', ko:'5,000명 이상의 여행자가 신뢰', ja:'5,000人以上の旅行者に信頼', zh:'超过5,000名旅客信赖' },
@@ -111,6 +131,34 @@ const I18N = {
         'footer.cert':          { vi:'Chứng Nhận', en:'Certifications', ko:'인증', ja:'認証', zh:'认证' },
         'footer.copyright':     { vi:'© 2026 eztravel — PRJ301 FPT University', en:'© 2026 eztravel — PRJ301 FPT University', ko:'© 2026 eztravel — PRJ301 FPT University', ja:'© 2026 eztravel — PRJ301 FPT University', zh:'© 2026 eztravel — PRJ301 FPT University' },
         'footer.made':          { vi:'Made with ❤️ in Đà Nẵng', en:'Made with ❤️ in Da Nang', ko:'다낭에서 ❤️로 제작', ja:'ダナンで❤️を込めて制作', zh:'在岘港用 ❤️ 制作' },
+
+        // ═══ CONTACT FORM ═══
+        'contact.title':        { vi:'Bạn cần tư vấn tour?', en:'Need tour consultation?' },
+        'contact.subtitle':     { vi:'Tiếp cận với dịch vụ du lịch đáng tin cậy nhất Đà Nẵng..', en:'Connect with the most trusted travel service in Da Nang..' },
+        'contact.name.label':   { vi:'Tên người gửi', en:'Your name' },
+        'contact.name.ph':      { vi:'Họ và tên *', en:'Full name *' },
+        'contact.email.label':  { vi:'Địa chỉ email', en:'Email address' },
+        'contact.service.label':{ vi:'Loại tour yêu cầu', en:'Tour type requested' },
+        'contact.opt.beach':    { vi:'Tour Biển & Đảo', en:'Beach & Island Tour' },
+        'contact.opt.mountain': { vi:'Tour Núi & Trekking', en:'Mountain & Trekking Tour' },
+        'contact.opt.culture':  { vi:'Tour Văn Hóa & Lịch Sử', en:'Culture & History Tour' },
+        'contact.opt.food':     { vi:'Tour Ẩm Thực', en:'Cuisine Tour' },
+        'contact.opt.combo':    { vi:'Combo Trọn Gói', en:'All-Inclusive Combo' },
+        'contact.opt.custom':   { vi:'Yêu cầu riêng', en:'Custom Request' },
+        'contact.desc.label':   { vi:'Mô Tả', en:'Description' },
+        'contact.desc.ph':      { vi:'Hãy mô tả những gì bạn cần.', en:'Describe what you need.' },
+        'contact.submit':       { vi:'Gửi', en:'Submit' },
+        'contact.reach':        { vi:'TIẾP CẬN NGAY', en:'REACH OUT NOW' },
+        'contact.reach.desc':   { vi:'Bắt đầu hợp tác với chúng tôi trong khi tìm ra giải pháp tốt nhất dựa trên nhu cầu của bạn.', en:'Start working with us to find the best solution based on your needs.' },
+        'contact.map':          { vi:'Xem trên bản đồ Google', en:'View on Google Maps' },
+
+        // ═══ MISSION ═══
+        'mission.title':        { vi:'Sứ Mệnh & Tầm Nhìn', en:'Mission & Vision' },
+        'mission.desc':         { vi:'Tập trung tối ưu trải nghiệm du lịch cho thế hệ 2k10 đến 2k, eztravel xây dựng hệ sinh thái du lịch toàn diện từ đặt tour, khám phá điểm đến đến thanh toán thông minh. Mục tiêu của chúng tôi là trở thành trợ lý AI đồng hành cùng mọi chuyến đi.', en:'Focused on optimizing travel for generations 2k10 to 2k, eztravel builds a comprehensive tourism ecosystem from booking tours, discovering destinations to smart payments. Our goal is to become an AI assistant for every journey.' },
+        'mission.eff':          { vi:'Hiệu quả', en:'Efficiency' },
+        'mission.eff.desc':     { vi:'Đặt tour nhanh chóng, thanh toán an toàn, xác nhận tức thì với công nghệ hiện đại.', en:'Quick booking, secure payment, instant confirmation with modern technology.' },
+        'mission.core':         { vi:'Bản chất', en:'Authenticity' },
+        'mission.core.desc':    { vi:'Mang đến trải nghiệm du lịch chân thực, kết nối văn hóa địa phương Đà Nẵng.', en:'Delivering authentic travel experiences, connecting with local Da Nang culture.' },
     },
 
     t: function(key) {
@@ -176,14 +224,27 @@ const I18N = {
 
     renderLangSelector: function() {
         var self = this;
+        // Update flag buttons active state
+        document.querySelectorAll('.lang-flag-btn').forEach(function(btn) {
+            var title = btn.getAttribute('title');
+            var isVi = title && title.indexOf('Vi') !== -1;
+            var isEn = title && title === 'English';
+            if ((isVi && self.currentLang === 'vi') || (isEn && self.currentLang === 'en')) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        // Also update any old lang-selector containers (backward compat)
         document.querySelectorAll('.lang-selector').forEach(function(container) {
             var current = self.langs[self.currentLang];
+            if (!current) return;
             container.innerHTML = 
                 '<div class="lang-current" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'block\'?\'none\':\'block\'">' +
                     current.flag + ' <span>' + current.short + '</span> <i class="fas fa-chevron-down" style="font-size:.5rem;opacity:.6"></i>' +
                 '</div>' +
                 '<div class="lang-dropdown">' +
-                    Object.keys(self.langs).map(function(code) {
+                    ['vi','en'].map(function(code) {
                         var l = self.langs[code];
                         var active = code === self.currentLang ? ' lang-active' : '';
                         return '<div class="lang-option' + active + '" onclick="I18N.setLang(\'' + code + '\')">' +

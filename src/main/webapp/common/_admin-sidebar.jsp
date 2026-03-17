@@ -66,6 +66,12 @@
             <span>Khách Hàng</span>
         </a>
 
+        <!-- Consultations -->
+        <a href="${ctx}/admin/consultations" class="nav-link ${requestScope.activePage == 'consultations' ? 'active' : ''}">
+            <svg class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+            <span>Tư Vấn</span>
+        </a>
+
         <div class="my-3 mx-3 border-t border-white/[.06]"></div>
         <p class="px-4 pb-1 text-[.65rem] font-semibold uppercase tracking-[1.5px] text-slate-500">Phân Tích</p>
 
