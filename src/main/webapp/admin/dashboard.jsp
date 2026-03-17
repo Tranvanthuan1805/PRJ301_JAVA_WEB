@@ -218,6 +218,7 @@
         <a href="#" onclick="showSection('orders',this);return false"><i class="fas fa-shopping-bag"></i> Đơn Hàng</a>
         <a href="#" onclick="showSection('tours-mgmt',this);return false"><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</a>
         <a href="#" onclick="showSection('providers',this);return false"><i class="fas fa-handshake"></i> Nhà Cung Cấp</a>
+        <a href="${pageContext.request.contextPath}/admin/consultations"><i class="fas fa-comments"></i> Tư Vấn</a>
 
         <div class="nav-label">AI & Phân Tích</div>
         <a href="#" onclick="showSection('chatbot',this);return false"><i class="fas fa-robot"></i> Chatbot & Hành Vi</a>
@@ -256,18 +257,21 @@
         <div class="stat"><div class="icon icon-green"><i class="fas fa-map-marked-alt"></i></div><div class="label">Tours Hoạt Động</div><div class="value">${activeTours}</div></div>
         <div class="stat"><div class="icon icon-orange"><i class="fas fa-shopping-bag"></i></div><div class="label">Tổng Đơn Hàng</div><div class="value">${totalOrders}</div></div>
         <div class="stat"><div class="icon icon-red"><i class="fas fa-clock"></i></div><div class="label">Đơn Chờ Xử Lý</div><div class="value" style="color:#F87171">${pendingOrders}</div></div>
+        <div class="stat"><div class="icon icon-purple"><i class="fas fa-comments"></i></div><div class="label">Yêu Cầu Tư Vấn</div><div class="value">${totalConsultations}</div></div>
+        <div class="stat"><div class="icon icon-cyan"><i class="fas fa-bell"></i></div><div class="label">Yêu Cầu Mới</div><div class="value" style="color:#22D3EE">${newConsultations}</div></div>
     </section>
     <div class="grid-2">
         <div class="card">
             <h3><i class="fas fa-coins"></i> Doanh Thu Tổng</h3>
             <div style="font-size:2.4rem;font-weight:800;color:#34D399;letter-spacing:-1px;margin-bottom:8px"><fmt:formatNumber value="${grossRevenue}" type="number" groupingUsed="true"/>đ</div>
-            <div style="font-size:.85rem;color:#34D399"><i class="fas fa-arrow-up"></i> Từ ${completedOrders} đơn hoàn thành</div>
+            <div style="font-size:.85rem;color:#34D399"><i class="fas fa-check-circle"></i> Từ ${completedOrders + confirmedOrders} đơn đã thanh toán thành công</div>
         </div>
         <div class="card">
             <h3><i class="fas fa-bolt"></i> Quản Trị Nhanh</h3>
             <a href="#" onclick="showSection('customers',document.querySelector('nav a:nth-child(2)'));return false" class="action-link"><div class="aicon icon-blue"><i class="fas fa-users"></i></div><div><div class="atitle">Quản Lý Khách Hàng</div><div class="adesc">${totalUsers} người dùng</div></div></a>
             <a href="#" onclick="showSection('orders',document.querySelector('nav a:nth-child(3)'));return false" class="action-link"><div class="aicon icon-orange"><i class="fas fa-shopping-bag"></i></div><div><div class="atitle">Quản Lý Đơn Hàng</div><div class="adesc">${totalOrders} đơn · ${pendingOrders} chờ</div></div></a>
             <a href="#" onclick="showSection('tours-mgmt',document.querySelector('nav a:nth-child(4)'));return false" class="action-link"><div class="aicon icon-green"><i class="fas fa-map"></i></div><div><div class="atitle">Quản Lý Tours</div><div class="adesc">${activeTours} tour hoạt động</div></div></a>
+            <a href="${pageContext.request.contextPath}/admin/consultations" class="action-link"><div class="aicon icon-purple"><i class="fas fa-comments"></i></div><div><div class="atitle">Yêu Cầu Tư Vấn</div><div class="adesc">${totalConsultations} yêu cầu · ${newConsultations} mới</div></div></a>
         </div>
     </div>
 

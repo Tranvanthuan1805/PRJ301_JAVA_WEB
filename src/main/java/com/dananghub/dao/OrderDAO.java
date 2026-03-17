@@ -223,7 +223,7 @@ public class OrderDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             Double result = em.createQuery(
-                "SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.orderStatus = 'Completed'",
+                "SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.orderStatus IN ('Completed', 'Confirmed')",
                 Double.class)
                 .getSingleResult();
             return result != null ? result : 0.0;
@@ -237,7 +237,7 @@ public class OrderDAO {
         try {
             Object result = em.createQuery(
                 "SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o " +
-                "WHERE o.orderStatus = 'Completed' AND o.orderDate BETWEEN :from AND :to")
+                "WHERE o.orderStatus IN ('Completed', 'Confirmed') AND o.orderDate BETWEEN :from AND :to")
                 .setParameter("from", fromDate)
                 .setParameter("to", toDate)
                 .getSingleResult();

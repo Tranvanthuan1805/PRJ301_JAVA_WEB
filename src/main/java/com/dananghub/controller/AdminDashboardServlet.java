@@ -66,8 +66,16 @@ public class AdminDashboardServlet extends HttpServlet {
 
             Double totalRevenue = 0.0;
             try {
-                Object rev = em.createQuery("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.orderStatus = 'Completed'").getSingleResult();
+                Object rev = em.createQuery("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.orderStatus IN ('Completed', 'Confirmed')").getSingleResult();
                 totalRevenue = ((Number) rev).doubleValue();
+            } catch (Exception ignored) {}
+
+            // Consultation stats
+            Long totalConsultations = 0L;
+            Long newConsultations = 0L;
+            try {
+                totalConsultations = (Long) em.createQuery("SELECT COUNT(c) FROM Consultation c").getSingleResult();
+                newConsultations = (Long) em.createQuery("SELECT COUNT(c) FROM Consultation c WHERE c.status = 'new'").getSingleResult();
             } catch (Exception ignored) {}
 
             // Providers
@@ -122,6 +130,8 @@ public class AdminDashboardServlet extends HttpServlet {
             request.setAttribute("pendingTourList", pendingTourList);
             request.setAttribute("totalReviews", totalReviews);
             request.setAttribute("totalCoupons", totalCoupons);
+            request.setAttribute("totalConsultations", totalConsultations);
+            request.setAttribute("newConsultations", newConsultations);
 
             // ═══ SPA DATA: Lists for inline sections ═══
             try {
