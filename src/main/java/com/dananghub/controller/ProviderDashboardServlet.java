@@ -23,10 +23,7 @@ public class ProviderDashboardServlet extends HttpServlet {
 
         User user = (User) session.getAttribute("user");
         String roleName = user.getRoleName();
-        if (!"PROVIDER".equalsIgnoreCase(roleName) && !"ADMIN".equalsIgnoreCase(roleName)) {
-            response.sendRedirect(request.getContextPath() + "/home");
-            return;
-        }
+        // Allow CUSTOMER to access if they are an approved provider (check below)
 
             int providerId = user.getUserId();
 

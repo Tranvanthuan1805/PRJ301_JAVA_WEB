@@ -5,6 +5,7 @@ import com.dananghub.dao.CouponDAO;
 import com.dananghub.dao.TourDAO;
 import com.dananghub.entity.Provider;
 import com.dananghub.entity.User;
+import com.dananghub.entity.Role;
 import com.dananghub.util.JPAUtil;
 
 import jakarta.persistence.EntityManager;
@@ -233,7 +234,21 @@ public class AdminDashboardServlet extends HttpServlet {
         try {
             tx.begin();
             Provider p = em.find(Provider.class, id);
-            if (p != null) { p.setStatus("Approved"); p.setVerified(true); em.merge(p); }
+            if (p != null) { 
+                p.setStatus("Approved"); 
+                p.setVerified(true); 
+                em.merge(p); 
+                
+                // Update user role to PROVIDER
+                User u = em.find(User.class, id);
+                if (u != null) {
+                    try {
+                        Role r = em.createQuery("SELECT r FROM Role r WHERE r.roleName = 'PROVIDER'", Role.class).getSingleResult();
+                        u.setRole(r);
+                        em.merge(u);
+                    } catch (Exception ignored) {}
+                }
+            }
             tx.commit();
         } catch (Exception e) { if (tx.isActive()) tx.rollback(); e.printStackTrace(); }
         finally { em.close(); }
