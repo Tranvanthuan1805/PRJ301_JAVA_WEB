@@ -73,6 +73,11 @@ public class AdminConsultationServlet extends HttpServlet {
             getServletContext().log("AdminConsultationServlet POST ERROR: " + e.getMessage(), e);
         }
 
-        resp.sendRedirect(req.getContextPath() + "/admin/consultations");
+        String redirectTo = req.getParameter("redirect");
+        if ("dashboard".equals(redirectTo)) {
+            resp.sendRedirect(req.getContextPath() + "/admin/dashboard#consultations");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/admin/consultations");
+        }
     }
 }

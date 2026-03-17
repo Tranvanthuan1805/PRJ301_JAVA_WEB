@@ -1,5 +1,6 @@
 package com.dananghub.controller;
 
+import com.dananghub.dao.ConsultationDAO;
 import com.dananghub.dao.TourDAO;
 import com.dananghub.entity.Provider;
 import com.dananghub.entity.User;
@@ -152,6 +153,19 @@ public class AdminDashboardServlet extends HttpServlet {
                 List<?> categoryList = em.createQuery("SELECT c FROM Category c ORDER BY c.categoryName").getResultList();
                 request.setAttribute("categoryList", categoryList);
             } catch (Exception ignored) {}
+
+            // Consultation list for SPA section
+            Long contactedConsultations = 0L;
+            Long doneConsultations = 0L;
+            try {
+                ConsultationDAO consultDAO = new ConsultationDAO();
+                List<?> consultationList = consultDAO.findAll();
+                request.setAttribute("consultationList", consultationList);
+                contactedConsultations = consultDAO.countByStatus("contacted");
+                doneConsultations = consultDAO.countByStatus("done");
+            } catch (Exception ignored) {}
+            request.setAttribute("contactedConsultations", contactedConsultations);
+            request.setAttribute("doneConsultations", doneConsultations);
 
             // All providers for SPA section
             try {

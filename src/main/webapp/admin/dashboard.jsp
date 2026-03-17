@@ -218,7 +218,7 @@
         <a href="#" onclick="showSection('orders',this);return false"><i class="fas fa-shopping-bag"></i> Đơn Hàng</a>
         <a href="#" onclick="showSection('tours-mgmt',this);return false"><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</a>
         <a href="#" onclick="showSection('providers',this);return false"><i class="fas fa-handshake"></i> Nhà Cung Cấp</a>
-        <a href="${pageContext.request.contextPath}/admin/consultations"><i class="fas fa-comments"></i> Tư Vấn</a>
+        <a href="#" onclick="showSection('consultations',this);return false"><i class="fas fa-comments"></i> Tư Vấn</a>
 
         <div class="nav-label">AI & Phân Tích</div>
         <a href="#" onclick="showSection('chatbot',this);return false"><i class="fas fa-robot"></i> Chatbot & Hành Vi</a>
@@ -271,7 +271,7 @@
             <a href="#" onclick="showSection('customers',document.querySelector('nav a:nth-child(2)'));return false" class="action-link"><div class="aicon icon-blue"><i class="fas fa-users"></i></div><div><div class="atitle">Quản Lý Khách Hàng</div><div class="adesc">${totalUsers} người dùng</div></div></a>
             <a href="#" onclick="showSection('orders',document.querySelector('nav a:nth-child(3)'));return false" class="action-link"><div class="aicon icon-orange"><i class="fas fa-shopping-bag"></i></div><div><div class="atitle">Quản Lý Đơn Hàng</div><div class="adesc">${totalOrders} đơn · ${pendingOrders} chờ</div></div></a>
             <a href="#" onclick="showSection('tours-mgmt',document.querySelector('nav a:nth-child(4)'));return false" class="action-link"><div class="aicon icon-green"><i class="fas fa-map"></i></div><div><div class="atitle">Quản Lý Tours</div><div class="adesc">${activeTours} tour hoạt động</div></div></a>
-            <a href="${pageContext.request.contextPath}/admin/consultations" class="action-link"><div class="aicon icon-purple"><i class="fas fa-comments"></i></div><div><div class="atitle">Yêu Cầu Tư Vấn</div><div class="adesc">${totalConsultations} yêu cầu · ${newConsultations} mới</div></div></a>
+            <a href="#" onclick="showSection('consultations',document.querySelector('nav a:nth-child(6)'));return false" class="action-link"><div class="aicon icon-purple"><i class="fas fa-comments"></i></div><div><div class="atitle">Yêu Cầu Tư Vấn</div><div class="adesc">${totalConsultations} yêu cầu · ${newConsultations} mới</div></div></a>
         </div>
     </div>
 
@@ -1067,6 +1067,105 @@
         </c:if>
     </section>
     </div><!-- /sec-neural -->
+
+    <!-- SPA SECTION: CONSULTATIONS -->
+    <div class="spa-section" id="sec-consultations" style="display:none">
+        <h2 style="font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:24px"><i class="fas fa-comments" style="color:#A78BFA;margin-right:10px"></i>Yêu Cầu Tư Vấn</h2>
+        
+        <!-- Stats -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+            <div class="stat"><div class="icon" style="background:rgba(139,92,246,.15);color:#A78BFA"><i class="fas fa-inbox"></i></div><div class="label">Tổng Yêu Cầu</div><div class="value">${totalConsultations}</div></div>
+            <div class="stat"><div class="icon icon-blue"><i class="fas fa-bell"></i></div><div class="label">Chưa Xử Lý</div><div class="value" style="color:#60A5FA">${newConsultations}</div></div>
+            <div class="stat"><div class="icon icon-orange"><i class="fas fa-phone"></i></div><div class="label">Đã Liên Hệ</div><div class="value" style="color:#FBBF24">${contactedConsultations}</div></div>
+            <div class="stat"><div class="icon icon-green"><i class="fas fa-check-circle"></i></div><div class="label">Hoàn Thành</div><div class="value" style="color:#34D399">${doneConsultations}</div></div>
+        </div>
+
+        <!-- Table -->
+        <div class="card">
+            <h3><i class="fas fa-list"></i> Danh Sách Yêu Cầu Tư Vấn</h3>
+            <c:choose>
+                <c:when test="${not empty consultationList}">
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse">
+                        <thead>
+                            <tr>
+                                <th style="padding:12px 16px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">#</th>
+                                <th style="padding:12px 16px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">Khách Hàng</th>
+                                <th style="padding:12px 16px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">Loại Tour</th>
+                                <th style="padding:12px 16px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">Tin Nhắn</th>
+                                <th style="padding:12px 16px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">Ngày Gửi</th>
+                                <th style="padding:12px 16px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">Trạng Thái</th>
+                                <th style="padding:12px 16px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${consultationList}" var="c" varStatus="s">
+                                <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+                                    <td style="padding:14px 16px;font-size:.85rem;color:#64748B;font-weight:600">${s.count}</td>
+                                    <td style="padding:14px 16px">
+                                        <div style="font-weight:700;color:#fff;font-size:.88rem">${c.fullName}</div>
+                                        <div style="color:#60A5FA;font-size:.78rem">${c.email}</div>
+                                        <c:if test="${not empty c.phone}"><div style="color:#94A3B8;font-size:.75rem"><i class="fas fa-phone" style="font-size:.6rem;margin-right:4px"></i>${c.phone}</div></c:if>
+                                    </td>
+                                    <td style="padding:14px 16px"><span style="padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:700;background:rgba(59,130,246,.1);color:#60A5FA">${c.tourTypeLabel}</span></td>
+                                    <td style="padding:14px 16px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#94A3B8;font-size:.82rem" title="${c.message}">${c.message}</td>
+                                    <td style="padding:14px 16px;color:#64748B;font-size:.78rem"><fmt:formatDate value="${c.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                    <td style="padding:14px 16px">
+                                        <span class="badge" style="padding:4px 12px;border-radius:999px;font-size:.68rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;
+                                            ${c.status == 'new' ? 'background:rgba(59,130,246,.12);color:#60A5FA' : c.status == 'contacted' ? 'background:rgba(245,158,11,.12);color:#FBBF24' : 'background:rgba(16,185,129,.12);color:#34D399'}">
+                                            <c:choose>
+                                                <c:when test="${c.status == 'new'}"><i class="fas fa-circle" style="font-size:.4rem"></i> Mới</c:when>
+                                                <c:when test="${c.status == 'contacted'}"><i class="fas fa-phone"></i> Đã liên hệ</c:when>
+                                                <c:when test="${c.status == 'done'}"><i class="fas fa-check"></i> Hoàn thành</c:when>
+                                                <c:otherwise>${c.status}</c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </td>
+                                    <td style="padding:14px 16px">
+                                        <button onclick="openConsultModal(${c.consultationId},'${c.status}','${c.adminNote}')" style="padding:6px 12px;border-radius:8px;font-size:.72rem;font-weight:600;border:none;cursor:pointer;background:rgba(59,130,246,.15);color:#60A5FA;display:inline-flex;align-items:center;gap:4px">
+                                            <i class="fas fa-edit"></i> Cập nhật
+                                        </button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div style="text-align:center;padding:60px 20px;color:#64748B">
+                        <i class="fas fa-inbox" style="font-size:3rem;opacity:.3;margin-bottom:16px;display:block"></i>
+                        <p>Chưa có yêu cầu tư vấn nào</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div><!-- /sec-consultations -->
+
+    <!-- Consultation Update Modal -->
+    <div id="consultModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center">
+        <div style="background:#1E293B;border-radius:16px;padding:28px;width:440px;max-width:90vw;border:1px solid rgba(255,255,255,.08)">
+            <h3 style="font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:20px"><i class="fas fa-edit" style="margin-right:8px;color:#3B82F6"></i>Cập nhật trạng thái</h3>
+            <form method="POST" action="${pageContext.request.contextPath}/admin/consultations">
+                <input type="hidden" name="action" value="updateStatus">
+                <input type="hidden" name="id" id="cModalId">
+                <input type="hidden" name="redirect" value="dashboard">
+                <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Trạng thái</label>
+                <select name="status" id="cModalStatus" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;margin-bottom:16px;outline:none">
+                    <option value="new">🟢 Mới</option>
+                    <option value="contacted">🟡 Đã liên hệ</option>
+                    <option value="done">✅ Hoàn thành</option>
+                </select>
+                <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Ghi chú Admin</label>
+                <textarea name="note" id="cModalNote" placeholder="Ghi chú xử lý..." style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;min-height:100px;resize:vertical;margin-bottom:16px;outline:none;font-family:'Inter',sans-serif"></textarea>
+                <div style="display:flex;gap:10px;justify-content:flex-end">
+                    <button type="button" onclick="closeConsultModal()" style="padding:10px 20px;border-radius:8px;font-size:.82rem;font-weight:700;border:none;cursor:pointer;background:rgba(255,255,255,.06);color:#94A3B8">Hủy</button>
+                    <button type="submit" style="padding:10px 20px;border-radius:8px;font-size:.82rem;font-weight:700;border:none;cursor:pointer;background:#3B82F6;color:#fff">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </main>
 
 <script>
@@ -1079,6 +1178,19 @@ function showSection(name, link) {
     if (link) link.classList.add('active');
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
+function openConsultModal(id, status, note) {
+    document.getElementById('cModalId').value = id;
+    document.getElementById('cModalStatus').value = status || 'new';
+    document.getElementById('cModalNote').value = note || '';
+    var m = document.getElementById('consultModal');
+    m.style.display = 'flex';
+}
+function closeConsultModal() {
+    document.getElementById('consultModal').style.display = 'none';
+}
+document.getElementById('consultModal').addEventListener('click', function(e) {
+    if (e.target === this) closeConsultModal();
+});
 </script>
 
 <c:if test="${aiDataLoaded}">
