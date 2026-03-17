@@ -391,12 +391,85 @@
             <div class="ai-metric"><small>Chờ Duyệt</small><div class="val warning">${pendingTours}</div></div>
             <div class="ai-metric"><small>Doanh Thu</small><div class="val" style="color:#34D399"><fmt:formatNumber value="${grossRevenue}" pattern="#,###"/>đ</div></div>
         </div>
+
+        <!-- Inline Add Tour Form (hidden by default) -->
+        <div id="addTourPanel" style="display:none;margin-bottom:24px">
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                    <h3 style="margin:0"><i class="fas fa-plus-circle" style="color:#3B82F6"></i> Thêm Tour Mới</h3>
+                    <button onclick="document.getElementById('addTourPanel').style.display='none'" style="background:rgba(255,255,255,.06);border:none;color:#94A3B8;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600"><i class="fas fa-times"></i> Đóng</button>
+                </div>
+                <form method="POST" action="${pageContext.request.contextPath}/admin/tours" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="redirect" value="dashboard">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Tên Tour *</label>
+                            <input type="text" name="tourName" required placeholder="VD: City Tour Đà Nẵng" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Danh Mục *</label>
+                            <select name="categoryId" required style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none">
+                                <c:forEach items="${categoryList}" var="cat">
+                                    <option value="${cat.categoryId}">${cat.categoryName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Giá (VNĐ) *</label>
+                            <input type="number" name="price" required placeholder="500000" min="0" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Thời Gian Tour</label>
+                            <input type="text" name="duration" placeholder="VD: 1 ngày, 2 giờ" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Phương Tiện</label>
+                            <input type="text" name="transport" placeholder="VD: Xe du lịch" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Điểm Đến</label>
+                            <input type="text" name="destination" placeholder="VD: Bà Nà Hills" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Ngày Bắt Đầu</label>
+                            <input type="date" name="startDate" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Ngày Kết Thúc</label>
+                            <input type="date" name="endDate" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Số Người Tối Đa</label>
+                            <input type="number" name="maxPeople" value="20" min="1" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">URL Ảnh</label>
+                            <input type="text" name="imageUrl" placeholder="https://..." style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                    </div>
+                    <div style="margin-top:16px">
+                        <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Mô Tả Ngắn</label>
+                        <input type="text" name="shortDesc" placeholder="Mô tả ngắn về tour..." style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                    </div>
+                    <div style="margin-top:16px">
+                        <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Mô Tả Chi Tiết</label>
+                        <textarea name="description" rows="3" placeholder="Mô tả chi tiết..." style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;resize:vertical;font-family:'Inter',sans-serif"></textarea>
+                    </div>
+                    <div style="margin-top:20px;display:flex;gap:10px;justify-content:flex-end">
+                        <button type="button" onclick="document.getElementById('addTourPanel').style.display='none'" style="padding:10px 20px;border-radius:8px;font-size:.82rem;font-weight:700;border:none;cursor:pointer;background:rgba(255,255,255,.06);color:#94A3B8">Hủy</button>
+                        <button type="submit" style="padding:10px 24px;border-radius:8px;font-size:.82rem;font-weight:700;border:none;cursor:pointer;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;box-shadow:0 4px 15px rgba(59,130,246,.3)"><i class="fas fa-save" style="margin-right:6px"></i>Lưu Tour</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
                 <h3 style="margin:0"><i class="fas fa-map-marked-alt"></i> Danh Sách Tour <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
-                <a href="${pageContext.request.contextPath}/admin/tours?action=add" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;text-decoration:none;transition:.3s;box-shadow:0 4px 15px rgba(59,130,246,.3)">
+                <button onclick="document.getElementById('addTourPanel').style.display=document.getElementById('addTourPanel').style.display==='none'?'block':'none';window.scrollTo({top:document.getElementById('addTourPanel').offsetTop-80,behavior:'smooth'})" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;transition:.3s;box-shadow:0 4px 15px rgba(59,130,246,.3)">
                     <i class="fas fa-plus-circle"></i> Thêm Tour Mới
-                </a>
+                </button>
             </div>
             <div style="overflow-x:auto">
             <table class="data-table">
@@ -424,7 +497,7 @@
                         <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${t.active ? 'background:rgba(16,185,129,.15);color:#34D399' : 'background:rgba(239,68,68,.15);color:#F87171'}">${t.active ? 'Active' : 'Inactive'}</span></td>
                         <td>
                             <div style="display:flex;gap:6px">
-                                <a href="${pageContext.request.contextPath}/admin/tours?action=edit&id=${t.tourId}" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(59,130,246,.15);color:#60A5FA;text-decoration:none;transition:.3s" title="Sửa"><i class="fas fa-edit"></i></a>
+                                <a href="${pageContext.request.contextPath}/admin/tours?action=toggle&id=${t.tourId}" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${t.active ? 'background:rgba(245,158,11,.15);color:#FBBF24' : 'background:rgba(16,185,129,.15);color:#34D399'};text-decoration:none" title="${t.active ? 'Ẩn' : 'Hiện'}">${t.active ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>'}</a>
                                 <a href="${pageContext.request.contextPath}/admin/tours?action=delete&id=${t.tourId}" onclick="return confirm('Bạn có chắc muốn xóa tour này?')" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171;text-decoration:none;transition:.3s" title="Xóa"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
