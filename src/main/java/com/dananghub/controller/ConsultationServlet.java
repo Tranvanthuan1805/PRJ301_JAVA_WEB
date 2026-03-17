@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 @WebServlet("/consultation")
 public class ConsultationServlet extends HttpServlet {
 
-    private final ConsultationDAO dao = new ConsultationDAO();
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
@@ -35,16 +33,25 @@ public class ConsultationServlet extends HttpServlet {
             c.setFullName(name.trim());
             c.setEmail(email.trim());
             c.setPhone(phone != null ? phone.trim() : "");
-            c.setTourType(tourType);
+            c.setTourType(tourType != null ? tourType.trim() : "other");
             c.setMessage(message != null ? message.trim() : "");
+            c.setStatus("new");
 
+            ConsultationDAO dao = new ConsultationDAO();
             dao.save(c);
 
             out.print("{\"success\":true,\"message\":\"Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm nhất.\"}");
         } catch (Exception e) {
-            resp.setStatus(500);
-            out.print("{\"success\":false,\"message\":\"Lỗi hệ thống, vui lòng thử lại.\"}");
             e.printStackTrace();
+            getServletContext().log("ConsultationServlet ERROR: " + e.getMessage(), e);
+            resp.setStatus(500);
+            out.print("{\"success\":false,\"message\":\"Lỗi hệ thống: " + e.getMessage().replace("\"", "'") + "\"}");
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json;charset=UTF-8");
+        resp.getWriter().print("{\"status\":\"ok\",\"servlet\":\"ConsultationServlet\"}");
     }
 }
