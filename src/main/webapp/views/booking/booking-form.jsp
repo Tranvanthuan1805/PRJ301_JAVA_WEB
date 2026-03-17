@@ -194,18 +194,22 @@
                                    required>
                         </div>
 
-                        <div class="field">
+                        <div class="field" id="field-fullName">
                             <label><i class="fas fa-user"></i> Họ Tên Người Đặt</label>
                             <input type="text" name="fullName"
+                                   id="fullName"
                                    value="${sessionScope.user.fullName}"
-                                   placeholder="Nhập họ tên" required>
+                                   placeholder="Nhập họ tên">
+                            <span class="error-msg" id="msg-fullName">Vui lòng nhập họ tên</span>
                         </div>
 
-                        <div class="field">
+                        <div class="field" id="field-phone">
                             <label><i class="fas fa-phone"></i> Số Điện Thoại</label>
                             <input type="tel" name="phone"
+                                   id="phone"
                                    value="${sessionScope.user.phoneNumber}"
-                                   placeholder="Nhập số điện thoại" required>
+                                   placeholder="Nhập số điện thoại">
+                            <span class="error-msg" id="msg-phone">Số điện thoại phải từ 10-11 chữ số</span>
                         </div>
 
                         <!-- Promo Code -->
@@ -339,6 +343,45 @@ document.addEventListener('DOMContentLoaded', () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
     dateInput.min = tomorrow.toISOString().split('T')[0];
     dateInput.value = tomorrow.toISOString().split('T')[0];
+});
+
+// Form Validation
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    // Reset errors
+    document.querySelectorAll('.error-msg').forEach(m => m.style.display = 'none');
+    document.querySelectorAll('.field').forEach(f => f.classList.remove('has-error'));
+
+    const fullName = document.getElementById('fullName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const phoneRegex = /^\d{10,11}$/;
+    
+    let isValid = true;
+    let firstErrorElement = null;
+
+    if (!fullName) {
+        isValid = false;
+        document.getElementById('msg-fullName').style.display = 'block';
+        document.getElementById('field-fullName').classList.add('has-error');
+        if (!firstErrorElement) firstErrorElement = document.getElementById('fullName');
+    }
+
+    if (!phoneRegex.test(phone)) {
+        isValid = false;
+        document.getElementById('msg-phone').style.display = 'block';
+        document.getElementById('field-phone').classList.add('has-error');
+        if (!firstErrorElement) firstErrorElement = document.getElementById('phone');
+    }
+
+    if (!isValid) {
+        e.preventDefault();
+        firstErrorElement.focus();
+        return;
+    }
+
+    // Processing state
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
 });
 </script>
 </body>

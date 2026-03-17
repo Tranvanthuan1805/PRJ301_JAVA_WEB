@@ -90,35 +90,39 @@
             </c:if>
 
             <form action="${pageContext.request.contextPath}/register" method="post">
-                <div class="form-group">
+                <div class="form-group" id="field-username">
                     <label for="username">Tên đăng nhập</label>
                     <div class="input-wrapper">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="username" name="username" placeholder="Nhập tên đăng nhập (3-50 ký tự)" required>
+                        <input type="text" id="username" name="username" placeholder="Nhập tên đăng nhập (3-50 ký tự)">
                     </div>
+                    <span class="error-msg" id="msg-username">Tên đăng nhập phải từ 3-50 ký tự</span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="field-email">
                     <label for="email">Email</label>
                     <div class="input-wrapper">
                         <i class="fas fa-envelope"></i>
                         <input type="email" id="email" name="email" placeholder="you@example.com">
                     </div>
+                    <span class="error-msg" id="msg-email">Vui lòng nhập email hợp lệ</span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="field-password">
                     <label for="password">Mật khẩu</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="password" placeholder="Tối thiểu 6 ký tự" required>
+                        <input type="password" id="password" name="password" placeholder="Tối thiểu 6 ký tự">
                     </div>
+                    <span class="error-msg" id="msg-password">Mật khẩu phải tối thiểu 6 ký tự</span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="field-confirmPassword">
                     <label for="confirmPassword">Xác nhận mật khẩu</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu">
                     </div>
+                    <span class="error-msg" id="msg-confirmPassword">Mật khẩu xác nhận không khớp</span>
                 </div>
-                <button type="submit" class="btn-register">
+                <button type="submit" class="btn-register" id="btnRegister">
                     <i class="fas fa-user-plus"></i> ĐĂNG KÝ
                 </button>
             </form>
@@ -127,5 +131,60 @@
             </div>
         </div>
     </div>
+    
+    <script>
+    document.querySelector('.auth-form form').addEventListener('submit', function(e) {
+        // Reset errors
+        document.querySelectorAll('.error-msg').forEach(m => m.style.display = 'none');
+        document.querySelectorAll('.form-group').forEach(f => f.classList.remove('has-error'));
+
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        let isValid = true;
+        let firstErrorElement = null;
+
+        if (username.length < 3 || username.length > 50) {
+            isValid = false;
+            document.getElementById('msg-username').style.display = 'block';
+            document.getElementById('field-username').classList.add('has-error');
+            if (!firstErrorElement) firstErrorElement = document.getElementById('username');
+        }
+
+        if (email && !emailRegex.test(email)) {
+            isValid = false;
+            document.getElementById('msg-email').style.display = 'block';
+            document.getElementById('field-email').classList.add('has-error');
+            if (!firstErrorElement) firstErrorElement = document.getElementById('email');
+        }
+
+        if (password.length < 6) {
+            isValid = false;
+            document.getElementById('msg-password').style.display = 'block';
+            document.getElementById('field-password').classList.add('has-error');
+            if (!firstErrorElement) firstErrorElement = document.getElementById('password');
+        }
+
+        if (password !== confirmPassword) {
+            isValid = false;
+            document.getElementById('msg-confirmPassword').style.display = 'block';
+            document.getElementById('field-confirmPassword').classList.add('has-error');
+            if (!firstErrorElement) firstErrorElement = document.getElementById('confirmPassword');
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            firstErrorElement.focus();
+            return;
+        }
+
+        const btn = document.getElementById('btnRegister');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đăng ký...';
+    });
+    </script>
 </body>
 </html>

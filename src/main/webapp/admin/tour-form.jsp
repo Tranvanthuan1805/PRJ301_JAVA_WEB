@@ -203,6 +203,7 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
                     <input type="date" name="endDate" class="form-input" required
                            value="<fmt:formatDate value='${tour.endDate}' pattern='yyyy-MM-dd'/>">
                     <span class="form-hint"><i class="fas fa-info-circle"></i> Tour sẽ tự động ẩn sau ngày này</span>
+                    <span id="date-error" class="text-red-400 text-[0.7rem] font-bold mt-1 hidden"><i class="fas fa-exclamation-circle"></i> Ngày kết thúc phải sau ngày bắt đầu!</span>
                 </div>
 
                 <!-- ═══ HÌNH ẢNH ═══ -->
@@ -298,13 +299,19 @@ document.getElementById('tourForm').addEventListener('submit', function(e) {
 document.getElementById('tourForm').addEventListener('submit', function(e) {
     var sd = document.querySelector('[name=startDate]').value;
     var ed = document.querySelector('[name=endDate]').value;
+    var errorSpan = document.getElementById('date-error');
+    
     if (sd && ed && sd > ed) {
         e.preventDefault();
-        alert('Ngày kết thúc phải sau ngày bắt đầu!');
+        errorSpan.classList.remove('hidden');
+        document.querySelector('[name=endDate]').classList.add('border-red-500');
+        
         var btn = document.getElementById('submitBtn');
         btn.innerHTML = '<i class="fas fa-save"></i> ${editMode ? "Cập Nhật Tour" : "Tạo Tour Mới"}';
         btn.disabled = false;
         btn.style.opacity = '1';
+    } else {
+        errorSpan.classList.add('hidden');
     }
 });
 </script>

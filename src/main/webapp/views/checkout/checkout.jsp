@@ -68,8 +68,8 @@
     .payment-methods{display:flex;gap:8px;justify-content:center;margin-top:6px}
     .payment-methods img{height:20px;opacity:.5}
 
-    @media(max-width:1024px){.checkout-layout{grid-template-columns:1fr}.summary-card{position:relative;top:0}}
-    @media(max-width:768px){.form-row{grid-template-columns:1fr}.form-group.full{grid-column:span 1}.steps{flex-wrap:wrap}.step-line{width:30px}}
+    .payment-methods{display:flex;gap:8px;justify-content:center;margin-top:6px}
+    .payment-methods img{height:20px;opacity:.5}
     </style>
 </head>
 <body>
@@ -96,22 +96,25 @@
             <div class="form-card">
                 <h3><i class="fas fa-user"></i> Thông Tin Liên Hệ</h3>
                 <div class="form-row">
-                    <div class="form-group">
+                    <div class="form-group" id="group-fullName">
                         <label>Họ và tên *</label>
-                        <input type="text" name="fullName" required placeholder="Nguyễn Văn A"
+                        <input type="text" name="fullName" placeholder="Nguyễn Văn A" 
                                value="${user.fullName}">
+                        <span class="error-msg" id="msg-fullName">Vui lòng nhập họ và tên</span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="group-phone">
                         <label>Số điện thoại *</label>
-                        <input type="tel" name="phone" required placeholder="0912 345 678"
+                        <input type="tel" name="phone" placeholder="0912 345 678" 
                                value="${user.phoneNumber}">
+                        <span class="error-msg" id="msg-phone">Số điện thoại phải chứa từ 10-11 chữ số</span>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group full">
+                    <div class="form-group full" id="group-email">
                         <label>Email *</label>
-                        <input type="email" name="email" required placeholder="email@example.com"
+                        <input type="email" name="email" placeholder="email@example.com" 
                                value="${user.email}">
+                        <span class="error-msg" id="msg-email">Email không hợp lệ</span>
                     </div>
                 </div>
                 <div class="form-row">
@@ -180,27 +183,43 @@
 
 <script>
 document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    // Reset errors
+    document.querySelectorAll('.error-msg').forEach(m => m.style.display = 'none');
+    document.querySelectorAll('.form-group').forEach(g => g.classList.remove('has-error'));
+
     const fullName = this.fullName.value.trim();
     const phone = this.phone.value.trim();
     const email = this.email.value.trim();
     const phoneRegex = /^\d{10,11}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    let isValid = true;
+    let firstErrorElement = null;
 
     if (!fullName) {
-        alert('Vui lòng nhập họ và tên');
-        e.preventDefault();
-        return;
+        isValid = false;
+        document.getElementById('msg-fullName').style.display = 'block';
+        document.getElementById('group-fullName').classList.add('has-error');
+        if (!firstErrorElement) firstErrorElement = this.fullName;
     }
 
     if (!phoneRegex.test(phone)) {
-        alert('Số điện thoại phải chứa từ 10-11 chữ số và không chứa ký tự khác');
-        e.preventDefault();
-        return;
+        isValid = false;
+        document.getElementById('msg-phone').style.display = 'block';
+        document.getElementById('group-phone').classList.add('has-error');
+        if (!firstErrorElement) firstErrorElement = this.phone;
     }
 
     if (!emailRegex.test(email)) {
-        alert('Email không đúng định dạng');
+        isValid = false;
+        document.getElementById('msg-email').style.display = 'block';
+        document.getElementById('group-email').classList.add('has-error');
+        if (!firstErrorElement) firstErrorElement = this.email;
+    }
+
+    if (!isValid) {
         e.preventDefault();
+        firstErrorElement.focus();
         return;
     }
 

@@ -176,13 +176,14 @@
                         <c:when test="${not empty sessionScope.user}">
                             <form action="${pageContext.request.contextPath}/provider" method="POST">
                                 <input type="hidden" name="action" value="register">
-                                <div class="field">
+                                <div class="field" id="field-businessName">
                                     <label><i class="fas fa-building"></i> Tên Doanh Nghiệp / Thương Hiệu</label>
-                                    <input type="text" name="businessName" placeholder="VD: Đà Nẵng Adventure Tours" required>
+                                    <input type="text" id="businessName" name="businessName" placeholder="VD: Đà Nẵng Adventure Tours">
+                                    <span class="error-msg" id="msg-businessName">Vui lòng nhập tên doanh nghiệp</span>
                                 </div>
-                                <div class="field">
+                                <div class="field" id="field-providerType">
                                     <label><i class="fas fa-tag"></i> Loại Hình</label>
-                                    <select name="providerType" required>
+                                    <select name="providerType" id="providerType">
                                         <option value="">Chọn loại hình</option>
                                         <option value="Tour Operator">Công ty Lữ Hành</option>
                                         <option value="Local Guide">Hướng Dẫn Viên Địa Phương</option>
@@ -190,19 +191,68 @@
                                         <option value="Hotel & Resort">Khách Sạn & Resort</option>
                                         <option value="Transport">Dịch Vụ Vận Chuyển</option>
                                     </select>
+                                    <span class="error-msg" id="msg-providerType">Vui lòng chọn loại hình</span>
                                 </div>
-                                <div class="field">
+                                <div class="field" id="field-phone">
                                     <label><i class="fas fa-phone"></i> Số Điện Thoại Liên Hệ</label>
-                                    <input type="tel" name="phone" value="${sessionScope.user.phoneNumber}" placeholder="0335 111 783" required>
+                                    <input type="tel" name="phone" id="phone" value="${sessionScope.user.phoneNumber}" placeholder="0335 111 783">
+                                    <span class="error-msg" id="msg-phone">Số điện thoại phải từ 10-11 chữ số</span>
                                 </div>
                                 <div class="field">
                                     <label><i class="fas fa-pen"></i> Mô Tả Doanh Nghiệp</label>
                                     <textarea name="description" placeholder="Giới thiệu ngắn về doanh nghiệp, kinh nghiệm, dịch vụ nổi bật..." rows="4"></textarea>
                                 </div>
-                                <button type="submit" class="btn-register">
+                                <button type="submit" class="btn-register" id="btnRegister">
                                     <i class="fas fa-paper-plane"></i> GỬI ĐĂNG KÝ
                                 </button>
                             </form>
+                            
+                            <script>
+                            document.querySelector('#registerForm form').addEventListener('submit', function(e) {
+                                // Reset errors
+                                document.querySelectorAll('.error-msg').forEach(m => m.style.display = 'none');
+                                document.querySelectorAll('.field').forEach(f => f.classList.remove('has-error'));
+
+                                const businessName = document.getElementById('businessName').value.trim();
+                                const providerType = document.getElementById('providerType').value;
+                                const phone = document.getElementById('phone').value.trim();
+                                const phoneRegex = /^\d{10,11}$/;
+                                
+                                let isValid = true;
+                                let firstErrorElement = null;
+
+                                if (!businessName) {
+                                    isValid = false;
+                                    document.getElementById('msg-businessName').style.display = 'block';
+                                    document.getElementById('field-businessName').classList.add('has-error');
+                                    if (!firstErrorElement) firstErrorElement = document.getElementById('businessName');
+                                }
+
+                                if (!providerType) {
+                                    isValid = false;
+                                    document.getElementById('msg-providerType').style.display = 'block';
+                                    document.getElementById('field-providerType').classList.add('has-error');
+                                    if (!firstErrorElement) firstErrorElement = document.getElementById('providerType');
+                                }
+
+                                if (!phoneRegex.test(phone)) {
+                                    isValid = false;
+                                    document.getElementById('msg-phone').style.display = 'block';
+                                    document.getElementById('field-phone').classList.add('has-error');
+                                    if (!firstErrorElement) firstErrorElement = document.getElementById('phone');
+                                }
+
+                                if (!isValid) {
+                                    e.preventDefault();
+                                    if (firstErrorElement) firstErrorElement.focus();
+                                    return;
+                                }
+
+                                const btn = document.getElementById('btnRegister');
+                                btn.disabled = true;
+                                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+                            });
+                            </script>
                         </c:when>
                         <c:otherwise>
                             <div style="text-align:center;padding:30px 0">

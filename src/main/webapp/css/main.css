@@ -1308,3 +1308,31 @@ button {
         grid-template-columns: 1fr;
     }
 }
+
+/* ═══════════════════════════════════════
+   FORM VALIDATION SYLES
+   ═══════════════════════════════════════ */
+.error-msg {
+    color: #F87171 !important;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-top: 4px;
+    display: none;
+    animation: fadeInError 0.3s ease;
+}
+
+@keyframes fadeInError {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-group.has-error input, 
+.field.has-error input,
+.form-group.has-error select,
+.field.has-error select,
+.form-group.has-error textarea,
+.field.has-error textarea {
+    border-color: #F87171 !important;
+    background-color: rgba(248, 113, 113, 0.04) !important;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1) !important;
+}

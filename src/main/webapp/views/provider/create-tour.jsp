@@ -96,23 +96,26 @@
             <!-- BASIC INFO -->
             <div class="form-section">
                 <div class="form-section-title"><i class="fas fa-info-circle"></i> Thông Tin Cơ Bản</div>
-                <div class="field">
+                <div class="field" id="field-tourName">
                     <label>Tên Tour <span class="req">*</span></label>
-                    <input type="text" name="tourName" placeholder="VD: Tour Bà Nà Hills - Cầu Vàng Trọn Ngày" required>
+                    <input type="text" name="tourName" id="tourName" placeholder="VD: Tour Bà Nà Hills - Cầu Vàng Trọn Ngày">
+                    <span class="error-msg" id="msg-tourName">Vui lòng nhập tên tour</span>
                 </div>
                 <div class="field-row">
-                    <div class="field">
+                    <div class="field" id="field-categoryId">
                         <label>Danh Mục <span class="req">*</span></label>
-                        <select name="categoryId" required>
+                        <select name="categoryId" id="categoryId">
                             <option value="">Chọn danh mục</option>
                             <c:forEach items="${categories}" var="cat">
                                 <option value="${cat.categoryId}">${cat.categoryName}</option>
                             </c:forEach>
                         </select>
+                        <span class="error-msg" id="msg-categoryId">Vui lòng chọn danh mục</span>
                     </div>
-                    <div class="field">
+                    <div class="field" id="field-price">
                         <label>Giá Tour (VNĐ) <span class="req">*</span></label>
-                        <input type="number" name="price" placeholder="500000" min="0" required>
+                        <input type="number" name="price" id="price" placeholder="500000" min="0">
+                        <span class="error-msg" id="msg-price">Vui lòng nhập giá tour hợp lệ</span>
                     </div>
                 </div>
                 <div class="field">
@@ -163,9 +166,10 @@
                         <i class="fas fa-cloud-upload-alt"></i>
                         <p>Click để chọn ảnh đại diện</p>
                         <small>JPG, PNG, WebP • Tối đa 10MB</small>
-                        <input type="file" id="tourImage" name="tourImage" accept="image/*" required onchange="previewMain(this)">
+                        <input type="file" id="tourImage" name="tourImage" accept="image/*" onchange="previewMain(this)">
                         <img id="mainPreview" class="preview-img" style="display:none">
                     </div>
+                    <span class="error-msg" id="msg-tourImage" style="text-align:center">Vui lòng chọn ảnh đại diện</span>
                 </div>
 
                 <!-- 3D Toggle -->
@@ -242,6 +246,59 @@ function preview3D(input) {
         });
     }
 }
+
+// Form validation
+document.querySelector('.form-card').addEventListener('submit', function(e) {
+    // Reset
+    document.querySelectorAll('.error-msg').forEach(m => m.style.display = 'none');
+    document.querySelectorAll('.field').forEach(f => f.classList.remove('has-error'));
+    document.getElementById('mainUpload').classList.remove('has-error');
+
+    const tourName = document.getElementById('tourName').value.trim();
+    const categoryId = document.getElementById('categoryId').value;
+    const price = document.getElementById('price').value;
+    const tourImage = document.getElementById('tourImage').files.length;
+    
+    let isValid = true;
+    let firstErrorElement = null;
+
+    if (!tourName) {
+        isValid = false;
+        document.getElementById('msg-tourName').style.display = 'block';
+        document.getElementById('field-tourName').classList.add('has-error');
+        if (!firstErrorElement) firstErrorElement = document.getElementById('tourName');
+    }
+
+    if (!categoryId) {
+        isValid = false;
+        document.getElementById('msg-categoryId').style.display = 'block';
+        document.getElementById('field-categoryId').classList.add('has-error');
+        if (!firstErrorElement) firstErrorElement = document.getElementById('categoryId');
+    }
+
+    if (!price || price <= 0) {
+        isValid = false;
+        document.getElementById('msg-price').style.display = 'block';
+        document.getElementById('field-price').classList.add('has-error');
+        if (!firstErrorElement) firstErrorElement = document.getElementById('price');
+    }
+
+    if (tourImage === 0) {
+        isValid = false;
+        document.getElementById('msg-tourImage').style.display = 'block';
+        document.getElementById('mainUpload').classList.add('has-error');
+    }
+
+    if (!isValid) {
+        e.preventDefault();
+        if (firstErrorElement) firstErrorElement.focus();
+        return;
+    }
+
+    const btn = document.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+});
 </script>
 </body>
 </html>
