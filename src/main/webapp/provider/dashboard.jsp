@@ -96,7 +96,7 @@
     <div class="logo"><img src="${pageContext.request.contextPath}/images/logo.png" style="width:36px;height:36px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:8px"><span style="vertical-align:middle"><span class="a">ez</span>travel</span></div>
     <nav>
         <a href="${pageContext.request.contextPath}/provider/dashboard" class="active"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
-        <a href="${pageContext.request.contextPath}/provider?action=dashboard"><i class="fas fa-map-marked-alt"></i> Tours Của Tôi</a>
+        <a href="${pageContext.request.contextPath}/provider/dashboard#tours-section"><i class="fas fa-map-marked-alt"></i> Tours Của Tôi</a>
         <a href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-shopping-bag"></i> Đơn Đặt</a>
         <a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user-cog"></i> Hồ Sơ</a>
     </nav>
@@ -149,13 +149,49 @@
     </section>
 
     <div class="grid-2">
-        <!-- Recent Bookings -->
-        <div class="card">
-            <h3><i class="fas fa-clock"></i> Đặt Chỗ Gần Đây</h3>
-            <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <p>Chưa có đặt chỗ nào. Hãy tạo tour để nhận đơn!</p>
-            </div>
+        <!-- My Tours List -->
+        <div class="card" id="tours-section">
+            <h3><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</h3>
+            <c:choose>
+                <c:when test="${not empty tours}">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tour</th>
+                                <th>Giá</th>
+                                <th>Trạng Thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${tours}" var="t">
+                                <tr>
+                                    <td>
+                                        <div style="font-weight:600;color:#fff">${t.tourName}</div>
+                                        <div style="font-size:.75rem;color:rgba(255,255,255,.4)">${t.duration} • ${t.startLocation}</div>
+                                    </td>
+                                    <td><fmt:formatNumber value="${t.price}" type="number" groupingUsed="true"/>đ</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${t.active}"><span class="badge badge-green">Hoạt động</span></c:when>
+                                            <c:otherwise><span class="badge badge-yellow">Chờ duyệt</span></c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td style="text-align:right">
+                                        <a href="${pageContext.request.contextPath}/tour?id=${t.tourId}" style="color:#60A5FA;text-decoration:none;font-size:.8rem"><i class="fas fa-eye"></i></a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </c:when>
+                <c:otherwise>
+                    <div class="empty-state">
+                        <i class="fas fa-map-signs"></i>
+                        <p>Bạn chưa có tour nào. Hãy tạo tour ngay!</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
 
         <!-- Quick Actions -->

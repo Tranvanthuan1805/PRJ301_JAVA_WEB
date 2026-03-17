@@ -68,8 +68,8 @@ public class ProviderServlet extends HttpServlet {
         // Check if user is already a provider
         if (user != null) {
             Provider provider = findProvider(user.getUserId());
-            if (provider != null && "Approved".equals(provider.getStatus())) {
-                response.sendRedirect(request.getContextPath() + "/provider?action=dashboard");
+            if (provider != null && ("Approved".equals(provider.getStatus()) || "Active".equals(provider.getStatus()))) {
+                response.sendRedirect(request.getContextPath() + "/provider/dashboard");
                 return;
             }
             request.setAttribute("provider", provider);
@@ -80,7 +80,7 @@ public class ProviderServlet extends HttpServlet {
     private void showDashboard(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
         Provider provider = findProvider(user.getUserId());
-        if (provider == null || !"Approved".equals(provider.getStatus())) {
+        if (provider == null || (!"Approved".equals(provider.getStatus()) && !"Active".equals(provider.getStatus()))) {
             response.sendRedirect(request.getContextPath() + "/provider");
             return;
         }
@@ -108,7 +108,7 @@ public class ProviderServlet extends HttpServlet {
     private void showCreateTour(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
         Provider provider = findProvider(user.getUserId());
-        if (provider == null || !"Approved".equals(provider.getStatus())) {
+        if (provider == null || (!"Approved".equals(provider.getStatus()) && !"Active".equals(provider.getStatus()))) {
             response.sendRedirect(request.getContextPath() + "/provider");
             return;
         }
@@ -164,7 +164,7 @@ public class ProviderServlet extends HttpServlet {
     private void submitTour(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException, ServletException {
         Provider provider = findProvider(user.getUserId());
-        if (provider == null || !"Approved".equals(provider.getStatus())) {
+        if (provider == null || (!"Approved".equals(provider.getStatus()) && !"Active".equals(provider.getStatus()))) {
             response.sendRedirect(request.getContextPath() + "/provider");
             return;
         }

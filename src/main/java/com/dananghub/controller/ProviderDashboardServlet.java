@@ -33,6 +33,15 @@ public class ProviderDashboardServlet extends HttpServlet {
         EntityManager em = null;
         try {
             em = JPAUtil.getEntityManager();
+            
+            // 1. Kiểm tra status của Provider
+            com.dananghub.entity.Provider provider = em.find(com.dananghub.entity.Provider.class, providerId);
+            if (provider == null || (!"Approved".equals(provider.getStatus()) && !"Active".equals(provider.getStatus()))) {
+                response.sendRedirect(request.getContextPath() + "/provider");
+                return;
+            }
+            
+            request.setAttribute("provider", provider);
 
             Long myTours = (Long) em.createQuery(
                 "SELECT COUNT(t) FROM Tour t WHERE t.provider.providerId = :pid AND t.isActive = true")
@@ -54,6 +63,14 @@ public class ProviderDashboardServlet extends HttpServlet {
             request.setAttribute("myBookings", myBookings);
             request.setAttribute("myRevenue", myRevenue);
             request.setAttribute("providerName", user.getFullName() != null ? user.getFullName() : user.getUsername());
+
+            // 4. Lấy danh sách Tour để hiển thị
+            java.util.List<com.dananghub.entity.Tour> tours = em.createQuery(
+                "SELECT t FROM Tour t WHERE t.provider.providerId = :pid ORDER BY t.createdAt DESC", com.dananghub.entity.Tour.class)
+                .setParameter("pid", providerId)
+                .setMaxResults(10)
+                .getResultList();
+            request.setAttribute("tours", tours);
 
         } catch (Exception e) {
             e.printStackTrace();
