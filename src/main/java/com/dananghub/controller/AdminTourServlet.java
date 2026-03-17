@@ -271,7 +271,7 @@ public class AdminTourServlet extends HttpServlet {
                 providerDAO.syncStats(tour.getProvider().getProviderId());
             }
 
-            response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=created");
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=created&section=tours-mgmt");
             return;
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
@@ -349,7 +349,7 @@ public class AdminTourServlet extends HttpServlet {
                 providerDAO.syncStats(Integer.parseInt(pId));
             }
 
-            response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=updated");
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=updated&section=tours-mgmt");
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
@@ -376,7 +376,7 @@ public class AdminTourServlet extends HttpServlet {
                 providerDAO.syncStats(tour.getProvider().getProviderId());
             }
         }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted&section=tours-mgmt");
     }
 
     private void showHistory(HttpServletRequest request, HttpServletResponse response)

@@ -30,8 +30,7 @@ public class AdminCrudServlet extends HttpServlet {
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "";
-        String action = request.getParameter("action");
-
+        
         switch (pathInfo) {
             case "/customer-edit" -> showCustomerForm(request, response);
             case "/customer-delete" -> deleteCustomer(request, response);
@@ -140,7 +139,7 @@ public class AdminCrudServlet extends HttpServlet {
         } finally {
             em.close();
         }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=saved");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=saved&section=customers");
     }
 
     private void deleteCustomer(HttpServletRequest request, HttpServletResponse response)
@@ -165,7 +164,7 @@ public class AdminCrudServlet extends HttpServlet {
                 em.close();
             }
         }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted&section=customers");
     }
 
     private void activateCustomer(HttpServletRequest request, HttpServletResponse response)
@@ -190,7 +189,7 @@ public class AdminCrudServlet extends HttpServlet {
                 em.close();
             }
         }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=activated");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=activated&section=customers");
     }
 
     // ═══════════════ CATEGORY CRUD ═══════════════
@@ -242,7 +241,7 @@ public class AdminCrudServlet extends HttpServlet {
         } finally {
             em.close();
         }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=saved");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=saved&section=categories");
     }
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response)
@@ -265,6 +264,6 @@ public class AdminCrudServlet extends HttpServlet {
                 em.close();
             }
         }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted&section=categories");
     }
 }
