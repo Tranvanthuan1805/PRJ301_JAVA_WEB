@@ -95,6 +95,12 @@
     .timer-text{font-size:.78rem;color:#DC2626;font-weight:600;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px}
     .timer-text i{font-size:.7rem}
 
+    /* Simple Toast */
+    #toast{visibility:hidden;min-width:250px;background-color:#1B1F3B;color:#fff;text-align:center;border-radius:12px;padding:16px;position:fixed;z-index:9999;left:50%;bottom:30px;transform:translateX(-50%);box-shadow:0 8px 30px rgba(0,0,0,0.2)}
+    #toast.show{visibility:visible;animation:fadein 0.5s,fadeout 0.5s 2.5s}
+    @keyframes fadein{from{opacity:0;bottom:0}to{bottom:30px;opacity:1}}
+    @keyframes fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
+
     @media(max-width:900px){.payment-layout{grid-template-columns:1fr}}
     @media(max-width:600px){.qr-frame img{width:220px;height:220px}.steps{flex-wrap:wrap}.step{padding:8px 12px}}
     </style>
@@ -220,6 +226,8 @@
 
 <jsp:include page="/common/_footer.jsp" />
 
+<div id="toast"></div>
+
 <script>
 // Countdown timer (15 minutes)
 let timeLeft = 900;
@@ -242,8 +250,16 @@ const timer = setInterval(() => {
 // Copy transaction code
 function copyCode() {
     navigator.clipboard.writeText('${transCode}').then(() => {
-        alert('Đã sao chép mã giao dịch: ${transCode}');
+        showToast('✅ Đã sao chép mã giao dịch!');
     });
+}
+
+function showToast(msg) {
+    const x = document.getElementById("toast");
+    if (!x) return;
+    x.textContent = msg;
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
 
 // SePay payment check via backend
