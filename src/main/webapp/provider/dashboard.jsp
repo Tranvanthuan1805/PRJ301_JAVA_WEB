@@ -96,7 +96,7 @@
     <div class="logo"><img src="${pageContext.request.contextPath}/images/logo.png" style="width:36px;height:36px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:8px"><span style="vertical-align:middle"><span class="a">ez</span>travel</span></div>
     <nav>
         <a href="${pageContext.request.contextPath}/provider/dashboard" class="active"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
-        <a href="${pageContext.request.contextPath}/tour"><i class="fas fa-map-marked-alt"></i> Tours Của Tôi</a>
+        <a href="${pageContext.request.contextPath}/provider?action=dashboard"><i class="fas fa-map-marked-alt"></i> Tours Của Tôi</a>
         <a href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-shopping-bag"></i> Đơn Đặt</a>
         <a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user-cog"></i> Hồ Sơ</a>
     </nav>
@@ -117,7 +117,7 @@
             <p>Xin chào, <strong>${providerName}</strong> 👋</p>
         </div>
         <div class="header-actions">
-            <a href="${pageContext.request.contextPath}/tour?action=create" class="btn-primary"><i class="fas fa-plus"></i> Tạo Tour Mới</a>
+            <a href="${pageContext.request.contextPath}/provider?action=create-tour" class="btn-primary"><i class="fas fa-plus"></i> Tạo Tour Mới</a>
             <a href="${pageContext.request.contextPath}/logout" class="btn-outline"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
         </div>
     </header>
@@ -162,7 +162,7 @@
         <div class="card">
             <h3><i class="fas fa-bolt"></i> Thao Tác Nhanh</h3>
             <div class="quick-actions">
-                <a href="${pageContext.request.contextPath}/tour?action=create" class="quick-action">
+                <a href="${pageContext.request.contextPath}/provider?action=create-tour" class="quick-action">
                     <div class="qa-icon icon-blue"><i class="fas fa-plus"></i></div>
                     <div class="qa-text"><h4>Tạo Tour Mới</h4><p>Thêm tour du lịch mới</p></div>
                 </a>
