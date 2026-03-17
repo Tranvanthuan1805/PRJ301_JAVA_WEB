@@ -104,7 +104,7 @@
                     <div class="form-group">
                         <label>Số điện thoại *</label>
                         <input type="tel" name="phone" required placeholder="0912 345 678"
-                               value="${user.phone}">
+                               value="${user.phoneNumber}">
                     </div>
                 </div>
                 <div class="form-row">
