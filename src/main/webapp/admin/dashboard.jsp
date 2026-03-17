@@ -251,6 +251,27 @@
             <a href="${pageContext.request.contextPath}/logout" class="btn-outline"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
         </div>
     </header>
+    
+    <c:if test="${not empty param.error}">
+        <div style="padding:16px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:12px;color:#F87171;font-weight:700;margin-bottom:24px;display:flex;align-items:center;gap:12px">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>
+                <c:choose>
+                    <c:when test="${param.error == 'start_date_invalid'}">Lỗi: Ngày bắt đầu tour phải lớn hơn hoặc bằng ngày hiện tại! (Hôm nay: <fmt:formatDate value="<%= new java.util.Date() %>" pattern="dd/MM/yyyy"/>)</c:when>
+                    <c:when test="${param.error == 'end_date_invalid'}">Lỗi: Ngày kết thúc phải sau ngày bắt đầu!</c:when>
+                    <c:otherwise>Có lỗi xảy ra trong quá trình xử lý: ${param.error}</c:otherwise>
+                </c:choose>
+            </span>
+        </div>
+    </c:if>
+
+    <c:if test="${not empty param.success}">
+        <div id="successBanner" style="padding:16px;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);border-radius:12px;color:#34D399;font-weight:700;margin-bottom:24px;display:flex;align-items:center;gap:12px">
+            <i class="fas fa-check-circle"></i>
+            <span>Thực hiện thao tác thành công!</span>
+        </div>
+        <script>setTimeout(()=> { try { document.getElementById('successBanner').style.display='none'; } catch(e){} }, 5000);</script>
+    </c:if>
 
     <!-- SPA SECTION: OVERVIEW -->
     <div class="spa-section active" id="sec-overview">
@@ -1400,6 +1421,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (section) {
         showSection(section);
     }
+    
+    // Set min date for tour forms
+    const today = new Date().toISOString().split('T')[0];
+    const startDateInputs = document.querySelectorAll('input[name="startDate"]');
+    startDateInputs.forEach(input => {
+        input.min = today;
+    });
 });
 function openConsultModal(id, status, note) {
     document.getElementById('cModalId').value = id;

@@ -78,7 +78,7 @@ public class AdminTourServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         try {
-            if ("create".equals(action)) {
+            if ("create".equals(action) || "add".equals(action)) {
                 createTour(request, response);
             } else if ("update".equals(action)) {
                 updateTour(request, response);
@@ -201,16 +201,29 @@ public class AdminTourServlet extends HttpServlet {
             try { tour.setPrice(Double.parseDouble(request.getParameter("price"))); } catch (Exception ignored) {}
             try { tour.setMaxPeople(Integer.parseInt(request.getParameter("maxPeople"))); } catch (Exception ignored) {}
 
-            // Parse dates
+            // Parse and validate dates
             java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-            try {
-                String sd = request.getParameter("startDate");
-                if (sd != null && !sd.isEmpty()) tour.setStartDate(sdf.parse(sd));
-            } catch (Exception ignored) {}
-            try {
-                String ed = request.getParameter("endDate");
-                if (ed != null && !ed.isEmpty()) tour.setEndDate(sdf.parse(ed));
-            } catch (Exception ignored) {}
+            Date today = new java.sql.Date(System.currentTimeMillis()); // date only
+            
+            String sd = request.getParameter("startDate");
+            if (sd != null && !sd.isEmpty()) {
+                Date d = sdf.parse(sd);
+                if (d.before(today)) {
+                    response.sendRedirect(request.getContextPath() + "/admin/dashboard?error=start_date_invalid&section=tours-mgmt");
+                    return;
+                }
+                tour.setStartDate(d);
+            }
+            
+            String ed = request.getParameter("endDate");
+            if (ed != null && !ed.isEmpty()) {
+                Date d = sdf.parse(ed);
+                if (tour.getStartDate() != null && d.before(tour.getStartDate())) {
+                   response.sendRedirect(request.getContextPath() + "/admin/dashboard?error=end_date_invalid&section=tours-mgmt");
+                   return;
+                }
+                tour.setEndDate(d);
+            }
 
             // Category - load within same EntityManager
             String categoryId = request.getParameter("categoryId");
@@ -242,12 +255,11 @@ public class AdminTourServlet extends HttpServlet {
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
-            getServletContext().log("CREATE TOUR ERROR: " + e.getMessage(), e);
-            request.setAttribute("error", "Không thể tạo tour: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8") + "&section=tours-mgmt");
+            return;
         } finally {
             em.close();
         }
-        showForm(request, response, null);
     }
 
     private void updateTour(HttpServletRequest request, HttpServletResponse response)
