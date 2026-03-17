@@ -295,21 +295,31 @@
             </div>
             <div style="overflow-x:auto">
             <table class="data-table">
-                <thead><tr><th>#</th><th>Username</th><th>Họ Tên</th><th>Email</th><th>SĐT</th><th>Vai Trò</th><th>Ngày Tạo</th><th>Thao Tác</th></tr></thead>
+                <thead><tr><th>#</th><th>Username</th><th>Họ Tên</th><th>Email</th><th>SĐT</th><th>Vai Trò</th><th>Trạng Thái</th><th>Ngày Tạo</th><th>Thao Tác</th></tr></thead>
                 <tbody>
                 <c:forEach items="${customerList}" var="u" varStatus="s">
-                    <tr>
+                    <tr style="${!u.active ? 'opacity:.5' : ''}">
                         <td style="color:#64748B;font-weight:600">${s.index + 1}</td>
                         <td><span style="color:#60A5FA;font-weight:600">@${u.username}</span></td>
                         <td style="color:#fff;font-weight:600">${u.fullName != null ? u.fullName : '—'}</td>
                         <td>${u.email}</td>
                         <td>${u.phoneNumber != null ? u.phoneNumber : '—'}</td>
                         <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${u.role.roleName == 'ADMIN' ? 'background:rgba(245,158,11,.15);color:#FBBF24' : u.role.roleName == 'PROVIDER' ? 'background:rgba(139,92,246,.15);color:#A78BFA' : 'background:rgba(59,130,246,.15);color:#60A5FA'}">${u.role.roleName}</span></td>
+                        <td><span style="padding:3px 8px;border-radius:6px;font-size:.68rem;font-weight:700;${u.active ? 'background:rgba(16,185,129,.15);color:#34D399' : 'background:rgba(239,68,68,.15);color:#F87171'}">${u.active ? 'Active' : 'Bị khóa'}</span></td>
                         <td style="font-size:.82rem;color:rgba(255,255,255,.4)"><fmt:formatDate value="${u.createdAt}" pattern="dd/MM/yyyy"/></td>
                         <td>
                             <div style="display:flex;gap:6px">
                                 <a href="${pageContext.request.contextPath}/admin/crud/customer-edit?id=${u.userId}" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(59,130,246,.15);color:#60A5FA;text-decoration:none" title="Sửa"><i class="fas fa-edit"></i></a>
-                                <a href="${pageContext.request.contextPath}/admin/crud/customer-delete?id=${u.userId}" onclick="return confirm('Vô hiệu hóa người dùng @${u.username}?')" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171;text-decoration:none" title="Vô hiệu hóa"><i class="fas fa-ban"></i></a>
+                                <c:if test="${u.role.roleName != 'ADMIN'}">
+                                    <c:choose>
+                                        <c:when test="${u.active}">
+                                            <a href="${pageContext.request.contextPath}/admin/crud/customer-delete?id=${u.userId}" onclick="return confirm('Vô hiệu hóa tài khoản @${u.username}? Người dùng sẽ không thể đăng nhập!')" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(239,68,68,.15);color:#F87171;text-decoration:none" title="Vô hiệu hóa"><i class="fas fa-ban"></i></a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${pageContext.request.contextPath}/admin/crud/customer-activate?id=${u.userId}" onclick="return confirm('Kích hoạt lại tài khoản @${u.username}?')" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;background:rgba(16,185,129,.15);color:#34D399;text-decoration:none" title="Kích hoạt lại"><i class="fas fa-check-circle"></i></a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
                             </div>
                         </td>
                     </tr>

@@ -35,6 +35,7 @@ public class AdminCrudServlet extends HttpServlet {
         switch (pathInfo) {
             case "/customer-edit" -> showCustomerForm(request, response);
             case "/customer-delete" -> deleteCustomer(request, response);
+            case "/customer-activate" -> activateCustomer(request, response);
             case "/category-edit" -> showCategoryForm(request, response);
             case "/category-delete" -> deleteCategory(request, response);
             default -> response.sendRedirect(request.getContextPath() + "/admin/dashboard");
@@ -165,6 +166,31 @@ public class AdminCrudServlet extends HttpServlet {
             }
         }
         response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted");
+    }
+
+    private void activateCustomer(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String idStr = request.getParameter("id");
+        if (idStr != null) {
+            EntityManager em = JPAUtil.getEntityManager();
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
+                User u = em.find(User.class, Integer.parseInt(idStr));
+                if (u != null) {
+                    u.setActive(true);
+                    u.setUpdatedAt(new Date());
+                    em.merge(u);
+                }
+                tx.commit();
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                e.printStackTrace();
+            } finally {
+                em.close();
+            }
+        }
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=activated");
     }
 
     // ═══════════════ CATEGORY CRUD ═══════════════

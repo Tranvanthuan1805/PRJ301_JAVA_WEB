@@ -59,6 +59,14 @@ public class LoginServlet extends HttpServlet {
 
             System.out.println(">>> LOGIN SUCCESS: " + user);
 
+            // Check if user is deactivated by admin
+            if (!user.isActive()) {
+                System.out.println(">>> LOGIN BLOCKED: User '" + username + "' is deactivated");
+                request.setAttribute("error", "Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ admin!");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
             session.setAttribute("username", user.getUsername());

@@ -167,6 +167,14 @@ public class GoogleAuthServlet extends HttpServlet {
                 System.out.println(">>> GOOGLE: Existing user login: " + user.getUsername());
             }
 
+            // Check if user is deactivated by admin
+            if (!user.isActive()) {
+                System.out.println(">>> GOOGLE LOGIN BLOCKED: User '" + user.getUsername() + "' is deactivated");
+                request.setAttribute("error", "Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ admin!");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+
             // 2d. Create session
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
