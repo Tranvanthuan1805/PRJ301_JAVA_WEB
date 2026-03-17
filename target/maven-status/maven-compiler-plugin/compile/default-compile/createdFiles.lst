@@ -84,6 +84,7 @@ com\dananghub\dao\SubscriptionDAO.class
 com\dananghub\controller\Tour3DServlet.class
 com\dananghub\entity\Role.class
 com\dananghub\entity\SubscriptionPlan.class
+com\dananghub\listener\AppInitializer.class
 com\dananghub\dao\FeedbackDAO.class
 com\dananghub\filter\GzipResponseWrapper.class
 com\dananghub\controller\AdminConsultationServlet.class

@@ -37,6 +37,7 @@ E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\controller\ChatLogServlet.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\filter\GzipFilter.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\entity\User.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\entity\Role.java
+E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\listener\AppInitializer.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\filter\EncodingFilter.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\entity\Category.java
 E:\PRJ301_JAVA_WEB\src\main\java\com\dananghub\dao\CouponDAO.java

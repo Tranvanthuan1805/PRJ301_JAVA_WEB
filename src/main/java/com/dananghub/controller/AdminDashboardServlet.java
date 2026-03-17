@@ -140,6 +140,8 @@ public class AdminDashboardServlet extends HttpServlet {
             try {
                 List<?> customerList = em.createQuery("SELECT u FROM User u ORDER BY u.userId DESC").getResultList();
                 request.setAttribute("customerList", customerList);
+                List<Role> roles = em.createQuery("SELECT r FROM Role r ORDER BY r.roleId", Role.class).getResultList();
+                request.setAttribute("roles", roles);
             } catch (Exception ignored) {}
 
             try {

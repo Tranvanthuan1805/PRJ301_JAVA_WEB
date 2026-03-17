@@ -311,9 +311,47 @@
         <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
                 <h3 style="margin:0"><i class="fas fa-users"></i> Danh Sách Khách Hàng <span style="font-size:.75rem;color:rgba(255,255,255,.3);font-weight:500;margin-left:8px">(Dữ liệu thực từ Supabase)</span></h3>
-                <a href="${pageContext.request.contextPath}/admin/crud/customer-edit" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;text-decoration:none;transition:.3s;box-shadow:0 4px 15px rgba(59,130,246,.3)">
+                <button onclick="toggleInlineForm('inlineCustomerForm')" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;transition:.3s;box-shadow:0 4px 15px rgba(59,130,246,.3)">
                     <i class="fas fa-user-plus"></i> Thêm Khách Hàng
-                </a>
+                </button>
+            </div>
+            <!-- Inline Customer Form -->
+            <div id="inlineCustomerForm" style="display:none;margin-bottom:20px;padding:24px;background:rgba(59,130,246,.04);border:1px solid rgba(59,130,246,.15);border-radius:14px">
+                <h4 style="margin:0 0 16px;color:#60A5FA;font-size:.95rem"><i class="fas fa-user-plus"></i> Tạo Tài Khoản Mới</h4>
+                <form action="${pageContext.request.contextPath}/admin/crud/customer-save" method="post" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+                    <div>
+                        <label style="display:block;font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:4px;font-weight:700;text-transform:uppercase">Username *</label>
+                        <input type="text" name="username" required style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:.85rem;outline:none">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:4px;font-weight:700;text-transform:uppercase">Mật khẩu *</label>
+                        <input type="password" name="password" required style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:.85rem;outline:none">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:4px;font-weight:700;text-transform:uppercase">Email *</label>
+                        <input type="email" name="email" required style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:.85rem;outline:none">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:4px;font-weight:700;text-transform:uppercase">Họ Tên</label>
+                        <input type="text" name="fullName" style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:.85rem;outline:none">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:4px;font-weight:700;text-transform:uppercase">SĐT</label>
+                        <input type="text" name="phoneNumber" style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:.85rem;outline:none">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:4px;font-weight:700;text-transform:uppercase">Vai Trò</label>
+                        <select name="roleId" style="width:100%;padding:10px 14px;background:rgba(15,23,41,.95);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:.85rem;outline:none">
+                            <c:forEach items="${roles}" var="r">
+                                <option value="${r.roleId}">${r.roleName}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;margin-top:4px">
+                        <button type="button" onclick="toggleInlineForm('inlineCustomerForm')" style="padding:10px 20px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">Hủy</button>
+                        <button type="submit" style="padding:10px 24px;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,.3)">Lưu Khách Hàng</button>
+                    </div>
+                </form>
             </div>
             <div style="overflow-x:auto">
             <table class="data-table">
@@ -1437,6 +1475,10 @@ document.addEventListener('DOMContentLoaded', () => {
         input.min = today;
     });
 });
+function toggleInlineForm(id) {
+    var f = document.getElementById(id);
+    if (f) { f.style.display = f.style.display === 'none' ? 'block' : 'none'; if (f.style.display === 'block') f.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
 function openConsultModal(id, status, note) {
     document.getElementById('cModalId').value = id;
     document.getElementById('cModalStatus').value = status || 'new';
