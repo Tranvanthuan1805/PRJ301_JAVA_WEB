@@ -237,7 +237,7 @@ public class AdminDashboardServlet extends HttpServlet {
             tx.commit();
         } catch (Exception e) { if (tx.isActive()) tx.rollback(); e.printStackTrace(); }
         finally { em.close(); }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=provider_approved");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=provider_approved&section=providers");
     }
 
     private void rejectProvider(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -251,7 +251,7 @@ public class AdminDashboardServlet extends HttpServlet {
             tx.commit();
         } catch (Exception e) { if (tx.isActive()) tx.rollback(); e.printStackTrace(); }
         finally { em.close(); }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=provider_rejected");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=provider_rejected&section=providers");
     }
 
     private void approveTour(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -264,7 +264,7 @@ public class AdminDashboardServlet extends HttpServlet {
             tx.commit();
         } catch (Exception e) { if (tx.isActive()) tx.rollback(); e.printStackTrace(); }
         finally { em.close(); }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=tour_approved");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=tour_approved&section=tours-mgmt");
     }
 
     private void rejectTour(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -277,7 +277,7 @@ public class AdminDashboardServlet extends HttpServlet {
             tx.commit();
         } catch (Exception e) { if (tx.isActive()) tx.rollback(); e.printStackTrace(); }
         finally { em.close(); }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=tour_rejected");
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=tour_rejected&section=tours-mgmt");
     }
 
     @SuppressWarnings("unchecked")

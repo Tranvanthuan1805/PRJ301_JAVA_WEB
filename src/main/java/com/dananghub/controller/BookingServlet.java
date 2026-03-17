@@ -95,6 +95,17 @@ public class BookingServlet extends HttpServlet {
                 return;
             }
 
+            // 1. Get travel date from request
+            String travelDateStr = request.getParameter("travelDate");
+            java.util.Date travelDate = new java.util.Date();
+            if (travelDateStr != null && !travelDateStr.isEmpty()) {
+                try {
+                    travelDate = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(travelDateStr);
+                } catch (Exception e) {
+                    // Fallback to today if parsing fails
+                }
+            }
+
             Tour tour = tourDAO.findById(tourId);
             if (tour == null) {
                 session.setAttribute("error", "Tour không tồn tại");
@@ -102,9 +113,13 @@ public class BookingServlet extends HttpServlet {
                 return;
             }
 
-            // CHECK CAPACITY: Ensure numberOfPeople doesn't exceed tour.getMaxPeople()
-            if (numberOfPeople > tour.getMaxPeople()) {
-                session.setAttribute("error", "Tour này chỉ còn tối đa " + tour.getMaxPeople() + " chỗ. Vui lòng chọn lại số lượng.");
+            // 2. CHECK CAPACITY & AVAILABILITY (Overbooking fix)
+            // Use DAO to check real-time availability for the specific date
+            boolean isAvailable = tourDAO.checkAvailability(tourId, travelDate, numberOfPeople);
+            if (!isAvailable) {
+                // Find how many slots are left (for better UX)
+                // We'll reuse parts of checkAvailability logic here or just show a generic error
+                session.setAttribute("error", "Tour này không còn đủ " + numberOfPeople + " chỗ trong ngày " + travelDateStr + ". Vui lòng chọn ngày khác hoặc giảm số lượng người.");
                 response.sendRedirect(request.getContextPath() + "/booking?id=" + tourId);
                 return;
             }

@@ -274,6 +274,7 @@
             <a href="#" onclick="showSection('orders',document.querySelector('nav a:nth-child(3)'));return false" class="action-link"><div class="aicon icon-orange"><i class="fas fa-shopping-bag"></i></div><div><div class="atitle">Quản Lý Đơn Hàng</div><div class="adesc">${totalOrders} đơn · ${pendingOrders} chờ</div></div></a>
             <a href="#" onclick="showSection('tours-mgmt',document.querySelector('nav a:nth-child(4)'));return false" class="action-link"><div class="aicon icon-green"><i class="fas fa-map"></i></div><div><div class="atitle">Quản Lý Tours</div><div class="adesc">${activeTours} tour hoạt động</div></div></a>
             <a href="#" onclick="showSection('consultations',document.querySelector('nav a:nth-child(6)'));return false" class="action-link"><div class="aicon icon-purple"><i class="fas fa-comments"></i></div><div><div class="atitle">Yêu Cầu Tư Vấn</div><div class="adesc">${totalConsultations} yêu cầu · ${newConsultations} mới</div></div></a>
+            <a href="#" onclick="showSection('providers',document.querySelector('nav a:nth-child(5)'));return false" class="action-link"><div class="aicon icon-cyan" style="background:rgba(6,182,212,.15);color:#22D3EE"><i class="fas fa-handshake"></i></div><div><div class="atitle">Nhà Cung Cấp</div><div class="adesc">${totalProviders} doanh nghiệp · ${pendingProviders} chờ</div></div></a>
         </div>
     </div>
 
@@ -1379,9 +1380,27 @@ function showSection(name, link) {
     var sec = document.getElementById('sec-' + name);
     if (sec) { sec.style.display = 'block'; sec.classList.add('active'); }
     document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
-    if (link) link.classList.add('active');
+    if (link) {
+        link.classList.add('active');
+    } else {
+        // Fallback: try to find the link in sidebar if not provided
+        document.querySelectorAll('.sidebar nav a').forEach(a => {
+            if (a.getAttribute('onclick') && a.getAttribute('onclick').includes("'" + name + "'")) {
+                a.classList.add('active');
+            }
+        });
+    }
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
+
+// Auto-show section from URL param (e.g. ?section=providers)
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const section = urlParams.get('section');
+    if (section) {
+        showSection(section);
+    }
+});
 function openConsultModal(id, status, note) {
     document.getElementById('cModalId').value = id;
     document.getElementById('cModalStatus').value = status || 'new';
