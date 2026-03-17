@@ -91,6 +91,17 @@ public class CheckoutServlet extends HttpServlet {
             String email = request.getParameter("email");
             String notes = request.getParameter("notes");
 
+            // Server-side validation
+            if (fullName == null || fullName.trim().isEmpty()) {
+                throw new Exception("Họ tên không được để trống");
+            }
+            if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                throw new Exception("Email không đúng định dạng");
+            }
+            if (phone == null || !phone.matches("^\\d{10,11}$")) {
+                throw new Exception("Số điện thoại không đúng định dạng (chỉ chứa 10-11 chữ số)");
+            }
+
             // Calculate total
             double subtotal = 0;
             for (CartItem item : cart) {

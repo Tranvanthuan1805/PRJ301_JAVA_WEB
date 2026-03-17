@@ -180,6 +180,30 @@
 
 <script>
 document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    const fullName = this.fullName.value.trim();
+    const phone = this.phone.value.trim();
+    const email = this.email.value.trim();
+    const phoneRegex = /^\d{10,11}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!fullName) {
+        alert('Vui lòng nhập họ và tên');
+        e.preventDefault();
+        return;
+    }
+
+    if (!phoneRegex.test(phone)) {
+        alert('Số điện thoại phải chứa từ 10-11 chữ số và không chứa ký tự khác');
+        e.preventDefault();
+        return;
+    }
+
+    if (!emailRegex.test(email)) {
+        alert('Email không đúng định dạng');
+        e.preventDefault();
+        return;
+    }
+
     var btn = document.getElementById('btnSubmit');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
