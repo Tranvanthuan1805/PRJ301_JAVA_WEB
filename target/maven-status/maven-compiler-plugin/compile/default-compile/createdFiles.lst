@@ -125,6 +125,7 @@ com\dananghub\controller\WishlistServlet.class
 com\dananghub\dao\PaymentDAO.class
 com\dananghub\entity\PaymentTransaction_.class
 com\dananghub\controller\AdminDashboardServlet.class
+com\dananghub\controller\AdminCouponServlet.class
 com\dananghub\entity\OrderStatus.class
 com\dananghub\dao\WishlistDAO.class
 com\dananghub\entity\Order_.class

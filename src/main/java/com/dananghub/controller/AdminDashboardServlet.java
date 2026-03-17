@@ -1,6 +1,7 @@
 package com.dananghub.controller;
 
 import com.dananghub.dao.ConsultationDAO;
+import com.dananghub.dao.CouponDAO;
 import com.dananghub.dao.TourDAO;
 import com.dananghub.entity.Provider;
 import com.dananghub.entity.User;
@@ -166,6 +167,13 @@ public class AdminDashboardServlet extends HttpServlet {
             } catch (Exception ignored) {}
             request.setAttribute("contactedConsultations", contactedConsultations);
             request.setAttribute("doneConsultations", doneConsultations);
+
+            // Coupon list for SPA section
+            try {
+                CouponDAO couponDAO = new CouponDAO();
+                List<?> couponList = couponDAO.findAll();
+                request.setAttribute("couponList", couponList);
+            } catch (Exception ignored) {}
 
             // All providers for SPA section
             try {

@@ -220,6 +220,7 @@
         <a href="#" onclick="showSection('tours-mgmt',this);return false"><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</a>
         <a href="#" onclick="showSection('providers',this);return false"><i class="fas fa-handshake"></i> Nhà Cung Cấp</a>
         <a href="#" onclick="showSection('consultations',this);return false"><i class="fas fa-comments"></i> Tư Vấn</a>
+        <a href="#" onclick="showSection('coupons',this);return false"><i class="fas fa-ticket-alt"></i> Mã Giảm Giá</a>
 
         <div class="nav-label">AI & Phân Tích</div>
         <a href="#" onclick="showSection('chatbot',this);return false"><i class="fas fa-robot"></i> Chatbot & Hành Vi</a>
@@ -1239,6 +1240,125 @@
             </form>
         </div>
     </div>
+
+    <!-- SPA SECTION: COUPONS -->
+    <div class="spa-section" id="sec-coupons" style="display:none">
+        <h2 style="font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:24px"><i class="fas fa-ticket-alt" style="color:#FBBF24;margin-right:10px"></i>Quản Lý Mã Giảm Giá</h2>
+
+        <!-- Add Coupon Form -->
+        <div id="addCouponPanel" style="display:none;margin-bottom:24px">
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                    <h3 style="margin:0"><i class="fas fa-plus-circle" style="color:#FBBF24"></i> Thêm Mã Giảm Giá</h3>
+                    <button onclick="document.getElementById('addCouponPanel').style.display='none'" style="background:rgba(255,255,255,.06);border:none;color:#94A3B8;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600"><i class="fas fa-times"></i> Đóng</button>
+                </div>
+                <form method="POST" action="${pageContext.request.contextPath}/admin/coupons">
+                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="redirect" value="dashboard">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Mã Code *</label>
+                            <input type="text" name="code" required placeholder="VD: EZTRAVEL10" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif;text-transform:uppercase">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Loại Giảm *</label>
+                            <select name="discountType" required style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none">
+                                <option value="percent">Phần trăm (%)</option>
+                                <option value="fixed">Số tiền cố định (VNĐ)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Giá Trị Giảm *</label>
+                            <input type="number" name="discountValue" required placeholder="10" min="0" step="0.01" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Giảm Tối Đa (VNĐ)</label>
+                            <input type="number" name="maxDiscount" placeholder="100000" min="0" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Đơn Tối Thiểu (VNĐ)</label>
+                            <input type="number" name="minOrderAmount" placeholder="0" min="0" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Giới Hạn Sử Dụng</label>
+                            <input type="number" name="usageLimit" placeholder="100" min="1" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Ngày Bắt Đầu</label>
+                            <input type="date" name="startDate" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Ngày Kết Thúc</label>
+                            <input type="date" name="endDate" style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                        </div>
+                    </div>
+                    <div style="margin-top:16px">
+                        <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Mô Tả</label>
+                        <input type="text" name="description" placeholder="Mô tả mã giảm giá..." style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none;font-family:'Inter',sans-serif">
+                    </div>
+                    <div style="margin-top:20px;display:flex;gap:10px;justify-content:flex-end">
+                        <button type="button" onclick="document.getElementById('addCouponPanel').style.display='none'" style="padding:10px 20px;border-radius:8px;font-size:.82rem;font-weight:700;border:none;cursor:pointer;background:rgba(255,255,255,.06);color:#94A3B8">Hủy</button>
+                        <button type="submit" style="padding:10px 24px;border-radius:8px;font-size:.82rem;font-weight:700;border:none;cursor:pointer;background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;box-shadow:0 4px 15px rgba(245,158,11,.3)"><i class="fas fa-save" style="margin-right:6px"></i>Lưu Mã</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+                <h3 style="margin:0"><i class="fas fa-list"></i> Danh Sách Mã Giảm Giá</h3>
+                <button onclick="var p=document.getElementById('addCouponPanel');p.style.display=p.style.display==='none'?'block':'none'" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(245,158,11,.3)">
+                    <i class="fas fa-plus-circle"></i> Thêm Mã Mới
+                </button>
+            </div>
+            <c:choose>
+                <c:when test="${not empty couponList}">
+                    <div style="overflow-x:auto">
+                    <table class="data-table">
+                        <thead><tr><th>#</th><th>Mã Code</th><th>Loại</th><th>Giá Trị</th><th>Giảm Tối Đa</th><th>Đơn Tối Thiểu</th><th>Đã Dùng</th><th>Hạn</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+                        <tbody>
+                        <c:forEach items="${couponList}" var="cp" varStatus="s">
+                            <tr>
+                                <td style="color:#64748B;font-weight:600">${s.count}</td>
+                                <td style="font-weight:800;color:#FBBF24;font-family:monospace;font-size:.9rem">${cp.code}</td>
+                                <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${cp.discountType == 'percent' ? 'background:rgba(59,130,246,.15);color:#60A5FA' : 'background:rgba(16,185,129,.15);color:#34D399'}">${cp.discountType == 'percent' ? 'Phần trăm' : 'Cố định'}</span></td>
+                                <td style="font-weight:700;color:#fff">${cp.discountType == 'percent' ? cp.discountValue : ''}<c:if test="${cp.discountType == 'percent'}">%</c:if><c:if test="${cp.discountType != 'percent'}"><fmt:formatNumber value="${cp.discountValue}" pattern="#,###"/>đ</c:if></td>
+                                <td style="font-size:.82rem;color:rgba(255,255,255,.5)">${not empty cp.maxDiscount ? cp.maxDiscount : '—'}</td>
+                                <td style="font-size:.82rem;color:rgba(255,255,255,.5)"><c:choose><c:when test="${cp.minOrderAmount > 0}"><fmt:formatNumber value="${cp.minOrderAmount}" pattern="#,###"/>đ</c:when><c:otherwise>—</c:otherwise></c:choose></td>
+                                <td style="font-size:.82rem">${cp.usedCount}<c:if test="${not empty cp.usageLimit}">/${cp.usageLimit}</c:if></td>
+                                <td style="font-size:.78rem;color:rgba(255,255,255,.4)"><c:if test="${not empty cp.endDate}"><fmt:formatDate value="${cp.endDate}" pattern="dd/MM/yyyy"/></c:if><c:if test="${empty cp.endDate}">Vĩnh viễn</c:if></td>
+                                <td><span style="padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;${cp.active ? 'background:rgba(16,185,129,.15);color:#34D399' : 'background:rgba(239,68,68,.15);color:#F87171'}">${cp.active ? 'Hoạt động' : 'Đã tắt'}</span></td>
+                                <td>
+                                    <div style="display:flex;gap:6px">
+                                        <form method="POST" action="${pageContext.request.contextPath}/admin/coupons" style="display:inline">
+                                            <input type="hidden" name="action" value="toggle">
+                                            <input type="hidden" name="id" value="${cp.couponId}">
+                                            <input type="hidden" name="redirect" value="dashboard">
+                                            <button type="submit" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;border:none;cursor:pointer;${cp.active ? 'background:rgba(245,158,11,.15);color:#FBBF24' : 'background:rgba(16,185,129,.15);color:#34D399'}" title="${cp.active ? 'Tắt' : 'Bật'}">${cp.active ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button>
+                                        </form>
+                                        <form method="POST" action="${pageContext.request.contextPath}/admin/coupons" style="display:inline" onsubmit="return confirm('Xóa mã này?')">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="id" value="${cp.couponId}">
+                                            <input type="hidden" name="redirect" value="dashboard">
+                                            <button type="submit" style="padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;border:none;cursor:pointer;background:rgba(239,68,68,.15);color:#F87171" title="Xóa"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div style="text-align:center;padding:60px 20px;color:#64748B">
+                        <i class="fas fa-ticket-alt" style="font-size:3rem;opacity:.3;margin-bottom:16px;display:block"></i>
+                        <p>Chưa có mã giảm giá nào</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div><!-- /sec-coupons -->
 
 </main>
 
