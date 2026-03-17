@@ -88,15 +88,28 @@ public class CartServlet extends HttpServlet {
 
         // Check if tour already in cart
         boolean found = false;
+        int currentInCart = 0;
+        CartItem existingItem = null;
+
         for (CartItem item : cart) {
             if (item.getTour().getTourId() == tourId) {
-                item.setQuantity(item.getQuantity() + qty);
+                currentInCart = item.getQuantity();
+                existingItem = item;
                 found = true;
                 break;
             }
         }
 
-        if (!found) {
+        if (currentInCart + qty > tour.getMaxPeople()) {
+            session.setAttribute("error", "Tour này chỉ còn tối đa " + tour.getMaxPeople() + " chỗ. Bạn đã có " + currentInCart + " chỗ trong giỏ.");
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer : request.getContextPath() + "/cart");
+            return;
+        }
+
+        if (found && existingItem != null) {
+            existingItem.setQuantity(currentInCart + qty);
+        } else {
             CartItem newItem = new CartItem(tour, qty, new Date());
             cart.add(newItem);
         }
@@ -149,7 +162,12 @@ public class CartServlet extends HttpServlet {
                     if (newQty <= 0) {
                         cart.removeIf(i -> i.getTour().getTourId() == tourId);
                     } else {
-                        item.setQuantity(newQty);
+                        // Check capacity
+                        if (newQty > item.getTour().getMaxPeople()) {
+                            session.setAttribute("error", "Tour này chỉ có tối đa " + item.getTour().getMaxPeople() + " chỗ.");
+                        } else {
+                            item.setQuantity(newQty);
+                        }
                     }
                     break;
                 }

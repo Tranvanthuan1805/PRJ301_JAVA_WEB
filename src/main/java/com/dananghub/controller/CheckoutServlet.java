@@ -120,8 +120,11 @@ public class CheckoutServlet extends HttpServlet {
             if (orderId > 0) {
                 Order savedOrder = orderDAO.findById(orderId);
 
-                // Create bookings for each cart item
+                // Create bookings for each cart item and verify capacity again
                 for (CartItem item : cart) {
+                    if (item.getQuantity() > item.getTour().getMaxPeople()) {
+                        throw new Exception("Tour " + item.getTour().getTourName() + " vượt quá số chỗ (Tối đa " + item.getTour().getMaxPeople() + " người)");
+                    }
                     Booking booking = new Booking();
                     booking.setOrder(savedOrder);
                     booking.setTour(item.getTour());
