@@ -96,6 +96,13 @@
             <h1 class="page-title"><i class="fas fa-comments"></i> Yêu Cầu Tư Vấn</h1>
         </div>
 
+        <c:if test="${not empty errorMessage}">
+            <div style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:16px 20px;margin-bottom:20px;color:#F87171;font-size:.85rem;display:flex;align-items:center;gap:10px">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>${errorMessage} — Hãy chạy SQL tạo bảng Consultations trên Supabase.</span>
+            </div>
+        </c:if>
+
         <!-- Stats -->
         <div class="stats-row">
             <a href="${ctx}/admin/consultations" class="stat-card ${empty currentStatus ? 'active' : ''}">
