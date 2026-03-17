@@ -34,8 +34,7 @@ public class ProviderServlet extends HttpServlet {
 
         switch (action) {
             case "dashboard" -> {
-                if (user == null) { response.sendRedirect(request.getContextPath() + "/login.jsp"); return; }
-                showDashboard(request, response, user);
+                response.sendRedirect(request.getContextPath() + "/provider/dashboard");
             }
             case "create-tour" -> {
                 if (user == null) { response.sendRedirect(request.getContextPath() + "/login.jsp"); return; }
@@ -77,33 +76,7 @@ public class ProviderServlet extends HttpServlet {
         request.getRequestDispatcher("/views/provider/landing.jsp").forward(request, response);
     }
 
-    private void showDashboard(HttpServletRequest request, HttpServletResponse response, User user)
-            throws ServletException, IOException {
-        Provider provider = findProvider(user.getUserId());
-        if (provider == null || (!"Approved".equals(provider.getStatus()) && !"Active".equals(provider.getStatus()))) {
-            response.sendRedirect(request.getContextPath() + "/provider");
-            return;
-        }
 
-        // Get provider's tours
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            List<Tour> tours = em.createQuery(
-                "SELECT t FROM Tour t WHERE t.provider.providerId = :pid ORDER BY t.createdAt DESC", Tour.class)
-                .setParameter("pid", provider.getProviderId())
-                .getResultList();
-
-            long pendingCount = tours.stream().filter(t -> !t.isActive()).count();
-            long activeCount = tours.stream().filter(Tour::isActive).count();
-
-            request.setAttribute("provider", provider);
-            request.setAttribute("tours", tours);
-            request.setAttribute("pendingCount", pendingCount);
-            request.setAttribute("activeCount", activeCount);
-        } finally { em.close(); }
-
-        request.getRequestDispatcher("/views/provider/dashboard.jsp").forward(request, response);
-    }
 
     private void showCreateTour(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
@@ -253,7 +226,7 @@ public class ProviderServlet extends HttpServlet {
             request.getSession().setAttribute("error", "Lỗi: " + e.getMessage());
         } finally { em.close(); }
 
-        response.sendRedirect(request.getContextPath() + "/provider?action=dashboard");
+        response.sendRedirect(request.getContextPath() + "/provider/dashboard");
     }
 
     private String saveUploadedFile(Part part, HttpServletRequest request) throws IOException {
