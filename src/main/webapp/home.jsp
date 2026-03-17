@@ -1813,133 +1813,151 @@
                 </section>
 
                 <!-- ═══ CONTACT / CONSULTATION FORM ═══ -->
-                <section class="consult-section">
-                    <style>
-                        .consult-section{background:linear-gradient(135deg,#F0F4FF 0%,#E8EFFF 50%,#F5F3FF 100%);padding:90px 0;position:relative;overflow:hidden}
-                        .consult-section::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.08) 0%,transparent 70%);border-radius:50%}
-                        .consult-section::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(139,92,246,.06) 0%,transparent 70%);border-radius:50%}
-                        .consult-wrap{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
-                        .consult-left h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:900;color:#0F172A;line-height:1.15;margin:0 0 16px}
-                        .consult-left h2 span{background:linear-gradient(135deg,#2563EB,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-                        .consult-left>p{font-size:.95rem;color:#475569;line-height:1.8;margin:0 0 32px}
-                        .consult-perks{display:flex;flex-direction:column;gap:14px}
-                        .consult-perk{display:flex;align-items:flex-start;gap:12px}
-                        .consult-perk-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem}
-                        .consult-perk-icon.blue{background:rgba(59,130,246,.1);color:#2563EB}
-                        .consult-perk-icon.green{background:rgba(16,185,129,.1);color:#059669}
-                        .consult-perk-icon.purple{background:rgba(139,92,246,.1);color:#7C3AED}
-                        .consult-perk h4{font-size:.88rem;font-weight:700;color:#1E293B;margin:0 0 2px}
-                        .consult-perk p{font-size:.78rem;color:#64748B;margin:0;line-height:1.5}
-                        .consult-card{background:#fff;border-radius:20px;padding:36px;box-shadow:0 8px 40px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.03);position:relative;overflow:hidden}
-                        .consult-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#2563EB,#7C3AED,#EC4899)}
-                        .consult-card h3{font-size:1.2rem;font-weight:800;color:#0F172A;margin:0 0 6px}
-                        .consult-card>p{font-size:.82rem;color:#94A3B8;margin:0 0 24px}
-                        .c-form{display:flex;flex-direction:column;gap:16px}
-                        .c-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-                        .c-field{display:flex;flex-direction:column;gap:5px}
-                        .c-field label{font-size:.75rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.3px}
-                        .c-field input,.c-field select,.c-field textarea{padding:12px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.88rem;color:#1E293B;font-family:'Inter',sans-serif;background:#F8FAFC;transition:all .25s;outline:none;width:100%;box-sizing:border-box}
-                        .c-field input:focus,.c-field select:focus,.c-field textarea:focus{border-color:#2563EB;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
-                        .c-field input::placeholder,.c-field textarea::placeholder{color:#94A3B8;font-size:.84rem}
-                        .c-field textarea{resize:vertical;min-height:90px}
-                        .c-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;background-color:#F8FAFC}
-                        .c-submit{padding:14px 32px;background:linear-gradient(135deg,#2563EB,#4F46E5);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(37,99,235,.3)}
-                        .c-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.4)}
-                        .c-submit:active{transform:translateY(0)}
-                        .c-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
-                        .c-submit i{transition:transform .3s}
-                        .c-submit:hover i{transform:translateX(3px)}
-                        .c-success{display:none;padding:16px 20px;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1px solid #A7F3D0;border-radius:12px;color:#065F46;font-weight:600;font-size:.88rem;text-align:center;align-items:center;gap:8px;justify-content:center}
-                        .c-success.show{display:flex}
-                        .c-success i{color:#059669;font-size:1.1rem}
-                        @media(max-width:768px){
-                            .consult-wrap{grid-template-columns:1fr;gap:40px}
-                            .c-row{grid-template-columns:1fr}
-                            .consult-card{padding:28px 20px}
-                        }
-                    </style>
-                    <div class="consult-wrap">
-                        <div class="consult-left">
-                            <h2>Bạn cần <span>tư vấn tour</span>?</h2>
-                            <p>Đội ngũ chuyên gia du lịch Đà Nẵng với hơn 10 năm kinh nghiệm sẵn sàng tư vấn miễn phí, giúp bạn tìm ra chuyến đi hoàn hảo nhất.</p>
-                            <div class="consult-perks">
-                                <div class="consult-perk">
-                                    <div class="consult-perk-icon blue"><i class="fas fa-headset"></i></div>
-                                    <div><h4>Tư vấn miễn phí 24/7</h4><p>Hotline: (0335) 111 783 — Luôn sẵn sàng hỗ trợ</p></div>
+                <style>
+                    .consult-section { background-color: #f8fafc; padding: 100px 0; position: relative; overflow: hidden; }
+                    .consult-container { max-width: 1240px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 70px; align-items: start; position: relative; z-index: 1; }
+                    
+                    /* Left: Content & Map */
+                    .consult-info { display: flex; flex-direction: column; gap: 32px; position: sticky; top: 100px; }
+                    .consult-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 900; color: #0f172a; line-height: 1.1; margin-bottom: 20px; }
+                    .consult-header h2 span { background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+                    .consult-header p { font-size: 1.05rem; color: #475569; line-height: 1.7; max-width: 500px; }
+                    
+                    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
+                    .contact-box { background: #fff; padding: 20px; border-radius: 20px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 16px; transition: all 0.3s; }
+                    .contact-box:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: #2563eb; }
+                    .contact-box i { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+                    .contact-box.blue i { background: rgba(37,99,235,0.1); color: #2563eb; }
+                    .contact-box.green i { background: rgba(16,185,129,0.1); color: #10b981; }
+                    .contact-box div h4 { font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+                    .contact-box div p { font-size: 0.95rem; font-weight: 700; color: #1e293b; margin: 0; }
+                    
+                    .map-box { background: #fff; border-radius: 24px; overflow: hidden; border: 5px solid #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.1); height: 320px; }
+                    .map-box iframe { width: 100%; height: 100%; border: 0; }
+                    
+                    /* Right: Form Card */
+                    .consult-form-card { background: #fff; padding: 48px; border-radius: 32px; box-shadow: 0 30px 60px rgba(15,23,42,0.1); border: 1px solid #f1f5f9; }
+                    .consult-form-card h3 { font-size: 1.6rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+                    .consult-form-card > p { color: #64748b; font-size: 0.92rem; margin-bottom: 36px; }
+                    
+                    .c-input-group { margin-bottom: 20px; }
+                    .c-input-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #334155; margin-bottom: 8px; }
+                    .c-input-group input, .c-input-group select, .c-input-group textarea { width: 100%; padding: 15px 20px; border-radius: 14px; border: 2px solid #f1f5f9; background: #f8fafc; font-family: inherit; font-size: 0.95rem; color: #0f172a; transition: all 0.3s; outline: none; }
+                    .c-input-group input:focus, .c-input-group select:focus, .c-input-group textarea:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
+                    .c-input-group textarea { min-height: 110px; resize: vertical; }
+                    .c-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+                    
+                    .c-btn-submit { width: 100%; padding: 18px; border-radius: 14px; border: none; background: linear-gradient(135deg, #2563eb, #4f46e5); color: #fff; font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 10px 25px rgba(37,99,235,0.3); }
+                    .c-btn-submit:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(37,99,235,0.4); }
+                    .c-btn-submit:active { transform: translateY(0); }
+                    .c-btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+                    
+                    .c-success-msg { display: none; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 14px; padding: 18px; color: #065f46; font-weight: 600; font-size: 0.92rem; align-items: center; gap: 10px; margin-top: 24px; animation: slideIn 0.4s ease-out; }
+                    .c-success-msg.show { display: flex; }
+                    
+                    @media (max-width: 991px) { .consult-container { grid-template-columns: 1fr; gap: 50px; } .consult-info { position: static; } }
+                    @media (max-width: 640px) { .c-input-row { grid-template-columns: 1fr; gap: 0; } .consult-form-card { padding: 32px 24px; } .contact-grid { grid-template-columns: 1fr; } }
+                </style>
+
+                <section class="consult-section" id="consult-area">
+                    <div class="consult-container rv">
+                        <div class="consult-info">
+                            <div class="consult-header">
+                                <h2>Cần <span>tư vấn riêng</span> cho chuyến đi?</h2>
+                                <p>Đội ngũ EZTravel luôn sẵn sàng lắng nghe và thiết kế lịch trình riêng biệt, phù hợp nhất với nhu cầu và ngân sách của bạn.</p>
+                            </div>
+                            
+                            <div class="contact-grid">
+                                <div class="contact-box blue">
+                                    <i class="fas fa-phone-volume"></i>
+                                    <div><h4>Hotline 24/7</h4><p>(0335) 111 783</p></div>
                                 </div>
-                                <div class="consult-perk">
-                                    <div class="consult-perk-icon green"><i class="fas fa-shield-alt"></i></div>
-                                    <div><h4>Cam kết giá tốt nhất</h4><p>Hoàn tiền 100% nếu tìm thấy giá rẻ hơn</p></div>
-                                </div>
-                                <div class="consult-perk">
-                                    <div class="consult-perk-icon purple"><i class="fas fa-bolt"></i></div>
-                                    <div><h4>Phản hồi trong 30 phút</h4><p>Đội ngũ sẽ liên hệ bạn ngay sau khi nhận form</p></div>
+                                <div class="contact-box green">
+                                    <i class="fas fa-envelope-open-text"></i>
+                                    <div><h4>Email hỗ trợ</h4><p>eztravel@gmail.com</p></div>
                                 </div>
                             </div>
+
+                            <div class="map-box">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15342.93322080709!2d108.2616!3d15.975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314210899b3c3b35%3A0x7d6b3060fb64273e!2sFPT%20University%20Da%20Nang!5e0!3m2!1sen!2s!4v1710000000000!5m2!1sen!2s" 
+                                        allowfullscreen="" loading="lazy"></iframe>
+                            </div>
                         </div>
-                        <div class="consult-card">
-                            <h3>Gửi yêu cầu tư vấn</h3>
-                            <p>Điền thông tin bên dưới, chúng tôi sẽ liên hệ bạn sớm nhất</p>
-                            <form class="c-form" id="consultForm">
-                                <div class="c-row">
-                                    <div class="c-field">
+
+                        <div class="consult-form-card">
+                            <h3>Để lại lời nhắn</h3>
+                            <p>Thông tin của bạn sẽ được gửi trực tiếp đến hệ thống quản trị của chúng tôi.</p>
+                            <form id="consultFormAjax">
+                                <div class="c-input-row">
+                                    <div class="c-input-group">
                                         <label>Họ và tên *</label>
-                                        <input type="text" name="fullName" placeholder="Nguyễn Văn A" required>
+                                        <input type="text" name="fullName" placeholder="Ví dụ: Nguyễn Văn A" required>
                                     </div>
-                                    <div class="c-field">
+                                    <div class="c-input-group">
                                         <label>Số điện thoại</label>
-                                        <input type="tel" name="phone" placeholder="0335 111 783">
+                                        <input type="tel" name="phone" placeholder="0335 xxx xxx">
                                     </div>
                                 </div>
-                                <div class="c-row">
-                                    <div class="c-field">
-                                        <label>Email *</label>
-                                        <input type="email" name="email" placeholder="email@example.com" required>
-                                    </div>
-                                    <div class="c-field">
-                                        <label>Loại tour</label>
-                                        <select name="tourType">
-                                            <option value="beach">🏖️ Tour Biển & Đảo</option>
-                                            <option value="mountain">🏔️ Tour Núi & Trekking</option>
-                                            <option value="culture">🏛️ Tour Văn Hóa & Lịch Sử</option>
-                                            <option value="food">🍜 Tour Ẩm Thực</option>
-                                            <option value="combo">🎁 Combo Trọn Gói</option>
-                                            <option value="custom">✨ Yêu cầu riêng</option>
-                                        </select>
-                                    </div>
+                                <div class="c-input-group">
+                                    <label>Địa chỉ Email *</label>
+                                    <input type="email" name="email" placeholder="example@gmail.com" required>
                                 </div>
-                                <div class="c-field">
-                                    <label>Mô tả yêu cầu</label>
-                                    <textarea name="message" placeholder="Số người, ngày đi, ngân sách dự kiến..."></textarea>
+                                <div class="c-input-group">
+                                    <label>Loại hình quan tâm</label>
+                                    <select name="tourType">
+                                        <option value="beach">🏝️ Du lịch Biển Đảo</option>
+                                        <option value="mountain">🏔️ Tour Núi & Trekking</option>
+                                        <option value="culture">🏛️ Tour Văn Hóa - Di Sản</option>
+                                        <option value="food">🍜 Trải nghiệm Ẩm thực</option>
+                                        <option value="other">✨ Yêu cầu khác</option>
+                                    </select>
                                 </div>
-                                <button type="submit" class="c-submit" id="consultBtn">
-                                    <span>Gửi yêu cầu</span> <i class="fas fa-paper-plane"></i>
+                                <div class="c-input-group">
+                                    <label>Nội dung cần tư vấn</label>
+                                    <textarea name="message" placeholder="Ghi chú thêm về số lượng người, ngày đi mong muốn..."></textarea>
+                                </div>
+                                <button type="submit" class="c-btn-submit" id="cSubmitBtn">
+                                    Gửi Yêu Cầu <i class="fas fa-paper-plane"></i>
                                 </button>
-                                <div class="c-success" id="consultSuccess">
+                                <div class="c-success-msg" id="cSuccessMsg">
                                     <i class="fas fa-check-circle"></i>
-                                    <span>Cảm ơn bạn! Chúng tôi sẽ liên hệ trong 30 phút.</span>
+                                    <span>Gửi thành công! Chúng tôi sẽ phản hồi trong giây lát.</span>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </section>
                 <script>
-                document.getElementById('consultForm').addEventListener('submit',function(e){
+                document.getElementById('consultFormAjax').addEventListener('submit', function(e) {
                     e.preventDefault();
-                    var btn=document.getElementById('consultBtn');
-                    btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
-                    var fd=new FormData(this);
-                    fetch('${pageContext.request.contextPath}/consultation',{method:'POST',body:new URLSearchParams(fd)})
-                    .then(function(r){return r.json()})
-                    .then(function(d){
-                        if(d.success){
-                            document.getElementById('consultSuccess').classList.add('show');
-                            document.getElementById('consultForm').reset();
-                            setTimeout(function(){document.getElementById('consultSuccess').classList.remove('show')},6000);
-                        }else{alert(d.message||'Có lỗi xảy ra');}
-                        btn.disabled=false;btn.innerHTML='<span>Gửi yêu cầu</span> <i class="fas fa-paper-plane"></i>';
+                    const btn = document.getElementById('cSubmitBtn');
+                    const msg = document.getElementById('cSuccessMsg');
+                    
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Đang gửi...';
+                    
+                    const fd = new FormData(this);
+                    fetch('${pageContext.request.contextPath}/consultation', {
+                        method: 'POST',
+                        body: new URLSearchParams(fd)
                     })
-                    .catch(function(){alert('Lỗi kết nối');btn.disabled=false;btn.innerHTML='<span>Gửi yêu cầu</span> <i class="fas fa-paper-plane"></i>';});
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d.success) {
+                            msg.classList.add('show');
+                            this.reset();
+                            setTimeout(() => msg.classList.remove('show'), 6000);
+                        } else {
+                            alert(d.message || 'Lỗi hệ thống');
+                        }
+                        btn.disabled = false;
+                        btn.innerHTML = 'Gửi Yêu Cầu <i class="fas fa-paper-plane"></i>';
+                    })
+                    .catch(() => {
+                        alert('Không thể kết nối với máy chủ');
+                        btn.disabled = false;
+                        btn.innerHTML = 'Gửi Yêu Cầu <i class="fas fa-paper-plane"></i>';
+                    });
                 });
                 </script>
 
