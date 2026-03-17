@@ -23,7 +23,8 @@
     .sidebar .logo .a{color:#60A5FA}
     .sidebar .badge-admin{display:inline-block;padding:3px 10px;border-radius:8px;background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(239,68,68,.1));color:#F87171;font-size:.65rem;font-weight:700;font-family:'Inter',sans-serif;margin-left:6px;vertical-align:middle;border:1px solid rgba(239,68,68,.15);animation:adminPulse 3s ease-in-out infinite}
     @keyframes adminPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.15)}50%{box-shadow:0 0 12px 2px rgba(239,68,68,.1)}}
-    .sidebar nav{flex:1;overflow-y:auto}
+    .sidebar nav{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-ms-overflow-style:none}
+    .sidebar nav::-webkit-scrollbar{display:none}
     .sidebar nav a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;color:rgba(255,255,255,.45);font-size:.88rem;font-weight:500;transition:all .3s cubic-bezier(.4,0,.2,1);margin-bottom:3px;text-decoration:none;position:relative;border:1px solid transparent}
     .sidebar nav a:hover{color:#fff;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.06);transform:translateX(4px)}
     .sidebar nav a.active{color:#fff;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(139,92,246,.08));border:1px solid rgba(59,130,246,.18);box-shadow:0 0 20px rgba(59,130,246,.08),inset 0 1px 0 rgba(255,255,255,.05)}
