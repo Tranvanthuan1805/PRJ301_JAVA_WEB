@@ -113,7 +113,7 @@
                     <li><a href="#">Khách sạn</a></li>
                     <li><a href="${pageContext.request.contextPath}/provider">Nhà Cung Cấp</a></li>
                     <li><a href="${pageContext.request.contextPath}/tour-compare">So Sánh Tour</a></li>
-                    <li><a href="${pageContext.request.contextPath}/tour-3d">Tour 3D Gallery</a></li>
+
                 </ul>
             </div>
 

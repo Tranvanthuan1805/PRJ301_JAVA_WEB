@@ -97,9 +97,7 @@
     <nav>
         <a href="${pageContext.request.contextPath}/provider/dashboard" class="active"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
         <a href="${pageContext.request.contextPath}/tour"><i class="fas fa-map-marked-alt"></i> Tours Của Tôi</a>
-        <a href="${pageContext.request.contextPath}/tour-3d"><i class="fas fa-cube"></i> Tour 3D Gallery</a>
         <a href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-shopping-bag"></i> Đơn Đặt</a>
-        <a href="${pageContext.request.contextPath}/pricing"><i class="fas fa-crown"></i> Gói Dịch Vụ</a>
         <a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user-cog"></i> Hồ Sơ</a>
     </nav>
     <div class="user-box">
@@ -171,10 +169,6 @@
                 <a href="${pageContext.request.contextPath}/my-orders" class="quick-action">
                     <div class="qa-icon icon-green"><i class="fas fa-list"></i></div>
                     <div class="qa-text"><h4>Xem Đơn Hàng</h4><p>Quản lý đơn đặt tour</p></div>
-                </a>
-                <a href="${pageContext.request.contextPath}/pricing" class="quick-action">
-                    <div class="qa-icon icon-orange"><i class="fas fa-crown"></i></div>
-                    <div class="qa-text"><h4>Nâng Cấp Gói</h4><p>Xem các gói VIP</p></div>
                 </a>
                 <a href="${pageContext.request.contextPath}/profile" class="quick-action">
                     <div class="qa-icon icon-red"><i class="fas fa-user-edit"></i></div>
