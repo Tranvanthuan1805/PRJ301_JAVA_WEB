@@ -1509,7 +1509,7 @@
                                     <div class="m-tablet-frame">
                                         <div class="m-tablet-cam"></div>
                                         <div class="m-tablet-screen">
-                                            <iframe src="/DaNangTravelHub/" loading="lazy" title="eztravel desktop"></iframe>
+                                            <iframe src="${pageContext.request.contextPath}/" loading="lazy" title="eztravel desktop"></iframe>
                                         </div>
                                     </div>
                                 </div>
@@ -1518,7 +1518,7 @@
                                     <div class="m-phone-frame">
                                         <div class="m-phone-island"></div>
                                         <div class="m-phone-screen">
-                                            <iframe src="/DaNangTravelHub/" loading="lazy" title="eztravel mobile"></iframe>
+                                            <iframe src="${pageContext.request.contextPath}/" loading="lazy" title="eztravel mobile"></iframe>
                                         </div>
                                         <div class="m-phone-bar"></div>
                                     </div>
