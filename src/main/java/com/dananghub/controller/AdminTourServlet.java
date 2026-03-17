@@ -232,6 +232,11 @@ public class AdminTourServlet extends HttpServlet {
             em.persist(tour);
             tx.commit();
 
+            // Sync stats for the provider
+            if (tour.getProvider() != null) {
+                providerDAO.syncStats(tour.getProvider().getProviderId());
+            }
+
             response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=created");
             return;
         } catch (Exception e) {
@@ -302,6 +307,14 @@ public class AdminTourServlet extends HttpServlet {
                 em.merge(tour);
             }
             tx.commit();
+            
+            // Sync stats for the provider
+            String pId = request.getParameter("providerId");
+            if (pId != null && !pId.isEmpty()) {
+                providerDAO.syncStats(Integer.parseInt(pId));
+            }
+
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=updated");
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
@@ -309,7 +322,6 @@ public class AdminTourServlet extends HttpServlet {
         } finally {
             em.close();
         }
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=updated");
     }
 
     private void deleteTour(HttpServletRequest request, HttpServletResponse response)
@@ -320,6 +332,11 @@ public class AdminTourServlet extends HttpServlet {
             tour.setActive(false);
             tour.setUpdatedAt(new Date());
             tourDAO.update(tour);
+            
+            // Sync stats for the provider
+            if (tour.getProvider() != null) {
+                providerDAO.syncStats(tour.getProvider().getProviderId());
+            }
         }
         response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=deleted");
     }

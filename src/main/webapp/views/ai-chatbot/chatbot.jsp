@@ -416,10 +416,18 @@
     // Show tour info when selected
     tourSelect.addEventListener('change', () => {
         const tourInfo = document.getElementById('bf-tour-info');
+        const guestInput = document.getElementById('bf-guests');
         const selected = toursCache.find(t => t.tourId == tourSelect.value);
         if (selected) {
             document.getElementById('bf-tour-name').textContent = selected.tourName;
             document.getElementById('bf-tour-price').textContent = new Intl.NumberFormat('vi-VN').format(selected.price) + 'đ/người';
+            
+            // UPDATE CAP CITY FOR CHATBOT FORM
+            guestInput.max = selected.maxPeople || 20;
+            if (parseInt(guestInput.value) > guestInput.max) {
+                guestInput.value = guestInput.max;
+            }
+            
             tourInfo.style.display = 'block';
         } else {
             tourInfo.style.display = 'none';
@@ -451,6 +459,12 @@
         
         if (!tourId || !selected) {
             addBotMessage('⚠️ Vui lòng chọn tour từ danh sách.');
+            return;
+        }
+
+        // DOUBLE CHECK CAPACITY IN JS
+        if (parseInt(guests) > (selected.maxPeople || 20)) {
+            addBotMessage('⚠️ Tour này chỉ nhận tối đa ' + (selected.maxPeople || 20) + ' khách. Vui lòng giảm số lượng.');
             return;
         }
 

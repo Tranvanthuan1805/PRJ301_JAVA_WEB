@@ -4,6 +4,7 @@ import com.dananghub.entity.Provider;
 import com.dananghub.entity.ProviderPriceHistory;
 import com.dananghub.util.JPAUtil;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 
@@ -212,6 +213,44 @@ public class ProviderDAO {
                     Provider.class);
             query.setMaxResults(limit);
             return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    /**
+     * Đồng bộ lại các chỉ số của Provider: TotalTours và Rating
+     */
+    public void syncStats(int providerId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Provider provider = em.find(Provider.class, providerId);
+            if (provider != null) {
+                // 1. Tính tổng số tour active
+                Long tourCount = em.createQuery(
+                    "SELECT COUNT(t) FROM Tour t WHERE t.provider.providerId = :pid AND t.isActive = true", Long.class)
+                    .setParameter("pid", providerId)
+                    .getSingleResult();
+                provider.setTotalTours(tourCount.intValue());
+
+                // 2. Tính Rating trung bình (nếu có review)
+                try {
+                    Double avgRating = em.createQuery(
+                        "SELECT AVG(CAST(r.rating AS double)) FROM Review r WHERE r.tour.provider.providerId = :pid", Double.class)
+                        .setParameter("pid", providerId)
+                        .getSingleResult();
+                    if (avgRating != null) {
+                        provider.setRating(avgRating);
+                    }
+                } catch (Exception ignored) {}
+
+                em.merge(provider);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
         } finally {
             em.close();
         }

@@ -47,6 +47,18 @@ public class OrderDetailDTO {
             this.tourDuration = tour.getDuration();
             this.tourLocation = tour.getStartLocation();
         }
+        
+        // Calculate total people if not set
+        if (order.getBookings() != null && !order.getBookings().isEmpty()) {
+            this.numberOfPeople = order.getBookings().stream()
+                    .mapToInt(com.dananghub.entity.Booking::getQuantity)
+                    .sum();
+            
+            // If more than 1 tour, append "+ X more"
+            if (order.getBookings().size() > 1) {
+                this.tourName += " (và " + (order.getBookings().size() - 1) + " tour khác)";
+            }
+        }
     }
 
     // Helper methods

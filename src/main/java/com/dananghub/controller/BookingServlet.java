@@ -102,6 +102,13 @@ public class BookingServlet extends HttpServlet {
                 return;
             }
 
+            // CHECK CAPACITY: Ensure numberOfPeople doesn't exceed tour.getMaxPeople()
+            if (numberOfPeople > tour.getMaxPeople()) {
+                session.setAttribute("error", "Tour này chỉ còn tối đa " + tour.getMaxPeople() + " chỗ. Vui lòng chọn lại số lượng.");
+                response.sendRedirect(request.getContextPath() + "/booking?id=" + tourId);
+                return;
+            }
+
             double subtotal = tour.getPrice() * numberOfPeople;
 
             // Apply coupon if present (legacy system)
