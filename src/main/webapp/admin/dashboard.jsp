@@ -432,7 +432,7 @@
                     <h3 style="margin:0"><i class="fas fa-plus-circle" style="color:#3B82F6"></i> Thêm Tour Mới</h3>
                     <button onclick="document.getElementById('addTourPanel').style.display='none'" style="background:rgba(255,255,255,.06);border:none;color:#94A3B8;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600"><i class="fas fa-times"></i> Đóng</button>
                 </div>
-                <form method="POST" action="${pageContext.request.contextPath}/admin/tours" enctype="multipart/form-data">
+                <form method="POST" action="${pageContext.request.contextPath}/admin/tours">
                     <input type="hidden" name="action" value="add">
                     <input type="hidden" name="redirect" value="dashboard">
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
@@ -445,6 +445,14 @@
                             <select name="categoryId" required style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none">
                                 <c:forEach items="${categoryList}" var="cat">
                                     <option value="${cat.categoryId}">${cat.categoryName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:.78rem;font-weight:600;color:#94A3B8;display:block;margin-bottom:6px">Nhà Cung Cấp *</label>
+                            <select name="providerId" required style="width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.05);color:#E2E8F0;font-size:.85rem;outline:none">
+                                <c:forEach items="${providerList}" var="p">
+                                    <option value="${p.providerId}">${p.businessName}</option>
                                 </c:forEach>
                             </select>
                         </div>

@@ -187,8 +187,13 @@ public class AdminTourServlet extends HttpServlet {
             tx.begin();
             Tour tour = new Tour();
 
-            // Basic fields
-            tour.setTourName(request.getParameter("tourName"));
+            // Basic fields & validation
+            String tourName = request.getParameter("tourName");
+            if (tourName == null || tourName.trim().isEmpty()) {
+                throw new Exception("Tên Tour không được để trống!");
+            }
+            tour.setTourName(tourName.trim());
+            
             tour.setShortDesc(request.getParameter("shortDesc"));
             tour.setDescription(request.getParameter("description"));
             tour.setDuration(request.getParameter("duration"));
@@ -197,9 +202,21 @@ public class AdminTourServlet extends HttpServlet {
             tour.setDestination(request.getParameter("destination"));
             tour.setImageUrl(request.getParameter("imageUrl"));
             tour.setItinerary(request.getParameter("itinerary"));
-
-            try { tour.setPrice(Double.parseDouble(request.getParameter("price"))); } catch (Exception ignored) {}
-            try { tour.setMaxPeople(Integer.parseInt(request.getParameter("maxPeople"))); } catch (Exception ignored) {}
+            
+            String priceStr = request.getParameter("price");
+            if (priceStr == null || priceStr.isEmpty()) {
+                throw new Exception("Giá Tour không được để trống!");
+            }
+            try { 
+                tour.setPrice(Double.parseDouble(priceStr)); 
+            } catch (Exception e) {
+                throw new Exception("Giá Tour không hợp lệ!");
+            }
+            
+            try { 
+                String mp = request.getParameter("maxPeople");
+                if (mp != null && !mp.isEmpty()) tour.setMaxPeople(Integer.parseInt(mp)); 
+            } catch (Exception ignored) {}
 
             // Parse and validate dates
             java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -225,19 +242,23 @@ public class AdminTourServlet extends HttpServlet {
                 tour.setEndDate(d);
             }
 
-            // Category - load within same EntityManager
+            // Category validation
             String categoryId = request.getParameter("categoryId");
-            if (categoryId != null && !categoryId.isEmpty()) {
-                Category cat = em.find(Category.class, Integer.parseInt(categoryId));
-                if (cat != null) tour.setCategory(cat);
+            if (categoryId == null || categoryId.isEmpty()) {
+                throw new Exception("Vui lòng chọn Danh Mục!");
             }
+            Category cat = em.find(Category.class, Integer.parseInt(categoryId));
+            if (cat == null) throw new Exception("Danh Mục không hợp lệ!");
+            tour.setCategory(cat);
 
-            // Provider - load within same EntityManager
+            // Provider validation
             String providerIdStr = request.getParameter("providerId");
-            if (providerIdStr != null && !providerIdStr.isEmpty()) {
-                Provider p = em.find(Provider.class, Integer.parseInt(providerIdStr));
-                if (p != null) tour.setProvider(p);
+            if (providerIdStr == null || providerIdStr.isEmpty()) {
+                throw new Exception("Vui lòng chọn Nhà Cung Cấp!");
             }
+            Provider prov = em.find(Provider.class, Integer.parseInt(providerIdStr));
+            if (prov == null) throw new Exception("Nhà Cung Cấp không hợp lệ!");
+            tour.setProvider(prov);
 
             tour.setActive(true);
             tour.setCreatedAt(new Date());
@@ -255,9 +276,11 @@ public class AdminTourServlet extends HttpServlet {
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/admin/dashboard?error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8") + "&section=tours-mgmt");
+            String msg = e.getMessage() != null ? e.getMessage() : e.toString();
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?error=" + java.net.URLEncoder.encode(msg, "UTF-8") + "&section=tours-mgmt");
             return;
-        } finally {
+        }
+ finally {
             em.close();
         }
     }
@@ -330,8 +353,11 @@ public class AdminTourServlet extends HttpServlet {
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
-            request.setAttribute("error", "Lỗi cập nhật: " + e.getMessage());
-        } finally {
+            String msg = e.getMessage() != null ? e.getMessage() : e.toString();
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?error=" + java.net.URLEncoder.encode(msg, "UTF-8") + "&section=tours-mgmt");
+            return;
+        }
+ finally {
             em.close();
         }
     }
