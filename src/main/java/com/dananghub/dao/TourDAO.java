@@ -172,4 +172,30 @@ public class TourDAO {
             em.close();
         }
     }
+
+    /**
+     * Lấy số chỗ còn trống cho 1 tour vào ngày cụ thể
+     */
+    public int getAvailableSlots(int tourId, Date travelDate) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            Object[] result = (Object[]) em.createQuery(
+                "SELECT t.maxPeople, COALESCE(SUM(b.quantity), 0) " +
+                "FROM Tour t LEFT JOIN Booking b ON t.tourId = b.tour.tourId " +
+                "AND b.bookingStatus = 'Confirmed' AND CAST(b.bookingDate AS date) = CAST(:date AS date) " +
+                "WHERE t.tourId = :tid " +
+                "GROUP BY t.maxPeople")
+                .setParameter("date", travelDate)
+                .setParameter("tid", tourId)
+                .getSingleResult();
+
+            int maxPeople = ((Number) result[0]).intValue();
+            int booked = ((Number) result[1]).intValue();
+            return maxPeople - booked;
+        } catch (Exception e) {
+            return 0;
+        } finally {
+            em.close();
+        }
+    }
 }

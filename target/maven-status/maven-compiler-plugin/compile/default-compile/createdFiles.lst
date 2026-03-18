@@ -18,6 +18,7 @@ com\dananghub\entity\InteractionHistory.class
 com\dananghub\entity\Tour.class
 com\dananghub\entity\TourImage_.class
 com\dananghub\entity\Consultation.class
+com\dananghub\service\CartService.class
 com\dananghub\dao\TourDAO.class
 com\dananghub\controller\FeedbackServlet.class
 com\dananghub\entity\CustomerActivity.class
@@ -101,10 +102,10 @@ com\dananghub\entity\TourPriceSeason_.class
 com\dananghub\controller\payment\PaymentServlet.class
 com\dananghub\entity\Coupon.class
 com\dananghub\controller\RegisterServlet.class
+com\dananghub\service\CartService$CartDetailDTO.class
 com\dananghub\dao\OrderDAO.class
 com\dananghub\controller\CouponServlet.class
 com\dananghub\entity\AILog_.class
-com\dananghub\entity\OrderStatus$1.class
 com\dananghub\controller\GoogleAuthServlet.class
 com\dananghub\entity\Customer.class
 com\dananghub\entity\CustomerActivity_.class

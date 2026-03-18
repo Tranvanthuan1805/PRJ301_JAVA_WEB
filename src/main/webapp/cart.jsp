@@ -55,6 +55,13 @@
     .qty-btn:hover{background:rgba(255,111,97,.08);color:#FF6F61}
     .qty-value{width:42px;text-align:center;font-weight:800;font-size:.92rem;color:#1B1F3B;border-left:1px solid #E8EAF0;border-right:1px solid #E8EAF0;line-height:36px;background:#fff}
 
+    .qty-input{width:50px;text-align:center;font-weight:800;font-size:.92rem;color:#1B1F3B;border:1px solid #E8EAF0;background:#fff;outline:none;padding:0;font-family:inherit;transition:.2s}
+    .qty-input:focus{border-color:#FF6F61;box-shadow:0 0 0 2px rgba(255,111,97,.1)}
+    .qty-input::-webkit-outer-spin-button,.qty-input::-webkit-inner-spin-button{-webkit-appearance:none;appearance:none;margin:0}
+    .qty-input[type=number]{-moz-appearance:textfield;appearance:textfield}
+
+    .qty-error{display:none;margin-top:12px;padding:10px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;display:flex;align-items:flex-start;gap:8px;font-size:.85rem;animation:slideDown .3s ease}
+
     .item-price{text-align:right}
     .item-price .unit{font-size:.78rem;color:#A0A5C3;font-weight:600}
     .item-price .total{font-size:1.2rem;font-weight:800;color:#FF6F61;margin-top:2px}
@@ -101,6 +108,11 @@
     .secure-section .badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
     .secure-section .sbadge{display:flex;align-items:center;gap:4px;background:#fff;border:1px solid #E8EAF0;padding:4px 10px;border-radius:8px;font-size:.7rem;font-weight:700;color:#6B7194}
     .secure-section .sbadge i{color:#06D6A0;font-size:.65rem}
+
+    @keyframes slideDown {
+        from { opacity:0; transform:translateY(-10px); }
+        to { opacity:1; transform:translateY(0); }
+    }
 
     .coupon-section{padding:16px 0;border-top:1px solid #F0F1F5;margin-top:8px}
     .coupon-title{font-size:.82rem;font-weight:700;color:#4A4E6F;margin-bottom:10px;display:flex;align-items:center;gap:6px}
@@ -180,15 +192,39 @@
                                 </div>
                                 <div class="item-bottom">
                                     <div class="qty-control">
-                                        <a href="${pageContext.request.contextPath}/cart?action=decrease&id=${item.tour.tourId}" class="qty-btn">−</a>
-                                        <span class="qty-value">${item.quantity}</span>
-                                        <a href="${pageContext.request.contextPath}/cart?action=increase&id=${item.tour.tourId}" class="qty-btn">+</a>
+                                        <button class="qty-btn" data-tour-id="${item.tour.tourId}" data-action="decrease" onclick="handleQtyBtn(this)" title="Giảm">−</button>
+                                        <input type="number" class="qty-input" id="qty-${item.tour.tourId}" value="${item.quantity}" min="1" max="${item.tour.maxPeople}" 
+                                               data-max="${item.tour.maxPeople}"
+                                               data-tour-id="${item.tour.tourId}"
+                                               data-tour-name="${item.tour.tourName}"
+                                               oninput="validateQtyInput(this)"
+                                               onchange="updateQuantityFromInput(this)">
+                                        <button class="qty-btn" data-tour-id="${item.tour.tourId}" data-action="increase" onclick="handleQtyBtn(this)" title="Tăng">+</button>
                                     </div>
                                     <div class="item-price">
                                         <div class="unit"><fmt:formatNumber value="${item.tour.price}" type="number" groupingUsed="true"/>đ/người</div>
                                         <div class="total"><fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/>đ</div>
                                     </div>
                                 </div>
+                                
+                                <!-- Thông báo lỗi nếu vượt quá sức chứa -->
+                                <div id="error-${item.tour.tourId}" class="qty-error" style="display:none;margin-top:12px;padding:10px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;align-items:flex-start;gap:8px;font-size:.85rem">
+                                    <i class="fas fa-exclamation-circle" style="color:#DC2626;flex-shrink:0;margin-top:2px"></i>
+                                    <div style="color:#991B1B;font-weight:600" id="error-msg-${item.tour.tourId}"></div>
+                                </div>
+                                <c:if test="${not empty sessionScope['cartError_'.concat(item.tour.tourId)]}">
+                                    <c:set var="errorMsg" value="${sessionScope['cartError_'.concat(item.tour.tourId)]}"/>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            const errorDiv = document.getElementById('error-${item.tour.tourId}');
+                                            const errorMsgEl = document.getElementById('error-msg-${item.tour.tourId}');
+                                            if (errorDiv && errorMsgEl) {
+                                                errorMsgEl.textContent = '${errorMsg}';
+                                                errorDiv.style.display = 'flex';
+                                            }
+                                        });
+                                    </script>
+                                </c:if>
                             </div>
                         </div>
                     </c:forEach>
@@ -258,8 +294,7 @@
                             </div>
 
                             <!-- Discount display -->
-                            <div id="discount-row" class="discount-row"
-                                 style="${not empty sessionScope.couponDiscount ? '' : 'display:none'}">
+                            <div id="discount-row" class="discount-row" <c:if test="${empty sessionScope.couponDiscount}">style="display:none"</c:if>>
                                 <span><i class="fas fa-tag"></i> Giảm giá</span>
                                 <span class="discount-amount" id="discount-amount">
                                     -<fmt:formatNumber value="${sessionScope.couponDiscount != null ? sessionScope.couponDiscount : 0}" type="number" groupingUsed="true"/>đ
@@ -312,6 +347,209 @@
 
 <script>
 const CTX = '${pageContext.request.contextPath}';
+
+/**
+ * Hiển thị error message
+ */
+function showQtyError(tourId, message) {
+    console.log('showQtyError called:', tourId, message);
+    const errorDiv = document.getElementById('error-' + tourId);
+    const errorMsg = document.getElementById('error-msg-' + tourId);
+    console.log('errorDiv:', errorDiv, 'errorMsg:', errorMsg);
+    if (errorDiv && errorMsg) {
+        errorMsg.textContent = message;
+        errorDiv.style.display = 'flex';
+        console.log('Error displayed');
+    }
+}
+
+/**
+ * Ẩn error message
+ */
+function hideQtyError(tourId) {
+    const errorDiv = document.getElementById('error-' + tourId);
+    if (errorDiv) {
+        errorDiv.style.display = 'none';
+    }
+}
+
+/**
+ * Validate input realtime - chỉ cho phép số dương
+ */
+function validateQtyInput(input) {
+    const tourId = input.dataset.tourId;
+    const maxPeople = parseInt(input.dataset.max);
+    const tourName = input.dataset.tourName;
+    let value = input.value.trim();
+    
+    console.log('validateQtyInput:', tourId, 'value:', value, 'max:', maxPeople);
+    
+    // Xóa ký tự không phải số
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Nếu rỗng, để trống
+    if (value === '') {
+        input.value = '';
+        hideQtyError(tourId);
+        return;
+    }
+    
+    let num = parseInt(value);
+    
+    // Nếu < 1, set về 1
+    if (num < 1) {
+        num = 1;
+    }
+    
+    // Nếu > maxPeople, hiển thị error và reset về giá trị cũ
+    if (num > maxPeople) {
+        showQtyError(tourId, `❌ Vượt quá sức chứa! Tour "${tourName}" chỉ có tối đa ${maxPeople} chỗ.`);
+        // Không thay đổi input value, để người dùng thấy lỗi
+        return;
+    }
+    
+    input.value = num;
+    hideQtyError(tourId);
+}
+
+/**
+ * Tăng số lượng
+ */
+function increaseQty(tourId, maxPeople) {
+    console.log('increaseQty:', tourId, maxPeople);
+    const input = document.getElementById('qty-' + tourId);
+    if (!input) {
+        console.log('Input not found');
+        return;
+    }
+    
+    let current = parseInt(input.value) || 1;
+    let newQty = current + 1;
+    
+    console.log('current:', current, 'newQty:', newQty);
+    
+    if (newQty > maxPeople) {
+        showQtyError(tourId, `❌ Vượt quá sức chứa! Tối đa ${maxPeople} chỗ.`);
+        return;
+    }
+    
+    input.value = newQty;
+    hideQtyError(tourId);
+    updateQuantity(tourId, newQty, maxPeople);
+}
+
+/**
+ * Giảm số lượng
+ */
+function decreaseQty(tourId, maxPeople) {
+    console.log('decreaseQty:', tourId, maxPeople);
+    const input = document.getElementById('qty-' + tourId);
+    if (!input) return;
+    
+    let current = parseInt(input.value) || 1;
+    let newQty = current - 1;
+    
+    if (newQty <= 0) {
+        if (confirm('Bạn muốn xóa tour này khỏi giỏ hàng?')) {
+            window.location.href = CTX + '/cart?action=remove&id=' + tourId;
+        }
+        return;
+    }
+    
+    input.value = newQty;
+    hideQtyError(tourId);
+    updateQuantity(tourId, newQty, maxPeople);
+}
+
+/**
+ * Xử lý click button +/-
+ */
+function handleQtyBtn(btn) {
+    const tourId = parseInt(btn.dataset.tourId);
+    const action = btn.dataset.action;
+    const input = document.getElementById('qty-' + tourId);
+    if (!input) {
+        console.log('Input not found for tourId:', tourId);
+        return;
+    }
+    
+    const maxPeople = parseInt(input.dataset.max);
+    
+    if (action === 'increase') {
+        increaseQty(tourId, maxPeople);
+    } else if (action === 'decrease') {
+        decreaseQty(tourId, maxPeople);
+    }
+}
+
+/**
+ * Cập nhật số lượng từ input change event
+ */
+function updateQuantityFromInput(input) {
+    const tourId = parseInt(input.dataset.tourId);
+    const maxPeople = parseInt(input.dataset.max);
+    updateQuantity(tourId, input.value, maxPeople);
+}
+
+/**
+ * Cập nhật số lượng - gửi request đến server
+ */
+function updateQuantity(tourId, newQty, maxPeople) {
+    newQty = parseInt(newQty);
+    
+    console.log('updateQuantity:', tourId, newQty, maxPeople);
+    
+    // Validate
+    if (isNaN(newQty) || newQty <= 0) {
+        if (confirm('Bạn muốn xóa tour này khỏi giỏ hàng?')) {
+            window.location.href = CTX + '/cart?action=remove&id=' + tourId;
+        }
+        return;
+    }
+    
+    if (newQty > maxPeople) {
+        // Không gửi request, chỉ hiển thị error
+        const input = document.getElementById('qty-' + tourId);
+        const tourName = input.dataset.tourName;
+        showQtyError(tourId, `❌ Vượt quá sức chứa! Tour "${tourName}" chỉ có tối đa ${maxPeople} chỗ.`);
+        return;
+    }
+    
+    // Gửi request
+    console.log('Redirecting to:', CTX + '/cart?action=setqty&id=' + tourId + '&qty=' + newQty);
+    window.location.href = CTX + '/cart?action=setqty&id=' + tourId + '&qty=' + newQty;
+}
+
+// Event delegation cho qty buttons và input
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded - setting up event listeners');
+    
+    // Qty input events
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('qty-input')) {
+            console.log('Input event on qty-input');
+            validateQtyInput(e.target);
+        }
+    });
+    
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('qty-input')) {
+            console.log('Change event on qty-input');
+            const tourId = parseInt(e.target.dataset.tourId);
+            const maxPeople = parseInt(e.target.dataset.max);
+            updateQuantity(tourId, e.target.value, maxPeople);
+        }
+    });
+    
+    document.addEventListener('keypress', function(e) {
+        if (e.target.classList.contains('qty-input') && e.key === 'Enter') {
+            console.log('Enter key on qty-input');
+            const tourId = parseInt(e.target.dataset.tourId);
+            const maxPeople = parseInt(e.target.dataset.max);
+            updateQuantity(tourId, e.target.value, maxPeople);
+        }
+    });
+});
 
 function applyCoupon() {
     const code = document.getElementById('coupon-code').value.trim();
@@ -383,7 +621,7 @@ function showMsg(type, msg) {
     if (type === 'error') setTimeout(() => { el.style.display = 'none'; }, 4000);
 }
 
-// Enter key to apply
+// Enter key to apply coupon
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('coupon-code');
     if (input) input.addEventListener('keypress', e => { if (e.key === 'Enter') applyCoupon(); });
