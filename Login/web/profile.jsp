@@ -147,6 +147,13 @@
             </div>
         </c:if>
 
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-error fade-in">
+                <i class="fas fa-exclamation-circle"></i>
+                ${errorMessage}
+            </div>
+        </c:if>
+
         <!-- Content Grid -->
         <div class="content-grid">
             <!-- Left Column — Info Display -->

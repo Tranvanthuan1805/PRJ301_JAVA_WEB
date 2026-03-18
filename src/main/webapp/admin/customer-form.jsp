@@ -13,8 +13,27 @@
 <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#0a0f1e;color:#e2e8f0;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:#080d1a;color:#e2e8f0;min-height:100vh}
 a{text-decoration:none;color:inherit}
+
+/* Sidebar */
+.sidebar{position:fixed;left:0;top:0;width:270px;height:100vh;background:linear-gradient(180deg,rgba(11,17,32,.98) 0%,rgba(8,13,26,.99) 100%);border-right:1px solid rgba(255,255,255,.05);padding:24px 16px;display:flex;flex-direction:column;z-index:100;backdrop-filter:blur(24px)}
+.sidebar .logo{font-size:1.4rem;font-weight:800;color:#fff;padding:0 12px 24px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.sidebar .logo .a{color:#60A5FA}
+.sidebar .badge-admin{display:inline-block;padding:3px 10px;border-radius:8px;background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(239,68,68,.1));color:#F87171;font-size:.65rem;font-weight:700;margin-left:6px;border:1px solid rgba(239,68,68,.15)}
+.sidebar nav{flex:1;overflow-y:auto;scrollbar-width:none}
+.sidebar nav::-webkit-scrollbar{display:none}
+.sidebar nav a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;color:rgba(255,255,255,.45);font-size:.88rem;font-weight:500;transition:all .3s;margin-bottom:3px;border:1px solid transparent}
+.sidebar nav a:hover{color:#fff;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.06);transform:translateX(4px)}
+.sidebar nav a.active{color:#fff;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(139,92,246,.08));border:1px solid rgba(59,130,246,.18)}
+.sidebar nav a i{width:20px;text-align:center;font-size:.88rem}
+.sidebar .nav-label{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.15);font-weight:700;padding:20px 16px 8px}
+.sidebar .user-box{padding:16px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px}
+.sidebar .user-box .avatar{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#EF4444,#EC4899);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.88rem}
+.sidebar .user-box .uname{font-size:.88rem;color:#fff;font-weight:600}
+.sidebar .user-box .urole{font-size:.72rem;color:rgba(255,255,255,.35)}
+
+.main-content{margin-left:270px;padding:32px 40px;min-height:100vh}
 .form-card{background:rgba(17,24,39,.7);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:32px;backdrop-filter:blur(12px)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media(max-width:768px){.form-grid{grid-template-columns:1fr}}
@@ -22,13 +41,11 @@ a{text-decoration:none;color:inherit}
 .form-group{display:flex;flex-direction:column;gap:6px}
 .form-label{font-size:.82rem;font-weight:600;color:#94a3b8;display:flex;align-items:center;gap:4px}
 .form-label .req{color:#f87171;font-weight:700}
-.form-label i{font-size:.7rem;opacity:.5}
 .form-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.08);border-radius:10px;font-family:'Inter',sans-serif;font-size:.88rem;transition:all .3s;background:rgba(15,23,42,.6);color:#e2e8f0;outline:none}
 .form-input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
 .form-input::placeholder{color:#475569}
 select.form-input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
 .section-title{font-size:.78rem;font-weight:700;color:#60a5fa;text-transform:uppercase;letter-spacing:1.5px;padding:12px 0 6px;margin-top:8px;border-top:1px solid rgba(255,255,255,.05);grid-column:1/-1;display:flex;align-items:center;gap:8px}
-.section-title i{font-size:.72rem}
 .toggle-wrap{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(15,23,42,.4);border-radius:10px;border:1px solid rgba(255,255,255,.06)}
 .toggle{position:relative;width:48px;height:26px;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0}
@@ -50,20 +67,58 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 .page-title .hl{background:linear-gradient(135deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 </style>
 </head>
-<body class="bg-[#0a0f1e] text-slate-200 min-h-screen">
-<jsp:include page="/common/_admin-sidebar.jsp"/>
-<jsp:include page="/common/_admin-header.jsp"/>
+<body>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="logo">
+        <img src="${ctx}/images/logo.png" style="width:36px;height:36px;border-radius:50%">
+        <span><span class="a">ez</span>travel</span>
+        <span class="badge-admin">ADMIN</span>
+    </div>
+    <nav>
+        <a href="${ctx}/admin/dashboard"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
+        <a href="${ctx}/admin/dashboard?section=customers" class="active"><i class="fas fa-users"></i> Khách Hàng</a>
+        <a href="${ctx}/admin/dashboard?section=orders"><i class="fas fa-shopping-bag"></i> Đơn Hàng</a>
+        <a href="${ctx}/admin/dashboard?section=tours-mgmt"><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</a>
+        <a href="${ctx}/admin/dashboard?section=providers"><i class="fas fa-handshake"></i> Nhà Cung Cấp</a>
+        <a href="${ctx}/admin/dashboard?section=consultations"><i class="fas fa-comments"></i> Tư Vấn</a>
+        <a href="${ctx}/admin/dashboard?section=coupons"><i class="fas fa-ticket-alt"></i> Mã Giảm Giá</a>
+        <div class="nav-label">AI & Phân Tích</div>
+        <a href="${ctx}/admin/dashboard?section=chatbot"><i class="fas fa-robot"></i> Chatbot & Hành Vi</a>
+        <a href="${ctx}/admin/dashboard?section=neural"><i class="fas fa-brain"></i> Mạng Neural</a>
+        <div class="nav-label">Hệ Thống</div>
+        <a href="${ctx}/home" target="_blank"><i class="fas fa-globe"></i> Xem Website</a>
+        <a href="${ctx}/logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+    </nav>
+    <div class="user-box">
+        <div class="avatar">${sessionScope.user.username.substring(0,1).toUpperCase()}</div>
+        <div>
+            <div class="uname">${sessionScope.user.username}</div>
+            <div class="urole">Quản Trị Viên</div>
+        </div>
+    </div>
+</aside>
 
-<main class="lg:ml-[260px] pt-20 pb-10 px-4 lg:px-8" style="max-width:900px">
+<div class="main-content">
     <a href="${ctx}/admin/dashboard" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Dashboard</a>
-    <h1 class="page-title">
+    <h1 style="font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:12px">
         <c:choose>
-            <c:when test="${editMode}"><i class="fas fa-user-pen"></i> Sửa: <span class="hl">@${editUser.username}</span></c:when>
-            <c:otherwise><i class="fas fa-user-plus"></i> Thêm <span class="hl">Khách Hàng Mới</span></c:otherwise>
+            <c:when test="${editMode}"><i class="fas fa-user-pen" style="color:#3b82f6"></i> Sửa: <span style="background:linear-gradient(135deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">@${editUser.username}</span></c:when>
+            <c:otherwise><i class="fas fa-user-plus" style="color:#3b82f6"></i> Thêm <span style="background:linear-gradient(135deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Khách Hàng Mới</span></c:otherwise>
         </c:choose>
     </h1>
-    <div class="form-card">
-        <form action="${ctx}/admin/crud/customer-save" method="post">
+
+    <c:if test="${not empty errorMessage}">
+        <div style="padding:12px 18px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2);border-radius:10px;color:#F87171;font-size:.88rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+            <i class="fas fa-exclamation-circle"></i> ${errorMessage}
+        </div>
+    </c:if>
+
+    <div style="display:flex;gap:24px;align-items:flex-start;max-width:1100px">
+        <!-- Form -->
+        <div style="flex:1;min-width:0">
+        <div class="form-card">
+        <form action="${ctx}/admin/crud/customer-save" method="post" onsubmit="return validateForm(this)">
             <c:if test="${editMode}"><input type="hidden" name="userId" value="${editUser.userId}"></c:if>
             <div class="form-grid">
                 <div class="section-title"><i class="fas fa-id-card"></i> Thông Tin Tài Khoản</div>
@@ -102,6 +157,52 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
             </div>
         </form>
     </div>
-</main>
+    </div>
+
+        <!-- Activity Panel (chỉ hiện khi edit) -->
+        <c:if test="${editMode}">
+        <div style="width:320px;flex-shrink:0">
+            <div class="form-card" style="padding:20px">
+                <div style="font-size:.85rem;font-weight:700;color:#60a5fa;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+                    <i class="fas fa-history"></i> Lịch Sử Hoạt Động
+                </div>
+                <c:choose>
+                    <c:when test="${empty activities}">
+                        <div style="color:#475569;font-size:.83rem;text-align:center;padding:20px 0">Chưa có hoạt động nào</div>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="display:flex;flex-direction:column;gap:10px;max-height:500px;overflow-y:auto">
+                        <c:forEach var="act" items="${activities}">
+                            <div style="background:rgba(15,23,42,.5);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                                    <span style="font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(59,130,246,.15);color:#60a5fa">${act.actionType}</span>
+                                    <span style="font-size:.72rem;color:#475569"><fmt:formatDate value="${act.createdAt}" pattern="dd/MM/yyyy HH:mm"/></span>
+                                </div>
+                                <div style="font-size:.8rem;color:#94a3b8">${act.description}</div>
+                            </div>
+                        </c:forEach>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+        </c:if>
+    </div>
+</div>
+<script>
+function validateForm(form) {
+    const email = form.email.value.trim();
+    const phone = form.phoneNumber ? form.phoneNumber.value.trim() : '';
+    const fullName = form.fullName ? form.fullName.value.trim() : '';
+
+    if (!email) { alert('Email không được để trống'); return false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Email không hợp lệ'); return false; }
+    if (fullName && fullName.length < 2) { alert('Họ tên phải từ 2 ký tự trở lên'); return false; }
+    if (phone && !/^(\+84|0)[1-9][0-9]{8,9}$/.test(phone.replace(/\s/g,''))) {
+        alert('Số điện thoại không hợp lệ (VD: 0901234567)'); return false;
+    }
+    return true;
+}
+</script>
 </body>
 </html>

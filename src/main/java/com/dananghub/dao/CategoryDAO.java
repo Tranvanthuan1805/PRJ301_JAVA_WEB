@@ -10,7 +10,8 @@ public class CategoryDAO {
     public List<Category> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery("SELECT c FROM Category c ORDER BY c.categoryName", Category.class)
+            return em.createQuery(
+                "SELECT DISTINCT c FROM Category c ORDER BY c.categoryName", Category.class)
                     .getResultList();
         } finally {
             em.close();

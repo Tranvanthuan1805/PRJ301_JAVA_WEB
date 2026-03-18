@@ -57,6 +57,11 @@ public class ValidationUtil {
         return startDate.isAfter(LocalDate.now()) && endDate.isAfter(startDate);
     }
 
+    public static boolean isValidDateOfBirth(LocalDate dob) {
+        if (dob == null) return false;
+        return !dob.isAfter(LocalDate.now());
+    }
+
     public static boolean isValidDescription(String description) {
         if (description == null || description.trim().isEmpty()) return true;
         return description.trim().length() <= 2000;

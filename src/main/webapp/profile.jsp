@@ -159,6 +159,9 @@
     <c:if test="${param.error == '1'}">
         <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> Cập nhật thất bại. Vui lòng thử lại.</div>
     </c:if>
+    <c:if test="${not empty errorMessage}">
+        <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ${errorMessage}</div>
+    </c:if>
 
     <!-- Edit Profile -->
     <div class="card">
@@ -179,11 +182,18 @@
                 </div>
                 <div class="form-group">
                     <label>Số điện thoại</label>
-                    <input type="tel" name="phoneNumber" value="${profileUser.phoneNumber}" placeholder="0901 234 567">
+                    <input type="tel" name="phoneNumber" value="${profileUser.phoneNumber}" placeholder="0901 234 567"
+                        pattern="^(\+84|0)[1-9][0-9]{8,9}$"
+                        oninvalid="this.setCustomValidity('Số điện thoại không hợp lệ (VD: 0901234567)')"
+                        oninput="this.setCustomValidity('')">
                 </div>
                 <div class="form-group">
                     <label>Ngày sinh</label>
-                    <input type="date" name="dateOfBirth" value="<fmt:formatDate value='${profileUser.dateOfBirth}' pattern='yyyy-MM-dd'/>">
+                    <input type="date" name="dateOfBirth" lang="vi"
+                        value="<fmt:formatDate value='${profileUser.dateOfBirth}' pattern='yyyy-MM-dd'/>"
+                        max="<%= java.time.LocalDate.now() %>"
+                        oninvalid="this.setCustomValidity('Ngày sinh không được vượt quá ngày hiện tại')"
+                        oninput="this.setCustomValidity('')">
                 </div>
                 <div class="form-group full">
                     <label>Địa chỉ</label>

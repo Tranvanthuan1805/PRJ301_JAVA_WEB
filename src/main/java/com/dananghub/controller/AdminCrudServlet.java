@@ -70,11 +70,19 @@ public class AdminCrudServlet extends HttpServlet {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             if (idStr != null && !idStr.isEmpty()) {
-                User u = em.find(User.class, Integer.parseInt(idStr));
+                int userId = Integer.parseInt(idStr);
+                User u = em.find(User.class, userId);
                 request.setAttribute("editUser", u);
                 request.setAttribute("editMode", true);
+                // Load activities by userId
+                List<com.dananghub.entity.CustomerActivity> activities = em.createQuery(
+                    "SELECT ca FROM CustomerActivity ca WHERE ca.customerId = :cid ORDER BY ca.createdAt DESC",
+                    com.dananghub.entity.CustomerActivity.class)
+                    .setParameter("cid", userId)
+                    .setMaxResults(20)
+                    .getResultList();
+                request.setAttribute("activities", activities);
             }
-            // Load roles
             List<Role> roles = em.createQuery("SELECT r FROM Role r ORDER BY r.roleId", Role.class).getResultList();
             request.setAttribute("roles", roles);
         } finally {
@@ -85,7 +93,29 @@ public class AdminCrudServlet extends HttpServlet {
     }
 
     private void saveCustomer(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, ServletException {
+        String email = request.getParameter("email");
+        String fullName = request.getParameter("fullName");
+        String phone = request.getParameter("phoneNumber");
+
+        // Validate
+        if (email == null || email.trim().isEmpty()) {
+            forwardWithError(request, response, "Email không được để trống");
+            return;
+        }
+        if (!com.dananghub.util.ValidationUtil.isValidEmail(email.trim())) {
+            forwardWithError(request, response, "Email không hợp lệ");
+            return;
+        }
+        if (fullName != null && !fullName.trim().isEmpty() && !com.dananghub.util.ValidationUtil.isValidCustomerName(fullName.trim())) {
+            forwardWithError(request, response, "Họ tên phải từ 2 đến 100 ký tự");
+            return;
+        }
+        if (!com.dananghub.util.ValidationUtil.isValidPhone(phone)) {
+            forwardWithError(request, response, "Số điện thoại không hợp lệ (VD: 0901234567)");
+            return;
+        }
+
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -190,6 +220,31 @@ public class AdminCrudServlet extends HttpServlet {
             }
         }
         response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=activated&section=customers");
+    }
+
+    private void forwardWithError(HttpServletRequest request, HttpServletResponse response, String msg)
+            throws IOException, ServletException {
+        String idStr = request.getParameter("userId");
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            if (idStr != null && !idStr.isEmpty()) {
+                User u = em.find(User.class, Integer.parseInt(idStr));
+                request.setAttribute("editUser", u);
+                request.setAttribute("editMode", true);
+                List<com.dananghub.entity.CustomerActivity> activities = em.createQuery(
+                    "SELECT ca FROM CustomerActivity ca WHERE ca.customerId = :cid ORDER BY ca.createdAt DESC",
+                    com.dananghub.entity.CustomerActivity.class)
+                    .setParameter("cid", Integer.parseInt(idStr))
+                    .setMaxResults(20).getResultList();
+                request.setAttribute("activities", activities);
+            }
+            List<Role> roles = em.createQuery("SELECT r FROM Role r ORDER BY r.roleId", Role.class).getResultList();
+            request.setAttribute("roles", roles);
+        } finally {
+            em.close();
+        }
+        request.setAttribute("errorMessage", msg);
+        request.getRequestDispatcher("/admin/customer-form.jsp").forward(request, response);
     }
 
     // ═══════════════ CATEGORY CRUD ═══════════════

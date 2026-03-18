@@ -2,12 +2,15 @@ package com.dananghub.controller;
 
 import com.dananghub.dao.UserDAO;
 import com.dananghub.entity.User;
+import com.dananghub.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 @WebServlet("/profile")
@@ -56,13 +59,30 @@ public class ProfileServlet extends HttpServlet {
         String dobStr = request.getParameter("dateOfBirth");
 
         if (fullName != null && !fullName.trim().isEmpty()) user.setFullName(fullName.trim());
-        if (phone != null) user.setPhoneNumber(phone.trim());
+        if (phone != null) {
+            String phoneTrimmed = phone.trim();
+            if (!phoneTrimmed.isEmpty() && !ValidationUtil.isValidPhone(phoneTrimmed)) {
+                request.setAttribute("profileUser", user);
+                request.setAttribute("errorMessage", "Số điện thoại không hợp lệ (VD: 0901234567)");
+                request.getRequestDispatcher("/profile.jsp").forward(request, response);
+                return;
+            }
+            user.setPhoneNumber(phoneTrimmed);
+        }
         if (address != null) user.setAddress(address.trim());
 
         if (dobStr != null && !dobStr.trim().isEmpty()) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                user.setDateOfBirth(sdf.parse(dobStr.trim()));
+                Date dob = sdf.parse(dobStr.trim());
+                LocalDate dobLocal = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (!ValidationUtil.isValidDateOfBirth(dobLocal)) {
+                    request.setAttribute("profileUser", user);
+                    request.setAttribute("errorMessage", "Ngày sinh không hợp lệ, không được vượt quá ngày hiện tại.");
+                    request.getRequestDispatcher("/profile.jsp").forward(request, response);
+                    return;
+                }
+                user.setDateOfBirth(dob);
             } catch (Exception ignored) {}
         }
 
@@ -72,6 +92,14 @@ public class ProfileServlet extends HttpServlet {
         boolean updated = userDAO.update(user);
 
         if (updated) {
+            // Log profile update activity
+            try {
+                com.dananghub.dao.ActivityDAO actDAO = new com.dananghub.dao.ActivityDAO();
+                com.dananghub.entity.CustomerActivity act = new com.dananghub.entity.CustomerActivity(
+                    user.getUserId(), "UPDATE_PROFILE", "Cập nhật thông tin cá nhân"
+                );
+                actDAO.logActivity(act);
+            } catch (Exception ignored) {}
             session.setAttribute("user", user);
             response.sendRedirect(request.getContextPath() + "/profile?success=1");
         } else {

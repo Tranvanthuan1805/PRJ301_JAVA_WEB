@@ -51,6 +51,22 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("username", u.getUsername());
         session.setAttribute("role", u.getRole());
 
+        // Log LOGIN activity
+        try {
+            dao.CustomerDAO customerDAO = new dao.CustomerDAO();
+            model.Customer customer = customerDAO.getCustomerByUserId(u.getUserId());
+            if (customer != null) {
+                dao.CustomerActivityDAO activityDAO = new dao.CustomerActivityDAO();
+                model.CustomerActivity activity = new model.CustomerActivity();
+                activity.setCustomerId(customer.getId());
+                activity.setActionType("LOGIN");
+                activity.setDescription("Đăng nhập vào hệ thống");
+                activityDAO.addActivity(activity);
+            }
+        } catch (Exception e) {
+            System.out.println(">>> Login activity log failed: " + e.getMessage());
+        }
+
         // Redirect về trang chủ (cả Admin và User)
         response.sendRedirect("index.jsp");
     }

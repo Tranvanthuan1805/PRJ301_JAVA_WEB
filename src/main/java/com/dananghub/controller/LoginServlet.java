@@ -72,6 +72,15 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRoleName());
 
+            // Log login activity
+            try {
+                com.dananghub.dao.ActivityDAO actDAO = new com.dananghub.dao.ActivityDAO();
+                com.dananghub.entity.CustomerActivity act = new com.dananghub.entity.CustomerActivity(
+                    user.getUserId(), "LOGIN", "Đăng nhập thành công"
+                );
+                actDAO.logActivity(act);
+            } catch (Exception ignored) {}
+
             String ctx = request.getContextPath();
             String roleName = user.getRoleName();
             if ("ADMIN".equals(roleName)) {

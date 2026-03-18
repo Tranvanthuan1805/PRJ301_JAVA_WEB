@@ -122,11 +122,32 @@ public class ProfileServlet extends HttpServlet {
             String address = request.getParameter("address");
             String dobStr = request.getParameter("dateOfBirth");
             
+            // Server-side validate phone
+            if (phone != null && !phone.trim().isEmpty()) {
+                String cleanPhone = phone.trim().replaceAll("\\s", "");
+                if (!cleanPhone.matches("^(\\+84|0)[1-9][0-9]{8,9}$")) {
+                    request.setAttribute("customer", customer);
+                    request.setAttribute("errorMessage", "Số điện thoại không hợp lệ (VD: 0901234567)");
+                    request.getRequestDispatcher("/profile.jsp").forward(request, response);
+                    return;
+                }
+            }
+            
+            // Server-side validate date of birth
+            if (dobStr != null && !dobStr.isEmpty()) {
+                java.time.LocalDate dob = java.time.LocalDate.parse(dobStr);
+                if (dob.isAfter(java.time.LocalDate.now())) {
+                    request.setAttribute("customer", customer);
+                    request.setAttribute("errorMessage", "Ngày sinh không được vượt quá ngày hiện tại");
+                    request.getRequestDispatcher("/profile.jsp").forward(request, response);
+                    return;
+                }
+            }
+            
             // Keep existing email (don't allow changing email)
             customer.setFullName(fullName);
-            customer.setPhone(phone);
+            customer.setPhone(phone != null ? phone.trim() : null);
             customer.setAddress(address);
-            // Email stays the same - don't update it
             
             if (dobStr != null && !dobStr.isEmpty()) {
                 customer.setDateOfBirth(java.sql.Date.valueOf(dobStr));

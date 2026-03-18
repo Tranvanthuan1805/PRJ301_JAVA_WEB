@@ -184,6 +184,15 @@ public class BookingServlet extends HttpServlet {
                 );
                 activityDAO.logInteraction(ih);
 
+                // Log CustomerActivity
+                try {
+                    CustomerActivity act = new CustomerActivity(
+                        user.getUserId(), "BOOKING",
+                        "Đặt tour: " + tour.getTourName() + " - " + numberOfPeople + " người"
+                    );
+                    activityDAO.logActivity(act);
+                } catch (Exception ignored) {}
+
                 // Clear coupon
                 session.removeAttribute("appliedCoupon");
                 session.removeAttribute("couponDiscount");

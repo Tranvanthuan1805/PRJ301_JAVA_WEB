@@ -286,7 +286,16 @@ public class AdminCustomerServlet extends HttpServlet {
             return;
         }
         
+        // Load activity history for this customer
+        try {
+            List<CustomerActivity> activities = activityDAO.getActivitiesByCustomerId(customerId, 30);
+            request.setAttribute("activities", activities);
+        } catch (Exception e) {
+            System.out.println(">>> Could not load activities: " + e.getMessage());
+        }
+        
         request.setAttribute("customer", customer);
+        request.setAttribute("editMode", true);
         request.getRequestDispatcher("/admin/customer-form.jsp").forward(request, response);
     }
     
