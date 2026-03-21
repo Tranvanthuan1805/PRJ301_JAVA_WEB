@@ -179,10 +179,38 @@ public class AdminDashboardServlet extends HttpServlet {
             } catch (Exception ignored) {}
 
             // All providers for SPA section
+            List<Provider> providerList = new ArrayList<>();
             try {
-                List<?> providerList = em.createQuery("SELECT p FROM Provider p ORDER BY p.joinDate DESC").getResultList();
+                providerList = em.createQuery("SELECT p FROM Provider p ORDER BY p.joinDate DESC", Provider.class).getResultList();
                 request.setAttribute("providerList", providerList);
             } catch (Exception ignored) {}
+
+            // Provider Payouts & Reconciliation
+            List<Map<String, Object>> payoutList = new ArrayList<>();
+            for (Provider p : providerList) {
+                Double pRevenue = 0.0;
+                try {
+                    // Try getting revenue strictly from confirmed/completed orders/bookings
+                    Object rev = em.createQuery("SELECT COALESCE(SUM(b.subTotal), 0) FROM Booking b WHERE b.tour.provider.providerId = :pid AND (b.order.orderStatus = 'Completed' OR b.order.orderStatus = 'Confirmed')")
+                        .setParameter("pid", p.getProviderId())
+                        .getSingleResult();
+                    pRevenue = ((Number) rev).doubleValue();
+                } catch (Exception ignored) {}
+                
+                Double fee = pRevenue * 0.10; // 10% platform fee
+                Double netPayout = pRevenue - fee;
+                
+                com.dananghub.util.ProviderBankInfo bank = com.dananghub.util.ProviderBankManager.getBankInfo(p.getProviderId());
+                
+                Map<String, Object> map = new HashMap<>();
+                map.put("provider", p);
+                map.put("grossRevenue", pRevenue);
+                map.put("fee", fee);
+                map.put("netPayout", netPayout);
+                map.put("bankInfo", bank);
+                payoutList.add(map);
+            }
+            request.setAttribute("payoutList", payoutList);
 
             // Provider comparison data
             try {

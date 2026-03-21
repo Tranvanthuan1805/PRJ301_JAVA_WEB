@@ -40,6 +40,10 @@ public class ProviderServlet extends HttpServlet {
                 if (user == null) { response.sendRedirect(request.getContextPath() + "/login.jsp"); return; }
                 showCreateTour(request, response, user);
             }
+            case "bank-settings" -> {
+                if (user == null) { response.sendRedirect(request.getContextPath() + "/login.jsp"); return; }
+                showBankSettings(request, response, user);
+            }
             default -> showLanding(request, response, user);
         }
     }
@@ -58,6 +62,7 @@ public class ProviderServlet extends HttpServlet {
         switch (action) {
             case "register" -> registerProvider(request, response, user);
             case "submit-tour" -> submitTour(request, response, user);
+            case "save-bank" -> saveBankSettings(request, response, user);
             default -> response.sendRedirect(request.getContextPath() + "/provider");
         }
     }
@@ -94,6 +99,33 @@ public class ProviderServlet extends HttpServlet {
         } finally { em.close(); }
 
         request.getRequestDispatcher("/views/provider/create-tour.jsp").forward(request, response);
+    }
+
+    private void showBankSettings(HttpServletRequest request, HttpServletResponse response, User user)
+            throws ServletException, IOException {
+        Provider provider = findProvider(user.getUserId());
+        if (provider == null || (!"Approved".equals(provider.getStatus()) && !"Active".equals(provider.getStatus()))) {
+            response.sendRedirect(request.getContextPath() + "/provider");
+            return;
+        }
+        
+        com.dananghub.util.ProviderBankInfo bankInfo = com.dananghub.util.ProviderBankManager.getBankInfo(user.getUserId());
+        request.setAttribute("bankInfo", bankInfo);
+        request.setAttribute("provider", provider);
+        request.getRequestDispatcher("/provider/bank-settings.jsp").forward(request, response);
+    }
+
+    private void saveBankSettings(HttpServletRequest request, HttpServletResponse response, User user)
+            throws IOException {
+        String bankName = request.getParameter("bankName");
+        String accountNumber = request.getParameter("accountNumber");
+        String accountName = request.getParameter("accountName");
+
+        com.dananghub.util.ProviderBankInfo info = new com.dananghub.util.ProviderBankInfo(user.getUserId(), bankName, accountNumber, accountName);
+        com.dananghub.util.ProviderBankManager.saveBankInfo(info);
+        
+        request.getSession().setAttribute("success", "Đã lưu thông tin tài khoản ngân hàng thành công!");
+        response.sendRedirect(request.getContextPath() + "/provider/dashboard");
     }
 
     private void registerProvider(HttpServletRequest request, HttpServletResponse response, User user)

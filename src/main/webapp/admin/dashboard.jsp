@@ -219,6 +219,7 @@
         <a href="#" onclick="showSection('orders',this);return false"><i class="fas fa-shopping-bag"></i> Đơn Hàng</a>
         <a href="#" onclick="showSection('tours-mgmt',this);return false"><i class="fas fa-map-marked-alt"></i> Quản Lý Tours</a>
         <a href="#" onclick="showSection('providers',this);return false"><i class="fas fa-handshake"></i> Nhà Cung Cấp</a>
+        <a href="#" onclick="showSection('payouts',this);return false"><i class="fas fa-money-check-alt"></i> Đối Soát Cung Cấp</a>
         <a href="#" onclick="showSection('consultations',this);return false"><i class="fas fa-comments"></i> Tư Vấn</a>
         <a href="#" onclick="showSection('coupons',this);return false"><i class="fas fa-ticket-alt"></i> Mã Giảm Giá</a>
 
@@ -585,8 +586,86 @@
                 <c:if test="${empty tourList}"><tr><td colspan="9" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có tour</td></tr></c:if>
                 </tbody>
             </table>
+        </div>
+    </div>
+    </div>
+
+    <!-- ═══ SPA SECTION: PAYOUTS ═══ -->
+    <div class="spa-section" id="sec-payouts" style="display:none">
+        <div class="ai-metrics" style="margin-bottom:24px">
+            <div class="ai-metric" style="grid-column: span 2;"><small>Hướng dẫn đối soát</small><div class="val" style="color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500;">Hệ thống tính tổng doanh thu từ các Booking thành công của từng nhà cung cấp. Phí nền tảng mặc định là 10%. Admin sử dụng thông tin ngân hàng bên dưới để đi lệnh chuyển khoản thủ công trên App ngân hàng.</div></div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-money-check-alt"></i> Đối Soát Doanh Thu & Thanh Toán Cung Cấp (Payouts) <span style="font-size:.72rem;color:rgba(255,255,255,.25);margin-left:6px">(Đã trừ 10% phí)</span></h3>
+            <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead><tr><th>Nhà Cung Cấp</th><th>Doanh Thu Gốc</th><th>Phí Nền Tảng (10%)</th><th>Thực Nhận (Payout)</th><th>Thông Tin Ngân Hàng</th><th>Thao Tác</th></tr></thead>
+                <tbody>
+                <c:forEach items="${payoutList}" var="p">
+                    <tr>
+                        <td style="color:#fff;font-weight:600">${p.provider.businessName}</td>
+                        <td style="color:#34D399;font-weight:700"><fmt:formatNumber value="${p.grossRevenue}" pattern="#,###"/>đ</td>
+                        <td style="color:#F87171;font-weight:600"><fmt:formatNumber value="${p.fee}" pattern="#,###"/>đ</td>
+                        <td style="color:#60A5FA;font-weight:800;font-size:1.1rem"><fmt:formatNumber value="${p.netPayout}" pattern="#,###"/>đ</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${not empty p.bankInfo}">
+                                    <div style="font-weight:700;color:#A78BFA">${p.bankInfo.bankName}</div>
+                                    <div style="font-size:.82rem;color:#E2E8F0">${p.bankInfo.accountNumber} - ${p.bankInfo.accountName}</div>
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="padding:3px 8px;border-radius:6px;font-size:.7rem;font-weight:700;background:rgba(245,158,11,.15);color:#FBBF24">Chưa cài đặt</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <c:if test="${p.netPayout > 0 && not empty p.bankInfo}">
+                                <button onclick="showPayoutQR('${p.bankInfo.bankName}', '${p.bankInfo.accountNumber}', '${p.bankInfo.accountName}', '${p.netPayout}')" style="padding:6px 12px;background:rgba(16,185,129,.15);color:#34D399;border:1px solid rgba(16,185,129,.3);border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;transition:.3s"><i class="fas fa-qrcode"></i> Quét QR</button>
+                            </c:if>
+                        </td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty payoutList}"><tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">Chưa có dữ liệu nhà cung cấp</td></tr></c:if>
+                </tbody>
+            </table>
             </div>
         </div>
+
+        <!-- Payout QR Modal -->
+        <div id="payoutQRModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+            <div style="background:#1E293B;border-radius:16px;padding:30px;width:380px;text-align:center;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px rgba(0,0,0,.4)">
+                <h3 style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:8px">Quét Mã Thanh Toán</h3>
+                <p style="font-size:.85rem;color:#94A3B8;margin-bottom:20px">Sử dụng App Ngân hàng để quét mã VietQR</p>
+                <div style="background:#fff;padding:16px;border-radius:12px;display:inline-block;margin-bottom:20px">
+                    <img id="payoutQRImage" src="" alt="VietQR" style="width:240px;height:240px;object-fit:contain;display:block">
+                </div>
+                <div id="payoutQRTxt" style="font-size:.85rem;color:#E2E8F0;font-weight:600;line-height:1.6;margin-bottom:20px;background:rgba(255,255,255,.05);padding:12px;border-radius:8px">
+                    <!-- info here -->
+                </div>
+                <button onclick="closePayoutQR()" style="width:100%;padding:12px;background:rgba(255,255,255,.1);color:#fff;border-radius:8px;font-weight:700;border:none;cursor:pointer;transition:.2s">Đóng</button>
+            </div>
+        </div>
+        <script>
+            function showPayoutQR(bankCode, accNo, accName, amount) {
+                const nameEncoded = encodeURIComponent(accName || '');
+                const qrUrl = "https://img.vietqr.io/image/" + bankCode.trim().toLowerCase() + "-" + accNo.trim() + "-compact2.png?amount=" + amount + "&accountName=" + nameEncoded;
+                
+                document.getElementById('payoutQRImage').src = qrUrl;
+                document.getElementById('payoutQRTxt').innerHTML = 
+                    "<div style='color:#34D399;font-size:1.1rem;margin-bottom:4px;font-weight:800'>" + new Intl.NumberFormat('vi-VN').format(amount) + " đ</div>" +
+                    "<div>" + bankCode + " - " + accNo + "</div>" +
+                    "<div style='color:#A78BFA;text-transform:uppercase'>" + accName + "</div>";
+                
+                document.getElementById('payoutQRModal').style.display = 'flex';
+            }
+            function closePayoutQR() {
+                document.getElementById('payoutQRModal').style.display = 'none';
+                document.getElementById('payoutQRImage').src = "";
+            }
+            document.getElementById('payoutQRModal').addEventListener('click', function(e) {
+                if(e.target === this) closePayoutQR();
+            });
+        </script>
     </div>
 
     <!-- ═══ SPA SECTION: CHATBOT & USER BEHAVIOR ═══ -->

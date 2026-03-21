@@ -98,6 +98,7 @@
         <a href="${pageContext.request.contextPath}/provider/dashboard" class="active"><i class="fas fa-chart-pie"></i> Tổng Quan</a>
         <a href="${pageContext.request.contextPath}/provider/dashboard#tours-section"><i class="fas fa-map-marked-alt"></i> Tours Của Tôi</a>
         <a href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-shopping-bag"></i> Đơn Đặt</a>
+        <a href="${pageContext.request.contextPath}/provider?action=bank-settings"><i class="fas fa-university"></i> Cài Đặt NH</a>
         <a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user-cog"></i> Hồ Sơ</a>
     </nav>
     <div class="user-box">
@@ -200,7 +201,11 @@
             <div class="quick-actions">
                 <a href="${pageContext.request.contextPath}/provider?action=create-tour" class="quick-action">
                     <div class="qa-icon icon-blue"><i class="fas fa-plus"></i></div>
-                    <div class="qa-text"><h4>Tạo Tour Mới</h4><p>Thêm tour du lịch mới</p></div>
+                    <div class="qa-text"><h4>Tạo Tour Mới</h4><p>Thêm tour du lịch</p></div>
+                </a>
+                <a href="${pageContext.request.contextPath}/provider?action=bank-settings" class="quick-action">
+                    <div class="qa-icon" style="background:rgba(139,92,246,.15);color:#A78BFA"><i class="fas fa-university"></i></div>
+                    <div class="qa-text"><h4>Cài Đặt Ngân Hàng</h4><p>Cấu hình thanh toán</p></div>
                 </a>
                 <a href="${pageContext.request.contextPath}/my-orders" class="quick-action">
                     <div class="qa-icon icon-green"><i class="fas fa-list"></i></div>

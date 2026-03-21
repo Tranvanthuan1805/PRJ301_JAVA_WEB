@@ -92,6 +92,9 @@
             <p>Chào mừng, <span class="biz-name">${provider.businessName}</span> • ${provider.providerType}</p>
         </div>
         <div class="dash-right">
+            <a href="${pageContext.request.contextPath}/provider?action=bank-settings" class="dash-btn" style="background:#1E293B;color:#fff;">
+                <i class="fas fa-university"></i> Cài đặt NH
+            </a>
             <a href="${pageContext.request.contextPath}/provider?action=create-tour" class="dash-btn dash-btn-primary">
                 <i class="fas fa-plus"></i> Tạo Tour Mới
             </a>
